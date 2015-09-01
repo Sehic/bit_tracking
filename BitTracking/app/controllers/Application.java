@@ -1,18 +1,28 @@
 package controllers;
 
+import models.User;
 import play.*;
+import play.data.Form;
 import play.mvc.*;
 
 import views.html.*;
 
 public class Application extends Controller {
 
-    public Result index() {
-        return ok(index.render("Your new application is ready."));
-    }
+    static Form<User> newUser = new Form<User>(User.class);
 
     public Result login(){
-        return ok(login.render());
+
+        String  password=newUser.bindFromRequest().field("password").value();
+        String  email=newUser.bindFromRequest().field("email").value();
+        User u = User.findEmailAndPassword(email, password);
+
+        if(u != null) {
+
+            return ok(login.render("User registered successfuly!"));
+        }
+        return ok(login.render("There is no such user."));
+
     }
 
     public Result register(){
