@@ -1,26 +1,21 @@
-<!DOCTYPE html>
-<html>
-  <title>BITracking</title>
-
-  <head>
-    <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/login.css")">
-  </head>
-
+@(loginMessage:String)
+@import helper._
+@main("Home Page"){
   <body style="height: 778px">
     <div class="headerfix">
-            </div>
+    </div>
     <div class="header">
-      <div id="img01" class="header"><img src="" /></div>
+            <h1>@loginMessage</h1>
+      @helper.form(routes.Application.login()){
+                <div id="form01" class="header">Email:<br>
+                      <input placeholder="Email required" type="email" name="email"/><br>
 
-      <div id="form01" class="header">Email:<br>
-        <input placeholder="Email required" type="mail" name="name"/><br>
-
-        <div id="form02" class="header">Password:<br>
-          <input placeholder="Password" type="password" name="password"/></div>
-        </div>
+                <div id="form02" class="header">Password:<br>
+                      <input placeholder="Password" type="password" name="password"/></div>
+                </div>
 
       <input type="submit" class="submit01" value="Log In"/>
-
+      }
       <div class="body_fix">
 
         <div id="info01" class="body_fix">Welcome to BIT-Tracking page</div>
@@ -30,4 +25,4 @@
     </div>
 
   </body>
-</html>
+}
