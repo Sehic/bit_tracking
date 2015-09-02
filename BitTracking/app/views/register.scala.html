@@ -1,3 +1,5 @@
+@import helper._
+
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,18 +16,18 @@
         </div>
 
 	<div class="body_fix">
-
             <div id="info01" class="body_fix">BIT Tracking Registration</div>
             <div id="info02" class="body_fix">Create an account</div>
            	 <div id="img02" class="body_fix">
                 <img id="slika" src="http://www.cmegroup.com/images/map.gif"/></div>
             <div id="form03" class="body_fix">
-            <input placeholder="Firstname" type="text" id="namebox" name="name01" /><input placeholder="Lastname" type="text" id="namebox"/><br>
-            <input placeholder="Email" type="text" id="mailbox"/><br>
-            <input placeholder="Re-enter email" type="text" id="mailbox"/><br>
-            <input placeholder="Password" type="password" id="mailbox"/>
+                @helper.form(action = routes.Application.registrationCheck()){
+            <input placeholder="Firstname" type="firstName" id="namebox" name="firstName" /><input placeholder="Lastname" type="lastName" id="namebox" name="lastName"/><br>
+            <input placeholder="Email" type="email" id="mailbox" name="email"/><br>
+            <input placeholder="Password" type="password" id="mailbox" name="password"/><br>
+            <input placeholder="Re-enter password" type="password" id="mailbox" name="password"/>
              <input type="submit" class="submit02" value="Sign Up"/><br><br><hr>
-
+                }
           Sign up for BIT-Tracking account!
          </div>
 
