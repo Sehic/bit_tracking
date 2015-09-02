@@ -70,6 +70,15 @@ public class User extends Model {
         return (User)(listEmail.get(0));
     }
 
+    public static boolean checkName(String name) {
+        for (int i = 0; i < name.length(); i++) {
+            if ((name.charAt(i) < 65 || (name.charAt(i) > 90 && name.charAt(i) < 97) || name.charAt(i) > 123)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     @Override
     public String toString() {
