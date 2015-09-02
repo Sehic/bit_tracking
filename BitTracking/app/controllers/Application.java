@@ -61,7 +61,7 @@ String newPassword = getEncriptedPasswordMD5(password);
             u = new User(firstName, lastName, password, email);
             Logger.info(u.toString());
             if (u.checkName(firstName) && u.checkName(lastName)) {
-                if (password.equals(repassword)) {
+                if (u.checkPassword(password) && password.equals(repassword)) {
 				 String newPassword = getEncriptedPasswordMD5(password);
             u = new User(firstName, lastName, newPassword, email);
             Logger.info(u.toString());

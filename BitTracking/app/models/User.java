@@ -79,6 +79,25 @@ public class User extends Model {
         return true;
     }
 
+    public static boolean checkPassword(String password) {
+        int letters = 0;
+        int numbers = 0;
+        if (password.length() < 6) {
+            return false;
+        }
+        for (int i = 0; i < password.length(); i++) {
+            if(password.charAt(i) > 47 && password.charAt(i) < 58) {
+                numbers++;
+            } else if ((password.charAt(i) > 64 && password.charAt(i) < 91) || (password.charAt(i) > 96 && password.charAt(i) < 123)) {
+                letters++;
+            }
+        }
+        if (letters == 0 || numbers == 0) {
+            return false;
+        }
+        return true;
+    }
+
 
     @Override
     public String toString() {
