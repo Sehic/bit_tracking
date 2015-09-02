@@ -47,14 +47,27 @@ public class Application extends Controller {
         String firstName = boundForm.bindFromRequest().field("firstName").value();
         String lastName = boundForm.bindFromRequest().field("lastName").value();
         String password = boundForm.bindFromRequest().field("password").value();
+        String repassword = boundForm.bindFromRequest().field("repassword").value();
         String email = boundForm.bindFromRequest().field("email").value();
         User u = User.checkEmail(email);
         if(u == null) {
             u = new User(firstName, lastName, password, email);
             Logger.info(u.toString());
-            Ebean.save(u);
-            return redirect(routes.Application.login());
+            if (u.checkName(firstName) && u.checkName(lastName)) {
+                if (password.equals(repassword)) {
+                    Ebean.save(u);
+                    return redirect(routes.Application.login());
+                } else {
+                    flash("errorName", "Ne valja ti ime");
+                    return ok(register.render());
+                }
+            } else {
+                flash("errorName", "Ne valja ti ime");
+                return (badRequest(register.render()));
+                //return ok(register.render());
+            }
         }else {
+            flash("errorName", "Ne valja ti ime");
             return ok(register.render());
         }
     }
