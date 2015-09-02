@@ -9,11 +9,14 @@ import play.data.validation.Constraints;
 import play.db.*;
 import play.db.ebean.Model;
 
+import java.lang.Override;
+import java.lang.String;
 import java.util.List;
 
 @Entity
 public class User extends Model {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
     @Column(length = 50)
     public String firstName;
@@ -29,8 +32,7 @@ public class User extends Model {
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName, String password, String email) {
-        this.id = id;
+    public User(String firstName, String lastName, String password, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -57,6 +59,28 @@ public class User extends Model {
 
 
 
+    public static Finder<String, User> findEmail = new Finder<String, User>(String.class, User.class);
+
+    /**
+     * This method checks if the entered email exists in the database
+     * @param email email from user input
+     * @return null if email doesnt exist in database, otherwise 1
+     */
+    public static User checkEmail(String email) {
+        List<User> listEmail = findEmail.where().eq("email", email).findList();
+        if (listEmail.size()==0){
+            return null;
+        }
+        return (User)(listEmail.get(0));
+    }
 
 
+    @Override
+    public String toString() {
+        return "id=" + id +
+                ", firstName=" + firstName +
+                ", lastName=" + lastName +
+                ", password=" + password +
+                ", email=" + email;
+    }
 }
