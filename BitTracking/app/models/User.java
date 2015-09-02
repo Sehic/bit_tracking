@@ -49,17 +49,13 @@ public class User extends Model {
      */
     public static User findEmailAndPassword(String email, String password) {
 
-        List<User> listEmail = find.where().eq("email", email).findList();
-        List<User> listPassword = find.where().eq("password", password).findList();
-        if (listEmail.size()==0 || listPassword.size()==0){
+        List<User> list = find.where().eq("email", email).eq("password", password).findList();
+        if (list.size()==0){
             return null;
         }
-        return (User)(listEmail.get(0));
+        return (User)(list.get(0));
     }
 
-
-
-    public static Finder<String, User> findEmail = new Finder<String, User>(String.class, User.class);
 
     /**
      * This method checks if the entered email exists in the database
@@ -67,7 +63,7 @@ public class User extends Model {
      * @return null if email doesnt exist in database, otherwise 1
      */
     public static User checkEmail(String email) {
-        List<User> listEmail = findEmail.where().eq("email", email).findList();
+        List<User> listEmail = find.where().eq("email", email).findList();
         if (listEmail.size()==0){
             return null;
         }
