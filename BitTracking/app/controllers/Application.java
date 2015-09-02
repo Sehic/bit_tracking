@@ -10,6 +10,11 @@ import views.html.*;
 import com.avaje.ebean.Ebean;
 import play.Logger;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+
 public class Application extends Controller {
 
     static Form<User> newUser = new Form<User>(User.class);
@@ -24,7 +29,9 @@ public class Application extends Controller {
 
         String  password=newUser.bindFromRequest().field("password").value();
         String  email=newUser.bindFromRequest().field("email").value();
-        User u = User.findEmailAndPassword(email, password);
+String newPassword = getEncriptedPasswordMD5(password);
+
+        User u = User.findEmailAndPassword(email, newPassword);
 
         if(u != null) {
             return ok(login.render("Loged in successfuly!"));
@@ -55,6 +62,9 @@ public class Application extends Controller {
             Logger.info(u.toString());
             if (u.checkName(firstName) && u.checkName(lastName)) {
                 if (password.equals(repassword)) {
+				 String newPassword = getEncriptedPasswordMD5(password);
+            u = new User(firstName, lastName, newPassword, email);
+            Logger.info(u.toString());
                     Ebean.save(u);
                     return redirect(routes.Application.login());
                 } else {
@@ -71,6 +81,20 @@ public class Application extends Controller {
             return ok(register.render());
         }
     }
+
+public static String getEncriptedPasswordMD5(String password) {
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(password.getBytes(), 0, password.length());
+            String result = new BigInteger(1, md5.digest()).toString(16);
+            md5.reset();
+            return result;
+        } catch (NoSuchAlgorithmException e) {
+            // TODO add to logger
+        }
+        return "INVALID PASSWORD";
+    }
+
 
 
 
