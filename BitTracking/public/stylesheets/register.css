@@ -81,6 +81,7 @@ body{
     background: white;
     padding: 5%;
     font-size: 100%;
+    text-transform: capitalize;
 }
 #mailbox{
     width: 100%;
