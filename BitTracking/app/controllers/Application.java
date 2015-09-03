@@ -21,32 +21,33 @@ public class Application extends Controller {
     private static final Form<User> userForm =
             Form.form(User.class);
 
-    public Result login(){
+    public Result login() {
         return ok(login.render(""));
     }
 
-    public Result check(){
+    public Result check() {
 
-        String  password=newUser.bindFromRequest().field("password").value();
-        String  email=newUser.bindFromRequest().field("email").value();
-String newPassword = getEncriptedPasswordMD5(password);
+        String password = newUser.bindFromRequest().field("password").value();
+        String email = newUser.bindFromRequest().field("email").value();
+        String newPassword = getEncriptedPasswordMD5(password);
 
         User u = User.findEmailAndPassword(email, newPassword);
 
-        if(u != null) {
-            return ok(login.render("Loged in successfuly!"));
+        if (u != null) {
+            return ok(login.render("Logged in successfuly!"));
         }
         return ok(login.render("Wrong email or password!"));
 
     }
 
-    public Result register(){
+    public Result register() {
         return ok(register.render());
     }
 
     /**
      * This method get user input from registration form and if every input is valid
      * saves it to database.
+     *
      * @return redirect user to subpage login if everything is ok, otherwise ?????
      */
     public Result registrationCheck() {
@@ -57,32 +58,37 @@ String newPassword = getEncriptedPasswordMD5(password);
         String repassword = boundForm.bindFromRequest().field("repassword").value();
         String email = boundForm.bindFromRequest().field("email").value();
         User u = User.checkEmail(email);
-        if(u == null) {
+        if (u == null) {
             u = new User(firstName, lastName, password, email);
             Logger.info(u.toString());
+            if (firstName.length() == 0 || lastName.length() == 0 || password.length() == 0 || repassword.length() == 0 || email.length() == 0) {
+                flash("errorEmptyName", "Please fill all fields!");
+            }
+
             if (u.checkName(firstName) && u.checkName(lastName)) {
+
                 if (u.checkPassword(password) && password.equals(repassword)) {
-				 String newPassword = getEncriptedPasswordMD5(password);
-            u = new User(firstName, lastName, newPassword, email);
-            Logger.info(u.toString());
+                    String newPassword = getEncriptedPasswordMD5(password);
+                    u = new User(firstName, lastName, newPassword, email);
+
                     Ebean.save(u);
                     return redirect(routes.Application.login());
                 } else {
-                    flash("errorName", "Ne valja ti ime");
+                    flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters, one number, and one sign, or you entered different passwords");
                     return ok(register.render());
                 }
             } else {
-                flash("errorName", "Ne valja ti ime");
+                flash("errorName", "Your name or last name should have only letters.");
                 return (badRequest(register.render()));
                 //return ok(register.render());
             }
-        }else {
-            flash("errorName", "Ne valja ti ime");
+        } else {
+            flash("errorEmail", "E-mail address already exists!");
             return ok(register.render());
         }
     }
 
-public static String getEncriptedPasswordMD5(String password) {
+    public static String getEncriptedPasswordMD5(String password) {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             md5.update(password.getBytes(), 0, password.length());
@@ -94,8 +100,6 @@ public static String getEncriptedPasswordMD5(String password) {
         }
         return "INVALID PASSWORD";
     }
-
-
 
 
 }

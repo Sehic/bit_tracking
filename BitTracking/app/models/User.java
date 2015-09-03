@@ -43,34 +43,38 @@ public class User extends Model {
 
     /**
      * Method that checks if user exists in database
-     * @param email - email address from inserted user
+     *
+     * @param email    - email address from inserted user
      * @param password - inserted user password
      * @return - user if it finds him, otherwise null
      */
     public static User findEmailAndPassword(String email, String password) {
 
         List<User> list = find.where().eq("email", email).eq("password", password).findList();
-        if (list.size()==0){
+        if (list.size() == 0) {
             return null;
         }
-        return (User)(list.get(0));
+        return (User) (list.get(0));
     }
 
 
     /**
      * This method checks if the entered email exists in the database
+     *
      * @param email email from user input
      * @return null if email doesnt exist in database, otherwise 1
      */
     public static User checkEmail(String email) {
         List<User> listEmail = find.where().eq("email", email).findList();
-        if (listEmail.size()==0){
+        if (listEmail.size() == 0) {
             return null;
         }
-        return (User)(listEmail.get(0));
+        return (User) (listEmail.get(0));
     }
 
     public static boolean checkName(String name) {
+
+
         for (int i = 0; i < name.length(); i++) {
             if ((name.charAt(i) < 65 || (name.charAt(i) > 90 && name.charAt(i) < 97) || name.charAt(i) > 123)) {
                 return false;
@@ -86,7 +90,7 @@ public class User extends Model {
             return false;
         }
         for (int i = 0; i < password.length(); i++) {
-            if(password.charAt(i) > 47 && password.charAt(i) < 58) {
+            if (password.charAt(i) > 47 && password.charAt(i) < 58) {
                 numbers++;
             } else if ((password.charAt(i) > 64 && password.charAt(i) < 91) || (password.charAt(i) > 96 && password.charAt(i) < 123)) {
                 letters++;
