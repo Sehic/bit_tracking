@@ -26,6 +26,7 @@ body{
     color: white;
     z-index: 7;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    text-align: center;
 }
 
 #img01{
@@ -49,15 +50,29 @@ body{
 
 .submit01{
     left:1100px;
-    top: 42px;
-    height: 22px;
-    width: 50px;
+    top: 40px;
+    height: 45px;
+    width: 90px;
     position: fixed;
     z-index: 20;
     color: #142170;
     background: white;
     cursor: pointer;
+    font-size: 20px;
 }
+#registrationButton {
+    left:1200px;
+    top: 40px;
+    height: 45px;
+    width: 90px;
+    position: fixed;
+    z-index: 20;
+    color: #142170;
+    background: white;
+    cursor: pointer;
+    font-size: 20px;
+}
+
 .body_fix{
     position: absolute;
     left: 0;
@@ -69,30 +84,17 @@ body{
 #info01 {
     height: 75px;
     width: 550px;
-    left: 100px;
+    left: 700px;
     top: 50px;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 30px;
     color: #EB8D12;
 }
-#namebox{
-    width: 200px;
-    height: 50px;
-    /*-webkit-border-radius: 10px 10px;
-    -moz-border-radius: 10px 10px;*/
-    border-radius: 10px/10px;
-    background: white;
-    padding: 10px;
-    font-size: 20px;
-}
-#mailbox{
-    width: 423px;
-    height: 50px;
-    /*-webkit-border-radius: 10px 10px;
-    -moz-border-radius: 10px 10px;*/
-    border-radius: 10px/10px;
-    background: white;
-    padding: 10px;
-    font-size: 20px;
+
+
+#emailField, #passwordField{
+    width:170px;
+    height:40px;
+    font-size: 21px;
 }
 
