@@ -20,10 +20,10 @@
                 <div id="img02" class="body_fix">
                     <img id="slika" src="http://www.cmegroup.com/images/map.gif"/></div>
                 <div id="form03" class="body_fix">
-                    @helper.form(action = routes.Application.registrationCheck()) {
-                        <input placeholder="Firstname" type="firstName" id="namebox" name="firstName" /> <input placeholder="Lastname" type="lastName" id="namebox" name="lastName"/> <br>
+                    @helper.form(action = routes.UserController.registrationCheck()) {
+                        <input placeholder="Firstname" type="firstName" id="namebox" name="firstName" /><input placeholder="Lastname" type="lastName" id="namebox" name="lastName"/> <br>
                         <input placeholder="Email" type="email" id="mailbox" name="email"/> <br>
-                        <input placeholder="Password" type="password" id="mailbox" name="password"/> <br>
+                        <input placeholder="Password - must have one number and sign" type="password" id="mailbox" name="password"/> <br>
                         <input placeholder="Re-enter password" type="password" id="mailbox" name="repassword"/>
                         <input type="submit" class="submit02" value="Sign Up"/> <br> <br> <hr>
                         }
