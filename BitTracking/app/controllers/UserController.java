@@ -70,6 +70,7 @@ public class UserController extends Controller {
                     u = new User(firstName, lastName, newPassword, email);
 
                     Ebean.save(u);
+                    flash("registered", "Welcome, "+u.firstName+"!");
                     return redirect(routes.Application.login());
                 } else {
                     flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters, one number, and one sign, or you entered different passwords");

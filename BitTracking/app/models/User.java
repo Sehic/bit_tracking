@@ -75,13 +75,15 @@ public class User extends Model {
     public static boolean checkName(String name) {
 
 
-        for (int i = 0; i < name.length(); i++) {
-            if ((name.charAt(i) < 65 || (name.charAt(i) > 90 && name.charAt(i) < 97) || name.charAt(i) > 123)) {
-                return false;
-            }
+    for (int i = 0; i < name.length(); i++) {
+        if ((name.charAt(i) > 64 && name.charAt(i) < 91) || (name.charAt(i) > 96 && name.charAt(i) < 124)){
+            return true;
+        } else if (name.charAt(i)==262 || name.charAt(i)==263 || name.charAt(i)==268 || name.charAt(i)==269 || name.charAt(i)==272 || name.charAt(i)==273 || name.charAt(i)==352 || name.charAt(i)==353 || name.charAt(i)==381 || name.charAt(i)==382) {
+            return true;
         }
-        return true;
     }
+    return false;
+}
 
     public static boolean checkPassword(String password) {
         int letters = 0;

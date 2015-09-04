@@ -1,29 +1,40 @@
+@import helper._
 @(loginMessage: String)
-    @import helper._
-    @main("Home Page") {
-        <body style="height : 778 px">
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>BITracking</title>
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/register.css")">
 
+    </head>
+    <div class ="flexi">
+        <body>
+            <div class="headerfix">
+            </div>
             <div class="header">
 
+            </div>
+
+            <div class="body_fix">
+                <div id="info01" class="body_fix">Welcome to BitTracking Page</div>
+                <div id="info02" class="body_fix">Log In to our page</div>
+                <div id="img02" class="body_fix">
+                    <img id="slika" src="http://www.cmegroup.com/images/map.gif"/></div>
+                <div id="form03" class="body_fix">
                 @helper.form(action = routes.UserController.check()) {
-                    <div id="form01" class="header">Email:<br>
-                        <input id="emailField" placeholder="Email required" type="email" name="email" required/><br>
-
-                        <div id="form02" class="header">Password:<br>
-                            <input id="passwordField" placeholder="Password" type="password" name="password" required/></div>
-                    </div>
-
-                    <input type="submit" class="submit01" value="Log In"/>
-
-                } <a href="@routes.Application.register()"><input id="registrationButton" type="submit" value="Register"/></a>
-                <div class="body_fix">
-
-                    <div id="info01" class="body_fix">
-                        Welcome to BIT-Tracking page <br/> <h1 style="color : #EB8D12">@loginMessage</h1></div>
-
-
+                    <input placeholder="Email required" type="email" id="mailbox" name="email" required/> <br>
+                    <input placeholder="Password" type="password" id="mailbox" name="password" required/> <br>
+                    <input type="submit" class="submit02" value="Sign In"/>
+                    }<a href="@routes.Application.register()"><input type="submit" class="submit02" value="Sign Up"/></a> <hr/>
+                    <h2 style="color : #EB8D12">@loginMessage</h2>
+                    @if(flash.containsKey("registered")){
+                        <p>@flash.get("registered")</p>
+                    }
                 </div>
+
             </div>
 
         </body>
-    }
+    </div>
+</html>
