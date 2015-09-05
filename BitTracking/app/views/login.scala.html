@@ -1,40 +1,110 @@
 @import helper._
 @(loginMessage: String)
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>BITracking</title>
-        <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("stylesheets/register.css")">
+@main("Sign In"){
 
-    </head>
-    <div class ="flexi">
-        <body>
-            <div class="headerfix">
-            </div>
-            <div class="header">
+                <!-- LOG IN CONTAINER-->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
 
-            </div>
+                            <!--=========== LOG IN row starts===============-->
+                        <div class="row">
+                            <div class="col-md-7">  <!-- LOG IN Grid col 7-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h2>
+                                            Log In
+                                        </h2>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h3>
+                                            Log into an Existing Account
+                                        </h3>
+                                        @helper.form(routes.UserController.check(), 'class->"form-horizontal", 'role->"form"){
 
-            <div class="body_fix">
-                <div id="info01" class="body_fix">Welcome to BitTracking Page</div>
-                <div id="info02" class="body_fix">Log In to our page</div>
-                <div id="img02" class="body_fix">
-                    <img id="slika" src="http://www.cmegroup.com/images/map.gif"/></div>
-                <div id="form03" class="body_fix">
-                @helper.form(action = routes.UserController.check()) {
-                    <input placeholder="Email required" type="email" id="mailbox" name="email" required/> <br>
-                    <input placeholder="Password" type="password" id="mailbox" name="password" required/> <br>
-                    <input type="submit" class="submit02" value="Sign In"/>
-                    }<a href="@routes.Application.register()"><input type="submit" class="submit02" value="Sign Up"/></a> <hr/>
-                    <h2 style="color : #EB8D12">@loginMessage</h2>
-                    @if(flash.containsKey("registered")){
-                        <p>@flash.get("registered")</p>
-                    }
+                                            <div class="form-group">
+
+                                                <label for="inputEmail3" class="col-sm-2 control-label">
+                                                    Email
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <input name="email" id="email" placeholder="Insert email" type="email" class="form-control" id="inputEmail3" required="required">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+
+                                                <label for="inputPassword3" class="col-sm-2 control-label">
+                                                    Password
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <input name="password" id="password" placeholder="Password should contain any sequence of alpha, special symbol, one number. Minimum allowed length is 6." type="password" class="form-control" id="inputPassword3">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2 col-sm-10">
+                                                    <b>@loginMessage</b>
+                                                    <div class="checkbox">
+
+                                                        <label>
+                                                            <input type="checkbox"> Remember me
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2 col-sm-10">
+
+                                                    <button type="submit" class="btn btn-default">
+                                                        Log In
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        }
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <button type="button" class="btn btn-link">
+                                            Forgot your user ID and/or password?
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>  <!--Ends LOG IN grid col 7-->
+
+                            <!--=========Create a New Account========-->
+                            <div class="col-md-5">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h2>
+                                            Create A New Account
+                                        </h2><br>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>
+                                            There are various levels of access depending on your relationship with BIT Tracking. Review the benefits of registration and find the level that is most appropriate for you.
+                                            <small></small>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <a href="@routes.Application.register()"><button type="button" class="btn btn-primary">
+                                            Register Now
+                                        </button></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!--Ends Log In row-->
+                    </div>
                 </div>
-
             </div>
 
-        </body>
-    </div>
-</html>
+}

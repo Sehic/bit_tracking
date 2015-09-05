@@ -36,7 +36,7 @@ public class UserController extends Controller {
         User u = User.findEmailAndPassword(email, newPassword);
 
         if (u != null) {
-            return ok(login.render("Logged in successfuly!"));
+            return redirect(routes.Application.index());
         }
         return ok(login.render("Wrong email or password!"));
 
