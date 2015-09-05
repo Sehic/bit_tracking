@@ -13,7 +13,8 @@ libraryDependencies ++= Seq(
   javaJdbc,
   cache,
   javaWs,
-  "mysql" % "mysql-connector-java" % "5.1.36"
+  "mysql" % "mysql-connector-java" % "5.1.36",
+  "org.webjars" % "bootstrap" % "3.3.5"
 )
 
 // Play provides two styles of routers, one expects its actions to be injected, the
