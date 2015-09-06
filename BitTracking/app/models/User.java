@@ -28,16 +28,49 @@ public class User extends Model {
     public String password;
     @Column(length = 50)
     public String email;
+    @Column
+    @Enumerated(EnumType.STRING)
+    public UserType typeOfUser;
+    @ManyToOne(cascade = CascadeType.ALL)
+    public PostOffice postOffice;
+
 
     public User() {
     }
 
+    /**
+     * Constructor for registered user
+     * @param firstName - represents his first name
+     * @param lastName - last name
+     * @param password - password
+     * @param email - email address
+     */
     public User(String firstName, String lastName, String password, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
+        this.typeOfUser=UserType.REGISTERED_USER;
     }
+
+    /**
+     * Constructor that creates office worker
+     * @param firstName
+     * @param lastName
+     * @param password
+     * @param email
+     * @param postOffice - office where he works
+     */
+    public User(String firstName, String lastName, String password, String email, PostOffice postOffice) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.email = email;
+        this.typeOfUser=UserType.OFFICE_WORKER;
+        this.postOffice=postOffice;
+
+    }
+
 
     public static Finder<String, User> find = new Finder<String, User>(String.class, User.class);
 
