@@ -25,9 +25,11 @@ public class Application extends Controller {
         return ok(login.render(""));
     }
 
-
     public Result register() {
         return ok(register.render());
+    }
+    public Result editProfile() {
+        return ok(editprofile.render());
     }
 
 
