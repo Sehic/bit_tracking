@@ -33,9 +33,9 @@ public class Application extends Controller {
     public Result register() {
         return ok(register.render());
     }
-    public Result editProfile() {
+    /*public Result editProfile() {
         return ok(editprofile.render());
-    }
+    }*/
 
 
 

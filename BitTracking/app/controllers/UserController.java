@@ -6,8 +6,7 @@ import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.login;
-import views.html.register;
+import views.html.*;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -104,6 +103,30 @@ public class UserController extends Controller {
             // TODO add to logger
         }
         return "INVALID PASSWORD";
+    }
+
+    public Result editProfile(Long id) {
+        User user = User.findById(id);
+        if (user == null) {
+            return redirect(routes.Application.register());
+        }
+        Form<User> filledForm = newUser.fill(user);
+        return ok(editprofile.render(filledForm));
+
+    }
+
+    public Result updateUser(Long id) {
+        User user = User.findById(id);
+        if (user == null) {
+            return redirect(routes.Application.register());
+        }
+        Form<User> filledForm = newUser.fill(user);
+        user.firstName = filledForm.bindFromRequest().field("firstName").value();
+        user.lastName = filledForm.bindFromRequest().field("lastName").value();
+        user.email = filledForm.bindFromRequest().field("email").value();
+        user.password = filledForm.bindFromRequest().field("password").value();
+        Ebean.update(user);
+        return redirect(routes.Application.login());
     }
 
 }

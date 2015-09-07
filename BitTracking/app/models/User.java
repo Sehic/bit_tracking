@@ -140,6 +140,15 @@ public class User extends Model {
         return true;
     }
 
+    public static User findById (Long longId) {
+        String id = longId.toString();
+        User user = find.byId(id);
+        if (user != null) {
+            return user;
+        }
+        return null;
+    }
+
 
     @Override
     public String toString() {
