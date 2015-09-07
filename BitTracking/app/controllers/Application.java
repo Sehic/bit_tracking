@@ -33,9 +33,22 @@ public class Application extends Controller {
     public Result register() {
         return ok(register.render());
     }
-    /*public Result editProfile() {
-        return ok(editprofile.render());
-    }*/
+
+    public Result adminPanel(){
+        return ok(adminindex.render());
+    }
+
+    public Result adminMaps(){
+        return ok(adminmaps.render());
+    }
+
+    public Result adminTables(){
+        return ok(admintables.render());
+    }
+
+    public Result adminPreferences(){
+        return ok(adminpreferences.render());
+    }
 
 
 

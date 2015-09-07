@@ -1,0 +1,122 @@
+@(title: String)(content: Html)
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width">
+
+        <title>@title</title>
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/templatemo_main.css")">
+
+
+            <!--
+Dashboard Template 
+http://www.templatemo.com/preview/templatemo_415_dashboard
+-->
+    </head>
+    <body>
+        <div class="navbar navbar-inverse" role="navigation">
+            <div class="navbar-header">
+                <div class="logo"><h1>Admin Panel</h1></div>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+            </div>
+            <ul class="nav navbar-inverse pull-right">
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>
+                        Admin<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="template-page-wrapper">
+            <div class="navbar-collapse collapse templatemo-sidebar">
+                <ul class="templatemo-sidebar-menu">
+                    <li>
+                        <form class="navbar-form">
+                            <input type="text" class="form-control" id="templatemo_search_box" placeholder="Search...">
+                            <span class="btn btn-default">Go</span>
+                        </form>
+                    </li>
+                    <li class="active"><a href="@routes.Application.adminPanel()"><i class="fa fa-home"></i>Dashboard</a></li>
+                    <li class="sub">
+                        <a href="javascript:;">
+                            <i class="fa fa-database"></i>
+                            Nested Menu <div class="pull-right"><span class="caret"></span></div>
+                        </a>
+                        <ul class="templatemo-submenu">
+                            <li><a href="@routes.Application.index()">Home</a></li>
+                            <li><a href="#">Ship</a></li>
+                            <li><a href="#">Track</a></li>
+                            <li><a href="#">Locations</a></li>
+                            <li><a href="#">BT Solutions</a></li>
+                            <li><a href="#">Support</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="@routes.Application.adminMaps()"><i class="fa fa-map-marker"></i><span class="badge pull-right">1</span>
+                        Maps</a></li>
+                    <li><a href="@routes.Application.adminTables()"><i class="fa fa-users"></i><span class="badge pull-right">NEW</span>
+                        Manage Users</a></li>
+                    <li><a href="@routes.Application.adminPreferences()"><i class="fa fa-cog"></i>Preferences</a></li>
+                    <li><a href="javascript:;" data-toggle="modal" data-target="#confirmModal"><i class="fa fa-sign-out"></i>
+                        Sign Out</a></li>
+                </ul>
+            </div><!--/.navbar-collapse -->
+
+            <div class="templatemo-content-wrapper">
+                <div class="templatemo-content">
+
+                    @content
+                </div>
+            </div>
+                <!-- Modal -->
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">
+                                Close</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Are you sure you want to sign out?</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="@routes.Application.login()" class="btn btn-primary">Yes</a>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="templatemo-footer">
+                <div class="templatemo-copyright">
+                    <p>Copyright &copy; 2015 BitTracking Team</p>
+                </div>
+            </footer>
+        </div>
+
+        <script src="@routes.Assets.versioned("javascripts/jquery.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.versioned("javascripts/templatemo_script.js")" type="text/javascript"></script>
+
+    </body>
+</html>
