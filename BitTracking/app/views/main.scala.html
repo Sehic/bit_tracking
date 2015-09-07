@@ -162,7 +162,13 @@
 
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
-                                    <a href="@routes.Application.login()">Log In</a>
+
+                                    @if(session.get("email") ==null){
+                                        <a href="@routes.Application.login()">Log In</a>
+                                    }else {
+                                        <a href="@routes.Application.logout()">Log Out</a>
+                                    }
+
                                 </li>
                             </ul><!--Ends LOG IN REGISTER TAB in NAVIGATION BAR-->
 
@@ -228,7 +234,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <footer>
-                        <p>© Copyright 2015</p>
+                        <p>ï¿½ Copyright 2015</p>
                     </footer>
                 </div>
             </div> <!-- Ends copyright-->

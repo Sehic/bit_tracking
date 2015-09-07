@@ -25,6 +25,11 @@ public class Application extends Controller {
         return ok(login.render(""));
     }
 
+    public Result logout() {
+        session().clear();
+        return redirect(routes.Application.login());
+    }
+
     public Result register() {
         return ok(register.render());
     }

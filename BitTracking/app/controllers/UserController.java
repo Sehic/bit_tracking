@@ -36,6 +36,7 @@ public class UserController extends Controller {
         User u = User.findEmailAndPassword(email, newPassword);
 
         if (u != null) {
+            session("email", email);
             return redirect(routes.Application.index());
         }
         return ok(login.render("Wrong email or password!"));
