@@ -1,11 +1,14 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import helpers.CurrentUser;
+import helpers.SessionHelper;
 import models.User;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 import views.html.*;
 
 import java.math.BigInteger;
@@ -16,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
  * Created by mladen.teofilovic on 04/09/15.
  * This class controls user registration and login functions.
  */
+
 public class UserController extends Controller {
 
     static Form<User> newUser = new Form<User>(User.class);
@@ -27,6 +31,9 @@ public class UserController extends Controller {
      * @return - positive message if true, else negative message
      */
     public Result check() {
+
+        User u1 = SessionHelper.getCurrentUser(ctx());
+
 
         String password = newUser.bindFromRequest().field("password").value();
         String email = newUser.bindFromRequest().field("email").value();
@@ -49,6 +56,7 @@ public class UserController extends Controller {
      * @return redirect user to subpage login if everything is ok, otherwise ?????
      */
     public Result registrationCheck() {
+        User u1 = SessionHelper.getCurrentUser(ctx());
         Form<User> boundForm = userForm.bindFromRequest();
         String firstName = boundForm.bindFromRequest().field("firstName").value();
         String lastName = boundForm.bindFromRequest().field("lastName").value();
@@ -106,7 +114,13 @@ public class UserController extends Controller {
     }
 
     public Result editProfile(Long id) {
+        User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
+
+        if (u1.id != user.id){
+          return redirect(routes.Application.index());
+        }
+
         if (user == null) {
             return redirect(routes.Application.register());
         }
@@ -116,6 +130,7 @@ public class UserController extends Controller {
     }
 
     public Result updateUser(Long id) {
+        User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
         if (user == null) {
             return redirect(routes.Application.register());
