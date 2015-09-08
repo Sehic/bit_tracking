@@ -1,3 +1,4 @@
+@(users: List[User])
 @adminmain("Admin Panel") {
     <ol class="breadcrumb">
         <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
@@ -16,7 +17,7 @@
             <div class="templatemo-panels">
                 <div class="row">
 
-                    <div class="col-md-7 col-sm-7 margin-bottom-30">
+                    <div class="col-md-9 col-sm-7 margin-bottom-30">
                         <div class="panel panel-primary">
                             <div class="panel-heading">Users</div>
                             <div class="panel-body">
@@ -30,24 +31,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    @for(user <- users) {
                                         <tr>
-                                            <td>1</td>
-                                            <td>John</td>
-                                            <td>Smith</td>
-                                            <td>mail</td>
+                                            <td>@user.id</td>
+                                            <td>@user.firstName</td>
+                                            <td>@user.lastName</td>
+                                            <td>@user.email</td>
                                         </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Bill</td>
-                                            <td>Jones</td>
-                                            <td>mail</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Marry</td>
-                                            <td>James</td>
-                                            <td>mail</td>
-                                        </tr>
+                                    }
                                     </tbody>
                                 </table>
                             </div>

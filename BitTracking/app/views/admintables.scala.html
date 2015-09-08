@@ -1,3 +1,5 @@
+@(users: List[User])
+
 @adminmain("Menage Users") {
 
     <ol class="breadcrumb">
@@ -11,7 +13,7 @@
     <div class="row margin-bottom-30">
         <div class="col-md-12">
             <ul class="nav nav-pills">
-                <li class="active"><a href="#">User <span class="badge">????</span></a></li>
+                <li class="active"><a href="#">User <span class="badge">@users.size</span></a></li>
                 <li><a href="#">Post Office <span class="badge">????</span></a></li>
                 <li><a href="#">Package <span class="badge">????</span></a></li>
             </ul>
@@ -39,44 +41,21 @@
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
-                            <th>Add</th>
+                            <th>User Profile</th>
                             <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
+                    @for(user <- users) {
                         <tr>
-                            <td>1</td>
-                            <td>John</td>
-                            <td>Smith</td>
-                            <td>a./.company.com</td>
-                            <td><a href="#" class="btn btn-default">Add</a></td>
-                            <td><a href="#" class="btn btn-link">Delete</a></td>
+                            <td>@user.id</td>
+                            <td>@user.firstName</td>
+                            <td>@user.lastName</td>
+                            <td>@user.email</td>
+                            <td><form action="@routes.UserController.editProfile(user.id)"><input type="submit" value="Edit"></form></td>
+                            <td><form action="@routes.UserController.deleteUser(user.id)"><input type="submit" value="Delete"></form></td>
                         </tr>
-                        <tr class="success">
-                            <td>2</td>
-                            <td>Bill</td>
-                            <td>Digital</td>
-                            <td>bd./.company.com</td>
-                            <td><a href="#" class="btn btn-default">Add</a></td>
-                            <td><a href="#" class="btn btn-link">Delete</a></td>
-                        <tr>
-                            <td>1</td>
-                            <td>John</td>
-                            <td>Smith</td>
-                            <td>a./.company.com</td>
-                            <td><a href="#" class="btn btn-default">Add</a></td>
-                            <td><a href="#" class="btn btn-link">Delete</a></td>
-                        </tr>
-                        <tr class="success">
-                            <td>2</td>
-                            <td>Bill</td>
-                            <td>Digital</td>
-                            <td>bd./.company.com</td>
-                            <td><a href="#" class="btn btn-default">Add</a></td>
-
-                            <td><a href="#" class="btn btn-link">Delete</a></td>
-                        </tr>
-
+                    }
                     </tbody>
                 </table>
             </div>

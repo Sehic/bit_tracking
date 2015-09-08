@@ -150,4 +150,11 @@ public class UserController extends Controller {
         return redirect(routes.Application.login());
     }
 
+    public Result deleteUser(Long id){
+        User user = User.findById(id);
+        Ebean.delete(user);
+        return redirect(routes.Application.adminTables());
+    }
+
+
 }

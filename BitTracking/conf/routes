@@ -3,19 +3,20 @@
 # ~~~~
 
 # Home page
-GET         /                            controllers.Application.index()
-GET         /login                       controllers.Application.login()
-GET         /register                    controllers.Application.register()
-GET         /mybt/editprofile/:id        controllers.UserController.editProfile(id: Long)
-POST        /check                       controllers.UserController.check()
-POST        /register                    controllers.UserController.registrationCheck()
-POST        /mybt/editprofile/:id        controllers.UserController.updateUser(id: Long)
-GET         /logout                      controllers.Application.logout()
+GET         /                              controllers.Application.index()
+GET         /login                         controllers.Application.login()
+GET         /register                      controllers.Application.register()
+GET         /mybt/editprofile/:id          controllers.UserController.editProfile(id: Long)
+POST        /check                         controllers.UserController.check()
+POST        /register                      controllers.UserController.registrationCheck()
+POST        /mybt/editprofile/:id          controllers.UserController.updateUser(id: Long)
+GET         /logout                        controllers.Application.logout()
 
-GET         /adminpanel                  controllers.Application.adminPanel()
-GET         /adminpanel/maps             controllers.Application.adminMaps()
-GET         /adminpanel/tables           controllers.Application.adminTables()
-GET         /adminpanel/preferences           controllers.Application.adminPreferences()
+GET         /adminpanel                    controllers.Application.adminPanel()
+GET         /adminpanel/maps               controllers.Application.adminMaps()
+GET         /adminpanel/tables             controllers.Application.adminTables()
+GET         /adminpanel/preferences        controllers.Application.adminPreferences()
+GET         /adminpanel/tables/:id         controllers.UserController.deleteUser(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                  controllers.Assets.versioned(path="/public", file: Asset)

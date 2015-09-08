@@ -35,7 +35,7 @@ public class Application extends Controller {
     }
 
     public Result adminPanel(){
-        return ok(adminindex.render());
+        return ok(adminindex.render(User.find.findList()));
     }
 
     public Result adminMaps(){
@@ -43,7 +43,7 @@ public class Application extends Controller {
     }
 
     public Result adminTables(){
-        return ok(admintables.render());
+        return ok(admintables.render(User.find.findList()));
     }
 
     public Result adminPreferences(){
