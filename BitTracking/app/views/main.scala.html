@@ -1,4 +1,6 @@
-@(title: String)(content: Html)
+@import helpers.SessionHelper
+
+@(title: String)(content: Html)(implicit currentUser: User=SessionHelper.getCurrentUser(ctx()))
 
 
 <!DOCTYPE html>
@@ -44,9 +46,17 @@
                                         <li>
                                             <a href="#">My Profile</a>
                                         </li>
-                                        <li>
-                                            <a href="@routes.UserController.editProfile(1L)">Edit Profile</a>
-                                        </li>
+                                        @if(currentUser==null){
+                                            <li>
+                                            <a href="@routes.Application.index()">
+                                                Edit Profile</a>
+                                            </li>
+                                        }else {
+                                            <li>
+                                                <a href="@routes.UserController.editProfile(currentUser.id)">
+                                                    Edit Profile</a>
+                                            </li>
+                                        }
                                         <li>
                                             <a href="#">Option 3</a>
                                         </li>
@@ -167,7 +177,7 @@
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
 
-                                    @if(session.get("email") ==null){
+                                    @if(currentUser ==null){
                                         <a href="@routes.Application.login()">Log In</a>
                                     }else {
                                         <a href="@routes.Application.logout()">Log Out</a>
