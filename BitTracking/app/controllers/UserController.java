@@ -120,27 +120,33 @@ public class UserController extends Controller {
         if (u1.id != user.id){
           return redirect(routes.Application.index());
         }
-
-        if (user == null) {
-            return redirect(routes.Application.register());
-        }
-        Form<User> filledForm = newUser.fill(user);
-        return ok(editprofile.render(filledForm));
-
+        return ok(editprofile.render(user));
     }
 
+    /**
+     * Method that updates user firstname, lastname and password
+     * @param id - user on that id
+     * @return
+     */
     public Result updateUser(Long id) {
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
-        if (user == null) {
-            return redirect(routes.Application.register());
-        }
+
         Form<User> filledForm = newUser.fill(user);
+
         user.firstName = filledForm.bindFromRequest().field("firstName").value();
         user.lastName = filledForm.bindFromRequest().field("lastName").value();
-        user.email = filledForm.bindFromRequest().field("email").value();
         user.password = filledForm.bindFromRequest().field("password").value();
-        Ebean.update(user);
+
+        String repassword = filledForm.bindFromRequest().field("repassword").value();
+
+        if(User.checkName(user.firstName) && User.checkName(user.lastName)) {
+            if(user.password.equals(repassword)) {
+                user.password = getEncriptedPasswordMD5(user.password);
+                Ebean.update(user);
+                return redirect(routes.Application.index());
+            }
+        }
         return redirect(routes.Application.login());
     }
 

@@ -1,4 +1,4 @@
-@(filledForm: Form[User])
+@(user: User)
     @import helper._
     @main("Edit your profile") {
 
@@ -46,42 +46,27 @@
                                 <div class="col-md-12">
 
 
-                                @helper.form(action = routes.UserController.updateUser(filledForm.get.id), 'class -> "form-horizontal", 'role -> "form") {
+                                @helper.form(action = routes.UserController.updateUser(user.id), 'class -> "form-horizontal", 'role -> "form") {
                                     <div class="form-group">
 
-                                        <label for="name" class="col-sm-2 control-label">
+                                        <label for="firstName" class="col-sm-2 control-label">
                                             First Name:
                                         </label>
                                         <div class="col-sm-10">
-                                            @helper.inputText(filledForm("firstName"))
-
-                                                <!--<input type="text" class="form-control" id="name" placeholder="First name should contain only alphabet characters" required="required">-->
+                                            <input type="text" name="firstName" class="form-control" id="firstName" value="@user.firstName" required="required">
                                         </div>
                                     </div>
 
-
                                     <div class="form-group">
 
-                                        <label for="lastname" class="col-sm-2 control-label">
+                                        <label for="lastName" class="col-sm-2 control-label">
                                             Last Name:
                                         </label>
                                         <div class="col-sm-10">
-                                            @helper.inputText(filledForm("lastName"))
-
-                                                <!--<input type="text" class="form-control" id="lastname" placeholder="Last name should contain only alphabet characters" required="required">-->
+                                            <input type="text" name="lastName" class="form-control" id="lastName" value="@user.lastName" required="required">
                                         </div>
                                     </div>
-                                    <div class="form-group">
 
-                                        <label for="inputemail" class="col-sm-2 control-label">
-                                            Email:
-                                        </label>
-                                        <div class="col-sm-10">
-                                            @helper.inputText(filledForm("email"))
-
-                                                <!--<input type="email" class="form-control" id="inputemail" placeholder="Insert Email address" required="required">-->
-                                        </div>
-                                    </div>
                                     <div class="form-group">
 
                                         <label for="inputPassword3" class="col-sm-2 control-label" >
