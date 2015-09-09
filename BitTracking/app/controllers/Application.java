@@ -49,6 +49,10 @@ public class Application extends Controller {
         return ok(admintables.render(User.find.findList()));
     }
 
+    public Result officeWorkersList() {
+        List<User> officeWorkers = User.findOfficeWorkers();
+        return ok(officeworkerlist.render(officeWorkers));
+    }
 
     public Result adminPostOffice(){
         List<PostOffice> list = PostOffice.findOffice.findList();
@@ -57,6 +61,11 @@ public class Application extends Controller {
 
     public Result addPostOffice(){
         return ok(postofficeadd.render());
+    }
+
+    public Result registerOfficeWorker(){
+        List<PostOffice> postOffices = PostOffice.findOffice.findList();
+        return ok(officeworkeradd.render(postOffices));
     }
 
 

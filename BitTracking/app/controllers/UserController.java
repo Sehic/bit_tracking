@@ -3,6 +3,7 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import helpers.CurrentUser;
 import helpers.SessionHelper;
+import models.PostOffice;
 import models.User;
 import models.UserType;
 import play.Logger;
@@ -68,7 +69,7 @@ public class UserController extends Controller {
         User u = User.checkEmail(email);
         if (u == null) {
             u = new User(firstName, lastName, password, email);
-            Logger.info(u.toString());
+
             if (firstName.length() == 0 || lastName.length() == 0 || password.length() == 0 || repassword.length() == 0 || email.length() == 0) {
                 flash("errorEmptyName", "Please fill all fields!");
             }
@@ -205,9 +206,52 @@ public class UserController extends Controller {
         }
         Ebean.update(user);
 
-
         return TODO;
 
+    }
+
+    public Result addOfficeWorker(){
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        Form<User> boundForm = userForm.bindFromRequest();
+        String firstName = boundForm.bindFromRequest().field("firstName").value();
+        String lastName = boundForm.bindFromRequest().field("lastName").value();
+        String password = boundForm.bindFromRequest().field("password").value();
+        String repassword = boundForm.bindFromRequest().field("repassword").value();
+        String email = boundForm.bindFromRequest().field("email").value();
+        String postOffice = boundForm.bindFromRequest().field("postOffice").value();
+
+        PostOffice wantedPostOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
+        System.out.println(postOffice +" "+ wantedPostOffice.name);
+        User u = User.checkEmail(email);
+        if (u == null) {
+            u = new User(firstName, lastName, password, email, wantedPostOffice);
+
+            if (firstName.length() == 0 || lastName.length() == 0 || password.length() == 0 || repassword.length() == 0 || email.length() == 0) {
+                flash("errorEmptyName", "Please fill all fields!");
+            }
+
+            if (u.checkName(firstName) && u.checkName(lastName)) {
+
+                if (u.checkPassword(password) && password.equals(repassword)) {
+                    String newPassword = getEncriptedPasswordMD5(password);
+                    u = new User(firstName, lastName, newPassword, email, wantedPostOffice);
+
+                    Ebean.save(u);
+                    flash("registered", "Welcome, " + u.firstName + "!");
+                    return redirect(routes.Application.officeWorkersList());
+                } else {
+                    flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters, one number, and one sign, or you entered different passwords");
+                    return ok(register.render());
+                }
+            } else {
+                flash("errorName", "Your name or last name should have only letters.");
+                return (badRequest(register.render()));
+                //return ok(register.render());
+            }
+        } else {
+            flash("errorEmail", "E-mail address already exists!");
+            return ok(register.render());
+        }
 
     }
 

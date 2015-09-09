@@ -149,6 +149,16 @@ public class User extends Model {
         return null;
     }
 
+    public static List<User> findOfficeWorkers(){
+         List<User> officeworkers = find.where().eq("type_of_user", UserType.OFFICE_WORKER).findList();
+
+        if (officeworkers.size() == 0) {
+            return null;
+        }
+
+        return officeworkers;
+    }
+
 
     @Override
     public String toString() {
