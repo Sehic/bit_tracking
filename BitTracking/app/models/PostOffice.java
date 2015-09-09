@@ -5,6 +5,7 @@ import com.avaje.ebean.Model.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Mladen13 on 6.9.2015.
@@ -30,15 +31,19 @@ public class PostOffice {
         this.address = address;
     }
 
-    public static Finder<String, PostOffice> findOffice = new Finder<String, PostOffice>(String.class, PostOffice.class);
+    public static Finder<Long, PostOffice> findOffice = new Finder<Long, PostOffice>(Long.class, PostOffice.class);
 
-    public static PostOffice findPostOffice(String id) {
+    public static PostOffice findPostOffice(Long id) {
 
         PostOffice office = findOffice.byId(id);
         if (office != null) {
             return office;
         }
         return null;
+    }
+
+    public static List<PostOffice> findAllOffices(){
+      return findOffice.all();
     }
 
 }
