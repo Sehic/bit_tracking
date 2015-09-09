@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model.*;
+import play.db.ebean.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -30,9 +31,9 @@ public class PostOffice {
         this.address = address;
     }
 
-    public static Finder<String, PostOffice> findOffice = new Finder<String, PostOffice>(String.class, PostOffice.class);
+    public static Model.Finder<Long, PostOffice> findOffice = new Model.Finder<Long, PostOffice>(Long.class, PostOffice.class);
 
-    public static PostOffice findPostOffice(String id) {
+    public static PostOffice findPostOffice(Long id) {
 
         PostOffice office = findOffice.byId(id);
         if (office != null) {

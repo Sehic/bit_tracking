@@ -1,5 +1,6 @@
 package controllers;
 
+import models.PostOffice;
 import models.User;
 import play.*;
 import play.data.Form;
@@ -13,6 +14,7 @@ import play.Logger;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 
 public class Application extends Controller {
@@ -48,6 +50,11 @@ public class Application extends Controller {
 
     public Result adminPreferences(){
         return ok(adminpreferences.render());
+    }
+
+    public Result adminPostOffice(){
+        List<PostOffice> list = PostOffice.findOffice.findList();
+        return ok(adminpostoffice.render(list));
     }
 
 
