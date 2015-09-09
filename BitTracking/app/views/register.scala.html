@@ -30,21 +30,23 @@
 
                     <div class="form-group">
 
-                        <label for="name" class="col-sm-2 control-label">
+                        <label for="inputName" class="col-sm-2 control-label">
                             First Name:
                         </label>
                         <div class="col-sm-10">
-                            <input name="firstName" placeholder="First Name should contain only letters" type="text" class="form-control" id="inputName" required="required">
+                            <input name="firstName" placeholder="First Name should contain only letters" onblur="checkFirstName()" type="text" class="form-control" id="inputName" required="required">
+                            <span id="nameError" class="alert-danger" data-error-for="" ></span>
                         </div>
                     </div>
 
                     <div class="form-group">
 
-                        <label for="lastName" class="col-sm-2 control-label">
+                        <label for="inputLastName" class="col-sm-2 control-label">
                             Last Name:
                         </label>
                         <div class="col-sm-10">
-                            <input name="lastName" placeholder="Last Name should contain only letters" type="text" class="form-control" id="inputLastName" required="required">
+                            <input name="lastName" placeholder="Last Name should contain only letters" onblur="checkLastName()" type="text" class="form-control" id="inputLastName" required="required">
+                            <span id="lastNameError" class="alert-danger" data-error-for="" ></span>
                         </div>
                     </div>
 
@@ -55,7 +57,8 @@
                             Email:
                         </label>
                         <div class="col-sm-10">
-                            <input name="email" placeholder="Insert Email" type="email" class="form-control" id="inputEmail3" required="required">
+                            <input name="email" placeholder="Insert Email" onblur="checkEmail()" type="email" class="form-control" id="inputEmail3" required="required">
+                            <span id="mailError" class="alert-danger" data-error-for="" ></span>
                         </div>
                     </div>
 
@@ -65,7 +68,8 @@
                             Password:
                         </label>
                         <div class="col-sm-10">
-                            <input name="password" placeholder="Password should contain any sequence of alpha, special symbol, one number. Minimum alowed length is 6. " type="password" class="form-control" id="inputPassword3" required="required">
+                            <input name="password" onblur="checkPassword()" placeholder="Password should contain any sequence of alpha, special symbol, one number. Minimum alowed length is 6. " type="password" class="form-control" id="inputPassword3" required="required">
+                            <span id="passError" class="alert-danger" data-error-for="" ></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -74,7 +78,8 @@
                             Confirm Password:
                         </label>
                         <div class="col-sm-10">
-                            <input name="repassword" placeholder="Confirm Password" type="password" class="form-control" id="inputPassword4" required="required">
+                            <input name="repassword" onblur="checkPasswords()" placeholder="Confirm Password" type="password" class="form-control" id="inputPassword4" required="required">
+                            <span id="repassError" class="alert-danger" data-error-for="" ></span>
                         </div>
                     </div>
                         <!--=======Backend validation message============ -->
@@ -117,9 +122,6 @@
                         </div>
                     </div>
                 }
-
-
-
 
             </div>
         </div><!--End form row -->

@@ -120,7 +120,8 @@ public class UserController extends Controller {
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
 
-        if (u1.id != user.id) {
+
+        if (user == null || u1.id != user.id) {
             return redirect(routes.Application.index());
         }
         return ok(editprofile.render(user));
@@ -148,7 +149,10 @@ public class UserController extends Controller {
             if (user.password.equals(repassword)) {
                 user.password = getEncriptedPasswordMD5(user.password);
                 Ebean.update(user);
-                return redirect(routes.Application.index());
+                if(user.typeOfUser != UserType.ADMIN) {
+                    return redirect(routes.Application.index());
+                }
+                return redirect(routes.Application.adminPanel());
             }
         }
         return redirect(routes.Application.login());
@@ -160,9 +164,24 @@ public class UserController extends Controller {
         return redirect(routes.Application.adminTables());
     }
 
+    public Result adminPreferences(Long id){
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        User user = User.findById(id);
+        if(user == null || u1.id != user.id){
+            return redirect(routes.Application.adminPanel());
+        }
+
+        return ok(adminpreferences.render(user));
+    }
+
+
     public Result userProfile(Long id) {
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
+
+        if(user == null){
+            return redirect(routes.Application.index());
+        }
 
         if (u1.id != user.id && u1.typeOfUser != UserType.ADMIN) {
             return redirect(routes.Application.index());

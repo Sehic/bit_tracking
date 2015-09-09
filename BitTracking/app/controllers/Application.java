@@ -49,13 +49,14 @@ public class Application extends Controller {
         return ok(admintables.render(User.find.findList()));
     }
 
-    public Result adminPreferences(){
-        return ok(adminpreferences.render());
-    }
 
     public Result adminPostOffice(){
         List<PostOffice> list = PostOffice.findOffice.findList();
         return ok(adminpostoffice.render(list));
+    }
+
+    public Result addPostOffice(){
+        return ok(postofficeadd.render());
     }
 
 

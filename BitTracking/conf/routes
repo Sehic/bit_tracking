@@ -17,7 +17,8 @@ GET           /logout                                   @controllers.Application
 GET           /adminpanel                               @controllers.Application.adminPanel()
 GET           /adminpanel/maps                          @controllers.Application.adminMaps()
 GET           /adminpanel/tables                        @controllers.Application.adminTables()
-GET           /adminpanel/preferences                   @controllers.Application.adminPreferences()
+GET           /adminpanel/tables/addpostoffice          @controllers.Application.addPostOffice()
+GET           /adminpanel/preferences/:id               @controllers.UserController.adminPreferences(id: Long)
 GET           /adminpanel/tables/:id                    @controllers.UserController.deleteUser(id: Long)
 
 GET           /adminpanel/postoffice                    @controllers.Application.adminPostOffice()
