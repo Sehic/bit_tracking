@@ -40,6 +40,14 @@ h1 { font-size: 24px; }
     float: left;
     width: 100%;
 }
+
+.templatemo-maps {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px
+}
+
 .templatemo-content {
     margin-left: 235px;
     margin-top: 0px;
