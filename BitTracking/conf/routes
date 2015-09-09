@@ -10,6 +10,8 @@ GET           /mybt/editprofile/:id                     @controllers.UserControl
 POST          /check                                    @controllers.UserController.check()
 POST          /register                                 @controllers.UserController.registrationCheck()
 POST          /mybt/editprofile/:id                     @controllers.UserController.updateUser(id: Long)
+GET           /mybt/userprofile/:id                     @controllers.UserController.userProfile(id: Long)
+POST          /mybt/userprofile/:id                     @controllers.UserController.updateUserType(id: Long)
 GET           /logout                                   @controllers.Application.logout()
 
 GET           /adminpanel                               @controllers.Application.adminPanel()

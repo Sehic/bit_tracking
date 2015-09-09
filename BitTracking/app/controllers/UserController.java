@@ -4,6 +4,7 @@ import com.avaje.ebean.Ebean;
 import helpers.CurrentUser;
 import helpers.SessionHelper;
 import models.User;
+import models.UserType;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -28,6 +29,7 @@ public class UserController extends Controller {
 
     /**
      * This method is used for checking if user inserted data is valid.
+     *
      * @return - positive message if true, else negative message
      */
     public Result check() {
@@ -78,7 +80,7 @@ public class UserController extends Controller {
                     u = new User(firstName, lastName, newPassword, email);
 
                     Ebean.save(u);
-                    flash("registered", "Welcome, "+u.firstName+"!");
+                    flash("registered", "Welcome, " + u.firstName + "!");
                     return redirect(routes.Application.login());
                 } else {
                     flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters, one number, and one sign, or you entered different passwords");
@@ -97,6 +99,7 @@ public class UserController extends Controller {
 
     /**
      * This method is used for password encryption.
+     *
      * @param password - that would be inserted into database
      * @return - encrypted password
      */
@@ -117,14 +120,15 @@ public class UserController extends Controller {
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
 
-        if (u1.id != user.id){
-          return redirect(routes.Application.index());
+        if (u1.id != user.id) {
+            return redirect(routes.Application.index());
         }
         return ok(editprofile.render(user));
     }
 
     /**
      * Method that updates user firstname, lastname and password
+     *
      * @param id - user on that id
      * @return
      */
@@ -140,8 +144,8 @@ public class UserController extends Controller {
 
         String repassword = filledForm.bindFromRequest().field("repassword").value();
 
-        if(User.checkName(user.firstName) && User.checkName(user.lastName)) {
-            if(user.password.equals(repassword)) {
+        if (User.checkName(user.firstName) && User.checkName(user.lastName)) {
+            if (user.password.equals(repassword)) {
                 user.password = getEncriptedPasswordMD5(user.password);
                 Ebean.update(user);
                 return redirect(routes.Application.index());
@@ -150,10 +154,42 @@ public class UserController extends Controller {
         return redirect(routes.Application.login());
     }
 
-    public Result deleteUser(Long id){
+    public Result deleteUser(Long id) {
         User user = User.findById(id);
         Ebean.delete(user);
         return redirect(routes.Application.adminTables());
+    }
+
+    public Result userProfile(Long id) {
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        User user = User.findById(id);
+
+        if (u1.id != user.id && u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+
+        return ok(userprofile.render(user));
+    }
+
+    public Result updateUserType(Long id) {
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        User user = User.findById(id);
+
+        Form<User> boundForm = userForm.bindFromRequest();
+        String userType = boundForm.bindFromRequest().field("userType").value();
+        if (userType.equals("Admin")) {
+            user.typeOfUser = UserType.ADMIN;
+        } else if (userType.equals("Office Worker")) {
+            user.typeOfUser = UserType.OFFICE_WORKER;
+        } else {
+            user.typeOfUser = UserType.REGISTERED_USER;
+        }
+        Ebean.update(user);
+
+
+        return TODO;
+
+
     }
 
 

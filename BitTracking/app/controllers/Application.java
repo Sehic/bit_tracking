@@ -36,6 +36,7 @@ public class Application extends Controller {
         return ok(register.render());
     }
 
+
     public Result adminPanel(){
         return ok(adminindex.render(User.find.findList()));
     }

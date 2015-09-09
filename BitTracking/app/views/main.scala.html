@@ -1,6 +1,6 @@
 @import helpers.SessionHelper
 
-@(title: String)(content: Html)(implicit currentUser: User=SessionHelper.getCurrentUser(ctx()))
+@(title: String)(content: Html)(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
 
 
 <!DOCTYPE html>
@@ -14,7 +14,6 @@
 
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/style.css")">
-
 
     </head>
     <body>
@@ -32,9 +31,9 @@
                             <!-- Home tab in navigation bar-->
                         <div class="navbar-header">
                             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                                <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
                             </button> <a class="navbar-brand" href="@routes.Application.index()">Home</a>
-                        </div><!-- End Home tab in navigation bar-->
+                        </div> <!-- End Home tab in navigation bar-->
 
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                             <ul class="nav navbar-nav">
@@ -43,35 +42,41 @@
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">My BT<strong class="caret"></strong></a>
                                     <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="#">My Profile</a>
-                                        </li>
-                                        @if(currentUser==null){
+                                        @if(currentUser == null) {
                                             <li>
-                                            <a href="@routes.Application.index()">
-                                                Edit Profile</a>
+                                                <a href="@routes.Application.index()">My Profile</a>
                                             </li>
-                                        }else {
+
+                                            <li>
+                                                <a href="@routes.Application.index()">
+                                                    Edit Profile</a>
+                                            </li>
+                                        } else {
+
+                                            <li>
+                                                <a href="@routes.UserController.userProfile(currentUser.id)">My Profile</a>
+                                            </li>
+
                                             <li>
                                                 <a href="@routes.UserController.editProfile(currentUser.id)">
                                                     Edit Profile</a>
                                             </li>
                                         }
-                                        <li>
-                                            <a href="#">Option 3</a>
+                                    <li>
+                                        <a href="#">Option 3</a>
+                                    </li>
+                                    <li class="divider">
                                         </li>
-                                        <li class="divider">
+                                    <li>
+                                        <a href="#">Option 4</a>
+                                    </li>
+                                    <li class="divider">
                                         </li>
-                                        <li>
-                                            <a href="#">Option 4</a>
-                                        </li>
-                                        <li class="divider">
-                                        </li>
-                                        <li>
-                                            <a href="#">Option 5</a>
-                                        </li>
+                                    <li>
+                                        <a href="#">Option 5</a>
+                                    </li>
                                     </ul>
-                                </li><!-- End My Bit Tracking dropdown in navigation bar-->
+                                </li> <!-- End My Bit Tracking dropdown in navigation bar-->
 
                                 <!-- =====Shipping dropdown in navigation bar======-->
                                 <li class="dropdown">
@@ -97,7 +102,7 @@
                                             <a href="#">Action 5</a>
                                         </li>
                                     </ul>
-                                </li><!-- End Shipping dropdown in navigation bar-->
+                                </li> <!-- End Shipping dropdown in navigation bar-->
 
                                 <!-- Tracking dropdown in navigation bar-->
                                 <li class="dropdown">
@@ -123,18 +128,18 @@
                                             <a href="#">Action 5</a>
                                         </li>
                                     </ul>
-                                </li><!-- End Tracking dropdown in navigation bar-->
+                                </li> <!-- End Tracking dropdown in navigation bar-->
 
                                 <!-- Location tab in navigation bar-->
                                 <li>
                                     <a href="#">Locations</a>
-                                </li><!-- Ends Location tab in navigation bar-->
+                                </li> <!-- Ends Location tab in navigation bar-->
 
 
                                 <!-- BT Solutions tab in navigation bar-->
                                 <li>
                                     <a href="#">BT Solutions</a>
-                                </li><!-- Ends BT Solutions tab in navigation bar-->
+                                </li> <!-- Ends BT Solutions tab in navigation bar-->
 
                                 <!-- SUPPORT Dropdown tab in navigation bar-->
                                 <li class="dropdown">
@@ -162,7 +167,7 @@
                                     </ul>
                                 </li> <!-- ENDS SUPPORT Dropdown tab in navigation bar-->
                                 <!-- Admin panel tab in navigation bar-->
-                                @if(currentUser != null && currentUser.typeOfUser==UserType.ADMIN) {
+                                @if(currentUser != null && currentUser.typeOfUser == UserType.ADMIN) {
                                     <li>
                                         <a href="@routes.Application.adminPanel()">Admin panel</a>
                                     </li> <!--Admin panel tab in navigation bar-->
@@ -179,14 +184,14 @@
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
 
-                                    @if(currentUser ==null){
-                                        <a href="@routes.Application.login()">Log In</a>
-                                    }else {
-                                        <a href="@routes.Application.logout()">Log Out</a>
-                                    }
+                                @if(currentUser == null) {
+                                    <a href="@routes.Application.login()">Log In</a>
+                                } else {
+                                    <a href="@routes.Application.logout()">Log Out</a>
+                                }
 
                                 </li>
-                            </ul><!--Ends LOG IN REGISTER TAB in NAVIGATION BAR-->
+                            </ul> <!--Ends LOG IN REGISTER TAB in NAVIGATION BAR-->
 
                             <!--SEARCH BAR-->
                             <form class="navbar-form navbar-right" role="search">
@@ -211,7 +216,8 @@
                     <div class="row">
                         <div class="col-md-3">
                             <address>
-                                <h3>BIT Tracking</h3><br> Address: Sarajevo, Street: <br> Bosnia and Herzegovina, 71000<br> <abbr title="Phone">P:</abbr> (387) 000-000
+                                <h3>BIT Tracking</h3> <br> Address: Sarajevo, Street: <br>
+                                Bosnia and Herzegovina, 71000<br> <abbr title="Phone">P:</abbr> (387) 000-000
                             </address>
                         </div>
                         <div class="col-md-3">
@@ -229,7 +235,8 @@
                             </h3>
                             <a href="@routes.Application.register()"><button type="button" class="btn btn-link btn-default">
                                 Open an Account
-                            </button><br></a>
+                            </button> <br>
+                            </a>
 
                         </div>
 
@@ -241,7 +248,7 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- Ends footer-->
+            </div> <!-- Ends footer-->
 
             <hr>
 
