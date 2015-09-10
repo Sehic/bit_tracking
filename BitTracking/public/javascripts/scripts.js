@@ -1,5 +1,8 @@
 // Empty JS for your own code to be here
 //Registration validation
+
+
+
 function checkEmail() {
     var email = document.getElementById("inputEmail3").value;
     var filter = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;

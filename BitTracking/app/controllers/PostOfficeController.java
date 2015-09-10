@@ -17,6 +17,7 @@ import java.lang.System;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,7 +51,7 @@ public class PostOfficeController extends Controller {
 
     public Result postOfficeDetails(Long id){
         PostOffice office = PostOffice.findPostOffice(id);
-        return ok(postofficedetails.render(office));
+        return ok(postofficedetails.render(office, PostOffice.findOffice.findList()));
     }
 
     public Result updateOffice(Long Id){
@@ -62,7 +63,14 @@ public class PostOfficeController extends Controller {
         Form<PostOffice> newOfficeForm = officeForm.fill(office);
         office.name = newOfficeForm.bindFromRequest().field("name").value();
         office.address = newOfficeForm.bindFromRequest().field("address").value();
-        System.out.println(office.name+" "+office.address);
+
+        String postOffice = newOfficeForm.bindFromRequest().field("postOffice").value();
+
+
+        PostOffice linkedPostOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
+        office.childOffices.add(linkedPostOffice);
+
+        System.out.println(office.name+" "+postOffice+" "+linkedPostOffice);
         Ebean.update(office);
         return redirect(routes.PostOfficeController.postOfficeDetails(office.id));
 

@@ -1,4 +1,4 @@
-@(office: PostOffice)
+@(office: PostOffice, offices: List[PostOffice])
 
   @import helper._
   @adminmain("Details") {
@@ -24,7 +24,7 @@
       </div>
       <div class="form-group">
 
-        <label for="address" class="col-sm-2 control-label">
+         <label for="address" class="col-sm-2 control-label">
           Address:
         </label>
         <div class="col-sm-10">
@@ -33,14 +33,39 @@
 
       </div>
 
+        <div class="form-group">
+
+            <label for="address" class="col-sm-2 control-label">
+                Link to Post Office:
+            </label>
+            <div class="col-sm-10">
+                <div class="well carousel-search hidden-sm">
+
+                    <select name="postOffice">
+                    @for(office <- offices) {
+                        <option value="@office.name">@office.name</option>
+                    }
+
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+            <input id="submit" type="submit" class="btn btn-primary" value="Save changes">
+            </div>
+        </div>
+
+
+
       <div class="templatemo-maps">
         <div class="row">
           <div class="col-md-12 col-sm-12 margin-bottom-30">
             <div id="map" style="position: relative; height: 700px; width: auto"></div>
 
-            <div>
-              <input id="submit" type="submit" class="btn btn-primary" value="Save changes">
-            </div>
+
 
             <script type="text/javascript">
   var map = new google.maps.Map(document.getElementById('map'), {
@@ -52,6 +77,8 @@
         position: new google.maps.LatLng(43.8331, 18.3039),
         map: map
       });
+
+
 console.log("uso");
 // Opens the InfoWindow when marker is clicked.
      google.maps.event.addListener(marker, 'click', (function(marker) {

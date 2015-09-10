@@ -27,6 +27,15 @@ public class PostOffice extends Model {
     @OneToOne
     public Location place;
 
+    @ManyToOne
+    public PostOffice parentOffice;
+    @OneToMany(mappedBy = "parentOffice")
+    public List<PostOffice> childOffices;
+
+
+
+
+
     public PostOffice(){
 
     }
@@ -42,6 +51,14 @@ public class PostOffice extends Model {
         this.address = address;
         this.place = place;
     }
+
+    public PostOffice(String name, String address, Location place, List<PostOffice> offices) {
+        this.name = name;
+        this.address = address;
+        this.place = place;
+        this.childOffices = new ArrayList<>(offices);
+    }
+
 
     public static Model.Finder<Long, PostOffice> findOffice = new Model.Finder<Long, PostOffice>(Long.class, PostOffice.class);
 
