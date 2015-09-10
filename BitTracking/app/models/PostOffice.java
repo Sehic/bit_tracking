@@ -1,6 +1,6 @@
 package models;
 
-import com.avaje.ebean.Model.*;
+
 import play.db.ebean.Model;
 
 import javax.persistence.*;
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Mladen13 on 6.9.2015.
  */
 @Entity
-public class PostOffice {
+public class PostOffice extends Model{
     @Id
     public Long id;
     @Column

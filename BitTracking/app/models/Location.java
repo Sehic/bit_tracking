@@ -1,5 +1,7 @@
 package models;
 
+import play.db.ebean.Model;
+
 import javax.persistence.*;
 
 /**
@@ -20,6 +22,20 @@ public class Location {
     @OneToOne(mappedBy="place", cascade=CascadeType.ALL)
     public PostOffice postOffice;
 
+    public Location(String name, Double x, Double y) {
+        this.name = name;
+        this.x = x;
+        this.y = y;
+    }
 
+    public static Model.Finder<Long, Location> findLocation = new Model.Finder<Long, Location>(Long.class, Location.class);
 
+    public static Location findLocationById(Long id) {
+
+        Location loc = findLocation.byId(id);
+        if (loc != null) {
+            return loc;
+        }
+        return null;
+    }
 }
