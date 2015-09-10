@@ -24,6 +24,9 @@ public class PostOffice extends Model {
     @OneToMany(mappedBy = "postOffice", cascade = CascadeType.ALL)
     public List<Package> packages = new ArrayList<>();
 
+    @OneToOne
+    public Location place;
+
     public PostOffice(){
 
     }
@@ -32,6 +35,12 @@ public class PostOffice extends Model {
 
         this.name = name;
         this.address = address;
+    }
+
+    public PostOffice(String name, String address, Location place) {
+        this.name = name;
+        this.address = address;
+        this.place = place;
     }
 
     public static Model.Finder<Long, PostOffice> findOffice = new Model.Finder<Long, PostOffice>(Long.class, PostOffice.class);

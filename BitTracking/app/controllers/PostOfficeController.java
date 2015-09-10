@@ -64,7 +64,7 @@ public class PostOfficeController extends Controller {
         office.address = newOfficeForm.bindFromRequest().field("address").value();
         System.out.println(office.name+" "+office.address);
         Ebean.update(office);
-        return redirect(routes.Application.adminPostOffice());
+        return redirect(routes.PostOfficeController.postOfficeDetails(office.id));
 
     }
 

@@ -10,6 +10,10 @@
         <meta name="viewport" content="width=device-width">
 
         <title>@title</title>
+            <!--The Google Maps API JavaScript library-->
+        <script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdP0Y0KTcDGgwMKqeN5OILxrhprHw8qtQ&libraries=geometry">
+        </script>
 
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/templatemo_main.css")">
 
@@ -38,10 +42,12 @@ http://www.templatemo.com/preview/templatemo_415_dashboard
                         Admin<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="@routes.UserController.userProfile(currentUser.id)"><i class="fa fa-fw fa-user"></i> Profile</a>
+                            <a href="@routes.UserController.userProfile(currentUser.id)"><i class="fa fa-fw fa-user"></i>
+                                Profile</a>
                         </li>
                         <li>
-                            <a href="@routes.UserController.adminPreferences(currentUser.id)"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                            <a href="@routes.UserController.adminPreferences(currentUser.id)"><i class="fa fa-fw fa-gear"></i>
+                                Settings</a>
                         </li>
                         <li class="divider"></li>
                         <li>
@@ -62,7 +68,9 @@ http://www.templatemo.com/preview/templatemo_415_dashboard
                             <span class="btn btn-default">Go</span>
                         </form>
                     </li>
-                    <li class="active"><a href="@routes.Application.adminPanel()"><i class="fa fa-home"></i>Dashboard</a></li>
+                    <li class="active"><a href="@routes.Application.adminPanel()"><i class="fa fa-home"></i>
+                        Dashboard</a>
+                    </li>
                     <li class="sub">
                         <a href="javascript:;">
                             <i class="fa fa-database"></i>
@@ -77,20 +85,25 @@ http://www.templatemo.com/preview/templatemo_415_dashboard
                             <li><a href="#">Support</a></li>
                         </ul>
                     </li>
-                    <li><a href="@routes.Application.adminMaps()"><i class="fa fa-map-marker"></i><span class="badge pull-right">1</span>
-                        Maps</a></li>
-                    <li><a href="@routes.Application.adminTables()"><i class="fa fa-users"></i><span class="badge pull-right">NEW</span>
-                        Manage Users</a></li>
-                    <li><a href="@routes.UserController.adminPreferences(currentUser.id)"><i class="fa fa-cog"></i>Preferences</a></li>
+                    <li><a href="@routes.Application.adminMaps()"><i class="fa fa-map-marker"></i> <span class="badge pull-right">1</span>
+                        Maps</a>
+                    </li>
+                    <li><a href="@routes.Application.adminTables()"><i class="fa fa-users"></i> <span class="badge pull-right">NEW</span>
+                        Manage Users</a>
+                    </li>
+                    <li><a href="@routes.UserController.adminPreferences(currentUser.id)"><i class="fa fa-cog"></i>
+                        Preferences</a>
+                    </li>
                     <li><a href="javascript:;" data-toggle="modal" data-target="#confirmModal"><i class="fa fa-sign-out"></i>
-                        Sign Out</a></li>
+                        Sign Out</a>
+                    </li>
                 </ul>
-            </div><!--/.navbar-collapse -->
+            </div> <!--/.navbar-collapse -->
 
             <div class="templatemo-content-wrapper">
                 <div class="templatemo-content">
 
-                    @content
+                @content
                 </div>
             </div>
                 <!-- Modal -->
@@ -98,7 +111,7 @@ http://www.templatemo.com/preview/templatemo_415_dashboard
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">
                                 Close</span></button>
                             <h4 class="modal-title" id="myModalLabel">Are you sure you want to sign out?</h4>
                         </div>
