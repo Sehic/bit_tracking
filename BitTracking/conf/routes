@@ -31,6 +31,13 @@ GET           /adminpanel/officeworkers                 @controllers.Application
 GET           /adminpanel/officeworkers/add             @controllers.Application.registerOfficeWorker()
 POST          /adminpanel/officeworkers/add             @controllers.UserController.addOfficeWorker()
 
+GET           /adminpanel/package/                      @controllers.PackageController.adminPackage()
+GET           /adminpanel/package/addpackage            @controllers.PackageController.addPackage()
+POST          /adminpanel/package/addpackage            @controllers.PackageController.savePackage()
+DELETE        /adminpanel/package/delete/:id            @controllers.PackageController.deletePackage(id: Long)
+GET           /adminpanel/package/update/:id            @controllers.PackageController.editPackage(id: Long)
+POST          /adminpanel/package/update/:id            @controllers.PackageController.updatePackage(id: Long)
+
 
 
 # Map static resources from the /public folder to the /assets URL path

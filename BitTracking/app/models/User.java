@@ -15,8 +15,8 @@ import java.util.List;
 
 @Entity
 public class User extends Model {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
     @Column(length = 50)
     public String firstName;
@@ -150,7 +150,7 @@ public class User extends Model {
     }
 
     public static List<User> findOfficeWorkers(){
-         List<User> officeworkers = find.where().eq("type_of_user", UserType.OFFICE_WORKER).findList();
+         List<User> officeworkers = find.where().eq("typeOfUser", UserType.OFFICE_WORKER).findList();
 
         if (officeworkers.size() == 0) {
             return null;

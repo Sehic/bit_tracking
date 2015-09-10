@@ -21,6 +21,9 @@ public class PostOffice extends Model {
     @OneToMany(mappedBy = "postOffice", cascade = CascadeType.ALL)
     public List<User> officeWorkers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "postOffice", cascade = CascadeType.ALL)
+    public List<Package> packages = new ArrayList<>();
+
     public PostOffice(){
 
     }

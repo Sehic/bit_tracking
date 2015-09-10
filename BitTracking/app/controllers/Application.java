@@ -50,8 +50,9 @@ public class Application extends Controller {
     }
 
     public Result officeWorkersList() {
-        List<User> officeWorkers = User.findOfficeWorkers();
-        return ok(officeworkerlist.render(officeWorkers));
+
+
+        return ok(officeworkerlist.render(User.findOfficeWorkers()));
     }
 
     public Result adminPostOffice(){
