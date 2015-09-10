@@ -34,7 +34,7 @@ public class User extends Model {
     @ManyToOne(cascade = CascadeType.ALL)
     public PostOffice postOffice;
 
-    @OneToOne(mappedBy="profilePhoto", cascade=CascadeType.ALL)
+    @OneToOne(mappedBy = "profilePhoto", cascade = CascadeType.ALL)
     public ImagePath imagePath;
 
 
@@ -43,21 +43,23 @@ public class User extends Model {
 
     /**
      * Constructor for registered user
+     *
      * @param firstName - represents his first name
-     * @param lastName - last name
-     * @param password - password
-     * @param email - email address
+     * @param lastName  - last name
+     * @param password  - password
+     * @param email     - email address
      */
     public User(String firstName, String lastName, String password, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
-        this.typeOfUser=UserType.REGISTERED_USER;
+        this.typeOfUser = UserType.REGISTERED_USER;
     }
 
     /**
      * Constructor that creates office worker
+     *
      * @param firstName
      * @param lastName
      * @param password
@@ -69,8 +71,8 @@ public class User extends Model {
         this.lastName = lastName;
         this.password = password;
         this.email = email;
-        this.typeOfUser=UserType.OFFICE_WORKER;
-        this.postOffice=postOffice;
+        this.typeOfUser = UserType.OFFICE_WORKER;
+        this.postOffice = postOffice;
 
     }
 
@@ -109,17 +111,19 @@ public class User extends Model {
     }
 
     public static boolean checkName(String name) {
-
-
-    for (int i = 0; i < name.length(); i++) {
-        if ((name.charAt(i) > 64 && name.charAt(i) < 91) || (name.charAt(i) > 96 && name.charAt(i) < 124)){
-            return true;
-        } else if (name.charAt(i)==262 || name.charAt(i)==263 || name.charAt(i)==268 || name.charAt(i)==269 || name.charAt(i)==272 || name.charAt(i)==273 || name.charAt(i)==352 || name.charAt(i)==353 || name.charAt(i)==381 || name.charAt(i)==382) {
-            return true;
+        for (int i = 0; i < name.length(); i++) {
+            if ((name.charAt(i) < 65) || (name.charAt(i) > 90 &&
+                    name.charAt(i) < 97) || (name.charAt(i) > 122 && name.charAt(i) < 262) ||
+                    (name.charAt(i) > 263 && name.charAt(i) < 268) ||
+                    (name.charAt(i) > 269 && name.charAt(i) < 272) ||
+                    (name.charAt(i) > 273 && name.charAt(i) < 352) ||
+                    (name.charAt(i) > 353 && name.charAt(i) < 381) ||
+                    name.charAt(i) > 382) {
+                return false;
+            }
         }
+        return true;
     }
-    return false;
-}
 
     public static boolean checkPassword(String password) {
         int letters = 0;
@@ -140,7 +144,7 @@ public class User extends Model {
         return true;
     }
 
-    public static User findById (Long longId) {
+    public static User findById(Long longId) {
         String id = longId.toString();
         User user = find.byId(id);
         if (user != null) {
@@ -149,14 +153,8 @@ public class User extends Model {
         return null;
     }
 
-    public static List<User> findOfficeWorkers(){
-         List<User> officeworkers = find.where().eq("typeOfUser", UserType.OFFICE_WORKER).findList();
-
-        if (officeworkers.size() == 0) {
-            return null;
-        }
-
-        return officeworkers;
+    public static List<User> findOfficeWorkers() {
+        return find.where().eq("typeOfUser", UserType.OFFICE_WORKER).findList();
     }
 
 
