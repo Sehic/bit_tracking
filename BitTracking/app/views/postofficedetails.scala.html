@@ -29,6 +29,8 @@
         </label>
         <div class="col-sm-10">
           <input name="address" type="text" class="form-control" id="address" value="@office.address">
+
+
         </div>
 
       </div>
@@ -48,10 +50,10 @@
     center: new google.maps.LatLng(43.8331, 18.3039),
       mapTypeId: google.maps.MapTypeId.ROADMAP
   });
-   var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(43.8331, 18.3039),
-        map: map
-      });
+  var geocoder = new google.maps.Geocoder();
+ geocodeAddress(geocoder, map);
+   var marker = geocoder.marker;
+
 console.log("uso");
 // Opens the InfoWindow when marker is clicked.
      google.maps.event.addListener(marker, 'click', (function(marker) {
@@ -63,7 +65,7 @@ console.log("uso");
         }
       })(marker));
 console.log("izaso");
-  var geocoder = new google.maps.Geocoder();
+
   document.getElementById('submit').addEventListener('click', function() {
     geocodeAddress(geocoder, map);
   });

@@ -14,16 +14,13 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
     @Column
-    public String name;
-    @Column
     public Double x;
     @Column
     public Double y;
     @OneToOne(mappedBy="place", cascade=CascadeType.ALL)
     public PostOffice postOffice;
 
-    public Location(String name, Double x, Double y) {
-        this.name = name;
+    public Location(Double x, Double y) {
         this.x = x;
         this.y = y;
     }

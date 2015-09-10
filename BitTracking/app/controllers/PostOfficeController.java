@@ -1,6 +1,7 @@
 package controllers;
 
 
+import models.Location;
 import models.User;
 import models.PostOffice;
 import play.*;
@@ -36,13 +37,18 @@ public class PostOfficeController extends Controller {
         return redirect(routes.Application.adminPostOffice());
     }
 
-
-
     public Result addNewOffice(){
         Form<PostOffice> boundForm = officeForm.bindFromRequest();
         String name = boundForm.bindFromRequest().field("name").value();
         String address = boundForm.bindFromRequest().field("address").value();
-        PostOffice p = new PostOffice(name, address);
+        String lon = boundForm.bindFromRequest().field("longitude").value();
+        String lat = boundForm.bindFromRequest().field("latitude").value();
+        Double x = Double.parseDouble(lon);
+        Double y = Double.parseDouble(lat);
+        Location place = new Location(x,y);
+        Ebean.save(place);
+       System.out.println(x+" "+y+" "+place.id);
+        PostOffice p = new PostOffice(name, address, place);
         Ebean.save(p);
         return redirect(routes.Application.adminPostOffice());
     }
