@@ -51,6 +51,7 @@
               <td>@user.lastName</td>
               <td>@user.email</td>
               <td>@user.postOffice.name</td>
+
               <td><form action="@routes.UserController.userProfile(user.id)"><input type="submit" value="Edit"></form></td>
               <td><form action="@routes.UserController.deleteUser(user.id)"><input type="submit" value="Delete"></form></td>
             </tr>

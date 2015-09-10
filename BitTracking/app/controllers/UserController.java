@@ -188,7 +188,7 @@ public class UserController extends Controller {
             return redirect(routes.Application.index());
         }
 
-        return ok(userprofile.render(user));
+        return ok(userprofile.render(user, PostOffice.findOffice.findList()));
     }
 
     public Result updateUserType(Long id) {
@@ -197,10 +197,13 @@ public class UserController extends Controller {
 
         Form<User> boundForm = userForm.bindFromRequest();
         String userType = boundForm.bindFromRequest().field("userType").value();
+        String postOffice = boundForm.bindFromRequest().field("postOffice").value();
         if (userType.equals("Admin")) {
             user.typeOfUser = UserType.ADMIN;
         } else if (userType.equals("Office Worker")) {
             user.typeOfUser = UserType.OFFICE_WORKER;
+            user.postOffice =PostOffice.findOffice.where().eq("name", postOffice).findUnique();
+
         } else {
             user.typeOfUser = UserType.REGISTERED_USER;
         }
@@ -221,7 +224,7 @@ public class UserController extends Controller {
         String postOffice = boundForm.bindFromRequest().field("postOffice").value();
 
         PostOffice wantedPostOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
-        System.out.println(postOffice +" "+ wantedPostOffice.name);
+        System.out.println(postOffice + " " + wantedPostOffice.name);
         User u = User.checkEmail(email);
         if (u == null) {
             u = new User(firstName, lastName, password, email, wantedPostOffice);

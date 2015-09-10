@@ -1,4 +1,4 @@
-@(user: User)
+@(user: User, offices: List[PostOffice])
 @import helper._
 @main("Edit your profile") {
 
@@ -31,7 +31,6 @@
                             <div class="col-md-12">
 
 
-
                                 <div class="form-group">
 
                                     <label for="firstName" class="col-sm-2 control-label">
@@ -44,7 +43,8 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <br/>
+                                <br/>
                                 <div class="form-group">
 
                                     <label for="lastName" class="col-sm-2 control-label">
@@ -57,7 +57,8 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <br/>
+                                <br/>
                                 <div class="form-group">
 
                                     <label for="email" class="col-sm-2 control-label" >
@@ -72,30 +73,43 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br/>
+                                <br/>
                                 @helper.form(action = routes.UserController.updateUserType(user.id), 'class -> "form-horizontal", 'role -> "form") {
-                                <div class="form-group">
+
                                     <div class="col-sm-2"></div>
                                     <div class="col-sm-3">
                                         <div class="well carousel-search hidden-sm">
 
                                             <select name="userType">
+                                                <option value="@user.typeOfUser">@user.typeOfUser</option>
                                                 <option value="Admin">Admin</option>
                                                 <option value="Office Worker">Office Worker</option>
                                                 <option value="Registered User">Registered User</option>
                                             </select>
 
                                         </div>
-                                    </div>
-                                </div>
+                                        <div class="well carousel-search hidden-sm">
 
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <input type="submit" class="btn btn-primary" value="Save Changes">
-                                        <span></span>
-                                        <input type="reset" class="btn btn-default" value="Cancel">
+                                            <select name="postOffice">
+                                            @for(office <- offices) {
+                                                <option value="@office.name">@office.name</option>
+                                            }
+
+                                            </select>
+                                        </div>
+
                                     </div>
-                                </div>
-                            }
+
+
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <input type="submit" class="btn btn-primary" value="Save Changes">
+                                            <span></span>
+                                            <input type="reset" class="btn btn-default" value="Cancel">
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
