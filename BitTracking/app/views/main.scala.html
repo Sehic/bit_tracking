@@ -31,7 +31,8 @@
                             <!-- Home tab in navigation bar-->
                         <div class="navbar-header">
                             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                                <span class="sr-only">
+                                    Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
                             </button> <a class="navbar-brand" href="@routes.Application.index()">Home</a>
                         </div> <!-- End Home tab in navigation bar-->
 
@@ -40,12 +41,14 @@
 
                                     <!-- =========My Bit Tracking dropdown in navigation bar========-->
                                 <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">My BT<strong class="caret"></strong></a>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        My BT<strong class="caret"></strong></a>
                                     <ul class="dropdown-menu">
-                                        @if(currentUser != null && currentUser.typeOfUser!=UserType.ADMIN) {
+                                        @if(currentUser != null && currentUser.typeOfUser != UserType.ADMIN) {
 
                                             <li>
-                                                <a href="@routes.UserController.userProfile(currentUser.id)">My Profile</a>
+                                                <a href="@routes.UserController.userProfile(currentUser.id)">
+                                                    My Profile</a>
                                             </li>
 
                                             <li>
@@ -53,25 +56,26 @@
                                                     Edit Profile</a>
                                             </li>
                                         }
-                                    <li>
-                                        <a href="#">Option 3</a>
-                                    </li>
-                                    <li class="divider">
+                                        <li>
+                                            <a href="#">Option 3</a>
                                         </li>
-                                    <li>
-                                        <a href="#">Option 4</a>
-                                    </li>
-                                    <li class="divider">
+                                        <li class="divider">
                                         </li>
-                                    <li>
-                                        <a href="#">Option 5</a>
-                                    </li>
+                                        <li>
+                                            <a href="#">Option 4</a>
+                                        </li>
+                                        <li class="divider">
+                                        </li>
+                                        <li>
+                                            <a href="#">Option 5</a>
+                                        </li>
                                     </ul>
                                 </li> <!-- End My Bit Tracking dropdown in navigation bar-->
 
                                 <!-- =====Shipping dropdown in navigation bar======-->
                                 <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ship<strong class="caret"></strong></a>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Ship<strong class="caret"></strong></a>
                                     <ul class="dropdown-menu">
                                         <li>
                                             <a href="#">Action 1</a>
@@ -97,7 +101,8 @@
 
                                 <!-- Tracking dropdown in navigation bar-->
                                 <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Track<strong class="caret"></strong></a>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Track<strong class="caret"></strong></a>
                                     <ul class="dropdown-menu">
                                         <li>
                                             <a href="#">Action 1</a>
@@ -134,7 +139,8 @@
 
                                 <!-- SUPPORT Dropdown tab in navigation bar-->
                                 <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Support<strong class="caret"></strong></a>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Support<strong class="caret"></strong></a>
                                     <ul class="dropdown-menu">
                                         <li>
                                             <a href="#">Action 1</a>
@@ -163,26 +169,42 @@
                                         <a href="@routes.Application.adminPanel()">Admin panel</a>
                                     </li> <!--Admin panel tab in navigation bar-->
                                 }
+                                @if(currentUser != null && currentUser.typeOfUser == UserType.OFFICE_WORKER) {
+                                    <li>
+                                        <a href="@routes.PackageController.adminPackage()">Office Worker Panel</a>
+                                    </li> <!--Admin panel tab in navigation bar-->
+                                }
+
                             </ul>
 
                                 <!--=========== LOG IN REGISTER TAB in NAVIGATION BAR===========-->
-                            <ul class="nav navbar-nav navbar-right">
-                                <li>
-                                    <a href="@routes.Application.register()">Register</a>
-                                </li>
-                            </ul>
+                            @if(currentUser == null) {
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li>
+                                        <a href="@routes.Application.register()">Register</a>
+                                    </li>
+                                </ul>
 
-                            <ul class="nav navbar-nav navbar-right">
-                                <li>
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li>
+                                        <a href="@routes.Application.login()">Log In</a>
+                                        } else {
 
-                                @if(currentUser == null) {
-                                    <a href="@routes.Application.login()">Log In</a>
-                                } else {
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li>
                                     <a href="@routes.Application.logout()">Log Out</a>
-                                }
+                                    </li>
+                                </ul>
 
-                                </li>
-                            </ul> <!--Ends LOG IN REGISTER TAB in NAVIGATION BAR-->
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li>
+                                        <a href="#">@currentUser.typeOfUser</a>
+                                    </li>
+                                </ul>
+                            }
+
+                        </li>
+                        </ul> <!--Ends LOG IN REGISTER TAB in NAVIGATION BAR-->
 
                             <!--SEARCH BAR-->
                             <form class="navbar-form navbar-right" role="search">

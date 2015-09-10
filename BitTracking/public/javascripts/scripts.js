@@ -1,5 +1,16 @@
 // Empty JS for your own code to be here
 //Registration validation
+
+$(".dropdown-menu li a").click(function(){
+    var selText = $(this).text();
+    $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+});
+
+$("#btnSearch").click(function(){
+    alert($('.btn-select').text()+", "+$('.btn-select2').text());
+});
+
+
 function checkEmail() {
     var email = document.getElementById("inputEmail3").value;
     var filter = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;

@@ -119,10 +119,11 @@ public class UserController extends Controller {
 
     public Result editProfile(Long id) {
         User u1 = SessionHelper.getCurrentUser(ctx());
+
         User user = User.findById(id);
 
 
-        if (user == null || u1.id != user.id) {
+        if (u1 == null || user == null || u1.id != user.id) {
             return redirect(routes.Application.index());
         }
         return ok(editprofile.render(user));
@@ -150,7 +151,7 @@ public class UserController extends Controller {
             if (user.password.equals(repassword)) {
                 user.password = getEncriptedPasswordMD5(user.password);
                 Ebean.update(user);
-                if(user.typeOfUser != UserType.ADMIN) {
+                if (user.typeOfUser != UserType.ADMIN) {
                     return redirect(routes.Application.index());
                 }
                 return redirect(routes.Application.adminPanel());
@@ -160,15 +161,25 @@ public class UserController extends Controller {
     }
 
     public Result deleteUser(Long id) {
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+
         User user = User.findById(id);
         Ebean.delete(user);
         return redirect(routes.Application.adminTables());
     }
 
-    public Result adminPreferences(Long id){
+    public Result adminPreferences(Long id) {
         User u1 = SessionHelper.getCurrentUser(ctx());
+
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+
         User user = User.findById(id);
-        if(user == null || u1.id != user.id){
+        if (user == null || u1.id != user.id) {
             return redirect(routes.Application.adminPanel());
         }
 
@@ -180,7 +191,7 @@ public class UserController extends Controller {
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
 
-        if(user == null){
+        if (user == null) {
             return redirect(routes.Application.index());
         }
 
@@ -188,7 +199,7 @@ public class UserController extends Controller {
             return redirect(routes.Application.index());
         }
 
-        return ok(userprofile.render(user, PostOffice.findOffice.findList()));
+        return ok(userprofile.render(user, PostOffice.findOffice.findList(), u1));
     }
 
     public Result updateUserType(Long id) {
@@ -202,19 +213,24 @@ public class UserController extends Controller {
             user.typeOfUser = UserType.ADMIN;
         } else if (userType.equals("Office Worker")) {
             user.typeOfUser = UserType.OFFICE_WORKER;
-            user.postOffice =PostOffice.findOffice.where().eq("name", postOffice).findUnique();
+            user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
 
         } else {
             user.typeOfUser = UserType.REGISTERED_USER;
         }
         Ebean.update(user);
 
-        return TODO;
+        return redirect(routes.Application.adminPanel());
 
     }
 
-    public Result addOfficeWorker(){
+    public Result addOfficeWorker() {
         User u1 = SessionHelper.getCurrentUser(ctx());
+
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+
         Form<User> boundForm = userForm.bindFromRequest();
         String firstName = boundForm.bindFromRequest().field("firstName").value();
         String lastName = boundForm.bindFromRequest().field("lastName").value();

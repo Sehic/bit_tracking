@@ -1,4 +1,6 @@
-@(user: User, offices: List[PostOffice])
+@import helpers.SessionHelper
+
+@(user: User, offices: List[PostOffice])(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
 @import helper._
 @main("Edit your profile") {
 
@@ -79,6 +81,7 @@
 
                                     <div class="col-sm-2"></div>
                                     <div class="col-sm-3">
+                                    @if(currentUser != null && currentUser.typeOfUser == UserType.ADMIN) {
                                         <div class="well carousel-search hidden-sm">
 
                                             <select name="userType">
@@ -89,10 +92,13 @@
                                             </select>
 
                                         </div>
+
                                         <div class="well carousel-search hidden-sm">
 
                                             <select name="postOffice">
+                                                <option value=""></option>
                                             @for(office <- offices) {
+
                                                 <option value="@office.name">@office.name</option>
                                             }
 
@@ -109,6 +115,7 @@
                                             <input type="reset" class="btn btn-default" value="Cancel">
                                         </div>
                                     </div>
+                                }
                                 }
                             </div>
                         </div>

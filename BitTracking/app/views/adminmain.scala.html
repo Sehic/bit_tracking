@@ -39,7 +39,12 @@ http://www.templatemo.com/preview/templatemo_415_dashboard
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>
-                        Admin<b class="caret"></b></a>
+                        @if(currentUser !=null && currentUser.typeOfUser==UserType.OFFICE_WORKER){
+                            Office Worker
+                        }else {
+                            Admin
+                        }
+                        <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="@routes.UserController.userProfile(currentUser.id)"><i class="fa fa-fw fa-user"></i>
@@ -89,7 +94,7 @@ http://www.templatemo.com/preview/templatemo_415_dashboard
                         Maps</a>
                     </li>
                     <li><a href="@routes.Application.adminTables()"><i class="fa fa-users"></i> <span class="badge pull-right">NEW</span>
-                        Manage Users</a>
+                        Manage</a>
                     </li>
                     <li><a href="@routes.UserController.adminPreferences(currentUser.id)"><i class="fa fa-cog"></i>
                         Preferences</a>

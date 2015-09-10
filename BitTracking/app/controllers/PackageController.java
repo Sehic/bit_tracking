@@ -20,18 +20,30 @@ import java.util.List;
  */
 public class PackageController extends Controller {
 
-    public Result adminPackage(){
+    public Result adminPackage() {
+
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.OFFICE_WORKER) {
+            return redirect(routes.Application.index());
+        }
+
         return ok(adminpackage.render(Package.finder.findList()));
     }
 
-    public Result addPackage(){
+    public Result addPackage() {
+
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.OFFICE_WORKER) {
+            return redirect(routes.Application.index());
+        }
+
         return ok(packageadd.render(PostOffice.findOffice.findList()));
     }
 
-    public Result savePackage(){
+    public Result savePackage() {
         DynamicForm form = Form.form().bindFromRequest();
         User user = SessionHelper.getCurrentUser(ctx());
-        if (user.typeOfUser!=UserType.ADMIN || user.typeOfUser!=UserType.OFFICE_WORKER) {
+        if (user ==null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
             return redirect("/");
         }
         String id = form.bindFromRequest().field("officePost").value();
@@ -43,10 +55,10 @@ public class PackageController extends Controller {
         return ok(adminpackage.render(Package.finder.findList()));
     }
 
-    public Result deletePackage(Long id){
+    public Result deletePackage(Long id) {
         Package p = Package.findPackageById(id);
         User user = SessionHelper.getCurrentUser(ctx());
-        if(user.typeOfUser==UserType.ADMIN) {
+        if (user !=null || user.typeOfUser==UserType.OFFICE_WORKER || user.typeOfUser == UserType.ADMIN) {
             Ebean.delete(p);
             return ok(packageadd.render(PostOffice.findOffice.findList()));
         } else {
@@ -57,7 +69,7 @@ public class PackageController extends Controller {
     public Result updatePackage(Long id) {
         DynamicForm form = Form.form().bindFromRequest();
         User user = SessionHelper.getCurrentUser(ctx());
-        if (user.typeOfUser!=UserType.ADMIN || user.typeOfUser!=UserType.OFFICE_WORKER) {
+        if (user ==null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
             return redirect("/");
         }
         Package pack = Package.findPackageById(id);
@@ -70,6 +82,12 @@ public class PackageController extends Controller {
     }
 
     public Result editPackage(Long id) {
+
+        User user = SessionHelper.getCurrentUser(ctx());
+        if (user ==null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
+            return redirect("/");
+        }
+
         return ok(packagedetails.render(Package.findPackageById(id), PostOffice.findOffice.findList()));
     }
 }

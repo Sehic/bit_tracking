@@ -50,7 +50,8 @@
                             <td>@user.firstName</td>
                             <td>@user.lastName</td>
                             <td>@user.email</td>
-                            <td><form action="@routes.UserController.userProfile(user.id)"><input type="submit" value="Edit"></form></td>
+
+                            <td><form action="@routes.UserController.userProfile(user.id)"><a href="javascript:;" data-toggle="modal" data-target="#confirmModal"><i class="fa fa-sign-out"></i><input type="submit" value="Edit"></a></form></td>
                             <td><form action="@routes.UserController.deleteUser(user.id)"><input type="submit" value="Delete"></form></td>
                         </tr>
                     }
