@@ -31,15 +31,15 @@ public class PackageController extends Controller {
     public Result savePackage(){
         DynamicForm form = Form.form().bindFromRequest();
         User user = SessionHelper.getCurrentUser(ctx());
-        if (user.typeOfUser!=UserType.ADMIN) {
+        if (user.typeOfUser!=UserType.ADMIN || user.typeOfUser!=UserType.OFFICE_WORKER) {
             return redirect("/");
         }
         String id = form.bindFromRequest().field("officePost").value();
-        PostOffice po = PostOffice.findPostOffice(Long.parseLong(id));
-        Package p = new Package();
-        p.postOffice = po;
-        p.destination = form.get("destination");
-        p.save();
+        PostOffice office = PostOffice.findPostOffice(Long.parseLong(id));
+        Package pack = new Package();
+        pack.postOffice = office;
+        pack.destination = form.get("destination");
+        pack.save();
         return ok(adminpackage.render(Package.finder.findList()));
     }
 
@@ -56,17 +56,20 @@ public class PackageController extends Controller {
 
     public Result updatePackage(Long id) {
         DynamicForm form = Form.form().bindFromRequest();
-        Package p = Package.findPackageById(id);
+        User user = SessionHelper.getCurrentUser(ctx());
+        if (user.typeOfUser!=UserType.ADMIN || user.typeOfUser!=UserType.OFFICE_WORKER) {
+            return redirect("/");
+        }
+        Package pack = Package.findPackageById(id);
         String officeid = form.bindFromRequest().field("officePost").value();
-        PostOffice po = PostOffice.findPostOffice(Long.parseLong(officeid));
-        p.postOffice = po;
-        p.destination = form.get("destination");
-        p.update();
+        PostOffice office = PostOffice.findPostOffice(Long.parseLong(officeid));
+        pack.postOffice = office;
+        pack.destination = form.get("destination");
+        pack.update();
         return ok(adminpackage.render(Package.finder.findList()));
     }
 
     public Result editPackage(Long id) {
-        Package p = Package.findPackageById(id);
-        return ok(packagedetails.render(p, PostOffice.findOffice.findList()));
+        return ok(packagedetails.render(Package.findPackageById(id), PostOffice.findOffice.findList()));
     }
 }
