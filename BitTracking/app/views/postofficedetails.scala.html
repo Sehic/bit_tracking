@@ -1,4 +1,4 @@
-@(office: PostOffice)
+@(postOffice: PostOffice)(offices: Set[PostOffice])(linked: List[String])
 
   @import helper._
   @adminmain("Details") {
@@ -8,7 +8,7 @@
       <li class="active">Details</li>
     </ol>
 
-    @helper.form(action = routes.PostOfficeController.updateOffice(office.id), 'class -> "form-horizontal", 'role -> "form") {
+    @helper.form(action = routes.PostOfficeController.updateOffice(postOffice.id), 'class -> "form-horizontal", 'role -> "form") {
 
 
       <h1>Details</h1>
@@ -18,7 +18,7 @@
           Name:
         </label>
         <div class="col-sm-10">
-          <input name="name" type="text" class="form-control" id="name" value="@office.name">
+          <input name="name" type="text" class="form-control" id="name" value="@postOffice.name">
         </div>
 
       </div>
@@ -28,19 +28,45 @@
           Address:
         </label>
         <div class="col-sm-10">
-          <input name="address" type="text" class="form-control" id="address" value="@office.address">
+          <input name="address" type="text" class="form-control" id="address" value="@postOffice.address">
         </div>
 
       </div>
-
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">
+                Link to PostOffice:
+            </label>
+            <div class="col-sm-10">
+        <select name="officePost">
+        @for(office <- offices){
+            @if(!office.name.equals(postOffice.name)){
+                <option value="@office.name">@office.name</option>
+            }
+        }
+        </select>
+                </div>
+        </div>
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">
+                Linked to:
+            </label>
+            <div class="col-sm-2 control-label">
+            @for(link <- linked){
+                <strong>| @link
+                }|</strong>
+            </div>
+        </div>
+        <div class="form-group">
+        <div class="col-sm-10">
+            <input id="submit" type="submit" class="btn btn-primary" value="Save changes">
+        </div>
+        </div>
       <div class="templatemo-maps">
         <div class="row">
           <div class="col-md-12 col-sm-12 margin-bottom-30">
             <div id="map" style="position: relative; height: 700px; width: auto"></div>
 
-            <div>
-              <input id="submit" type="submit" class="btn btn-primary" value="Save changes">
-            </div>
+
 
             <script type="text/javascript">
   var map = new google.maps.Map(document.getElementById('map'), {
@@ -57,8 +83,8 @@ console.log("uso");
      google.maps.event.addListener(marker, 'click', (function(marker) {
         return function() {
         console.log("unutra");
-          infowindow.setContent(@office.name);
-          console.log(@office.name);
+          infowindow.setContent(@postOffice.name);
+          console.log(@postOffice.name);
           infowindow.open(map, marker);
         }
       })(marker));
@@ -70,7 +96,7 @@ console.log("izaso");
       var geocoder = new google.maps.Geocoder();
        geocodeAddress(geocoder,map);
     function geocodeAddress(geocoder, resultsMap) {
-  var address = "@office.address";
+  var address = "@postOffice.address";
   geocoder.geocode({'address': address}, function(results, status) {
     if (status === google.maps.GeocoderStatus.OK) {
       resultsMap.setCenter(results[0].geometry.location);

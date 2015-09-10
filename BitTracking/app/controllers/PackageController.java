@@ -36,7 +36,10 @@ public class PackageController extends Controller {
         if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.OFFICE_WORKER) {
             return redirect(routes.Application.index());
         }
-
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+        if(offices.size() == 0 || offices == null) {
+            return ok(postofficeadd.render());
+        }
         return ok(packageadd.render(PostOffice.findOffice.findList()));
     }
 

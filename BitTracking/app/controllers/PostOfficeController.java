@@ -1,10 +1,8 @@
 package controllers;
 
 
-import helpers.SessionHelper;
 import models.User;
 import models.PostOffice;
-import models.UserType;
 import play.*;
 import play.data.Form;
 import play.mvc.*;
@@ -30,14 +28,12 @@ public class PostOfficeController extends Controller {
             Form.form(PostOffice.class);
 
     public Result deleteOffice(Long id) {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
-
         final PostOffice office = PostOffice.findPostOffice(id);
-
+//        if (office == null) {
+//            return notFound(String.format("Office %s does not exists.", id));
+//        }
+        office.linkOffice = null;
+        Ebean.update(office);
         Ebean.delete(office);
         return redirect(routes.Application.adminPostOffice());
     }
@@ -45,12 +41,6 @@ public class PostOfficeController extends Controller {
 
 
     public Result addNewOffice(){
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
-
         Form<PostOffice> boundForm = officeForm.bindFromRequest();
         String name = boundForm.bindFromRequest().field("name").value();
         String address = boundForm.bindFromRequest().field("address").value();
@@ -61,33 +51,28 @@ public class PostOfficeController extends Controller {
 
 
     public Result postOfficeDetails(Long id){
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
-
         PostOffice office = PostOffice.findPostOffice(id);
-        return ok(postofficedetails.render(office));
+        return ok(postofficedetails.render(office, PostOffice.findOffice.findSet(), PostOffice.linkedOffices(office.name)));
     }
 
     public Result updateOffice(Long Id){
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
-
         PostOffice office = PostOffice.findPostOffice(Id);
-
         if (office == null) {
-            return redirect(routes.Application.adminPanel());
+            return TODO;
         }
         Form<PostOffice> newOfficeForm = officeForm.fill(office);
-        office.name = newOfficeForm.bindFromRequest().field("name").value();
-        office.address = newOfficeForm.bindFromRequest().field("address").value();
-        System.out.println(office.name+" "+office.address);
-        Ebean.update(office);
+        if(office.linkOffice == null || office.linkOffice.equals(PostOffice.findPostOfficeByName(newOfficeForm.bindFromRequest().field("officePost").value()))) {
+            office.name = newOfficeForm.bindFromRequest().field("name").value();
+            office.address = newOfficeForm.bindFromRequest().field("address").value();
+            office.linkOffice = PostOffice.findPostOfficeByName(newOfficeForm.bindFromRequest().field("officePost").value());
+            Ebean.update(office);
+        } else {
+            PostOffice newOffice = new PostOffice();
+            newOffice.name = newOfficeForm.bindFromRequest().field("name").value();
+            newOffice.address = newOfficeForm.bindFromRequest().field("address").value();
+            newOffice.linkOffice = PostOffice.findPostOfficeByName(newOfficeForm.bindFromRequest().field("officePost").value());
+            Ebean.save(newOffice);
+        }
         return redirect(routes.PostOfficeController.postOfficeDetails(office.id));
 
     }
