@@ -1,5 +1,4 @@
-
-@(users: List[User])
+@(users: List[User], offices: List[PostOffice], packages: List[models.Package])
 
 @adminmain("Menage Users") {
 
@@ -16,8 +15,8 @@
             <ul class="nav nav-pills">
                 <li class="active"><a href="#">User <span class="badge">@users.size</span></a></li>
                 <li><a href="@routes.Application.adminPostOffice()">Post Office <span class="badge">
-                    ????</span></a></li>
-                <li><a href="@routes.PackageController.adminPackage()">Package <span class="badge">????</span></a></li>
+                    @offices.size</span></a></li>
+                <li><a href="@routes.PackageController.adminPackage()">Package <span class="badge">@packages.size</span></a></li>
             </ul>
         </div>
     </div>
@@ -39,6 +38,7 @@
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
+                            <th>User Type</th>
                             <th>User Profile</th>
                             <th>Delete</th>
                         </tr>
@@ -50,8 +50,8 @@
                             <td>@user.firstName</td>
                             <td>@user.lastName</td>
                             <td>@user.email</td>
-
-                            <td><form action="@routes.UserController.userProfile(user.id)"><a href="javascript:;" data-toggle="modal" data-target="#confirmModal"><i class="fa fa-sign-out"></i><input type="submit" value="Edit"></a></form></td>
+                            <td>@user.typeOfUser</td>
+                            <td><form action="@routes.UserController.userProfile(user.id)"><input type="submit" value="Edit"></form></td>
                             <td><form action="@routes.UserController.deleteUser(user.id)"><input type="submit" value="Delete"></form></td>
                         </tr>
                     }

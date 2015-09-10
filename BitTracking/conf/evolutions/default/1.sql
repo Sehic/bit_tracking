@@ -13,7 +13,6 @@ create table image_path (
 
 create table location (
   id                        bigint auto_increment not null,
-  name                      varchar(255),
   x                         double,
   y                         double,
   constraint pk_location primary key (id))
@@ -31,6 +30,7 @@ create table post_office (
   name                      varchar(255),
   address                   varchar(255),
   place_id                  bigint,
+  link_office_id            bigint,
   constraint uq_post_office_place_id unique (place_id),
   constraint pk_post_office primary key (id))
 ;
@@ -53,8 +53,10 @@ alter table package add constraint fk_package_postOffice_2 foreign key (post_off
 create index ix_package_postOffice_2 on package (post_office_id);
 alter table post_office add constraint fk_post_office_place_3 foreign key (place_id) references location (id) on delete restrict on update restrict;
 create index ix_post_office_place_3 on post_office (place_id);
-alter table user add constraint fk_user_postOffice_4 foreign key (post_office_id) references post_office (id) on delete restrict on update restrict;
-create index ix_user_postOffice_4 on user (post_office_id);
+alter table post_office add constraint fk_post_office_linkOffice_4 foreign key (link_office_id) references post_office (id) on delete restrict on update restrict;
+create index ix_post_office_linkOffice_4 on post_office (link_office_id);
+alter table user add constraint fk_user_postOffice_5 foreign key (post_office_id) references post_office (id) on delete restrict on update restrict;
+create index ix_user_postOffice_5 on user (post_office_id);
 
 
 

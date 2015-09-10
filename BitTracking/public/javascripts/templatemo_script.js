@@ -12,3 +12,4 @@ $(document).ready( function() {
 	});  // sidebar menu click
 
 }); // document.ready
+

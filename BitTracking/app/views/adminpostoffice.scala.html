@@ -1,4 +1,4 @@
-@(postOffices: java.util.List[models.PostOffice])
+@(postOffices: List[PostOffice])
 @import helper._
 @adminmain("Post Office") {
   <script>
@@ -31,6 +31,7 @@
         <th>#</th>
         <th>Name</th>
         <th>Adress</th>
+        <th>Linked to</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -40,6 +41,11 @@
         <td>@postOffice.id</td>
         <td><a href="@routes.PostOfficeController.postOfficeDetails(postOffice.id)" class="btn btn-link">@postOffice.name</a></td>
         <td>@postOffice.address</td>
+          @if(postOffice.linkOffice != null) {
+              <td>@postOffice.linkOffice.name</td>
+          } else {
+              <td><a href="@routes.PostOfficeController.postOfficeDetails(postOffice.id)" class="btn btn-link">NOT LINKED YET</a></td>
+          }
         <td><a onclick="del('@routes.PostOfficeController.deleteOffice(postOffice.id)')" class="btn btn-link">Delete</a></td>
       </tr>
     }

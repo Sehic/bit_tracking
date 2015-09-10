@@ -37,13 +37,18 @@ public class PackageController extends Controller {
             return redirect(routes.Application.index());
         }
 
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+        if (offices.size() == 0 || offices == null) {
+            return ok(postofficeadd.render());
+        }
+
         return ok(packageadd.render(PostOffice.findOffice.findList()));
     }
 
     public Result savePackage() {
         DynamicForm form = Form.form().bindFromRequest();
         User user = SessionHelper.getCurrentUser(ctx());
-        if (user ==null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
+        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
             return redirect("/");
         }
         String id = form.bindFromRequest().field("officePost").value();
@@ -58,7 +63,7 @@ public class PackageController extends Controller {
     public Result deletePackage(Long id) {
         Package p = Package.findPackageById(id);
         User user = SessionHelper.getCurrentUser(ctx());
-        if (user !=null || user.typeOfUser==UserType.OFFICE_WORKER || user.typeOfUser == UserType.ADMIN) {
+        if (user != null || user.typeOfUser == UserType.OFFICE_WORKER || user.typeOfUser == UserType.ADMIN) {
             Ebean.delete(p);
             return ok(packageadd.render(PostOffice.findOffice.findList()));
         } else {
@@ -69,7 +74,7 @@ public class PackageController extends Controller {
     public Result updatePackage(Long id) {
         DynamicForm form = Form.form().bindFromRequest();
         User user = SessionHelper.getCurrentUser(ctx());
-        if (user ==null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
+        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
             return redirect("/");
         }
         Package pack = Package.findPackageById(id);
@@ -84,7 +89,7 @@ public class PackageController extends Controller {
     public Result editPackage(Long id) {
 
         User user = SessionHelper.getCurrentUser(ctx());
-        if (user ==null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
+        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
             return redirect("/");
         }
 

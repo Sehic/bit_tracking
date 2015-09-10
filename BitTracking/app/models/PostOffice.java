@@ -27,6 +27,12 @@ public class PostOffice extends Model {
     @OneToOne
     public Location place;
 
+    @ManyToOne
+    public PostOffice linkOffice;
+
+    @OneToMany(mappedBy = "linkOffice")
+    public List<PostOffice> offices;
+
     public PostOffice(){
 
     }
@@ -52,6 +58,21 @@ public class PostOffice extends Model {
             return office;
         }
         return null;
+    }
+
+    public static PostOffice findPostOfficeByName(String name){
+        return findOffice.where().eq("name", name).findUnique();
+    }
+
+    public static List<String> linkedOffices(String name){
+        List<String> linkedOffices = new ArrayList<>();
+        List<PostOffice> offices = findOffice.where().eq("name", name).findList();
+        for(int i = 0; i < offices.size(); i++) {
+            if(offices.get(i).linkOffice != null) {
+                linkedOffices.add(offices.get(i).linkOffice.name);
+            }
+        }
+        return linkedOffices;
     }
 
 }

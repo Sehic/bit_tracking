@@ -240,7 +240,7 @@ public class UserController extends Controller {
         String postOffice = boundForm.bindFromRequest().field("postOffice").value();
 
         PostOffice wantedPostOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
-        System.out.println(postOffice + " " + wantedPostOffice.name);
+
         User u = User.checkEmail(email);
         if (u == null) {
             u = new User(firstName, lastName, password, email, wantedPostOffice);

@@ -4,6 +4,8 @@ import helpers.SessionHelper;
 import models.PostOffice;
 import models.User;
 import models.UserType;
+import models.Package;
+import models.Location;
 import play.*;
 import play.data.Form;
 import play.mvc.*;
@@ -54,7 +56,7 @@ public class Application extends Controller {
             return redirect(routes.Application.index());
         }
 
-        return ok(adminmaps.render());
+        return ok(adminmaps.render(Location.findLocation.findList()));
     }
 
     public Result adminTables() {
@@ -63,7 +65,7 @@ public class Application extends Controller {
             return redirect(routes.Application.index());
         }
 
-        return ok(admintables.render(User.find.findList()));
+        return ok(admintables.render(User.find.findList(), PostOffice.findOffice.findList(), Package.finder.findList()));
     }
 
     public Result officeWorkersList() {
@@ -98,12 +100,6 @@ public class Application extends Controller {
     }
 
     public Result registerOfficeWorker() {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
-
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
         return ok(officeworkeradd.render(postOffices));
     }

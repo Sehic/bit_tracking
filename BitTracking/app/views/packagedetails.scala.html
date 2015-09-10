@@ -19,7 +19,11 @@
       </label>
       <select name="officePost">
       @for(office <- offices){
-        <option value="@office.id">@office.name</option>
+        @if(office.linkOffice != null) {
+          <option value="@office.id">@office.name (@office.linkOffice.name)</option>
+        } else {
+          <option value="@office.id">@office.name (NOT LINKED YET)</option>
+        }
       }
       </select>
 
