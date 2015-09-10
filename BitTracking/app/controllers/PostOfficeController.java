@@ -1,6 +1,7 @@
 package controllers;
 
 
+import models.Location;
 import models.User;
 import models.PostOffice;
 import play.*;
@@ -32,6 +33,8 @@ public class PostOfficeController extends Controller {
 //        if (office == null) {
 //            return notFound(String.format("Office %s does not exists.", id));
 //        }
+        Location place = Location.findLocationById(office.place.id);
+        Ebean.delete(place);
         Ebean.delete(office);
         return redirect(routes.Application.adminPostOffice());
     }
@@ -42,7 +45,14 @@ public class PostOfficeController extends Controller {
         Form<PostOffice> boundForm = officeForm.bindFromRequest();
         String name = boundForm.bindFromRequest().field("name").value();
         String address = boundForm.bindFromRequest().field("address").value();
-        PostOffice p = new PostOffice(name, address);
+        String lon = boundForm.bindFromRequest().field("longitude").value();
+        String lat = boundForm.bindFromRequest().field("latitude").value();
+        Double x = Double.parseDouble(lon);
+        Double y = Double.parseDouble(lat);
+        Location place = new Location(x,y);
+        Ebean.save(place);
+        System.out.println(x+" "+y+" "+place.id);
+        PostOffice p = new PostOffice(name, address, place);
         Ebean.save(p);
         return redirect(routes.Application.adminPostOffice());
     }
@@ -55,14 +65,23 @@ public class PostOfficeController extends Controller {
 
     public Result updateOffice(Long Id){
         PostOffice office = PostOffice.findPostOffice(Id);
-
+        Location place = Location.findLocationById(office.place.id);
         if (office == null) {
             return TODO;
         }
         Form<PostOffice> newOfficeForm = officeForm.fill(office);
         office.name = newOfficeForm.bindFromRequest().field("name").value();
         office.address = newOfficeForm.bindFromRequest().field("address").value();
-        System.out.println(office.name+" "+office.address);
+        String lon = newOfficeForm.bindFromRequest().field("longitude").value();
+        String lat = newOfficeForm.bindFromRequest().field("latitude").value();
+        if(lon != "") {
+            Double x = Double.parseDouble(lon);
+            Double y = Double.parseDouble(lat);
+            place.x = x;
+            place.y = y;
+            Ebean.update(place);
+            office.place = place;
+        }
         Ebean.update(office);
         return redirect(routes.PostOfficeController.postOfficeDetails(office.id));
 

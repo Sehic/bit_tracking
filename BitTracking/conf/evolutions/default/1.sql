@@ -13,7 +13,6 @@ create table image_path (
 
 create table location (
   id                        bigint auto_increment not null,
-  name                      varchar(255),
   x                         double,
   y                         double,
   constraint pk_location primary key (id))

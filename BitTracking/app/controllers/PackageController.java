@@ -47,7 +47,7 @@ public class PackageController extends Controller {
         Package p = Package.findPackageById(id);
         User user = SessionHelper.getCurrentUser(ctx());
         if(user.typeOfUser==UserType.ADMIN) {
-            Ebean.delete(p);
+           p.delete();
             return ok(packageadd.render(PostOffice.findOffice.findList()));
         } else {
             return redirect("/");
@@ -65,7 +65,7 @@ public class PackageController extends Controller {
         PostOffice office = PostOffice.findPostOffice(Long.parseLong(officeid));
         pack.postOffice = office;
         pack.destination = form.get("destination");
-        Ebean.update(pack);
+        pack.update();
         return ok(adminpackage.render(Package.finder.findList()));
     }
 

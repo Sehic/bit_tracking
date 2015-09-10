@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Location;
 import models.PostOffice;
 import models.User;
 import play.*;
@@ -42,7 +43,7 @@ public class Application extends Controller {
     }
 
     public Result adminMaps(){
-        return ok(adminmaps.render());
+        return ok(adminmaps.render(Location.findLocation.findList()));
     }
 
     public Result adminTables(){
