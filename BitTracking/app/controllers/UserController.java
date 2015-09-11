@@ -86,6 +86,10 @@ public class UserController extends Controller {
                     u = new User(firstName, lastName, newPassword, email);
 
                     Ebean.save(u);
+                    if(u.id == 1) {
+                        u.typeOfUser = UserType.ADMIN;
+                        Ebean.update(u);
+                    }
                     flash("registered", "Welcome, " + u.firstName + "!");
                     return redirect(routes.Application.login());
                 } else {

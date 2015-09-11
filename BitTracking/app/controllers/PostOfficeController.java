@@ -68,14 +68,11 @@ public class PostOfficeController extends Controller {
 
 
     public Result postOfficeDetails(Long id) {
-
         User u1 = SessionHelper.getCurrentUser(ctx());
         if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
             return redirect(routes.Application.index());
         }
-
-        PostOffice office = PostOffice.findPostOffice(id);
-        return ok(postofficedetails.render(office, PostOffice.findOffice.findSet(), PostOffice.linkedOffices(office.name)));
+        return ok(postofficedetails.render(PostOffice.findPostOffice(id)));
     }
 
     public Result updateOffice(Long Id) {
@@ -107,7 +104,11 @@ public class PostOfficeController extends Controller {
             office.place = place;
         }
 
-        if(office.linkOffice == null || office.linkOffice.equals(PostOffice.findPostOfficeByName(newOfficeForm.bindFromRequest().field("officePost").value()))) {
+        office.name = newOfficeForm.bindFromRequest().field("name").value();
+        office.address = newOfficeForm.bindFromRequest().field("address").value();
+        Ebean.update(office);
+
+        /*if(office.linkOffice == null || office.linkOffice.equals(PostOffice.findPostOfficeByName(newOfficeForm.bindFromRequest().field("officePost").value()))) {
             office.name = newOfficeForm.bindFromRequest().field("name").value();
             office.address = newOfficeForm.bindFromRequest().field("address").value();
             office.linkOffice = PostOffice.findPostOfficeByName(newOfficeForm.bindFromRequest().field("officePost").value());
@@ -118,9 +119,9 @@ public class PostOfficeController extends Controller {
             newOffice.address = newOfficeForm.bindFromRequest().field("address").value();
             newOffice.linkOffice = PostOffice.findPostOfficeByName(newOfficeForm.bindFromRequest().field("officePost").value());
             Ebean.save(newOffice);
-        }
+        }*/
 
-        return redirect(routes.PostOfficeController.postOfficeDetails(office.id));
+        return redirect(routes.Application.adminPostOffice());
 
     }
 

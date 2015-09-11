@@ -31,11 +31,7 @@
       <div class="col-sm-2">
         <select name="officePost">
         @for(office <- offices){
-          @if(office.linkOffice != null) {
-            <option value="@office.id">@office.name (@office.linkOffice.name)</option>
-          } else {
-            <option value="@office.id">@office.name (NOT LINKED YET)</option>
-          }
+          <option value="@office.id">@office.name</option>
         }
         </select>
       </div>
