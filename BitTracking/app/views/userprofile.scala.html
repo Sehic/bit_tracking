@@ -1,6 +1,6 @@
 @import helpers.SessionHelper
 
-@(user: User, offices: List[PostOffice])(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
+@(user: User, offices: List[PostOffice], path: ImagePath)(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
 @import helper._
 @main("Edit your profile") {
 
@@ -19,7 +19,11 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="text-center">
-                                    <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
+                                    @if(path != null) {
+                                    <img src="@path.image_url" alt="avatar">
+                                    } else {
+                                        <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
+                                    }
                                     <h6>Profile photo</h6>
 
                                 </div>

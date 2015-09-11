@@ -20,7 +20,10 @@
                                         <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
                                         <h6>Upload a different photo...</h6>
 
-                                        <input type="file" class="form-control">
+                                        <form action="@routes.UserController.uploadPicture()" method="post" enctype="multipart/form-data">
+                                        <input type="file" name="picture" accept="image/*" class="form-control">
+                                            <input type="submit">
+                                        </form>
                                     </div>
                                 </div>
                             </div>

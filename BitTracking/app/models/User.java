@@ -33,8 +33,8 @@ public class User extends Model {
     public UserType typeOfUser;
     @ManyToOne(cascade = CascadeType.ALL)
     public PostOffice postOffice;
-
-    @OneToOne(mappedBy = "profilePhoto", cascade = CascadeType.ALL)
+    @Column
+    @OneToMany(mappedBy = "profilePhoto", cascade = CascadeType.ALL)
     public ImagePath imagePath;
 
 

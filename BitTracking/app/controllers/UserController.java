@@ -1,21 +1,30 @@
 package controllers;
 
+import org.apache.commons.io.FileUtils;
+import play.*;
+import play.Play;
+import play.mvc.*;
 import com.avaje.ebean.Ebean;
 import helpers.CurrentUser;
 import helpers.SessionHelper;
+import models.ImagePath;
 import models.PostOffice;
 import models.User;
 import models.UserType;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
 import views.html.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /**
  * Created by mladen.teofilovic on 04/09/15.
@@ -119,7 +128,6 @@ public class UserController extends Controller {
 
     public Result editProfile(Long id) {
         User u1 = SessionHelper.getCurrentUser(ctx());
-
         User user = User.findById(id);
 
 
@@ -190,6 +198,7 @@ public class UserController extends Controller {
     public Result userProfile(Long id) {
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
+        ImagePath path = ImagePath.findByUser(user);
 
         if (user == null) {
             return redirect(routes.Application.index());
@@ -199,7 +208,7 @@ public class UserController extends Controller {
             return redirect(routes.Application.index());
         }
 
-        return ok(userprofile.render(user, PostOffice.findOffice.findList(), u1));
+        return ok(userprofile.render(user, PostOffice.findOffice.findList(), path, u1));
     }
 
     public Result updateUserType(Long id) {
@@ -272,6 +281,30 @@ public class UserController extends Controller {
             return ok(register.render());
         }
 
+    }
+
+    public Result uploadPicture() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        Http.MultipartFormData body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart picture = body.getFile("picture");
+        if (picture != null) {
+            String fileName = picture.getFilename();
+            File file = picture.getFile();
+            try {
+                FileUtils.moveFile(file, new File(play.Play.application().path() + "\\public\\images\\" + fileName));
+                ImagePath path = new ImagePath();
+                path.image_url = play.Play.application().path() + "\\public\\images\\" + fileName;
+                path.profilePhoto = user;
+                Ebean.save(path);
+                user.imagePath = path;
+                Ebean.update(user);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return TODO;
+        } else {
+            return redirect(routes.Application.index());
+        }
     }
 
 
