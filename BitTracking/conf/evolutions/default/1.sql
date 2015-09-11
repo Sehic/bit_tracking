@@ -3,14 +3,6 @@
 
 # --- !Ups
 
-create table image_path (
-  id                        bigint auto_increment not null,
-  image_url                 varchar(255),
-  profile_photo_id          bigint,
-  constraint uq_image_path_profile_photo_id unique (profile_photo_id),
-  constraint pk_image_path primary key (id))
-;
-
 create table post_office (
   id                        bigint auto_increment not null,
   name                      varchar(255),
@@ -30,18 +22,14 @@ create table user (
   constraint pk_user primary key (id))
 ;
 
-alter table image_path add constraint fk_image_path_profilePhoto_1 foreign key (profile_photo_id) references user (id) on delete restrict on update restrict;
-create index ix_image_path_profilePhoto_1 on image_path (profile_photo_id);
-alter table user add constraint fk_user_postOffice_2 foreign key (post_office_id) references post_office (id) on delete restrict on update restrict;
-create index ix_user_postOffice_2 on user (post_office_id);
+alter table user add constraint fk_user_postOffice_1 foreign key (post_office_id) references post_office (id) on delete restrict on update restrict;
+create index ix_user_postOffice_1 on user (post_office_id);
 
 
 
 # --- !Downs
 
 SET FOREIGN_KEY_CHECKS=0;
-
-drop table image_path;
 
 drop table post_office;
 

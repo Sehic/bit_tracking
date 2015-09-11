@@ -21,6 +21,7 @@ public class PostOffice {
     @OneToMany(mappedBy = "postOffice", cascade = CascadeType.ALL)
     public List<User> officeWorkers = new ArrayList<>();
 
+
     public PostOffice(){
 
     }

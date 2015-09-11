@@ -11,9 +11,6 @@ import views.html.*;
 import com.avaje.ebean.Ebean;
 import play.Logger;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 
@@ -58,7 +55,6 @@ public class Application extends Controller {
     public Result addPostOffice(){
         return ok(postofficeadd.render());
     }
-
 
 
 

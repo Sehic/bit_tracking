@@ -36,8 +36,6 @@ public class PostOfficeController extends Controller {
         return redirect(routes.Application.adminPostOffice());
     }
 
-
-
     public Result addNewOffice(){
         Form<PostOffice> boundForm = officeForm.bindFromRequest();
         String name = boundForm.bindFromRequest().field("name").value();
@@ -46,7 +44,6 @@ public class PostOfficeController extends Controller {
         Ebean.save(p);
         return redirect(routes.Application.adminPostOffice());
     }
-
 
     public Result postOfficeDetails(Long id){
         PostOffice office = PostOffice.findPostOffice(id);
