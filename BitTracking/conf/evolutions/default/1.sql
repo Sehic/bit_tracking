@@ -7,7 +7,6 @@ create table image_path (
   id                        bigint auto_increment not null,
   image_url                 varchar(255),
   profile_photo_id          bigint,
-  constraint uq_image_path_profile_photo_id unique (profile_photo_id),
   constraint pk_image_path primary key (id))
 ;
 

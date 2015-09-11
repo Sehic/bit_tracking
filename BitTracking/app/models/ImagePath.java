@@ -15,10 +15,23 @@ public class ImagePath extends Model {
     public Long id;
     @Required
     public String image_url;
-    @OneToOne
+    @ManyToOne
     public User profilePhoto;
 
     public ImagePath(){
 
     }
+
+    public ImagePath(String image_url, User profilePhoto){
+        this.image_url = image_url;
+        this.profilePhoto = profilePhoto;
+    }
+
+    public static Model.Finder<Long, ImagePath> findImage = new Model.Finder<Long, ImagePath>(Long.class, ImagePath.class);
+
+    public static ImagePath findByUser(User user){
+        ImagePath path = findImage.where().eq("profilePhoto", user).findUnique();
+        return path;
+    }
+
 }

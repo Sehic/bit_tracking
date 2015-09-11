@@ -24,7 +24,7 @@
 
             <div class="row"> <!--This row contains grid col 2 8-->
                 <div class="col-md-2"> <!--Col-2 contains logo-->
-                    <img alt="Bootstrap Image Preview" src="http://www.broadbandbuyer.co.uk/images/logos/bt-logo.png">
+                    <img alt="Bootstrap Image Preview" src="https://s3.amazonaws.com/lg-vectors/bitmaps/2096/6902.jpg">
                 </div> <!--Ends logo col -->
                 <div class="col-md-10"><!-- Starts navbar -->
                     <nav class="navbar navbar-default" role="navigation">
@@ -207,7 +207,7 @@
                         </li>
                         </ul> <!--Ends LOG IN REGISTER TAB in NAVIGATION BAR-->
 
-                            <!--SEARCH BAR-->
+                            <!--SEARCH BAR
                             <form class="navbar-form navbar-right" role="search">
                                 <div class="form-group">
                                     <input class="form-control" type="text">
@@ -215,7 +215,7 @@
                                 <button type="submit" class="btn btn-default">
                                     Search
                                 </button>
-                            </form> <!--ENDS SEARCH BAR-->
+                            </form> ENDS SEARCH BAR-->
                         </div>
                     </nav>
                 </div> <!-- Ends navbar-->
@@ -241,28 +241,35 @@
             </div>
 
                 <!-- ==============FOOTER=================-->
+
             <div class="row">
                 <hr>
                 <div class="col-md-12">
                     <div class="row">
+
                         <div class="col-md-3">
-                            <address>
-                                <h3>BIT Tracking</h3> <br> Address: Sarajevo, Street: <br>
-                                Bosnia and Herzegovina, 71000<br> <abbr title="Phone">P:</abbr> (387) 000-000
-                            </address>
-                        </div>
-                        <div class="col-md-3">
-                            <h3>
-                                Custommer Support
-                            </h3>
-                            <button type="button" class="btn btn-link">
-                                Contact BIT Tracking
-                            </button>
+                            <div class="container" style="font-size:x-small">
+                                <address>
+                                    <h3 style="font-size:14px"><strong>BIT Tracking</strong></h3> <br> Address: Sarajevo, Street: <br>
+                                    Bosnia and Herzegovina, 71000<br> <abbr title="Phone">P:</abbr> (387) 000-000
+                                </address>
+                            </div>
                         </div>
 
                         <div class="col-md-3">
-                            <h3>
-                                New Customers
+                            <div class="container">
+                                <h3 style="font-size:14px">
+                                    <strong> Custommer Support</strong>
+                                </h3>
+                                <button type="button" class="btn btn-link">
+                                Contact BIT Tracking
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <h3 style="font-size:14px">
+                                <strong>New Customers</strong>
                             </h3>
                             <a href="@routes.Application.register()"><button type="button" class="btn btn-link btn-default">
                                 Open an Account
@@ -272,8 +279,8 @@
                         </div>
 
                         <div class="col-md-3">
-                            <h3>
-                                Follow BIT Tracking
+                            <h3 style="font-size:14px">
+                                <strong>Follow BIT Tracking</strong>
                             </h3>
                             <link href="">
                         </div>
@@ -286,9 +293,11 @@
                 <!-- ==============COPYRIGHT=================-->
             <div class="row">
                 <div class="col-md-12">
-                    <footer>
-                        <p>Copyright &copy; 2015 BitTracking Team</p>
-                    </footer>
+                    <div class="container" style="text-align: center" >
+                        <footer>
+                            <p>Copyright &copy; 2015 BitTracking Team</p>
+                        </footer>
+                    </div>
                 </div>
             </div> <!-- Ends copyright-->
         </div>

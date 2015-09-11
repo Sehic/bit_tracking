@@ -34,7 +34,7 @@ public class User extends Model {
     @ManyToOne(cascade = CascadeType.ALL)
     public PostOffice postOffice;
 
-    @OneToOne(mappedBy = "profilePhoto", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "profilePhoto", cascade = CascadeType.ALL)
     public ImagePath imagePath;
 
 

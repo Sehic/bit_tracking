@@ -3,16 +3,21 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import helpers.CurrentUser;
 import helpers.SessionHelper;
+import models.ImagePath;
 import models.PostOffice;
 import models.User;
 import models.UserType;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
 import views.html.*;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -121,13 +126,45 @@ public class UserController extends Controller {
         User u1 = SessionHelper.getCurrentUser(ctx());
 
         User user = User.findById(id);
-
-
+        ImagePath path = ImagePath.findByUser(u1);
         if (u1 == null || user == null || u1.id != user.id) {
             return redirect(routes.Application.index());
         }
-        return ok(editprofile.render(user));
+        return ok(editprofile.render(user, path));
     }
+
+    public Result uploadPicture() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        Http.MultipartFormData body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart picture = body.getFile("picture");
+        if (picture != null) {
+            String fileName = picture.getFilename();
+            File file = picture.getFile();
+            try {
+                FileUtils.moveFile(file, new File("./public/images/" + fileName));
+                ImagePath path = ImagePath.findByUser(user);
+                if(path == null) {
+                    path = new ImagePath();
+                    path.image_url = "/assets/images/" + fileName;
+                } else {
+                    //FileUtils.forceDelete(new File(path.image_url));
+                    path.image_url = null;
+                    Ebean.update(path);
+                    path.image_url = "/assets/images/" + fileName;
+                }
+                path.profilePhoto = user;
+                Ebean.save(path);
+                user.imagePath = path;
+                Ebean.update(user);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return redirect("/mybt/userprofile/"+user.id);
+        } else {
+            return redirect(routes.Application.index());
+        }
+    }
+
 
     /**
      * Method that updates user firstname, lastname and password
@@ -191,6 +228,8 @@ public class UserController extends Controller {
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
 
+
+
         if (user == null) {
             return redirect(routes.Application.index());
         }
@@ -199,7 +238,9 @@ public class UserController extends Controller {
             return redirect(routes.Application.index());
         }
 
-        return ok(userprofile.render(user, PostOffice.findOffice.findList(), u1));
+        ImagePath path = ImagePath.findByUser(user);
+
+        return ok(userprofile.render(user, PostOffice.findOffice.findList(), path, u1));
     }
 
     public Result updateUserType(Long id) {
