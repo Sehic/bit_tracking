@@ -32,6 +32,7 @@ public class Application extends Controller {
     }
 
     public Result logout() {
+
         session().clear();
         return redirect(routes.Application.login());
     }
@@ -100,6 +101,10 @@ public class Application extends Controller {
     }
 
     public Result registerOfficeWorker() {
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
         return ok(officeworkeradd.render(postOffices));
     }

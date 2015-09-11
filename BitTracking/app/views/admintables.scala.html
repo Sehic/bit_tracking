@@ -52,7 +52,11 @@
                             <td>@user.email</td>
                             <td>@user.typeOfUser</td>
                             <td><form action="@routes.UserController.userProfile(user.id)"><input type="submit" value="Edit"></form></td>
+                            @if(user.typeOfUser!=UserType.ADMIN){
                             <td><form action="@routes.UserController.deleteUser(user.id)"><input type="submit" value="Delete"></form></td>
+                            }else {
+                                <td><form action="3"></form></td>
+                            }
                         </tr>
                     }
                     </tbody>
