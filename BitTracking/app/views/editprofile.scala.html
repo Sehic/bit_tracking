@@ -1,4 +1,4 @@
-@(user: User)
+@(user: User, path: ImagePath)
     @import helper._
     @main("Edit your profile") {
 
@@ -17,7 +17,11 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="text-center">
-                                        <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
+                                        @if(path != null) {
+                                            <img src="@path.image_url" class="avatar img-circle" alt="avatar" height="100" width="100">
+                                        } else {
+                                            <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
+                                        }
                                         <h6>Upload a different photo...</h6>
 
                                         <form action="@routes.UserController.uploadPicture()" method="post" enctype="multipart/form-data">

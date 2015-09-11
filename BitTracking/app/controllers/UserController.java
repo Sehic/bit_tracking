@@ -129,12 +129,13 @@ public class UserController extends Controller {
     public Result editProfile(Long id) {
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
+        ImagePath path = ImagePath.findByUser(u1);
 
 
         if (u1 == null || user == null || u1.id != user.id) {
             return redirect(routes.Application.index());
         }
-        return ok(editprofile.render(user));
+        return ok(editprofile.render(user, path));
     }
 
     /**
@@ -291,9 +292,17 @@ public class UserController extends Controller {
             String fileName = picture.getFilename();
             File file = picture.getFile();
             try {
-                FileUtils.moveFile(file, new File(play.Play.application().path() + "\\public\\images\\" + fileName));
-                ImagePath path = new ImagePath();
-                path.image_url = play.Play.application().path() + "\\public\\images\\" + fileName;
+                FileUtils.moveFile(file, new File("./public/images/" + fileName));
+                ImagePath path = ImagePath.findByUser(user);
+                if(path == null) {
+                    path = new ImagePath();
+                    path.image_url = "/assets/images/" + fileName;
+                } else {
+                    //FileUtils.forceDelete(new File(path.image_url));
+                    path.image_url = null;
+                    Ebean.update(path);
+                    path.image_url = "/assets/images/" + fileName;
+                }
                 path.profilePhoto = user;
                 Ebean.save(path);
                 user.imagePath = path;
@@ -301,7 +310,7 @@ public class UserController extends Controller {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return TODO;
+            return redirect("/mybt/userprofile/"+user.id);
         } else {
             return redirect(routes.Application.index());
         }
