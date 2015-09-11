@@ -57,7 +57,10 @@ public class Application extends Controller {
             return redirect(routes.Application.index());
         }
 
-        return ok(adminmaps.render(Location.findLocation.findList()));
+        if (Location.findLocation.findList().size() > 0)
+            return ok(adminmaps.render(Location.findLocation.findList()));
+        return redirect(routes.Application.index());
+
     }
 
     public Result adminTables() {
