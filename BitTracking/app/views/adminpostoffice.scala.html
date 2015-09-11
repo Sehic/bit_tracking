@@ -17,16 +17,21 @@
     <li class="active">Post office</li>
   </ol>
   <h2>Post office</h2>
+    <div class="row">
+        <div class="col-sm-12" >
+            <div class="row">
+                <div class="col-sm-10" >
+                    <h4 class="margin-bottom-15">List of post offices</h4>
+                </div>
 
-  <a href="@routes.Application.addPostOffice()"><button type="button" class="btn btn-info btn-lg" data-toggle="modal">Add post office</button></a>
-
-  <div class="table-responsive">
-
-  </div>
-
-  <h4 class="margin-bottom-15">List of post offices</h4>
-  <table class="table table-striped table-hover table-bordered">
-    <thead>
+                <div class="col-sm-2" class=".pull-right" >
+                    <a href="@routes.Application.addPostOffice()"><button type="button" class="btn btn-info" data-toggle="modal" >Add post office</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
       <tr>
         <th>#</th>
         <th>Name</th>
