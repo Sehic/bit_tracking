@@ -7,7 +7,7 @@ GET           /                                         @controllers.Application
 GET           /login                                    @controllers.Application.login()
 GET           /register                                 @controllers.Application.register()
 GET           /mybt/editprofile/:id                     @controllers.UserController.editProfile(id: Long)
-POST          /check                                    @controllers.UserController.check()
+POST          /check                                    @controllers.UserController.loginCheck()
 POST          /register                                 @controllers.UserController.registrationCheck()
 POST          /mybt/editprofile/:id                     @controllers.UserController.updateUser(id: Long)
 GET           /mybt/userprofile/:id                     @controllers.UserController.userProfile(id: Long)

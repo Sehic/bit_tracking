@@ -18,20 +18,30 @@ public class User extends Model {
 
     @Id
     public Long id;
+
+    @Constraints.Required
     @Column(length = 50)
     public String firstName;
+
+    @Constraints.Required
     @Column(length = 50)
     public String lastName;
+
+    @Constraints.Required
     @Column(length = 50)
     @Constraints.MinLength(6)
     @Constraints.MaxLength(28)
     public String password;
+
+    @Constraints.Required
     @Column(length = 50)
     public String email;
+
     @Column
     @Enumerated(EnumType.STRING)
     public UserType typeOfUser;
-    @ManyToOne(cascade = CascadeType.ALL)
+
+    @ManyToOne
     public PostOffice postOffice;
 
     @OneToMany(mappedBy = "profilePhoto", cascade = CascadeType.ALL)

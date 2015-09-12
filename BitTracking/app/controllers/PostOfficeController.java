@@ -30,6 +30,11 @@ public class PostOfficeController extends Controller {
     private static final Form<PostOffice> officeForm =
             Form.form(PostOffice.class);
 
+    /**
+     * Method that deletes office from database
+     * @param id - represents office id
+     * @return
+     */
     public Result deleteOffice(Long id) {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
@@ -37,13 +42,17 @@ public class PostOfficeController extends Controller {
             return redirect(routes.Application.index());
         }
 
-        final PostOffice office = PostOffice.findPostOffice(id);
+        PostOffice office = PostOffice.findPostOffice(id);
         Location place = Location.findLocationById(office.place.id);
+
         Ebean.delete(place);
         return redirect(routes.Application.adminPostOffice());
     }
 
-
+    /**
+     * Method that adds new office to database using (adminpostoffice.scala.html)
+     * @return
+     */
     public Result addNewOffice() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
@@ -56,6 +65,11 @@ public class PostOfficeController extends Controller {
         String address = boundForm.bindFromRequest().field("address").value();
         String lon = boundForm.bindFromRequest().field("longitude").value();
         String lat = boundForm.bindFromRequest().field("latitude").value();
+
+        if (lon== null || lat==null){
+            return redirect(routes.Application.adminPostOffice());
+        }
+
         Double x = Double.parseDouble(lon);
         Double y = Double.parseDouble(lat);
         Location place = new Location(x, y);
@@ -66,7 +80,11 @@ public class PostOfficeController extends Controller {
         return redirect(routes.Application.adminPostOffice());
     }
 
-
+    /**
+     * Method that enables post office editing
+     * @param id - post office id
+     * @return
+     */
     public Result postOfficeDetails(Long id) {
         User u1 = SessionHelper.getCurrentUser(ctx());
         if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
@@ -75,6 +93,11 @@ public class PostOfficeController extends Controller {
         return ok(postofficedetails.render(PostOffice.findPostOffice(id)));
     }
 
+    /**
+     * Method that updates post office information (postofficedetails.scala.html)
+     * @param Id
+     * @return
+     */
     public Result updateOffice(Long Id) {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
@@ -95,6 +118,11 @@ public class PostOfficeController extends Controller {
         Form<PostOffice> newOfficeForm = officeForm.fill(office);
         String lon = newOfficeForm.bindFromRequest().field("longitude").value();
         String lat = newOfficeForm.bindFromRequest().field("latitude").value();
+
+        if (lon== null || lat==null){
+            return redirect(routes.Application.adminPostOffice());
+        }
+
         if (lon != "") {
             Double x = Double.parseDouble(lon);
             Double y = Double.parseDouble(lat);
@@ -108,18 +136,6 @@ public class PostOfficeController extends Controller {
         office.address = newOfficeForm.bindFromRequest().field("address").value();
         Ebean.update(office);
 
-        /*if(office.linkOffice == null || office.linkOffice.equals(PostOffice.findPostOfficeByName(newOfficeForm.bindFromRequest().field("officePost").value()))) {
-            office.name = newOfficeForm.bindFromRequest().field("name").value();
-            office.address = newOfficeForm.bindFromRequest().field("address").value();
-            office.linkOffice = PostOffice.findPostOfficeByName(newOfficeForm.bindFromRequest().field("officePost").value());
-            Ebean.update(office);
-        } else {
-            PostOffice newOffice = new PostOffice();
-            newOffice.name = newOfficeForm.bindFromRequest().field("name").value();
-            newOffice.address = newOfficeForm.bindFromRequest().field("address").value();
-            newOffice.linkOffice = PostOffice.findPostOfficeByName(newOfficeForm.bindFromRequest().field("officePost").value());
-            Ebean.save(newOffice);
-        }*/
 
         return redirect(routes.Application.adminPostOffice());
 

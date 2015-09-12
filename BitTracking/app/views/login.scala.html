@@ -1,5 +1,5 @@
 @import helper._
-@(loginMessage: String)
+@(loginMessage: String, userForm: Form[User])
     @main("Sign In"){
 
         <!-- LOG IN CONTAINER-->
@@ -24,7 +24,7 @@
                                         <h5>
                                             Log into an Existing Account. Required fields are marked with an asterisk (<abbr class="req" title="required">*</abbr>).
                                         </h5><br>
-                                        @helper.form(routes.UserController.check(), 'class->"form-horizontal", 'role->"form"){
+                                        @helper.form(routes.UserController.loginCheck(), 'class->"form-horizontal", 'role->"form"){
 
                                             <div class="form-group">
 
@@ -32,7 +32,7 @@
                                                     Email<abbr class="req" title="required" style="color: red"> * </abbr>
                                                 </label>
                                                 <div class="col-sm-10">
-                                                    <input name="email" placeholder="Your email address" type="email" class="form-control" id="inputEmail3" required="required" style="font-size:12px; font-style: italic ">
+                                                    <input value="@userForm("email").value" name="email" placeholder="Your email address" type="email" class="form-control" id="inputEmail3" required="required" style="font-size:12px; font-style: italic ">
                                                 </div>
                                             </div>
 
@@ -43,9 +43,18 @@
                                                 </label>
                                                 <div class= "col-sm-10">
                                                     <input name="password" id="password" placeholder="Password must have any sequence of alpha, special symbol, one number. Min allowed length is 6."
-                                                    type="password" class="form-control" id="inputPassword3" style="font-size:10px; font-style: italic " >
+                                                    type="password" class="form-control" id="inputPassword3" required="required" style="font-size:10px; font-style: italic " >
                                                 </div>
                                             </div>
+
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2 col-sm-10">
+                                                <b style="color:red">
+                                                @loginMessage
+                                                </b>
+                                                </div>
+                                            </div>
+
                                             <div class="form-group">
                                                 <div class="col-sm-offset-2 col-sm-10">
 
@@ -65,7 +74,6 @@
                                                     </button>
                                                 </div>
                                             </div>
-                                            @loginMessage
                                         }
                                     </div>
                                 </div>
@@ -113,5 +121,6 @@
                 </div>
             </div>
         </div>
+
 
     }

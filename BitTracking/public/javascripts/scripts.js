@@ -86,3 +86,4 @@ function checkPasswords() {
         document.getElementById("repassError").innerHTML = "";
     }
 }
+

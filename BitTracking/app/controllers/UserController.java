@@ -29,20 +29,16 @@ import java.security.NoSuchAlgorithmException;
 
 public class UserController extends Controller {
 
-    static Form<User> newUser = new Form<User>(User.class);
-    private static final Form<User> userForm =
-            Form.form(User.class);
+    private static final Form<User> newUser = new Form<User>(User.class);
+
 
     /**
      * This method is used for checking if user inserted data is valid.
      *
      * @return - positive message if true, else negative message
      */
-    public Result check() {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-
-
+    public Result loginCheck() {
+        //Getting values from form in (login.scala.html)
         String password = newUser.bindFromRequest().field("password").value();
         String email = newUser.bindFromRequest().field("email").value();
         String newPassword = getEncriptedPasswordMD5(password);
@@ -53,7 +49,7 @@ public class UserController extends Controller {
             session("email", email);
             return redirect(routes.Application.index());
         }
-        return ok(login.render("Wrong email or password!"));
+        return badRequest(login.render("Wrong email or password!", newUser.bindFromRequest()));
 
     }
 
@@ -64,29 +60,26 @@ public class UserController extends Controller {
      * @return redirect user to subpage login if everything is ok, otherwise ?????
      */
     public Result registrationCheck() {
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        Form<User> boundForm = userForm.bindFromRequest();
-        String firstName = boundForm.bindFromRequest().field("firstName").value();
-        String lastName = boundForm.bindFromRequest().field("lastName").value();
-        String password = boundForm.bindFromRequest().field("password").value();
+
+        Form<User> boundForm = newUser.bindFromRequest();
+        //Creating user using form values (register.scala.html)
+        User userFromForm = boundForm.get();
+        //Getting password confirmation field on this way because it is not attribute
         String repassword = boundForm.bindFromRequest().field("repassword").value();
-        String email = boundForm.bindFromRequest().field("email").value();
-        User u = User.checkEmail(email);
+        //Creating new user where we will check if mail exists in database
+        User u = User.checkEmail(userFromForm.email);
+        //If user is not found, that means we can proceed creating new user
         if (u == null) {
-            u = new User(firstName, lastName, password, email);
+            u = new User(userFromForm.firstName, userFromForm.lastName, userFromForm.password, userFromForm.email);
 
-            if (firstName.length() == 0 || lastName.length() == 0 || password.length() == 0 || repassword.length() == 0 || email.length() == 0) {
-                flash("errorEmptyName", "Please fill all fields!");
-            }
+            if (u.checkName(u.firstName) && u.checkName(u.lastName)) {
 
-            if (u.checkName(firstName) && u.checkName(lastName)) {
-
-                if (u.checkPassword(password) && password.equals(repassword)) {
-                    String newPassword = getEncriptedPasswordMD5(password);
-                    u = new User(firstName, lastName, newPassword, email);
+                if (u.checkPassword(u.password) && u.password.equals(repassword)) {
+                    String newPassword = getEncriptedPasswordMD5(u.password);
+                    u = new User(u.firstName, u.lastName, newPassword, u.email);
 
                     Ebean.save(u);
-                    if(u.id == 1) {
+                    if (u.id == 1) {
                         u.typeOfUser = UserType.ADMIN;
                         Ebean.update(u);
                     }
@@ -94,16 +87,16 @@ public class UserController extends Controller {
                     return redirect(routes.Application.login());
                 } else {
                     flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters, one number, and one sign, or you entered different passwords");
-                    return ok(register.render());
+                    return badRequest(register.render(boundForm));
                 }
             } else {
                 flash("errorName", "Your name or last name should have only letters.");
-                return (badRequest(register.render()));
+                return badRequest(register.render(boundForm));
                 //return ok(register.render());
             }
         } else {
             flash("errorEmail", "E-mail address already exists!");
-            return ok(register.render());
+            return badRequest(register.render(boundForm));
         }
     }
 
@@ -126,44 +119,65 @@ public class UserController extends Controller {
         return "INVALID PASSWORD";
     }
 
+    /**
+     * This method is used for editing user profile
+     *
+     * @param id - user id
+     * @return - ok  if everything goes fine, redirect to index page if user is not part of session.
+     */
     public Result editProfile(Long id) {
-        User u1 = SessionHelper.getCurrentUser(ctx());
 
+        User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
+
         ImagePath path = ImagePath.findByUser(u1);
+
         if (u1 == null || user == null || u1.id != user.id) {
             return redirect(routes.Application.index());
         }
         return ok(editprofile.render(user, path));
     }
 
+    /**
+     * This method is used for uploading picture when clicking on button
+     *
+     * @return
+     */
     public Result uploadPicture() {
+
         User user = SessionHelper.getCurrentUser(ctx());
+        if (user == null) {
+            return redirect(routes.Application.index());
+        }
+
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart picture = body.getFile("picture");
+
         if (picture != null) {
             String fileName = picture.getFilename();
             File file = picture.getFile();
             try {
                 FileUtils.moveFile(file, new File("./public/images/" + fileName));
                 ImagePath path = ImagePath.findByUser(user);
-                if(path == null) {
+                if (path == null) {
                     path = new ImagePath();
                     path.image_url = "/assets/images/" + fileName;
+                    path.profilePhoto = user;
+                    Ebean.save(path);
+                    user.imagePath = path;
+                    Ebean.update(user);
                 } else {
-                    //FileUtils.forceDelete(new File(path.image_url));
-                    path.image_url = null;
-                    Ebean.update(path);
+                    String deletePic = "./public/images/" + path.image_url.split("/", 4)[3];
+                    Logger.info(deletePic);
                     path.image_url = "/assets/images/" + fileName;
+                    Ebean.update(path);
+                    FileUtils.deleteQuietly(new File(deletePic));
                 }
-                path.profilePhoto = user;
-                Ebean.save(path);
-                user.imagePath = path;
-                Ebean.update(user);
+               
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return redirect("/mybt/userprofile/"+user.id);
+            return redirect("/mybt/editprofile/" + user.id);
         } else {
             return redirect(routes.Application.index());
         }
@@ -177,8 +191,13 @@ public class UserController extends Controller {
      * @return
      */
     public Result updateUser(Long id) {
+
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
+
+        if (u1 == null || user == null || u1.id != user.id) {
+            return redirect(routes.Application.index());
+        }
 
         Form<User> filledForm = newUser.fill(user);
 
@@ -201,18 +220,30 @@ public class UserController extends Controller {
         return redirect(routes.Application.login());
     }
 
+    /**
+     * Method that deletes user from database
+     * @param id - user id
+     * @return
+     */
     public Result deleteUser(Long id) {
+
         User u1 = SessionHelper.getCurrentUser(ctx());
+
         if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
             return redirect(routes.Application.index());
         }
-
         User user = User.findById(id);
         Ebean.delete(user);
         return redirect(routes.Application.adminTables());
     }
 
+    /**
+     * Method that opens up admin profile (adminpreferences.scala.html)
+     * @param id
+     * @return
+     */
     public Result adminPreferences(Long id) {
+
         User u1 = SessionHelper.getCurrentUser(ctx());
 
         if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
@@ -227,12 +258,15 @@ public class UserController extends Controller {
         return ok(adminpreferences.render(user));
     }
 
-
+    /**
+     * Method that opens up user profile (userprofile.scala.html)
+     * @param id - edited user id
+     * @return
+     */
     public Result userProfile(Long id) {
+
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
-
-
 
         if (user == null) {
             return redirect(routes.Application.index());
@@ -247,43 +281,57 @@ public class UserController extends Controller {
         return ok(userprofile.render(user, PostOffice.findOffice.findList(), path, u1));
     }
 
+    /**
+     * Method that is used for updating type of user (userprofile.scala.html)
+     * @param id - edited user id
+     * @return
+     */
     public Result updateUserType(Long id) {
+
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
 
-        Form<User> boundForm = userForm.bindFromRequest();
+        Form<User> boundForm = newUser.bindFromRequest();
+        //Getting values from combo boxes
         String userType = boundForm.bindFromRequest().field("userType").value();
         String postOffice = boundForm.bindFromRequest().field("postOffice").value();
+
         if (userType.equals("Admin")) {
+
             user.typeOfUser = UserType.ADMIN;
+
         } else if (userType.equals("Office Worker")) {
+
             user.typeOfUser = UserType.OFFICE_WORKER;
             user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
 
         } else {
+
             user.typeOfUser = UserType.REGISTERED_USER;
+
         }
         Ebean.update(user);
 
         return redirect(routes.Application.adminPanel());
-
     }
 
     public Result addOfficeWorker() {
+
         User u1 = SessionHelper.getCurrentUser(ctx());
 
         if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
             return redirect(routes.Application.index());
         }
 
-        Form<User> boundForm = userForm.bindFromRequest();
+        Form<User> boundForm = newUser.bindFromRequest();
         String firstName = boundForm.bindFromRequest().field("firstName").value();
         String lastName = boundForm.bindFromRequest().field("lastName").value();
         String password = boundForm.bindFromRequest().field("password").value();
         String repassword = boundForm.bindFromRequest().field("repassword").value();
         String email = boundForm.bindFromRequest().field("email").value();
+        //Getting post office name
         String postOffice = boundForm.bindFromRequest().field("postOffice").value();
-
+        //Proceeding value and creating post office with it
         PostOffice wantedPostOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
 
         User u = User.checkEmail(email);
@@ -305,16 +353,16 @@ public class UserController extends Controller {
                     return redirect(routes.Application.officeWorkersList());
                 } else {
                     flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters, one number, and one sign, or you entered different passwords");
-                    return ok(register.render());
+                    return redirect(routes.Application.registerOfficeWorker());
                 }
             } else {
                 flash("errorName", "Your name or last name should have only letters.");
-                return (badRequest(register.render()));
+                return redirect(routes.Application.registerOfficeWorker());
                 //return ok(register.render());
             }
         } else {
             flash("errorEmail", "E-mail address already exists!");
-            return ok(register.render());
+            return redirect(routes.Application.registerOfficeWorker());
         }
 
     }

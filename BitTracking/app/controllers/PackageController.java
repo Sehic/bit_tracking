@@ -20,6 +20,11 @@ import java.util.List;
  */
 public class PackageController extends Controller {
 
+    /**
+     * Method that shows up list of all packages in post office
+     *
+     * @return
+     */
     public Result adminPackage() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
@@ -30,6 +35,11 @@ public class PackageController extends Controller {
         return ok(adminpackage.render(Package.finder.findList()));
     }
 
+    /**
+     * Method that opens up add package form (packageadd.scala.html)
+     *
+     * @return
+     */
     public Result addPackage() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
@@ -38,29 +48,44 @@ public class PackageController extends Controller {
         }
 
         List<PostOffice> offices = PostOffice.findOffice.findList();
-        if (offices.size() == 0 || offices == null) {
+        if (offices == null || offices.size() == 0) {
             return ok(postofficeadd.render());
         }
 
         return ok(packageadd.render(PostOffice.findOffice.findList()));
     }
 
+    /**
+     * Method that saves package to database using (packageadd.scala.html) form
+     * @return
+     */
     public Result savePackage() {
-        DynamicForm form = Form.form().bindFromRequest();
+
         User user = SessionHelper.getCurrentUser(ctx());
         if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
             return redirect("/");
         }
+        DynamicForm form = Form.form().bindFromRequest();
+
         String id = form.bindFromRequest().field("officePost").value();
+
         PostOffice office = PostOffice.findPostOffice(Long.parseLong(id));
+
         Package pack = new Package();
         pack.postOffice = office;
         pack.destination = form.get("destination");
+
         Ebean.save(pack);
         return ok(adminpackage.render(Package.finder.findList()));
     }
 
+    /**
+     * Method that deletes package from database
+     * @param id - tracking number
+     * @return
+     */
     public Result deletePackage(Long id) {
+
         Package p = Package.findPackageById(id);
         User user = SessionHelper.getCurrentUser(ctx());
         if (user != null || user.typeOfUser == UserType.OFFICE_WORKER || user.typeOfUser == UserType.ADMIN) {
@@ -71,12 +96,18 @@ public class PackageController extends Controller {
         }
     }
 
+    /**
+     * Method that updates package informations (packagedetails.scala.html)
+     * @param id
+     * @return
+     */
     public Result updatePackage(Long id) {
-        DynamicForm form = Form.form().bindFromRequest();
+
         User user = SessionHelper.getCurrentUser(ctx());
         if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
             return redirect("/");
         }
+        DynamicForm form = Form.form().bindFromRequest();
         Package pack = Package.findPackageById(id);
         String officeid = form.bindFromRequest().field("officePost").value();
         PostOffice office = PostOffice.findPostOffice(Long.parseLong(officeid));
@@ -86,6 +117,11 @@ public class PackageController extends Controller {
         return ok(adminpackage.render(Package.finder.findList()));
     }
 
+    /**
+     * Method that is used for opening up form for editing package (adminpackage.scala.html)
+     * @param id
+     * @return
+     */
     public Result editPackage(Long id) {
 
         User user = SessionHelper.getCurrentUser(ctx());
