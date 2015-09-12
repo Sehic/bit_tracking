@@ -12,9 +12,12 @@ POST          /register                                 @controllers.UserControl
 POST          /mybt/editprofile/:id                     @controllers.UserController.updateUser(id: Long)
 GET           /mybt/userprofile/:id                     @controllers.UserController.userProfile(id: Long)
 POST          /mybt/userprofile/:id                     @controllers.UserController.updateUserType(id: Long)
+POST          /mybt/userprofile/upload/                 @controllers.UserController.uploadPicture()
 GET           /logout                                   @controllers.Application.logout()
 
 GET           /adminpanel                               @controllers.Application.adminPanel()
+GET           /adminpanel/linkoffices/:id                   @controllers.PostOfficeController.linkPostOffices(id: Long)
+POST           /adminpanel/linkoffices                   @controllers.PostOfficeController.savePostOffices()
 GET           /adminpanel/maps                          @controllers.Application.adminMaps()
 GET           /adminpanel/tables                        @controllers.Application.adminTables()
 GET           /adminpanel/tables/addpostoffice          @controllers.Application.addPostOffice()
@@ -38,7 +41,7 @@ DELETE        /adminpanel/package/delete/:id            @controllers.PackageCont
 GET           /adminpanel/package/update/:id            @controllers.PackageController.editPackage(id: Long)
 POST          /adminpanel/package/update/:id            @controllers.PackageController.updatePackage(id: Long)
 
-POST        /mybt/userprofile/upload/                   @controllers.UserController.uploadPicture()
+
 
 
 

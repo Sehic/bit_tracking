@@ -36,6 +36,7 @@
         <th>#</th>
         <th>Name</th>
         <th>Adress</th>
+          <th>Linked To</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -45,6 +46,7 @@
         <td>@postOffice.id</td>
         <td><a href="@routes.PostOfficeController.postOfficeDetails(postOffice.id)" class="btn btn-link">@postOffice.name</a></td>
         <td>@postOffice.address</td>
+          <td><a href="@routes.PostOfficeController.linkPostOffices(postOffice.id)">Link</a></td>
         <td><a onclick="del('@routes.PostOfficeController.deleteOffice(postOffice.id)')" class="btn btn-link">Delete</a></td>
       </tr>
     }

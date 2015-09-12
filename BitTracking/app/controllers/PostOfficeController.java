@@ -20,6 +20,8 @@ import java.lang.System;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,6 +34,7 @@ public class PostOfficeController extends Controller {
 
     /**
      * Method that deletes office from database
+     *
      * @param id - represents office id
      * @return
      */
@@ -51,6 +54,7 @@ public class PostOfficeController extends Controller {
 
     /**
      * Method that adds new office to database using (adminpostoffice.scala.html)
+     *
      * @return
      */
     public Result addNewOffice() {
@@ -66,7 +70,7 @@ public class PostOfficeController extends Controller {
         String lon = boundForm.bindFromRequest().field("longitude").value();
         String lat = boundForm.bindFromRequest().field("latitude").value();
 
-        if (lon== null || lat==null){
+        if (lon == null || lat == null) {
             return redirect(routes.Application.adminPostOffice());
         }
 
@@ -82,6 +86,7 @@ public class PostOfficeController extends Controller {
 
     /**
      * Method that enables post office editing
+     *
      * @param id - post office id
      * @return
      */
@@ -95,6 +100,7 @@ public class PostOfficeController extends Controller {
 
     /**
      * Method that updates post office information (postofficedetails.scala.html)
+     *
      * @param Id
      * @return
      */
@@ -108,7 +114,7 @@ public class PostOfficeController extends Controller {
         PostOffice office = PostOffice.findPostOffice(Id);
         Location place = Location.findLocationById(office.place.id);
 
-        if(place == null){
+        if (place == null) {
             return redirect(routes.Application.adminPostOffice());
         }
 
@@ -119,7 +125,7 @@ public class PostOfficeController extends Controller {
         String lon = newOfficeForm.bindFromRequest().field("longitude").value();
         String lat = newOfficeForm.bindFromRequest().field("latitude").value();
 
-        if (lon== null || lat==null){
+        if (lon == null || lat == null) {
             return redirect(routes.Application.adminPostOffice());
         }
 
@@ -141,5 +147,67 @@ public class PostOfficeController extends Controller {
 
     }
 
+    /**
+     * Method that opens up window for making links to offices
+     * @return
+     */
+    public Result linkPostOffices(Long id) {
+
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+
+        List<PostOffice> postOffices = PostOffice.findOffice.findList();
+
+        return ok(linkoffices.render(postOffices, PostOffice.findOffice.byId(id)));
+    }
+
+    /**
+     * Method that saves link of offices to database
+     * @return
+     */
+    public Result savePostOffices() {
+
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+
+        Form<PostOffice> boundForm = officeForm.bindFromRequest();
+
+        List<PostOffice> postOffices = PostOffice.findOffice.findList();
+        //Getting values from checkboxes
+        List<String> checkBoxValues = new ArrayList<>();
+        for (int i = 0; i < postOffices.size(); i++) {
+            String office = boundForm.bindFromRequest().field(postOffices.get(i).name).value();
+            checkBoxValues.add(office);
+
+        }
+        //Removing null elements from list
+        checkBoxValues.removeAll(Collections.singleton(null));
+        postOffices.clear();
+        //Making postoffices with names from checkBoxValues list
+        for (int i = 0; i < checkBoxValues.size(); i++) {
+            PostOffice postOffice = PostOffice.findOffice.where().eq("name", checkBoxValues.get(i)).findUnique();
+            postOffices.add(postOffice);
+        }
+
+        String officeName = boundForm.bindFromRequest().field("mainOfficeName").value();
+
+        PostOffice mainPostOffice = PostOffice.findOffice.where().eq("name", officeName).findUnique();
+        //Saving offices and their relationship to database
+        for (int i = 0; i < postOffices.size(); i++) {
+            PostOffice linkedPostOffice = postOffices.get(i);
+            mainPostOffice.postOfficesA.add(linkedPostOffice);
+            linkedPostOffice.postOfficesA.add(mainPostOffice);
+            Ebean.save(mainPostOffice);
+            Ebean.save(linkedPostOffice);
+
+        }
+
+        return redirect("/adminpanel");
+
+    }
 
 }

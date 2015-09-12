@@ -173,7 +173,7 @@ public class UserController extends Controller {
                     Ebean.update(path);
                     FileUtils.deleteQuietly(new File(deletePic));
                 }
-               
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
