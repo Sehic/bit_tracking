@@ -26,6 +26,13 @@ public class PostOffice extends Model {
     @OneToMany(mappedBy = "postOffice", cascade = CascadeType.ALL)
     public List<Package> packages = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name="linked_offices",
+            joinColumns=@JoinColumn(name="post_officeA_id"),
+            inverseJoinColumns=@JoinColumn(name="post_officeB_id")
+    )
+    public List<PostOffice> postOfficesA = new ArrayList<>();
+
     @OneToOne
     public Location place;
 
@@ -38,6 +45,7 @@ public class PostOffice extends Model {
         this.name = name;
         this.address = address;
     }
+
 
     public PostOffice(String name, String address, Location place) {
         this.name = name;

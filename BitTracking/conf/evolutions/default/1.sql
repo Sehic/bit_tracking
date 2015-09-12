@@ -45,6 +45,12 @@ create table user (
   constraint pk_user primary key (id))
 ;
 
+
+create table linked_offices (
+  post_officeA_id                bigint not null,
+  post_officeB_id                bigint not null,
+  constraint pk_linked_offices primary key (post_officeA_id, post_officeB_id))
+;
 alter table image_path add constraint fk_image_path_profilePhoto_1 foreign key (profile_photo_id) references user (id) on delete restrict on update restrict;
 create index ix_image_path_profilePhoto_1 on image_path (profile_photo_id);
 alter table package add constraint fk_package_postOffice_2 foreign key (post_office_id) references post_office (id) on delete restrict on update restrict;
@@ -55,6 +61,10 @@ alter table user add constraint fk_user_postOffice_4 foreign key (post_office_id
 create index ix_user_postOffice_4 on user (post_office_id);
 
 
+
+alter table linked_offices add constraint fk_linked_offices_post_office_01 foreign key (post_officeA_id) references post_office (id) on delete restrict on update restrict;
+
+alter table linked_offices add constraint fk_linked_offices_post_office_02 foreign key (post_officeB_id) references post_office (id) on delete restrict on update restrict;
 
 # --- !Downs
 
@@ -67,6 +77,8 @@ drop table location;
 drop table package;
 
 drop table post_office;
+
+drop table linked_offices;
 
 drop table user;
 
