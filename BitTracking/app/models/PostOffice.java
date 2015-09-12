@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model.*;
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
@@ -16,9 +17,10 @@ public class PostOffice extends Model {
     public Long id;
     @Column
     public String name;
+    @Constraints.Required
     @Column
     public String address;
-    @OneToMany(mappedBy = "postOffice", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "postOffice")
     public List<User> officeWorkers = new ArrayList<>();
 
     @OneToMany(mappedBy = "postOffice", cascade = CascadeType.ALL)

@@ -22,26 +22,46 @@ import java.util.List;
 
 
 public class Application extends Controller {
-
+    /**
+     * Method that opens up index page
+     * @return
+     */
     public Result index() {
         return ok(index.render());
     }
 
+    /**
+     * Method that opens up login page
+     * @return
+     */
     public Result login() {
-        return ok(login.render(""));
+        Form<User> newUser = new Form<User>(User.class);
+        return ok(login.render("", newUser));
     }
 
+    /**
+     * Method that logs out user and remove it from session
+     * @return
+     */
     public Result logout() {
 
         session().clear();
         return redirect(routes.Application.login());
     }
 
+    /**
+     * Method that opens up register page
+     * @return
+     */
     public Result register() {
-        return ok(register.render());
+        Form<User> newUser = new Form<User>(User.class);
+        return ok(register.render(newUser));
     }
 
-
+    /**
+     * Method that opens up admin panel
+     * @return
+     */
     public Result adminPanel() {
         User u1 = SessionHelper.getCurrentUser(ctx());
         if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
@@ -50,6 +70,10 @@ public class Application extends Controller {
         return ok(adminindex.render(User.find.findList()));
     }
 
+    /**
+     * Method that opens up maps panel
+     * @return
+     */
     public Result adminMaps() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
@@ -63,6 +87,10 @@ public class Application extends Controller {
 
     }
 
+    /**
+     * Method that opens up tables of users, post offices and packages
+     * @return
+     */
     public Result adminTables() {
         User u1 = SessionHelper.getCurrentUser(ctx());
         if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
@@ -72,6 +100,10 @@ public class Application extends Controller {
         return ok(admintables.render(User.find.findList(), PostOffice.findOffice.findList(), Package.finder.findList()));
     }
 
+    /**
+     * Method that opens up list of office workers
+     * @return
+     */
     public Result officeWorkersList() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
@@ -82,6 +114,10 @@ public class Application extends Controller {
         return ok(officeworkerlist.render(User.findOfficeWorkers()));
     }
 
+    /**
+     * Method that opens up list of post offices
+     * @return
+     */
     public Result adminPostOffice() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
@@ -93,6 +129,10 @@ public class Application extends Controller {
         return ok(adminpostoffice.render(list));
     }
 
+    /**
+     * Method that opens up form for adding new post office
+     * @return
+     */
     public Result addPostOffice() {
         User u1 = SessionHelper.getCurrentUser(ctx());
         if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
@@ -103,6 +143,10 @@ public class Application extends Controller {
         return ok(postofficeadd.render());
     }
 
+    /**
+     * Method that opens up form for registering office worker
+     * @return
+     */
     public Result registerOfficeWorker() {
         User u1 = SessionHelper.getCurrentUser(ctx());
         if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
