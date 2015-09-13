@@ -18,6 +18,9 @@ public class Package extends Model {
     @ManyToOne
     public PostOffice postOffice;
 
+    @Column
+    public String trackingNum;
+
     @Column(length = 255)
     @Constraints.Required
     public String destination;
