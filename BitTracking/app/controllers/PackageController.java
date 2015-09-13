@@ -14,6 +14,7 @@ import models.Package;
 
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by USER on 9.9.2015.
@@ -74,6 +75,7 @@ public class PackageController extends Controller {
         Package pack = new Package();
         pack.postOffice = office;
         pack.destination = form.get("destination");
+        pack.trackingNum = (UUID.randomUUID().toString());
 
         Ebean.save(pack);
         return ok(adminpackage.render(Package.finder.findList()));
