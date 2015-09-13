@@ -120,6 +120,11 @@ public class User extends Model {
         return (User) (listEmail.get(0));
     }
 
+    /**
+     * This method checks if entered character are only letters from A to  Z
+     * @param name
+     * @return
+     */
     public static boolean checkName(String name) {
         for (int i = 0; i < name.length(); i++) {
             if ((name.charAt(i) < 65) || (name.charAt(i) > 90 &&
@@ -135,6 +140,11 @@ public class User extends Model {
         return true;
     }
 
+    /**
+     * Checks if password has more then 6 letters
+     * @param password
+     * @return
+     */
     public static boolean checkPassword(String password) {
         int letters = 0;
         int numbers = 0;

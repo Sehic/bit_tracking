@@ -1,17 +1,7 @@
 @(postOffices: List[PostOffice])
 @import helper._
 @adminmain("Post Office") {
-  <script>
-      function del(urlToDel) {
-          $.ajax({
-              url: urlToDel,
-              type: 'DELETE',
-              success: function(results) {
-                  location.reload();
-              }
-          });
-      }
-  </script>
+
   <ol class="breadcrumb">
     <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
     <li class="active">Post office</li>
@@ -47,7 +37,7 @@
         <td><a href="@routes.PostOfficeController.postOfficeDetails(postOffice.id)" class="btn btn-link">@postOffice.name</a></td>
         <td>@postOffice.address</td>
           <td><a href="@routes.PostOfficeController.linkPostOffices(postOffice.id)">Link</a></td>
-        <td><a onclick="del('@routes.PostOfficeController.deleteOffice(postOffice.id)')" class="btn btn-link">Delete</a></td>
+        <td><a href="@routes.PostOfficeController.deleteOffice(postOffice.id)" class="btn btn-link">Delete</a></td>
       </tr>
     }
 

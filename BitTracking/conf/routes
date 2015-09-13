@@ -16,8 +16,8 @@ POST          /mybt/userprofile/upload/                 @controllers.UserControl
 GET           /logout                                   @controllers.Application.logout()
 
 GET           /adminpanel                               @controllers.Application.adminPanel()
-GET           /adminpanel/linkoffices/:id                   @controllers.PostOfficeController.linkPostOffices(id: Long)
-POST           /adminpanel/linkoffices                   @controllers.PostOfficeController.savePostOffices()
+GET           /adminpanel/linkoffices/:id               @controllers.PostOfficeController.linkPostOffices(id: Long)
+POST          /adminpanel/linkoffices                   @controllers.PostOfficeController.savePostOffices()
 GET           /adminpanel/maps                          @controllers.Application.adminMaps()
 GET           /adminpanel/tables                        @controllers.Application.adminTables()
 GET           /adminpanel/tables/addpostoffice          @controllers.Application.addPostOffice()
@@ -26,7 +26,7 @@ GET           /adminpanel/tables/:id                    @controllers.UserControl
 
 GET           /adminpanel/postoffice                    @controllers.Application.adminPostOffice()
 GET           /adminpanel/postoffice/details/:id        @controllers.PostOfficeController.postOfficeDetails(id: Long)
-DELETE        /adminpanel/postoffice/:id                @controllers.PostOfficeController.deleteOffice(id:Long)
+GET           /adminpanel/postoffice/:id                @controllers.PostOfficeController.deleteOffice(id:Long)
 POST          /adminpanel/postoffice                    @controllers.PostOfficeController.addNewOffice()
 POST          /adminpanel/postoffice/details/:id        @controllers.PostOfficeController.updateOffice(id: Long)
 

@@ -35,11 +35,10 @@
                     <td><a href="@routes.PostOfficeController.postOfficeDetails(office.id)" class="btn btn-link"><button>Edit</button></a></td>
                     <td>
                     @for(postOffice <- postOffices) {
-
-                        <input type="checkbox" name="@postOffice.name" value="@postOffice.name"> @postOffice.name <br>
-
-                        }
-
+                        @if(postOffice.name != office.name){
+                            <input type="checkbox" name="@postOffice.name" value="@postOffice.name"> @postOffice.name <br>
+                            }
+                    }
                     </td>
                 </tr>
 

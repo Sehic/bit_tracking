@@ -47,7 +47,6 @@ public class PostOfficeController extends Controller {
 
         PostOffice office = PostOffice.findPostOffice(id);
         Location place = Location.findLocationById(office.place.id);
-
         Ebean.delete(place);
         return redirect(routes.Application.adminPostOffice());
     }
