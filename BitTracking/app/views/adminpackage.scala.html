@@ -28,6 +28,7 @@
     <thead>
       <tr>
         <th>#</th>
+        <th>Tracking Number</th>
         <th>Destination</th>
         <th>Post Office</th>
         <th>Delete</th>
@@ -37,6 +38,7 @@
     @for(pack <- packs) {
       <tr class="succes">
         <td>@pack.id</td>
+        <td>@pack.trackingNum</td>
         <td><a href="@routes.PackageController.editPackage(pack.id)" class="btn btn-link">@pack.destination</a></td>
         <td>@pack.postOffice.name</td>
         <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>
