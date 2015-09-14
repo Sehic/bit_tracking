@@ -20,6 +20,7 @@ create table location (
 create table package (
   id                        bigint auto_increment not null,
   post_office_id            bigint,
+  tracking_num              varchar(255),
   destination               varchar(255),
   constraint pk_package primary key (id))
 ;

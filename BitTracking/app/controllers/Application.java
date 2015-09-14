@@ -83,7 +83,7 @@ public class Application extends Controller {
 
         if (Location.findLocation.findList().size() > 0)
             return ok(adminmaps.render(Location.findLocation.findList()));
-        return redirect(routes.Application.index());
+        return redirect(routes.Application.adminPanel());
 
     }
 
