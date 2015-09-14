@@ -1,26 +1,7 @@
 // Empty JS for your own code to be here
 //Registration validation
 
-$(document).ready(function() {
 
-    $("#trackSubmit").click(function(){
-        console.log("Usao2");
-        var number = $("#trackingNumber").val();
-        console.log("Usao3");
-        $.ajax({
-            url: "@routes.Application.checkTrackingNumber()",
-            data: "trackingNumber="+number,
-            type: "POST"
-        }).success(function (response) {
-            var s = response;
-            var splitted = s.split(" ");
-            $("#trackForm").show();
-            $('#number').html(splitted[0]);
-            $('#destination').html(splitted[1]);
-        })
-    })
-    console.log("Usao4");
-});
 
 
 $(".dropdown-menu li a").click(function(){

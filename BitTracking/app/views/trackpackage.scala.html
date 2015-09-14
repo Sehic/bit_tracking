@@ -1,9 +1,36 @@
 @main("Track your package") {
+  <html>
+    <head>
+      <script language="JavaScript" type="text/javascript">
+$(document).ready(function() {
+        console.log("Usao");
+        $("#formmenu").accordion();
+         console.log("Usao1");
+         $("#trackSubmit").click(function(){
+            console.log("Usao2");
+            var number = $("#trackingNumber").val();
+console.log("Usao3");
+                $.ajax({
+                     url: "@routes.Application.checkTrackingNumber()",
+                      data: "trackingNumber="+number,
+                       type: "POST"
+                }).success(function (response) {
+                       var s = response;
+                       var splitted = s.split(" ");
+                      $("#trackForm").show();
+                      $('#number').html(splitted[0]);
+                      $('#destination').html(splitted[1]);
+                 })
+                 })
+console.log("Usao4");
+               });
+            </script>
+    </head>
 
     <menu id="formmenu">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-md-12" style="margin-top : 9%">
+          <div class="col-md-12" style="margin-top : 9 %">
             <h2>Track your package</h2>
           </div>
         </div>
@@ -44,4 +71,6 @@
         </table>
       </div>
     </form>
+
+
 }

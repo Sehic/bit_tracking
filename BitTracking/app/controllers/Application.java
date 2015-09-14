@@ -168,11 +168,11 @@ public class Application extends Controller {
         return ok(officeworkeradd.render(postOffices));
     }
 
-    public Result trackPackage() {
+    public Result trackPackage(){
         return ok(trackpackage.render());
     }
 
-    public Result checkTrackingNumber() {
+    public Result checkTrackingNumber(){
         DynamicForm form = Form.form().bindFromRequest();
         System.out.println(form.data().toString());
         String trackingNumber = form.data().get("trackingNumber");
