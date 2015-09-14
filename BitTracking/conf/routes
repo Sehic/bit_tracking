@@ -41,6 +41,8 @@ DELETE        /adminpanel/package/delete/:id            @controllers.PackageCont
 GET           /adminpanel/package/update/:id            @controllers.PackageController.editPackage(id: Long)
 POST          /adminpanel/package/update/:id            @controllers.PackageController.updatePackage(id: Long)
 
+GET           /trackpackage/                            @controllers.Application.trackPackage()
+POST          /checktrack                               @controllers.Application.checkTrackingNumber()
 
 
 

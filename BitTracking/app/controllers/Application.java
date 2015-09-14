@@ -7,6 +7,7 @@ import models.UserType;
 import models.Package;
 import models.Location;
 import play.*;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.*;
 
@@ -154,6 +155,18 @@ public class Application extends Controller {
         }
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
         return ok(officeworkeradd.render(postOffices));
+    }
+
+    public Result trackPackage(){
+        return ok(trackpackage.render());
+    }
+
+    public Result checkTrackingNumber(){
+        DynamicForm form = Form.form().bindFromRequest();
+        System.out.println(form.data().toString());
+        String trackingNumber = form.data().get("trackingNumber");
+        Package p = Package.findPackageByTrackingNumber(trackingNumber);
+        return ok(p.toString());
     }
 
 }

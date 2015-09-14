@@ -6,7 +6,7 @@ import play.db.ebean.Model;
 import javax.persistence.*;
 import java.util.List;
 
-/**
+ /**
  * Created by USER on 9.9.2015.
  */
 @Entity
@@ -35,10 +35,12 @@ public class Package extends Model {
         return finder.where().eq("id", id).findUnique();
     }
 
+    public static Package findPackageByTrackingNumber(String num){
+        return finder.where().eq("trackingNum", num).findUnique();
+    }
 
-
-
-
-
-
+    @Override
+    public String toString() {
+        return trackingNum + " " + destination;
+    }
 }
