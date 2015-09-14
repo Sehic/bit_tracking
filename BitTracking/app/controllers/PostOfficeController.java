@@ -7,6 +7,7 @@ import models.PostOffice;
 import models.UserType;
 import models.Location;
 import play.*;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.*;
 import play.mvc.Result;
@@ -148,6 +149,7 @@ public class PostOfficeController extends Controller {
 
     /**
      * Method that opens up window for making links to offices
+     *
      * @return
      */
     public Result linkPostOffices(Long id) {
@@ -164,6 +166,7 @@ public class PostOfficeController extends Controller {
 
     /**
      * Method that saves link of offices to database
+     *
      * @return
      */
     public Result savePostOffices() {

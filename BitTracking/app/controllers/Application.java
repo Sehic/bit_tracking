@@ -7,6 +7,7 @@ import models.UserType;
 import models.Package;
 import models.Location;
 import play.*;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.*;
 
@@ -24,6 +25,7 @@ import java.util.List;
 public class Application extends Controller {
     /**
      * Method that opens up index page
+     *
      * @return
      */
     public Result index() {
@@ -32,6 +34,7 @@ public class Application extends Controller {
 
     /**
      * Method that opens up login page
+     *
      * @return
      */
     public Result login() {
@@ -41,6 +44,7 @@ public class Application extends Controller {
 
     /**
      * Method that logs out user and remove it from session
+     *
      * @return
      */
     public Result logout() {
@@ -51,6 +55,7 @@ public class Application extends Controller {
 
     /**
      * Method that opens up register page
+     *
      * @return
      */
     public Result register() {
@@ -60,6 +65,7 @@ public class Application extends Controller {
 
     /**
      * Method that opens up admin panel
+     *
      * @return
      */
     public Result adminPanel() {
@@ -72,6 +78,7 @@ public class Application extends Controller {
 
     /**
      * Method that opens up maps panel
+     *
      * @return
      */
     public Result adminMaps() {
@@ -89,6 +96,7 @@ public class Application extends Controller {
 
     /**
      * Method that opens up tables of users, post offices and packages
+     *
      * @return
      */
     public Result adminTables() {
@@ -102,6 +110,7 @@ public class Application extends Controller {
 
     /**
      * Method that opens up list of office workers
+     *
      * @return
      */
     public Result officeWorkersList() {
@@ -116,6 +125,7 @@ public class Application extends Controller {
 
     /**
      * Method that opens up list of post offices
+     *
      * @return
      */
     public Result adminPostOffice() {
@@ -131,6 +141,7 @@ public class Application extends Controller {
 
     /**
      * Method that opens up form for adding new post office
+     *
      * @return
      */
     public Result addPostOffice() {
@@ -145,6 +156,7 @@ public class Application extends Controller {
 
     /**
      * Method that opens up form for registering office worker
+     *
      * @return
      */
     public Result registerOfficeWorker() {
@@ -154,6 +166,18 @@ public class Application extends Controller {
         }
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
         return ok(officeworkeradd.render(postOffices));
+    }
+
+    public Result trackPackage() {
+        return ok(trackpackage.render());
+    }
+
+    public Result checkTrackingNumber() {
+        DynamicForm form = Form.form().bindFromRequest();
+        System.out.println(form.data().toString());
+        String trackingNumber = form.data().get("trackingNumber");
+        Package p = Package.findPackageByTrackingNumber(trackingNumber);
+        return ok(p.toString());
     }
 
 }
