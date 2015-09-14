@@ -6,19 +6,11 @@ import models.User;
 import models.UserType;
 import models.Package;
 import models.Location;
-import play.*;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.*;
 
 import views.html.*;
-
-import com.avaje.ebean.Ebean;
-import play.Logger;
-
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 
@@ -29,6 +21,8 @@ public class Application extends Controller {
      * @return
      */
     public Result index() {
+        Http.Cookie cookie = request().cookie("email");
+        session("email", cookie.value());
         return ok(index.render());
     }
 
@@ -48,7 +42,6 @@ public class Application extends Controller {
      * @return
      */
     public Result logout() {
-
         session().clear();
         return redirect(routes.Application.login());
     }
