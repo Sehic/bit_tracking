@@ -76,6 +76,10 @@ public class UserController extends Controller {
 
                 if (u.checkPassword(u.password) && u.password.equals(repassword)) {
                     String newPassword = getEncriptedPasswordMD5(u.password);
+
+                    u.firstName = u.firstName.substring(0,1).toUpperCase() + u.firstName.substring(1);
+                    u.lastName = u.lastName.substring(0,1).toUpperCase() + u.lastName.substring(1);
+
                     u = new User(u.firstName, u.lastName, newPassword, u.email);
 
                     Ebean.save(u);
@@ -346,6 +350,10 @@ public class UserController extends Controller {
 
                 if (u.checkPassword(password) && password.equals(repassword)) {
                     String newPassword = getEncriptedPasswordMD5(password);
+
+                    firstName = firstName.substring(0,1).toUpperCase()+firstName.substring(1);
+                    lastName = lastName.substring(0,1).toUpperCase()+lastName.substring(1);
+
                     u = new User(firstName, lastName, newPassword, email, wantedPostOffice);
 
                     Ebean.save(u);
