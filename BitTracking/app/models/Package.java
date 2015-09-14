@@ -35,6 +35,15 @@ public class Package extends Model {
         return finder.where().eq("id", id).findUnique();
     }
 
+    public static Package findPackageByTrackingNumber(String num){
+        return finder.where().eq("trackingNum", num).findUnique();
+    }
+
+    @Override
+    public String toString() {
+        return trackingNum + " " + destination;
+    }
+
 
 
 
