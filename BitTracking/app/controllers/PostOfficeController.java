@@ -4,6 +4,7 @@ package controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import helpers.SessionHelper;
+import helpers.StatusHelper;
 import models.*;
 import models.Package;
 import play.*;
@@ -250,8 +251,28 @@ public class PostOfficeController extends Controller {
         String route = form.data().get("route");
         Package packageWithRoute = Package.findPackageById(id);
         packageWithRoute.route=route;
+        packageWithRoute.status = "Ready";
         Ebean.update(packageWithRoute);
+        String []arr = route.split(" ");
+        for(int i = 1; i<arr.length; i++){
+            PostOffice p = PostOffice.findPostOfficeByName(arr[i]);
+            Package tmp = new Package();
+            System.out.println("Office name "+p.name);
+            tmp.postOffice = p;
+            tmp.status = "On route";
+            tmp.destination = packageWithRoute.destination;
+            tmp.route = route;
+            tmp.trackingNum = packageWithRoute.trackingNum;
+            Ebean.save(tmp);
+        }
         return redirect(routes.PackageController.adminPackage());
+    }
+
+    public Result changeRoute(Long id){
+        Package p = Package.findPackageById(id);
+        p.status = "out";
+        Ebean.update(p);
+        return redirect(routes.UserController.officeWorkerPanel());
     }
 
 

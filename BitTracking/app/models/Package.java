@@ -28,6 +28,9 @@ public class Package extends Model {
     @Column
     public String route;
 
+    @Column
+    public String status;
+
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 
     public static List<Package> findByPostOffice(Long id) {
