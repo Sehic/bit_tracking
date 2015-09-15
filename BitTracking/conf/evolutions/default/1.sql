@@ -43,7 +43,7 @@ create table user (
   email                     varchar(50),
   type_of_user              integer,
   post_office_id            bigint,
-  constraint ck_user_type_of_user check (type_of_user in ('3','2','1')),
+  constraint ck_user_type_of_user check (type_of_user in ('3','2','1','4')),
   constraint pk_user primary key (id))
 ;
 

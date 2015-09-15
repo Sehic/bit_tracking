@@ -1,0 +1,58 @@
+@(packs: java.util.List[models.Package])
+@adminmain("Office Worker Panel") {
+  <script>
+      function del(urlToDel) {
+          $.ajax({
+              url: urlToDel,
+              type: 'DELETE',
+              success: function(results) {
+                  location.reload();
+              }
+          });
+      }
+  </script>
+  <ol class="breadcrumb">
+    <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
+    <li class="active">Office Worker Panel</li>
+  </ol>
+  <h2>Package</h2>
+
+  <a href="@routes.PackageController.addPackage()"><button type="button" class="btn btn-info btn-lg" data-toggle="modal">Add package</button></a>
+
+  <div class="table-responsive">
+
+  </div>
+
+  <h4 class="margin-bottom-15">List of packages</h4>
+  <table class="table table-striped table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Tracking Number</th>
+        <th>Add route</th>
+        <th>Destination</th>
+        <th>Post Office</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+    @for(pack <- packs) {
+      <tr class="succes">
+        <td>@pack.id</td>
+        <td>@pack.trackingNum</td>
+        @if(pack.route != null){
+          <td>@pack.route</td>
+        }else {
+          <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
+        }
+
+        <td><a href="@routes.PackageController.editPackage(pack.id)" class="btn btn-link">@pack.destination</a></td>
+        <td>@pack.postOffice.name</td>
+        <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>
+      </tr>
+    }
+
+    </tbody>
+  </table>
+
+}

@@ -48,6 +48,8 @@ GET           /adminpanel/makeroute/:id                 @controllers.PostOfficeC
 POST          /adminpanel/makeroute/create              @controllers.PostOfficeController.createRoute()
 POST          /adminpanel/makeroute/save/id             @controllers.PostOfficeController.saveRoute(id: Long)
 
+GET           /officeworkerpanel                        @controllers.UserController.officeWorkerPanel()
+
 
 
 

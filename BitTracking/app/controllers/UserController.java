@@ -3,10 +3,7 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import helpers.CurrentUser;
 import helpers.SessionHelper;
-import models.ImagePath;
-import models.PostOffice;
-import models.User;
-import models.UserType;
+import models.*;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -373,6 +370,17 @@ public class UserController extends Controller {
             return redirect(routes.Application.registerOfficeWorker());
         }
 
+    }
+
+    public Result officeWorkerPanel() {
+
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.OFFICE_WORKER) {
+            return redirect(routes.Application.index());
+        }
+        PostOffice userOffice = u1.postOffice;
+
+        return ok(officeworkerpanel.render(userOffice.packages));
     }
 
 
