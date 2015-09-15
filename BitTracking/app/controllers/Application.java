@@ -183,4 +183,16 @@ public class Application extends Controller {
         return ok(p.toString());
     }
 
+    public Result deliveryPanel(){
+        User user = SessionHelper.getCurrentUser(ctx());
+        if (user == null) {
+            return redirect(routes.Application.index());
+        }
+        List<PostOffice> list = PostOffice.findOffice.findList();
+        if (user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.DELIVERY_WORKER) {
+            return redirect(routes.Application.index());
+        }
+        return ok(deliverypanel.render(user, list));
+    }
+
 }

@@ -5,6 +5,7 @@ import helpers.SessionHelper;
 import models.PostOffice;
 import models.User;
 import models.UserType;
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -133,5 +134,29 @@ public class PackageController extends Controller {
         }
 
         return ok(packagedetails.render(Package.findPackageById(id), PostOffice.findOffice.findList()));
+    }
+
+    public Result packagesByOffice(){
+        DynamicForm form = Form.form().bindFromRequest();
+        PostOffice office = PostOffice.findPostOfficeByName(form.data().get("office"));
+        Logger.info(form.data().get("office"));
+        List<Package> list = Package.findByPostOffice(office);
+        String offices = "";
+        for (int i = 0; i < list.size(); i++) {
+            offices += list.get(i).destination + " ";
+        }
+        return ok(offices);
+    }
+
+    public Result takePackage(){
+        DynamicForm form = Form.form().bindFromRequest();
+        String destination = form.bindFromRequest().get("package");
+        Package pack = Package.finder.where().eq("destination", destination).findUnique();
+        if (pack == null) {
+            return badRequest(index.render());
+        }
+        pack.status = Package.Status.OUT_FOR_DELIVERY;
+        Ebean.update(pack);
+        return redirect("/adminpanel/package/");
     }
 }

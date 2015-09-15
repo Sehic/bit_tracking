@@ -22,6 +22,8 @@ create table package (
   post_office_id            bigint,
   tracking_num              varchar(255),
   destination               varchar(255),
+  status                    ENUM('READY_FOR_SHIPING', 'ON_ROUTE', 'OUT_FOR_DELIVERY', 'DELIVERED'),
+  constraint ck_package_status check (status in ('READY_FOR_SHIPING','ON_ROUTE','OUT_FOR_DELIVERY','DELIVERED')),
   constraint pk_package primary key (id))
 ;
 
@@ -42,7 +44,7 @@ create table user (
   email                     varchar(50),
   type_of_user              integer,
   post_office_id            bigint,
-  constraint ck_user_type_of_user check (type_of_user in ('3','2','1')),
+  constraint ck_user_type_of_user check (type_of_user in ('3','2','1','4')),
   constraint pk_user primary key (id))
 ;
 

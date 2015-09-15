@@ -1,0 +1,51 @@
+@(user: models.User)(offices: List[models.PostOffice])
+
+@import helper._
+@adminmain("Delivery Worker Panel") {
+  <ol class="breadcrumb" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
+    <li><a href="@routes.PackageController.addPackage()">Package</a></li>
+    <li class="active">Details</li>
+  </ol>
+  <form id="form" action="@routes.PackageController.takePackage()" method="post">
+    <select name="offices" id="offices">
+      <option value="" selected>IZABERI OFFICE</option>
+      @for(office <- offices){
+        <option class="office" value="@office.name">@office.name</option>
+      }
+    </select>
+  </form>
+
+  <script>
+    $(document).ready(function() {
+      $("#offices").change(function() {
+        var office = $("#offices").val();
+        $.ajax({
+          data: "office="+office,
+          type: "post",
+          url: "@routes.PackageController.packagesByOffice()"
+        }).success(function(response){
+          var drop = $('<br><select id="drop"></select>');
+          var offices = response.split(" ");
+          drop.append($('<option value=""></option>').text("IZABERI PAKET"));
+          for (var i = 0; i < offices.length-1; i++) {
+            drop.append($('<option value="'+offices[i]+'"></option>').text(offices[i]));
+          }
+          $("#form").append(drop);
+          $("#drop").change(function() {
+            var package = $("#drop").val();
+            $.ajax({
+              data: "package="+package,
+              type: "post",
+              url: "@routes.PackageController.takePackage()",
+              success: function(report){
+              }
+            });
+            $("#form").append($('<br><button id="button" type="submit"></button>').text("SAVE"));
+          })
+        })
+      })
+    })
+  </script>
+
+}

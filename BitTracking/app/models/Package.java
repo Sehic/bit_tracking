@@ -25,10 +25,14 @@ public class Package extends Model {
     @Constraints.Required
     public String destination;
 
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "ENUM('READY_FOR_SHIPING', 'ON_ROUTE', 'OUT_FOR_DELIVERY', 'DELIVERED')")
+    public Status status = Status.READY_FOR_SHIPING;
+
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 
-    public static List<Package> findByPostOffice(Long id) {
-        return finder.where().eq("postOffice", id).findList();
+    public static List<Package> findByPostOffice(PostOffice office) {
+        return finder.where().eq("postOffice", office).findList();
     }
 
     public static Package findPackageById(Long id){
@@ -46,6 +50,12 @@ public class Package extends Model {
 
 
 
+    public enum Status {
+        READY_FOR_SHIPING,
+        ON_ROUTE,
+        OUT_FOR_DELIVERY,
+        DELIVERED
+    }
 
 
 

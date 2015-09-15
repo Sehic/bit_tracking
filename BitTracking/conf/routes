@@ -46,7 +46,11 @@ POST          /checktrack                               @controllers.Application
 
 GET           /adminpanel/makeroute/                    @controllers.PostOfficeController.listRoutes()
 POST          /adminpanel/create/                       @controllers.PostOfficeController.createRoute()
-POST           /adminpanel/save/                        @controllers.PostOfficeController.saveRoute()
+POST          /adminpanel/save/                         @controllers.PostOfficeController.saveRoute()
+
+GET           /adminpanel/delivery                      @controllers.Application.deliveryPanel()
+POST          /adminpanel/delivery                      @controllers.PackageController.packagesByOffice()
+POST        /adminpanel/delivery/take                   @controllers.PackageController.takePackage()
 
 
 

@@ -11,5 +11,7 @@ public enum UserType {
     @EnumValue("2")
     OFFICE_WORKER,
     @EnumValue("3")
-    REGISTERED_USER
+    REGISTERED_USER,
+    @EnumValue("4")
+    DELIVERY_WORKER
 }
