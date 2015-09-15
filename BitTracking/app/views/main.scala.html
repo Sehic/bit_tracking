@@ -160,7 +160,7 @@
                                 }
                                 @if(currentUser != null && currentUser.typeOfUser == UserType.OFFICE_WORKER) {
                                     <li>
-                                        <a href="@routes.PackageController.adminPackage()">Office Worker Panel</a>
+                                        <a href="@routes.UserController.officeWorkerPanel()">Office Worker Panel</a>
                                     </li> <!--Admin panel tab in navigation bar-->
                                 }
 
@@ -188,7 +188,7 @@
 
                                 <ul class="nav navbar-nav navbar-right">
                                     <li>
-                                        <a href="#">@currentUser.typeOfUser</a>
+                                        <a href="#">@currentUser.firstName</a>
                                     </li>
                                 </ul>
                             }
