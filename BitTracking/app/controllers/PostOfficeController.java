@@ -225,17 +225,26 @@ public class PostOfficeController extends Controller {
         DynamicForm form = Form.form().bindFromRequest();
         System.out.println(form.data().toString());
         String nextOffice = form.data().get("name");
+        System.out.println("next office = "+nextOffice);
         PostOffice mainOffice = PostOffice.findOffice.where().eq("name", nextOffice).findUnique();
         List<PostOffice> linkedOffices = mainOffice.postOfficesA;
 
         String officesString="";
         for (int i=0;i<linkedOffices.size();i++){
-
-            officesString += linkedOffices.get(i).name+" ";
+            officesString += linkedOffices.get(i).name;
+            if(i != linkedOffices.size()-1){
+                officesString += ",";
+            }
         }
+
+        System.out.println("lista= "+officesString);
 
 
         return ok(officesString);
+    }
+
+    public Result saveRoute(){
+        return TODO;
     }
 
 
