@@ -1,6 +1,8 @@
 package controllers;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import helpers.SessionHelper;
 import models.User;
 import models.PostOffice;
@@ -17,6 +19,7 @@ import views.html.*;
 import com.avaje.ebean.Ebean;
 import play.Logger;
 
+import java.io.IOException;
 import java.lang.System;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -211,5 +214,29 @@ public class PostOfficeController extends Controller {
         return redirect("/adminpanel");
 
     }
+
+    public Result listRoutes(){
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+
+        return ok(makearoute.render(offices));
+    }
+
+    public Result createRoute(){
+        DynamicForm form = Form.form().bindFromRequest();
+        System.out.println(form.data().toString());
+        String nextOffice = form.data().get("name");
+        PostOffice mainOffice = PostOffice.findOffice.where().eq("name", nextOffice).findUnique();
+        List<PostOffice> linkedOffices = mainOffice.postOfficesA;
+
+        String officesString="";
+        for (int i=0;i<linkedOffices.size();i++){
+
+            officesString += linkedOffices.get(i).name+" ";
+        }
+
+
+        return ok(officesString);
+    }
+
 
 }
