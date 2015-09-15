@@ -1,0 +1,55 @@
+@(postOffices: List[PostOffice])
+@adminmain("Make a route") {
+
+    <head>
+        <script language="JavaScript" type="text/javascript">
+    $(document).ready(function(){
+    // for any form on this page do the follofing
+    $('#selectOffice').blur(function(){
+
+     var valueOfSelect = $('#selectOffice').val();
+
+    $.ajax({
+    url: "@routes.PostOfficeController.createRoute()",
+    method: "POST",
+    data:"name="+valueOfSelect,
+    }).success(function(response){
+    var str = response;
+    var splitted = str.split(" ");
+    for(var i=0;i<splitted.length-1;i++){
+    $('#addOffices').append("<option value="+splitted[i]+">"+splitted[i]+"</option>");
+    }
+
+    }).error(function(response){
+    alert(response + valueOfSelect);
+
+    });
+    });
+    });
+</script>
+
+    </head>
+
+    <div class="row">
+        <div class="col-md-4">
+            <select name="postOffices" id="selectOffice">
+            @for(postOffice <- postOffices) {
+                <option value="@postOffice.name">@postOffice.name</option>
+            }
+
+            </select>
+        </div>
+        <div class="col-md-4" id="routeForm">
+            <select name="postOffices1" id="addOffices">
+
+
+
+            </select>
+        </div>
+
+    </div>
+
+
+
+
+}

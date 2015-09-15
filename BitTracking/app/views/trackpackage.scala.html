@@ -1,15 +1,15 @@
 @main("Track your package") {
-  <html>
+
     <head>
-      <script language="JavaScript" type="text/javascript">
+        <script language="JavaScript" type="text/javascript">
 $(document).ready(function() {
-        console.log("Usao");
+
         $("#formmenu").accordion();
-         console.log("Usao1");
+
          $("#trackSubmit").click(function(){
-            console.log("Usao2");
+
             var number = $("#trackingNumber").val();
-console.log("Usao3");
+
                 $.ajax({
                      url: "@routes.Application.checkTrackingNumber()",
                       data: "trackingNumber="+number,
@@ -22,54 +22,54 @@ console.log("Usao3");
                       $('#destination').html(splitted[1]);
                  })
                  })
-console.log("Usao4");
+
                });
             </script>
     </head>
 
     <menu id="formmenu">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-12" style="margin-top : 9 %">
-            <h2>Track your package</h2>
-          </div>
-        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12" style="margin-top : 9 %">
+                    <h2>Track your package</h2>
+                </div>
+            </div>
 
-        <div class="form-group">
-          <label for="trackingNumber" class="col-sm-2 control-label">
-            Please enter your tracking number:
-          </label>
-        </div>
+            <div class="form-group">
+                <label for="trackingNumber" class="col-sm-2 control-label">
+                    Please enter your tracking number:
+                </label>
+            </div>
 
-        <div class="input-group">
-          <input name="trackingNumber" id="trackingNumber" type="text" class="form-control">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button" id="trackSubmit">Track</button>
-          </span>
+            <div class="input-group">
+                <input name="trackingNumber" id="trackingNumber" type="text" class="form-control">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="trackSubmit">Track</button>
+                </span>
+            </div>
         </div>
-      </div>
     </menu>
 
 
     <form id="trackForm" name="trackForm" method="POST" style="display : none ;">
-      <div class="table-responsive">
-        <h4 class="margin-bottom-15">Package info</h4>
-        <table class="table table-striped table-hover table-bordered">
-          <thead>
-            <tr>
-              <th>Tracking number</th>
-              <th>Destination</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td id="number"></td>
-              <td id="destination"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="table-responsive">
+            <h4 class="margin-bottom-15">Package info</h4>
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>Tracking number</th>
+                        <th>Destination</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="number"></td>
+                        <td id="destination"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </form>
 
 
