@@ -5,9 +5,9 @@
         <script language="JavaScript" type="text/javascript">
     $(document).ready(function(){
     // for any form on this page do the follofing
-    $('#selectOffice').blur(function(){
+    $('.selectOffice').blur(function(){
 
-     var valueOfSelect = $('#selectOffice').val();
+     var valueOfSelect = $('.selectOffice').val();
 
     $.ajax({
     url: "@routes.PostOfficeController.createRoute()",
@@ -16,12 +16,18 @@
     }).success(function(response){
     var str = response;
     var splitted = str.split(" ");
+    $('.selectOffice').empty();
+    $('#routeForm').append(valueOfSelect+" ");
     for(var i=0;i<splitted.length-1;i++){
-    $('#addOffices').append("<option value="+splitted[i]+">"+splitted[i]+"</option>");
+
+$('.selectOffice').append("<option value="+splitted[i]+">"+splitted[i]+"</option>");
     }
 
+
+
+
     }).error(function(response){
-    alert(response + valueOfSelect);
+
 
     });
     });
@@ -32,7 +38,7 @@
 
     <div class="row">
         <div class="col-md-4">
-            <select name="postOffices" id="selectOffice">
+            <select name="postOffices" class="selectOffice">
             @for(postOffice <- postOffices) {
                 <option value="@postOffice.name">@postOffice.name</option>
             }
@@ -40,11 +46,7 @@
             </select>
         </div>
         <div class="col-md-4" id="routeForm">
-            <select name="postOffices1" id="addOffices">
 
-
-
-            </select>
         </div>
 
     </div>
