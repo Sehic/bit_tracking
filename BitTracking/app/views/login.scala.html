@@ -32,7 +32,7 @@
                                                     Email<abbr class="req" title="required" style="color: red"> * </abbr>
                                                 </label>
                                                 <div class="col-sm-10">
-                                                    <input value="@userForm("email").value" name="email" placeholder="Your email address" type="email" class="form-control" id="inputEmail3" required="required" style="font-size:12px; font-style: italic ">
+                                                    <input id="inputEmail3" name="email" placeholder="Your email address" type="email" class="form-control" required="required" style="font-size:12px; font-style: italic ">
                                                 </div>
                                             </div>
 
@@ -42,8 +42,7 @@
                                                     Password<abbr class="req" title="required" style="color: red">*</abbr>
                                                 </label>
                                                 <div class= "col-sm-10">
-                                                    <input name="password" id="password" placeholder="Password must have any sequence of alpha, special symbol, one number. Min allowed length is 6."
-                                                    type="password" class="form-control" id="inputPassword3" required="required" style="font-size:10px; font-style: italic " >
+                                                    <input id="inputPassword3" name="password" id="password" placeholder="Password must have any sequence of alpha, special symbol, one number. Min allowed length is 6."
                                                 </div>
                                             </div>
 
@@ -69,7 +68,7 @@
                                             <div class="form-group">
                                                 <div class="col-sm-offset-2 col-sm-10">
 
-                                                    <button type="submit" class="btn btn-default">
+                                                    <button type="submit" class="btn btn-default" onclick="setCookies()">
                                                         Log In
                                                     </button>
                                                 </div>
@@ -121,6 +120,11 @@
                 </div>
             </div>
         </div>
+        <script language="JavaScript">
+            function setCookies(){
+                document.cookie = "email="+inputEmail3.value;
+            }
+        </script>
 
 
     }

@@ -29,6 +29,8 @@ public class Application extends Controller {
      * @return
      */
     public Result index() {
+        Http.Cookie cookie = request().cookie("email");
+        session("email", cookie.value());
         return ok(index.render());
     }
 
@@ -48,7 +50,6 @@ public class Application extends Controller {
      * @return
      */
     public Result logout() {
-
         session().clear();
         return redirect(routes.Application.login());
     }
