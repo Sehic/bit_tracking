@@ -30,7 +30,9 @@ public class Application extends Controller {
      */
     public Result index() {
         Http.Cookie cookie = request().cookie("email");
-        session("email", cookie.value());
+        if (cookie != null) {
+            session("email", cookie.value());
+        }
         return ok(index.render());
     }
 
