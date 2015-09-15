@@ -4,31 +4,29 @@
     <head>
         <script language="JavaScript" type="text/javascript">
     $(document).ready(function(){
+    var valueOfSelect;
     // for any form on this page do the follofing
     $('.selectOffice').blur(function(){
-
-     var valueOfSelect = $('.selectOffice').val();
-
+    valueOfSelect = $('.selectOffice :selected').text();
+        console.log("On blur= "+ valueOfSelect);
     $.ajax({
     url: "@routes.PostOfficeController.createRoute()",
     method: "POST",
     data:"name="+valueOfSelect,
     }).success(function(response){
     var str = response;
-    var splitted = str.split(" ");
+    console.log("Response = "+response);
+    var splitted = str.split(",");
     $('.selectOffice').empty();
-    $('#routeForm').append(valueOfSelect+" ");
-    for(var i=0;i<splitted.length-1;i++){
-
-$('.selectOffice').append("<option value="+splitted[i]+">"+splitted[i]+"</option>");
+    console.log(valueOfSelect);
+    $('#finalRoute').append('"<input value="'+valueOfSelect+'">"');
+    for(var i=0;i<splitted.length;i++){
+        console.log(splitted[i]);
+        console.log("uso");
+        $('.selectOffice').append("<option value="+splitted[i]+">"+splitted[i]+"</option>");
     }
 
-
-
-
     }).error(function(response){
-
-
     });
     });
     });
@@ -45,9 +43,18 @@ $('.selectOffice').append("<option value="+splitted[i]+">"+splitted[i]+"</option
 
             </select>
         </div>
-        <div class="col-md-4" id="routeForm">
-
-        </div>
+        @helper.form(routes.PostOfficeController.saveRoute(), 'id->"forma", 'class->"form-horizontal", 'role->"form") {
+            <div class="col-md-4" id="routeForm">
+                <input id="finalRoute">
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">
+                        Set route
+                    </button>
+                </div>
+            </div>
+        }
 
     </div>
 
