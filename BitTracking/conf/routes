@@ -44,9 +44,9 @@ POST          /adminpanel/package/update/:id            @controllers.PackageCont
 GET           /trackpackage/                            @controllers.Application.trackPackage()
 POST          /checktrack                               @controllers.Application.checkTrackingNumber()
 
-GET           /adminpanel/makeroute/                    @controllers.PostOfficeController.listRoutes()
-POST          /adminpanel/create/                       @controllers.PostOfficeController.createRoute()
-POST           /adminpanel/save/                        @controllers.PostOfficeController.saveRoute()
+GET           /adminpanel/makeroute/:id                 @controllers.PostOfficeController.listRoutes(id: Long)
+POST          /adminpanel/makeroute/create              @controllers.PostOfficeController.createRoute()
+POST          /adminpanel/makeroute/save/id             @controllers.PostOfficeController.saveRoute(id: Long)
 
 
 

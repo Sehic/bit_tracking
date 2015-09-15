@@ -29,6 +29,7 @@
       <tr>
         <th>#</th>
         <th>Tracking Number</th>
+          <th>Add route</th>
         <th>Destination</th>
         <th>Post Office</th>
         <th>Delete</th>
@@ -39,6 +40,12 @@
       <tr class="succes">
         <td>@pack.id</td>
         <td>@pack.trackingNum</td>
+          @if(pack.route != null){
+              <td>@pack.route</td>
+          }else {
+              <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
+          }
+
         <td><a href="@routes.PackageController.editPackage(pack.id)" class="btn btn-link">@pack.destination</a></td>
         <td>@pack.postOffice.name</td>
         <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>

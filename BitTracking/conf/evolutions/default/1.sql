@@ -22,6 +22,7 @@ create table package (
   post_office_id            bigint,
   tracking_num              varchar(255),
   destination               varchar(255),
+  route                     varchar(255),
   constraint pk_package primary key (id))
 ;
 

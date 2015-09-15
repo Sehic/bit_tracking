@@ -1,14 +1,14 @@
-@(postOffices: List[PostOffice])
+@(postOffice: PostOffice, officePackage: models.Package)
 @adminmain("Make a route") {
 
     <head>
         <script language="JavaScript" type="text/javascript">
     $(document).ready(function(){
     var valueOfSelect;
+    var saveValueOfSelect="";
     // for any form on this page do the follofing
     $('.selectOffice').blur(function(){
     valueOfSelect = $('.selectOffice :selected').text();
-        console.log("On blur= "+ valueOfSelect);
     $.ajax({
     url: "@routes.PostOfficeController.createRoute()",
     method: "POST",
@@ -18,11 +18,10 @@
     console.log("Response = "+response);
     var splitted = str.split(",");
     $('.selectOffice').empty();
-    console.log(valueOfSelect);
-    $('#finalRoute').append('"<input value="'+valueOfSelect+'">"');
+    saveValueOfSelect+=valueOfSelect+" ";
+    $('#finalRoute').attr("value", saveValueOfSelect);
     for(var i=0;i<splitted.length;i++){
-        console.log(splitted[i]);
-        console.log("uso");
+
         $('.selectOffice').append("<option value="+splitted[i]+">"+splitted[i]+"</option>");
     }
 
@@ -37,15 +36,14 @@
     <div class="row">
         <div class="col-md-4">
             <select name="postOffices" class="selectOffice">
-            @for(postOffice <- postOffices) {
+
                 <option value="@postOffice.name">@postOffice.name</option>
-            }
 
             </select>
         </div>
-        @helper.form(routes.PostOfficeController.saveRoute(), 'id->"forma", 'class->"form-horizontal", 'role->"form") {
+        @helper.form(routes.PostOfficeController.saveRoute(officePackage.id), 'id->"forma", 'class->"form-horizontal", 'role->"form") {
             <div class="col-md-4" id="routeForm">
-                <input id="finalRoute">
+                <input id="finalRoute" name="route">
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">

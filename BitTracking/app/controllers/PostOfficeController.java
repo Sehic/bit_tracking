@@ -4,10 +4,8 @@ package controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import helpers.SessionHelper;
-import models.User;
-import models.PostOffice;
-import models.UserType;
-import models.Location;
+import models.*;
+import models.Package;
 import play.*;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -215,36 +213,45 @@ public class PostOfficeController extends Controller {
 
     }
 
-    public Result listRoutes(){
+    public Result listRoutes(Long id) {
         List<PostOffice> offices = PostOffice.findOffice.findList();
+        Package officePackage = Package.findPackageById(id);
+        PostOffice office= new PostOffice();
+        for (int i = 0; i < offices.size(); i++) {
+            if (offices.get(i).id == officePackage.postOffice.id) {
+                office = offices.get(i);
+            }
+        }
 
-        return ok(makearoute.render(offices));
+        return ok(makearoute.render(office, officePackage));
     }
 
-    public Result createRoute(){
+    public Result createRoute() {
         DynamicForm form = Form.form().bindFromRequest();
-        System.out.println(form.data().toString());
+
         String nextOffice = form.data().get("name");
-        System.out.println("next office = "+nextOffice);
+
         PostOffice mainOffice = PostOffice.findOffice.where().eq("name", nextOffice).findUnique();
         List<PostOffice> linkedOffices = mainOffice.postOfficesA;
 
-        String officesString="";
-        for (int i=0;i<linkedOffices.size();i++){
+        String officesString = "";
+        for (int i = 0; i < linkedOffices.size(); i++) {
             officesString += linkedOffices.get(i).name;
-            if(i != linkedOffices.size()-1){
+            if (i != linkedOffices.size() - 1) {
                 officesString += ",";
             }
         }
 
-        System.out.println("lista= "+officesString);
-
-
         return ok(officesString);
     }
 
-    public Result saveRoute(){
-        return TODO;
+    public Result saveRoute(Long id) {
+        DynamicForm form = Form.form().bindFromRequest();
+        String route = form.data().get("route");
+        Package packageWithRoute = Package.findPackageById(id);
+        packageWithRoute.route=route;
+        Ebean.update(packageWithRoute);
+        return redirect(routes.PackageController.adminPackage());
     }
 
 
