@@ -50,6 +50,8 @@ POST          /adminpanel/makeroute/save/id             @controllers.PostOfficeC
 
 GET           /officeworkerpanel                        @controllers.UserController.officeWorkerPanel()
 
+POST          /adminpanel/package/changeRoute/:id        @controllers.PostOfficeController.changeRoute(id: Long)
+
 
 
 

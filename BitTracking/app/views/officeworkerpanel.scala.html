@@ -10,6 +10,16 @@
               }
           });
       }
+
+      function post(urlToChg) {
+          $.ajax({
+              url: urlToChg,
+              type: 'POST',
+              success: function(results) {
+                  location.reload();
+              }
+          });
+      }
   </script>
   <ol class="breadcrumb">
     <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
@@ -32,6 +42,7 @@
         <th>Add route</th>
         <th>Destination</th>
         <th>Post Office</th>
+        <th>Status</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -48,6 +59,7 @@
 
         <td><a href="@routes.PackageController.editPackage(pack.id)" class="btn btn-link">@pack.destination</a></td>
         <td>@pack.postOffice.name</td>
+        <td><a onclick="post('@routes.PostOfficeController.changeRoute(pack.id)')" class="btn btn-link">@pack.status</a></td>
         <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>
       </tr>
     }
