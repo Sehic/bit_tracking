@@ -44,6 +44,9 @@ POST          /adminpanel/package/update/:id            @controllers.PackageCont
 GET           /trackpackage/                            @controllers.Application.trackPackage()
 POST          /checktrack                               @controllers.Application.checkTrackingNumber()
 
+GET           /adminpanel/makeroute/                    @controllers.PostOfficeController.listRoutes()
+POST           /create                                  @controllers.PostOfficeController.createRoute()
+
 
 
 

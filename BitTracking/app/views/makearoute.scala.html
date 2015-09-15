@@ -1,0 +1,80 @@
+@(postOffices: List[PostOffice])
+
+@adminmain("Make a route") {
+    <script language="JavaScript" type="text/javascript">
+
+      $(document).ready(function(){
+
+          // for any form on this page do the follofing
+
+           $('#selectOffice').blur(function(){
+              var valueOfSelect = $('#selectOffice').val();
+              $.ajax({
+         url: "@routes.PostOfficeController.createRoute()",
+         method: "POST",
+         data: "valueOfSelect="+valueOfSelect
+      }).success(function(response){
+          $("#trackForm").show();
+         var select = document.getElementById('selectOffice'); //get the select element
+         var respJson = JSON.parse(response); //get the response (in text) and transform to JSON object
+         respJson.forEach(function(item, 0){ //for in the JSON object
+            var opt = document.createElement('option') //create a new option element
+            opt.value = item.value; //set the value of otion (NOTE: item.value, where "value" is the parameter os the yout value in the JSON
+            opt.innerHTML = item.text;
+            select.appendChild(opt); //appende the option in to the select
+          })
+
+      }).error(function(response){
+         alert(response + valueOfSelect);
+      })
+      })
+      });
+
+    </script>
+
+
+
+    <div class="row">
+
+        <div class="col-md-4">
+
+            <select name="postOffices" id="selectOffice">
+
+            @for(postOffice <- postOffices) {
+
+                <option value="@postOffice.name">@postOffice.name</option>
+
+            }
+
+
+            </select>
+
+        </div>
+
+
+    </div>
+
+
+    <form id="trackForm" name="trackForm" method="POST" style="display : none ;">
+        <div class="row">
+
+            <div class="col-md-4">
+
+                <select name="postOffices" id="selectOffice">
+
+                @for(postOffice <- postOffices) {
+
+                    <option value=""></option>
+
+                }
+
+
+</select>
+
+</div>
+
+
+</div>
+</form>
+
+    }

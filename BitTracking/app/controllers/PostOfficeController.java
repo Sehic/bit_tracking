@@ -22,6 +22,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -211,5 +212,28 @@ public class PostOfficeController extends Controller {
         return redirect("/adminpanel");
 
     }
+
+    public Result listRoutes(){
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+        PostOffice office = PostOffice.findOffice.where().eq("name", "Zenica").findUnique();
+        // List<PostOffice> listLinkedOffices = PostOffice.findOffice.where().eq("post_officeA_id", offices.get(0).id).findList();
+        return ok(makearoute.render(offices));
+    }
+
+    public Result createRoute(){
+        DynamicForm form = Form.form().bindFromRequest();
+        System.out.println(form.data().toString());
+        String nextOffice = form.data().get("valueOfSelect");
+        PostOffice po = PostOffice.findPostOfficeByName(nextOffice);
+        PostOffice mainOffice = PostOffice.findOffice.where().eq("name", nextOffice).findUnique();
+        List<PostOffice> postOffices = mainOffice.postOfficesA;
+        for (int i=0;i<postOffices.size();i++){
+            System.out.println(postOffices.get(i).name);
+        }
+        return ok(postOffices.toString());
+    }
+
+
+
 
 }
