@@ -71,7 +71,7 @@ public class PostOfficeController extends Controller {
         String address = boundForm.bindFromRequest().field("address").value();
         String lon = boundForm.bindFromRequest().field("longitude").value();
         String lat = boundForm.bindFromRequest().field("latitude").value();
-
+        System.out.println("lon "+lon);
         if (lon == null || lat == null) {
             return redirect(routes.Application.adminPostOffice());
         }

@@ -3,32 +3,7 @@
 
     <head>
         <script language="JavaScript" type="text/javascript">
-    $(document).ready(function(){
-    var valueOfSelect;
-    var saveValueOfSelect="";
-    // for any form on this page do the follofing
-    $('.selectOffice').blur(function(){
-    valueOfSelect = $('.selectOffice :selected').text();
-    $.ajax({
-    url: "@routes.PostOfficeController.createRoute()",
-    method: "POST",
-    data:"name="+valueOfSelect,
-    }).success(function(response){
-    var str = response;
-    console.log("Response = "+response);
-    var splitted = str.split(",");
-    $('.selectOffice').empty();
-    saveValueOfSelect+=valueOfSelect+" ";
-    $('#finalRoute').attr("value", saveValueOfSelect);
-    for(var i=0;i<splitted.length;i++){
 
-        $('.selectOffice').append("<option value="+splitted[i]+">"+splitted[i]+"</option>");
-    }
-
-    }).error(function(response){
-    });
-    });
-    });
 </script>
 
     </head>

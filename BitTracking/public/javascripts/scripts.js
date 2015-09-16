@@ -1,3 +1,33 @@
+$(document).ready(function(){
+    var valueOfSelect;
+    var saveValueOfSelect="";
+    // for any form on this page do the follofing
+    $('.selectOffice').blur(function(){
+        valueOfSelect = $('.selectOffice :selected').text();
+        $.ajax({
+            url: "/adminpanel/makeroute/create",
+            method: "POST",
+            data:"name="+valueOfSelect,
+        }).success(function(response){
+            var str = response;
+            console.log("Response = "+response);
+            var splitted = str.split(",");
+            $('.selectOffice').empty();
+            saveValueOfSelect+=valueOfSelect+" ";
+            $('#finalRoute').attr("value", saveValueOfSelect);
+            for(var i=0;i<splitted.length;i++){
+
+                $('.selectOffice').append("<option value="+splitted[i]+">"+splitted[i]+"</option>");
+            }
+
+        }).error(function(response){
+        });
+    });
+});
+
+
+
+
 $(".dropdown-menu li a").click(function () {
     var selText = $(this).text();
     $(this).parents('.btn-group').find('.dropdown-toggle').html(selText + ' <span class="caret"></span>');
