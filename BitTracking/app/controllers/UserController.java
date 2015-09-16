@@ -4,6 +4,7 @@ import com.avaje.ebean.Ebean;
 import helpers.CurrentUser;
 import helpers.SessionHelper;
 import models.*;
+import models.Package;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
@@ -18,6 +19,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mladen.teofilovic on 04/09/15.
@@ -379,8 +382,13 @@ public class UserController extends Controller {
             return redirect(routes.Application.index());
         }
         PostOffice userOffice = u1.postOffice;
+        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packagePostOffice", userOffice).findList();
+        List<Package> packages = new ArrayList<>();
+        for(int i=0;i<shipments.size();i++){
+            packages.add(shipments.get(i).packageId);
+        }
 
-        return ok(officeworkerpanel.render(userOffice.packages));
+        return ok(officeworkerpanel.render(packages));
     }
 
 

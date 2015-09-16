@@ -73,7 +73,9 @@ public class PackageController extends Controller {
         PostOffice office = PostOffice.findPostOffice(Long.parseLong(id));
 
         Package pack = new Package();
-        pack.postOffice = office;
+      //  pack.shipmentPackages.get(0).packagePostOffice =office;
+      //  pack.packageRoutes.add(office);
+     //   pack.postOffice = office;
         pack.destination = form.get("destination");
         pack.trackingNum = (UUID.randomUUID().toString());
 
@@ -114,7 +116,9 @@ public class PackageController extends Controller {
         Package pack = Package.findPackageById(id);
         String officeid = form.bindFromRequest().field("officePost").value();
         PostOffice office = PostOffice.findPostOffice(Long.parseLong(officeid));
-        pack.postOffice = office;
+        pack.shipmentPackages.get(0).postOfficeId = office;
+     //   pack.packageRoutes.add(office);
+    //    pack.postOffice = office;
         pack.destination = form.get("destination");
         Ebean.update(pack);
         return ok(adminpackage.render(Package.finder.findList()));

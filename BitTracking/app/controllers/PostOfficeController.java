@@ -217,14 +217,9 @@ public class PostOfficeController extends Controller {
     public Result listRoutes(Long id) {
         List<PostOffice> offices = PostOffice.findOffice.findList();
         Package officePackage = Package.findPackageById(id);
-        PostOffice office= new PostOffice();
-        for (int i = 0; i < offices.size(); i++) {
-            if (offices.get(i).id == officePackage.postOffice.id) {
-                office = offices.get(i);
-            }
-        }
 
-        return ok(makearoute.render(office, officePackage));
+
+        return ok(makearoute.render(offices, officePackage));
     }
 
     public Result createRoute() {
@@ -250,27 +245,34 @@ public class PostOfficeController extends Controller {
         DynamicForm form = Form.form().bindFromRequest();
         String route = form.data().get("route");
         Package packageWithRoute = Package.findPackageById(id);
-        packageWithRoute.route=route;
-        packageWithRoute.status = "Ready";
-        Ebean.update(packageWithRoute);
+
+        packageWithRoute.status = StatusHelper.READY_FOR_SHIPPING;
+
         String []arr = route.split(" ");
-        for(int i = 1; i<arr.length; i++){
-            PostOffice p = PostOffice.findPostOfficeByName(arr[i]);
-            Package tmp = new Package();
-            System.out.println("Office name "+p.name);
-            tmp.postOffice = p;
-            tmp.status = "On route";
-            tmp.destination = packageWithRoute.destination;
-            tmp.route = route;
-            tmp.trackingNum = packageWithRoute.trackingNum;
-            Ebean.save(tmp);
-        }
+
+            for(int j = 0; j<arr.length; j++) {
+                PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
+                System.out.println(p.name);
+
+                    //dodaje u rutu ako ime officea iz naseg stringa nije jednako imenu od paketa kojeg saljemo i elementa liste
+                    Shipment ship = new Shipment();
+                ship.postOfficeId = p;
+                ship.packageId = packageWithRoute;
+                if(j==0) {
+                    ship.status = StatusHelper.READY_FOR_SHIPPING;
+                }else
+                    ship.status = StatusHelper.ON_ROUTE;
+
+
+                Ebean.save(ship);
+            }
+
         return redirect(routes.PackageController.adminPackage());
     }
 
     public Result changeRoute(Long id){
         Package p = Package.findPackageById(id);
-        p.status = "out";
+        p.status = StatusHelper.OUT_FOR_DELIVERY;
         Ebean.update(p);
         return redirect(routes.UserController.officeWorkerPanel());
     }
