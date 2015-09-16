@@ -391,5 +391,49 @@ public class UserController extends Controller {
         return ok(officeworkerpanel.render(packages));
     }
 
+    public Result addDeliveryWorker() {
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+        Form<User> boundForm = newUser.bindFromRequest();
+        String firstName = boundForm.bindFromRequest().field("firstName").value();
+        String lastName = boundForm.bindFromRequest().field("lastName").value();
+        String password = boundForm.bindFromRequest().field("password").value();
+        String repassword = boundForm.bindFromRequest().field("repassword").value();
+        String email = boundForm.bindFromRequest().field("email").value();
+
+        User u = User.checkEmail(email);
+        if (u == null) {
+            u = new User(firstName, lastName, password, email);
+            if (firstName.length() == 0 || lastName.length() == 0 || password.length() == 0 || repassword.length() == 0 || email.length() == 0) {
+                flash("errorEmptyName", "Please fill all fields!");
+            }
+            if (u.checkName(firstName) && u.checkName(lastName)) {
+                if (u.checkPassword(password) && password.equals(repassword)) {
+                    String newPassword = getEncriptedPasswordMD5(password);
+                    firstName = firstName.substring(0,1).toUpperCase()+firstName.substring(1);
+                    lastName = lastName.substring(0,1).toUpperCase()+lastName.substring(1);
+                    u = new User(firstName, lastName, newPassword, email);
+                    u.typeOfUser = UserType.DELIVERY_WORKER;
+                    Ebean.save(u);
+                    flash("registered", "Welcome, " + u.firstName + "!");
+                    return redirect(routes.Application.deliveryWorkersList());
+                } else {
+                    flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters, one number, and one sign, or you entered different passwords");
+                    return redirect(routes.Application.registerDeliveryWorker());
+                }
+            } else {
+                flash("errorName", "Your name or last name should have only letters.");
+                return redirect(routes.Application.registerDeliveryWorker());
+                //return ok(register.render());
+            }
+        } else {
+            flash("errorEmail", "E-mail address already exists!");
+            return redirect(routes.Application.registerDeliveryWorker());
+        }
+
+    }
+
 
 }

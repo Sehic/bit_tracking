@@ -3,54 +3,60 @@
 # ~~~~
 
 # Home page
-GET           /                                         @controllers.Application.index()
-GET           /login                                    @controllers.Application.login()
-GET           /register                                 @controllers.Application.register()
-GET           /mybt/editprofile/:id                     @controllers.UserController.editProfile(id: Long)
-POST          /check                                    @controllers.UserController.loginCheck()
-POST          /register                                 @controllers.UserController.registrationCheck()
-POST          /mybt/editprofile/:id                     @controllers.UserController.updateUser(id: Long)
-GET           /mybt/userprofile/:id                     @controllers.UserController.userProfile(id: Long)
-POST          /mybt/userprofile/:id                     @controllers.UserController.updateUserType(id: Long)
-POST          /mybt/userprofile/upload/                 @controllers.UserController.uploadPicture()
-GET           /logout                                   @controllers.Application.logout()
+GET           /                                          @controllers.Application.index()
+GET           /login                                     @controllers.Application.login()
+GET           /register                                  @controllers.Application.register()
+GET           /mybt/editprofile/:id                      @controllers.UserController.editProfile(id: Long)
+POST          /check                                     @controllers.UserController.loginCheck()
+POST          /register                                  @controllers.UserController.registrationCheck()
+POST          /mybt/editprofile/:id                      @controllers.UserController.updateUser(id: Long)
+GET           /mybt/userprofile/:id                      @controllers.UserController.userProfile(id: Long)
+POST          /mybt/userprofile/:id                      @controllers.UserController.updateUserType(id: Long)
+POST          /mybt/userprofile/upload/                  @controllers.UserController.uploadPicture()
+GET           /logout                                    @controllers.Application.logout()
 
-GET           /adminpanel                               @controllers.Application.adminPanel()
-GET           /adminpanel/linkoffices/:id               @controllers.PostOfficeController.linkPostOffices(id: Long)
-POST          /adminpanel/linkoffices                   @controllers.PostOfficeController.savePostOffices()
-GET           /adminpanel/maps                          @controllers.Application.adminMaps()
-GET           /adminpanel/tables                        @controllers.Application.adminTables()
-GET           /adminpanel/tables/addpostoffice          @controllers.Application.addPostOffice()
-GET           /adminpanel/preferences/:id               @controllers.UserController.adminPreferences(id: Long)
-GET           /adminpanel/tables/:id                    @controllers.UserController.deleteUser(id: Long)
+GET           /adminpanel                                @controllers.Application.adminPanel()
+GET           /adminpanel/linkoffices/:id                @controllers.PostOfficeController.linkPostOffices(id: Long)
+POST          /adminpanel/linkoffices                    @controllers.PostOfficeController.savePostOffices()
+GET           /adminpanel/maps                           @controllers.Application.adminMaps()
+GET           /adminpanel/tables                         @controllers.Application.adminTables()
+GET           /adminpanel/tables/addpostoffice           @controllers.Application.addPostOffice()
+GET           /adminpanel/preferences/:id                @controllers.UserController.adminPreferences(id: Long)
+GET           /adminpanel/tables/:id                     @controllers.UserController.deleteUser(id: Long)
 
-GET           /adminpanel/postoffice                    @controllers.Application.adminPostOffice()
-GET           /adminpanel/postoffice/details/:id        @controllers.PostOfficeController.postOfficeDetails(id: Long)
-GET           /adminpanel/postoffice/:id                @controllers.PostOfficeController.deleteOffice(id:Long)
-POST          /adminpanel/postoffice                    @controllers.PostOfficeController.addNewOffice()
-POST          /adminpanel/postoffice/details/:id        @controllers.PostOfficeController.updateOffice(id: Long)
+GET           /adminpanel/postoffice                     @controllers.Application.adminPostOffice()
+GET           /adminpanel/postoffice/details/:id         @controllers.PostOfficeController.postOfficeDetails(id: Long)
+GET           /adminpanel/postoffice/:id                 @controllers.PostOfficeController.deleteOffice(id:Long)
+POST          /adminpanel/postoffice                     @controllers.PostOfficeController.addNewOffice()
+POST          /adminpanel/postoffice/details/:id         @controllers.PostOfficeController.updateOffice(id: Long)
 
-GET           /adminpanel/officeworkers                 @controllers.Application.officeWorkersList()
-GET           /adminpanel/officeworkers/add             @controllers.Application.registerOfficeWorker()
-POST          /adminpanel/officeworkers/add             @controllers.UserController.addOfficeWorker()
+GET           /adminpanel/officeworkers                  @controllers.Application.officeWorkersList()
+GET           /adminpanel/officeworkers/add              @controllers.Application.registerOfficeWorker()
+POST          /adminpanel/officeworkers/add              @controllers.UserController.addOfficeWorker()
 
-GET           /adminpanel/package/                      @controllers.PackageController.adminPackage()
-GET           /adminpanel/package/addpackage            @controllers.PackageController.addPackage()
-POST          /adminpanel/package/addpackage            @controllers.PackageController.savePackage()
-DELETE        /adminpanel/package/delete/:id            @controllers.PackageController.deletePackage(id: Long)
-GET           /adminpanel/package/update/:id            @controllers.PackageController.editPackage(id: Long)
-POST          /adminpanel/package/update/:id            @controllers.PackageController.updatePackage(id: Long)
+GET           /adminpanel/package/                       @controllers.PackageController.adminPackage()
+GET           /adminpanel/package/addpackage             @controllers.PackageController.addPackage()
+POST          /adminpanel/package/addpackage             @controllers.PackageController.savePackage()
+DELETE        /adminpanel/package/delete/:id             @controllers.PackageController.deletePackage(id: Long)
+GET           /adminpanel/package/update/:id             @controllers.PackageController.editPackage(id: Long)
+POST          /adminpanel/package/update/:id             @controllers.PackageController.updatePackage(id: Long)
 
-GET           /trackpackage/                            @controllers.Application.trackPackage()
-POST          /checktrack                               @controllers.Application.checkTrackingNumber()
+GET           /trackpackage/                             @controllers.Application.trackPackage()
+POST          /checktrack                                @controllers.Application.checkTrackingNumber()
 
-GET           /adminpanel/makeroute/:id                 @controllers.PostOfficeController.listRoutes(id: Long)
-POST          /adminpanel/makeroute/create              @controllers.PostOfficeController.createRoute()
-POST          /adminpanel/makeroute/save/id             @controllers.PostOfficeController.saveRoute(id: Long)
+GET           /adminpanel/makeroute/:id                  @controllers.PostOfficeController.listRoutes(id: Long)
+POST          /adminpanel/makeroute/create               @controllers.PostOfficeController.createRoute()
+POST          /adminpanel/makeroute/save/id              @controllers.PostOfficeController.saveRoute(id: Long)
 
-GET           /officeworkerpanel                        @controllers.UserController.officeWorkerPanel()
+GET           /officeworkerpanel                         @controllers.UserController.officeWorkerPanel()
 
 POST          /adminpanel/package/changeRoute/:id        @controllers.PostOfficeController.changeRoute(id: Long)
+
+GET           /adminpanel/deliveryworkers/add            @controllers.Application.registerDeliveryWorker()
+GET           /adminpanel/deliveryworkers                @controllers.Application.deliveryWorkersList()
+POST          /adminpanel/deliveryworkers/add            @controllers.UserController.addDeliveryWorker()
+GET             /adminpanel/deliveryworkers/panel       @controllers.Application.deliveryWorkerPanel()
+
 
 
 
@@ -58,4 +64,4 @@ POST          /adminpanel/package/changeRoute/:id        @controllers.PostOffice
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET           /assets/*file                             controllers.Assets.versioned(path="/public", file: Asset)
+GET           /assets/*file                              controllers.Assets.versioned(path="/public", file: Asset)

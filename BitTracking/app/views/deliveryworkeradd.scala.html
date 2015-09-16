@@ -1,0 +1,130 @@
+@import helper._
+@adminmain("Add Delivery Worker") {
+    <!--============ REGISTER CONTAINER ==============-->
+    <div class="container-fluid">
+            <!--Register title row -->
+        <div class="row">
+            <div class="col-md-12">
+                <h3>
+                    Add Delivery Worker
+                </h3>
+            </div>
+        </div> <!--End register title  row-->
+
+        <!--Paragraf row -->
+        <div class="row">
+            <div class="col-md-12">
+                <p>
+                    Please use the form below to create a Delivery Worker account. Required fields are indicated with *.
+                </p>
+            </div>
+        </div><!--End paragraf row-->
+
+        <!--=======Form row============ -->
+        <div class="row">
+            <div class="col-md-12">
+
+            @helper.form(action = routes.UserController.addDeliveryWorker(), 'class -> "form-horizontal", 'role -> "form") {
+
+
+                <div class="form-group">
+
+                    <label for="inputName" class="col-sm-2 control-label">
+                        First Name*:
+                    </label>
+                    <div class="col-sm-10">
+                        <input name="firstName" placeholder="First Name should contain only letters" onblur="checkFirstName()" type="text" class="form-control" id="inputName" required="required">
+                        <span id="nameError" class="alert-danger" data-error-for="" ></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="inputLastName" class="col-sm-2 control-label">
+                        Last Name*:
+                    </label>
+                    <div class="col-sm-10">
+                        <input name="lastName" placeholder="Last Name should contain only letters" onblur="checkLastName()" type="text" class="form-control" id="inputLastName" required="required">
+                        <span id="lastNameError" class="alert-danger" data-error-for="" ></span>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="inputEmail3" class="col-sm-2 control-label">
+                        Email*:
+                    </label>
+                    <div class="col-sm-10">
+                        <input name="email" placeholder="Insert Email" onblur="checkEmail()" type="email" class="form-control" id="inputEmail3" required="required">
+                        <span id="mailError" class="alert-danger" data-error-for="" ></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="inputPassword3" class="col-sm-2 control-label">
+                        Password*:
+                    </label>
+                    <div class="col-sm-10">
+                        <input name="password" onblur="checkPassword()" placeholder="Password should contain any sequence of alpha, special symbol, one number. Minimum alowed length is 6. " type="password" class="form-control" id="inputPassword3" required="required">
+                        <span id="passError" class="alert-danger" data-error-for="" ></span>
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <label for="inputPassword4" class="col-sm-2 control-label">
+                        Confirm Password*:
+                    </label>
+                    <div class="col-sm-10">
+                        <input name="repassword" onblur="checkPasswords()" placeholder="Confirm Password" type="password" class="form-control" id="inputPassword4" required="required">
+                        <span id="repassError" class="alert-danger" data-error-for="" ></span>
+                    </div>
+
+                    <br/>
+                    <br/>
+                </div>
+                    <!--=======Backend validation message============ -->
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <b style="color : red">
+                        @if(flash.containsKey("errorEmptyName")) {
+                            @flash.get("errorEmptyName")
+                        } else {
+
+                            @if(flash.containsKey("errorEmail")) {
+                                @flash.get("errorEmail")
+                            }
+                            @if(flash.containsKey("errorPassword")) {
+                                @flash.get("errorPassword")
+                            }
+                            @if(flash.containsKey("errorName")) {
+                                @flash.get("errorName")
+                            }
+                        }</b>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+
+                        <input type="submit" class="btn-group pull-right" value="Register">
+
+                    </div>
+                </div>
+            }
+
+            </div>
+        </div><!--End form row -->
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <p class="text-muted text-left">
+                    <small><em>
+                        By clicking Register, I agree to the use of my personal information according to the BIT Tracking Statement. I understand that my personal information may be transferred for processing outside my country of residence, where standards of data protection may be different.</em></small>
+                </p>
+            </div>
+        </div>
+    </div>
+
+}

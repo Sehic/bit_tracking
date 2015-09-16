@@ -59,10 +59,22 @@ create table user (
 ;
 
 
+create table package_user (
+  package_id                     bigint not null,
+  user_id                        bigint not null,
+  constraint pk_package_user primary key (package_id, user_id))
+;
+
 create table linked_offices (
   post_officeA_id                bigint not null,
   post_officeB_id                bigint not null,
   constraint pk_linked_offices primary key (post_officeA_id, post_officeB_id))
+;
+
+create table user_package (
+  user_id                        bigint not null,
+  package_id                     bigint not null,
+  constraint pk_user_package primary key (user_id, package_id))
 ;
 alter table image_path add constraint fk_image_path_profilePhoto_1 foreign key (profile_photo_id) references user (id) on delete restrict on update restrict;
 create index ix_image_path_profilePhoto_1 on image_path (profile_photo_id);
@@ -77,9 +89,17 @@ create index ix_user_postOffice_5 on user (post_office_id);
 
 
 
+alter table package_user add constraint fk_package_user_package_01 foreign key (package_id) references package (id) on delete restrict on update restrict;
+
+alter table package_user add constraint fk_package_user_user_02 foreign key (user_id) references user (id) on delete restrict on update restrict;
+
 alter table linked_offices add constraint fk_linked_offices_post_office_01 foreign key (post_officeA_id) references post_office (id) on delete restrict on update restrict;
 
 alter table linked_offices add constraint fk_linked_offices_post_office_02 foreign key (post_officeB_id) references post_office (id) on delete restrict on update restrict;
+
+alter table user_package add constraint fk_user_package_user_01 foreign key (user_id) references user (id) on delete restrict on update restrict;
+
+alter table user_package add constraint fk_user_package_package_02 foreign key (package_id) references package (id) on delete restrict on update restrict;
 
 # --- !Downs
 
@@ -91,6 +111,8 @@ drop table location;
 
 drop table package;
 
+drop table package_user;
+
 drop table post_office;
 
 drop table linked_offices;
@@ -98,6 +120,8 @@ drop table linked_offices;
 drop table shipment;
 
 drop table user;
+
+drop table user_package;
 
 SET FOREIGN_KEY_CHECKS=1;
 

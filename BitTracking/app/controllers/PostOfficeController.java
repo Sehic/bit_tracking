@@ -162,8 +162,18 @@ public class PostOfficeController extends Controller {
         }
 
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
+        PostOffice office = PostOffice.findOffice.byId(id);
+        List<PostOffice> mainOfficeRelationList = office.postOfficesA;
 
-        return ok(linkoffices.render(postOffices, PostOffice.findOffice.byId(id)));
+        for (int i = 0; i < mainOfficeRelationList.size(); i++) {
+            for (int j = 0; j < postOffices.size(); j++) {
+                if(mainOfficeRelationList.get(i).id == postOffices.get(j).id){
+                    postOffices.remove( j );
+                }
+            }
+        }
+
+        return ok(linkoffices.render(postOffices, office));
     }
 
     /**
@@ -249,20 +259,23 @@ public class PostOfficeController extends Controller {
         packageWithRoute.status = StatusHelper.READY_FOR_SHIPPING;
 
         String []arr = route.split(" ");
-        Shipment ship = new Shipment();
 
-            for(int j = 0; j<arr.length; j++) {
-                PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
-                if(j == 0){
-                    ship.status = StatusHelper.READY_FOR_SHIPPING;
-                }else{
-                    ship.status = StatusHelper.ON_ROUTE;
-                }
-                ship.postOfficeId = p;
-                ship.packageId = packageWithRoute;
+        for(int j = 0; j<arr.length; j++) {
+            PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
+            System.out.println(p.name);
 
-                Ebean.save(ship);
-            }
+            //dodaje u rutu ako ime officea iz naseg stringa nije jednako imenu od paketa kojeg saljemo i elementa liste
+            Shipment ship = new Shipment();
+            ship.postOfficeId = p;
+            ship.packageId = packageWithRoute;
+            if(j==0) {
+                ship.status = StatusHelper.READY_FOR_SHIPPING;
+            }else
+                ship.status = StatusHelper.ON_ROUTE;
+
+
+            Ebean.save(ship);
+        }
 
         return redirect(routes.PackageController.adminPackage());
     }

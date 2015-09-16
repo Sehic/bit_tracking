@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import helpers.SessionHelper;
+import helpers.StatusHelper;
 import models.PostOffice;
 import models.User;
 import models.UserType;
@@ -11,6 +12,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.*;
 import models.Package;
+import play.Logger;
 
 
 import java.util.List;
@@ -78,6 +80,7 @@ public class PackageController extends Controller {
      //   pack.postOffice = office;
         pack.destination = form.get("destination");
         pack.trackingNum = (UUID.randomUUID().toString());
+        pack.status = StatusHelper.READY_FOR_SHIPPING;
 
 
         Ebean.save(pack);
@@ -109,17 +112,31 @@ public class PackageController extends Controller {
     public Result updatePackage(Long id) {
 
         User user = SessionHelper.getCurrentUser(ctx());
-        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
+        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER && user.typeOfUser != UserType.DELIVERY_WORKER) {
             return redirect("/");
         }
         DynamicForm form = Form.form().bindFromRequest();
         Package pack = Package.findPackageById(id);
+        Logger.info(form.bindFromRequest().field("drop").value());
         String officeid = form.bindFromRequest().field("officePost").value();
         PostOffice office = PostOffice.findPostOffice(Long.parseLong(officeid));
         pack.shipmentPackages.get(0).postOfficeId = office;
      //   pack.packageRoutes.add(office);
     //    pack.postOffice = office;
         pack.destination = form.get("destination");
+        String status = form.bindFromRequest().field("drop").value();
+        if (status.equals("1")){
+            pack.status = StatusHelper.READY_FOR_SHIPPING;
+        } else if (status.equals("2")){
+            pack.status = StatusHelper.ON_ROUTE;
+        } else if (status.equals("3")){
+            pack.status = StatusHelper.OUT_FOR_DELIVERY;
+        } else if (status.equals("4")){
+            pack.status = StatusHelper.DELIVERED;
+        }
+        pack.deliveryWorkers.add(user);
+        user.packages.add(pack);
+        Ebean.update(user);
         Ebean.update(pack);
         return ok(adminpackage.render(Package.finder.findList()));
     }
@@ -132,7 +149,7 @@ public class PackageController extends Controller {
     public Result editPackage(Long id) {
 
         User user = SessionHelper.getCurrentUser(ctx());
-        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
+        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER && user.typeOfUser != UserType.DELIVERY_WORKER) {
             return redirect("/");
         }
 

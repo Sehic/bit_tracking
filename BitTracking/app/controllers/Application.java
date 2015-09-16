@@ -1,6 +1,7 @@
 package controllers;
 
 import helpers.SessionHelper;
+import helpers.StatusHelper;
 import models.PostOffice;
 import models.User;
 import models.UserType;
@@ -182,5 +183,30 @@ public class Application extends Controller {
         Package p = Package.findPackageByTrackingNumber(trackingNumber);
         return ok(p.toString());
     }
+
+    public Result registerDeliveryWorker() {
+        User u = SessionHelper.getCurrentUser(ctx());
+        if (u == null || u.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+        return ok(deliveryworkeradd.render());
+    }
+
+    public Result deliveryWorkersList() {
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+        return ok(deliveryworkerslist.render(User.find.where().eq("typeOfUser", UserType.DELIVERY_WORKER).findList()));
+    }
+
+    public Result deliveryWorkerPanel(){
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
+            return redirect(routes.Application.index());
+        }
+        return ok(deliveryworkerpanel.render(u1.packages, Package.finder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).findList()));
+    }
+
 
 }
