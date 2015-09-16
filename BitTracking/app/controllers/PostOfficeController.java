@@ -276,18 +276,23 @@ public class PostOfficeController extends Controller {
         //da da jedan office za razlicite pakete moze imat razlicite statuse, jer mislim da ce se na moj nacin pravit lupanje podataka, kad vise paketa saljes preko istog centra, ali na razlicite destinacije
         //vidi ti to jos malo, ako sta skontas javi al ovo dole je okej, nisam htio sad ajax da diram, pa da odmah vadim u rutu mozda cu vcrs to
 
-        for (int i=0;i<packageWithRoute.packageRoutes.size();i++){
+   //    for (int i=0;i<packageWithRoute.packageRoutes.size();i++){
             for(int j = 1; j<arr.length; j++) {
                 PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
-                if (packageWithRoute.packageRoutes.get(i).name != p.name) {
+                System.out.println(p.name);
+
                     //dodaje u rutu ako ime officea iz naseg stringa nije jednako imenu od paketa kojeg saljemo i elementa liste
                     packageWithRoute.packageRoutes.add(p);
+
                     //znaci paket koji se salje svim officeima osim prvom, dodijeli status on route
-                    packageWithRoute.packageRoutes.get(i).packageStatus= StatusHelper.ON_ROUTE;
-                }
+                //Ovo treba skontat kako implementirat ispod.. ali kad ovu petlju arr preklopis ovom packagewithroute.packageroutes.size
+                //beskonacna bude i nikad se ne izvrsi
+                //ugl ovako radi da se u medju tabelu upisuju officei i paketi koji su u vezi
+        //            packageWithRoute.packageRoutes.get(i).packageStatus= StatusHelper.ON_ROUTE;
+                Ebean.save(packageWithRoute);
             }
-        }
-        Ebean.update(packageWithRoute);
+    //    }
+
 
 
         return redirect(routes.PackageController.adminPackage());

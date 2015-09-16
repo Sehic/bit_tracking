@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.ImmutableMap;
 import controllers.PostOfficeController;
 import models.PostOffice;
 import org.junit.*;
@@ -64,10 +65,15 @@ public class ApplicationTest {
         assertNotNull(p);
     }
 
-    @Test
-    public void testIndex(){
-        Result result = route(routes.Application.index());
-        assertThat(result
-    }
+   @Test
+    public void testInsert(){
+       Http.RequestBuilder rb = new Http.RequestBuilder().method(POST).uri("/products").bodyForm(ImmutableMap.of(
+       ));
+
+       Result result = route (rb);
+       assertThat(result.status()).isEqualTo(SEE_OTHER);
+       assertThat(result.redirectLocation()).isEqualTo("/products");
+       assertThat(result.flash().get("success")).contains("Sussc added");
+   }
 
 }
