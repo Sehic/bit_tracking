@@ -24,8 +24,8 @@ public class PostOffice extends Model {
     @OneToMany(mappedBy = "postOffice")
     public List<User> officeWorkers = new ArrayList<>();
 
-    @ManyToMany
-    public List<Package> packages = new ArrayList<>();
+    @OneToMany(mappedBy = "postOfficeId")
+    public List<Shipment> shipmentOffices = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name="linked_offices",

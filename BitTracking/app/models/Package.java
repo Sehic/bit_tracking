@@ -17,8 +17,8 @@ public class Package extends Model {
     @Id
     public Long id;
 
-    @ManyToMany(mappedBy = "packages")
-    public List<PostOffice> packageRoutes = new ArrayList<>();;
+    @OneToMany(mappedBy = "packageId")
+    public List<Shipment> shipmentPackages = new ArrayList<>();
 
     @Column
     public String trackingNum;
@@ -26,9 +26,6 @@ public class Package extends Model {
     @Column(length = 255)
     @Constraints.Required
     public String destination;
-
-    @Column
-    public String route;
 
     @Enumerated(EnumType.STRING)
     public StatusHelper status;

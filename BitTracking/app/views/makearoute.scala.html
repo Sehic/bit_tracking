@@ -1,4 +1,4 @@
-@(postOffice: PostOffice, officePackage: models.Package)
+@(postOffices: List[PostOffice], officePackage: models.Package)
 @adminmain("Make a route") {
 
     <head>
@@ -11,8 +11,9 @@
     <div class="row">
         <div class="col-md-4">
             <select name="postOffices" class="selectOffice">
-
-                <option value="@postOffice.name">@postOffice.name</option>
+                @for(office <- postOffices) {
+                    <option value="@office.name">@office.name</option>
+                }
 
             </select>
         </div>

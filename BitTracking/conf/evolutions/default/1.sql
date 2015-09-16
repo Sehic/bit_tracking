@@ -21,7 +21,6 @@ create table package (
   id                        bigint auto_increment not null,
   tracking_num              varchar(255),
   destination               varchar(255),
-  route                     varchar(255),
   status                    integer,
   constraint ck_package_status check (status in ('1','2','4','3')),
   constraint pk_package primary key (id))
@@ -38,6 +37,15 @@ create table post_office (
   constraint pk_post_office primary key (id))
 ;
 
+create table shipment (
+  id                        bigint auto_increment not null,
+  post_office_id_id         bigint,
+  package_id_id             bigint,
+  status                    integer,
+  constraint ck_shipment_status check (status in ('1','2','4','3')),
+  constraint pk_shipment primary key (id))
+;
+
 create table user (
   id                        bigint auto_increment not null,
   first_name                varchar(50),
@@ -51,12 +59,6 @@ create table user (
 ;
 
 
-create table post_office_package (
-  post_office_id                 bigint not null,
-  package_id                     bigint not null,
-  constraint pk_post_office_package primary key (post_office_id, package_id))
-;
-
 create table linked_offices (
   post_officeA_id                bigint not null,
   post_officeB_id                bigint not null,
@@ -66,14 +68,14 @@ alter table image_path add constraint fk_image_path_profilePhoto_1 foreign key (
 create index ix_image_path_profilePhoto_1 on image_path (profile_photo_id);
 alter table post_office add constraint fk_post_office_place_2 foreign key (place_id) references location (id) on delete restrict on update restrict;
 create index ix_post_office_place_2 on post_office (place_id);
-alter table user add constraint fk_user_postOffice_3 foreign key (post_office_id) references post_office (id) on delete restrict on update restrict;
-create index ix_user_postOffice_3 on user (post_office_id);
+alter table shipment add constraint fk_shipment_postOfficeId_3 foreign key (post_office_id_id) references post_office (id) on delete restrict on update restrict;
+create index ix_shipment_postOfficeId_3 on shipment (post_office_id_id);
+alter table shipment add constraint fk_shipment_packageId_4 foreign key (package_id_id) references package (id) on delete restrict on update restrict;
+create index ix_shipment_packageId_4 on shipment (package_id_id);
+alter table user add constraint fk_user_postOffice_5 foreign key (post_office_id) references post_office (id) on delete restrict on update restrict;
+create index ix_user_postOffice_5 on user (post_office_id);
 
 
-
-alter table post_office_package add constraint fk_post_office_package_post_office_01 foreign key (post_office_id) references post_office (id) on delete restrict on update restrict;
-
-alter table post_office_package add constraint fk_post_office_package_package_02 foreign key (package_id) references package (id) on delete restrict on update restrict;
 
 alter table linked_offices add constraint fk_linked_offices_post_office_01 foreign key (post_officeA_id) references post_office (id) on delete restrict on update restrict;
 
@@ -89,11 +91,11 @@ drop table location;
 
 drop table package;
 
-drop table post_office_package;
-
 drop table post_office;
 
 drop table linked_offices;
+
+drop table shipment;
 
 drop table user;
 

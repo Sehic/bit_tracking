@@ -217,14 +217,9 @@ public class PostOfficeController extends Controller {
     public Result listRoutes(Long id) {
         List<PostOffice> offices = PostOffice.findOffice.findList();
         Package officePackage = Package.findPackageById(id);
-        PostOffice office= new PostOffice();
-        for (int i = 0; i < officePackage.packageRoutes.size(); i++) {
-            if (offices.get(i).id == officePackage.packageRoutes.get(i).id) {
-                office = offices.get(i);
-            }
-        }
 
-        return ok(makearoute.render(office, officePackage));
+
+        return ok(makearoute.render(offices, officePackage));
     }
 
     public Result createRoute() {
@@ -251,49 +246,23 @@ public class PostOfficeController extends Controller {
         String route = form.data().get("route");
         Package packageWithRoute = Package.findPackageById(id);
 
-        packageWithRoute.route=route;
         packageWithRoute.status = StatusHelper.READY_FOR_SHIPPING;
 
         String []arr = route.split(" ");
-//        for(int i = 1; i<arr.length; i++){
-//            PostOffice p = PostOffice.findPostOfficeByName(arr[i]);
-//            Package tmp = new Package();
-//            System.out.println("Office name "+p.name);
-//            tmp.postOffice = p;
-//            tmp.status = "On route";
-//            tmp.destination = packageWithRoute.destination;
-//            tmp.route = route;
-//            tmp.trackingNum = packageWithRoute.trackingNum;
-//            Ebean.save(tmp);
-//        }
+        Shipment ship = new Shipment();
 
-        //Eh ovdje pazi, napravio sam dva statusa, jedan je u postofficeu status paketa, a drugi je u paketu
-        //Koristio sam tvoj string, izvrtio ga za sad, samo da nam fino sprema u bazu vezu paket office
-        //ne znam sta ti radi ova change route pa vidi, ima to bruku bagova. Vjerovatno mi ta logika ne valja za
-        //office status paketa, al nekako sam zamislio da npr paket ima listu ruta(postofficea) u sebi packet.list..
-        //eh sad da tom paketu stavimo status ready for shipment kad se obradi, outfor delivery kad krene, a post officeima,
-        //koji imaju u ovom paketu dodijelimo status on route.. eh sad mozda opet treba napravit tabelu status i povezat je sa officeom vise na vise
-        //da da jedan office za razlicite pakete moze imat razlicite statuse, jer mislim da ce se na moj nacin pravit lupanje podataka, kad vise paketa saljes preko istog centra, ali na razlicite destinacije
-        //vidi ti to jos malo, ako sta skontas javi al ovo dole je okej, nisam htio sad ajax da diram, pa da odmah vadim u rutu mozda cu vcrs to
-
-   //    for (int i=0;i<packageWithRoute.packageRoutes.size();i++){
-            for(int j = 1; j<arr.length; j++) {
+            for(int j = 0; j<arr.length; j++) {
                 PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
-                System.out.println(p.name);
+                if(j == 0){
+                    ship.status = StatusHelper.READY_FOR_SHIPPING;
+                }else{
+                    ship.status = StatusHelper.ON_ROUTE;
+                }
+                ship.postOfficeId = p;
+                ship.packageId = packageWithRoute;
 
-                    //dodaje u rutu ako ime officea iz naseg stringa nije jednako imenu od paketa kojeg saljemo i elementa liste
-                    packageWithRoute.packageRoutes.add(p);
-
-                    //znaci paket koji se salje svim officeima osim prvom, dodijeli status on route
-                //Ovo treba skontat kako implementirat ispod.. ali kad ovu petlju arr preklopis ovom packagewithroute.packageroutes.size
-                //beskonacna bude i nikad se ne izvrsi
-                //ugl ovako radi da se u medju tabelu upisuju officei i paketi koji su u vezi
-        //            packageWithRoute.packageRoutes.get(i).packageStatus= StatusHelper.ON_ROUTE;
-                Ebean.save(packageWithRoute);
+                Ebean.save(ship);
             }
-    //    }
-
-
 
         return redirect(routes.PackageController.adminPackage());
     }
