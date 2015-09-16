@@ -1,9 +1,11 @@
 package models;
 
+import helpers.StatusHelper;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,8 +17,8 @@ public class Package extends Model {
     @Id
     public Long id;
 
-    @ManyToOne
-    public PostOffice postOffice;
+    @ManyToMany(mappedBy = "packages")
+    public List<PostOffice> packageRoutes = new ArrayList<>();;
 
     @Column
     public String trackingNum;
@@ -28,8 +30,8 @@ public class Package extends Model {
     @Column
     public String route;
 
-    @Column
-    public String status;
+    @Enumerated(EnumType.STRING)
+    public StatusHelper status;
 
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 

@@ -47,7 +47,9 @@
           }
 
         <td><a href="@routes.PackageController.editPackage(pack.id)" class="btn btn-link">@pack.destination</a></td>
-        <td>@pack.postOffice.name</td>
+          @if(pack.packageRoutes.size()!=0) {
+              <td>@pack.packageRoutes.get(0).name</td>
+          }
         <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>
       </tr>
     }

@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model.*;
+import helpers.StatusHelper;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
@@ -23,7 +24,7 @@ public class PostOffice extends Model {
     @OneToMany(mappedBy = "postOffice")
     public List<User> officeWorkers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "postOffice", cascade = CascadeType.ALL)
+    @ManyToMany
     public List<Package> packages = new ArrayList<>();
 
     @ManyToMany
@@ -35,6 +36,9 @@ public class PostOffice extends Model {
 
     @OneToOne
     public Location place;
+
+    @Enumerated(EnumType.STRING)
+    public StatusHelper packageStatus;
 
     public PostOffice(){
 

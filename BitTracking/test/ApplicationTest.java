@@ -30,18 +30,44 @@ import static org.junit.Assert.*;
 */
 public class ApplicationTest {
 
-    @Test
-    public void simpleCheck() {
-        int a = 1 + 1;
-        assertEquals(2, a);
+    @Before
+    public void configureDatabase() {
+        fakeApplication(inMemoryDatabase());
     }
 
     @Test
-    public void renderTemplate() {
-        Content html = views.html.index.render("Your new application is ready.");
-        assertEquals("text/html", contentType(html));
-        assertTrue(contentAsString(html).contains("Your new application is ready."));
+    public void addOfficecheck(){
+        PostOffice office = new PostOffice();
+        office.id= new Long(1);
+        office.name= "Office1";
+        office.address="Adresa 1";
+
+        office.save();
     }
 
+    @Test
+    public void testSavingAndLoading(){
+        PostOffice office = new PostOffice();
+        office.id= new Long(1);
+        office.name= "Office1";
+        office.address="Adresa 1";
+
+        office.save();
+
+        PostOffice o = PostOffice.findPostOffice(office.id);
+        assertNotNull(o);
+    }
+
+    @Test
+    public void testNonExistancePackage(){
+        Package p = models.Package.findPackageById(new Long(2));
+        assertNotNull(p);
+    }
+
+    @Test
+    public void testIndex(){
+        Result result = route(routes.Application.index());
+        assertThat(result
+    }
 
 }
