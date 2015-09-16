@@ -71,7 +71,7 @@ public class PostOfficeController extends Controller {
         String address = boundForm.bindFromRequest().field("address").value();
         String lon = boundForm.bindFromRequest().field("longitude").value();
         String lat = boundForm.bindFromRequest().field("latitude").value();
-        System.out.println("lon "+lon);
+        System.out.println("lon " + lon);
         if (lon == null || lat == null) {
             return redirect(routes.Application.adminPostOffice());
         }
@@ -168,7 +168,7 @@ public class PostOfficeController extends Controller {
         for (int i = 0; i < mainOfficeRelationList.size(); i++) {
             for (int j = 0; j < postOffices.size(); j++) {
                 if(mainOfficeRelationList.get(i).id == postOffices.get(j).id){
-                    postOffices.remove( j );
+                    postOffices.remove(j);
                 }
             }
         }
@@ -258,9 +258,9 @@ public class PostOfficeController extends Controller {
 
         packageWithRoute.status = StatusHelper.READY_FOR_SHIPPING;
 
-        String []arr = route.split(" ");
+        String[] arr = route.split(" ");
 
-        for(int j = 0; j<arr.length; j++) {
+        for (int j = 0; j < arr.length; j++) {
             PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
             System.out.println(p.name);
 
@@ -268,9 +268,9 @@ public class PostOfficeController extends Controller {
             Shipment ship = new Shipment();
             ship.postOfficeId = p;
             ship.packageId = packageWithRoute;
-            if(j==0) {
+            if (j == 0) {
                 ship.status = StatusHelper.READY_FOR_SHIPPING;
-            }else
+            } else
                 ship.status = StatusHelper.ON_ROUTE;
 
 
@@ -280,7 +280,7 @@ public class PostOfficeController extends Controller {
         return redirect(routes.PackageController.adminPackage());
     }
 
-    public Result changeRoute(Long id){
+    public Result changeRoute(Long id) {
         Package p = Package.findPackageById(id);
         p.status = StatusHelper.OUT_FOR_DELIVERY;
         Ebean.update(p);
