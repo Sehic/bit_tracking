@@ -249,20 +249,26 @@ public class PostOfficeController extends Controller {
         packageWithRoute.status = StatusHelper.READY_FOR_SHIPPING;
 
         String []arr = route.split(" ");
-        Shipment ship = new Shipment();
 
             for(int j = 0; j<arr.length; j++) {
                 PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
-                if(j == 0){
-                    ship.status = StatusHelper.READY_FOR_SHIPPING;
-                }else{
-                    ship.status = StatusHelper.ON_ROUTE;
-                }
+                System.out.println(p.name);
+
+                    //dodaje u rutu ako ime officea iz naseg stringa nije jednako imenu od paketa kojeg saljemo i elementa liste
+                    Shipment ship = new Shipment();
                 ship.postOfficeId = p;
                 ship.packageId = packageWithRoute;
+                if(j==0) {
+                    ship.status = StatusHelper.READY_FOR_SHIPPING;
+                }else
+                    ship.status = StatusHelper.ON_ROUTE;
+
 
                 Ebean.save(ship);
             }
+
+
+
 
         return redirect(routes.PackageController.adminPackage());
     }
