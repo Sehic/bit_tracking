@@ -2,7 +2,7 @@ $(document).ready(function(){
     var valueOfSelect;
     var saveValueOfSelect="";
     // for any form on this page do the follofing
-    $('.selectOffice').blur(function(){
+    $('#addToRoute').click(function(){
         valueOfSelect = $('.selectOffice :selected').text();
         $.ajax({
             url: "/adminpanel/makeroute/create",

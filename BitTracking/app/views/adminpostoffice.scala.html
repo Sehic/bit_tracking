@@ -26,7 +26,9 @@
         <th>#</th>
         <th>Name</th>
         <th>Adress</th>
+          <th>Link</th>
           <th>Linked To</th>
+          <th>Edit</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -34,9 +36,15 @@
     @for(postOffice <- postOffices) {
       <tr class="succes">
         <td>@postOffice.id</td>
-        <td><a href="@routes.PostOfficeController.postOfficeDetails(postOffice.id)" class="btn btn-link">@postOffice.name</a></td>
-        <td>@postOffice.address</td>
+        <td>@postOffice.name</td>
+          <td>@postOffice.address</td>
           <td><a href="@routes.PostOfficeController.linkPostOffices(postOffice.id)">Link</a></td>
+          <td align="center">
+          @for(linkedOffice <- postOffice.postOfficesA) {
+             @linkedOffice.name
+          }
+          </td>
+          <td align="center"><a href="@routes.PostOfficeController.postOfficeDetails(postOffice.id)" class="btn btn-info">Edit</a></td>
         <td><a href="@routes.PostOfficeController.deleteOffice(postOffice.id)" class="btn btn-link">Delete</a></td>
       </tr>
     }

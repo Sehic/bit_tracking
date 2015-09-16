@@ -71,7 +71,7 @@ public class PostOfficeController extends Controller {
         String address = boundForm.bindFromRequest().field("address").value();
         String lon = boundForm.bindFromRequest().field("longitude").value();
         String lat = boundForm.bindFromRequest().field("latitude").value();
-        System.out.println("lon " + lon);
+
         if (lon == null || lat == null) {
             return redirect(routes.Application.adminPostOffice());
         }
@@ -262,9 +262,7 @@ public class PostOfficeController extends Controller {
 
         for (int j = 0; j < arr.length; j++) {
             PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
-            System.out.println(p.name);
 
-            //dodaje u rutu ako ime officea iz naseg stringa nije jednako imenu od paketa kojeg saljemo i elementa liste
             Shipment ship = new Shipment();
             ship.postOfficeId = p;
             ship.packageId = packageWithRoute;
@@ -272,7 +270,6 @@ public class PostOfficeController extends Controller {
                 ship.status = StatusHelper.READY_FOR_SHIPPING;
             } else
                 ship.status = StatusHelper.ON_ROUTE;
-
 
             Ebean.save(ship);
         }
