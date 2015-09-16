@@ -71,8 +71,8 @@
         map: resultsMap,
         position: results[0].geometry.location,
       });
-      document.getElementById("longitude").value = results[0].geometry.location.G;
-      document.getElementById("latitude").value = results[0].geometry.location.K;
+      document.getElementById("longitude").value = results[0].geometry.location.lng();
+      document.getElementById("latitude").value = results[0].geometry.location.lat();
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
     }
