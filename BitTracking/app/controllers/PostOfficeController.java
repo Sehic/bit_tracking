@@ -267,9 +267,6 @@ public class PostOfficeController extends Controller {
                 Ebean.save(ship);
             }
 
-
-
-
         return redirect(routes.PackageController.adminPackage());
     }
 
