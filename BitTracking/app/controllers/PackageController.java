@@ -73,9 +73,9 @@ public class PackageController extends Controller {
         PostOffice office = PostOffice.findPostOffice(Long.parseLong(id));
 
         Package pack = new Package();
-      //  pack.shipmentPackages.get(0).packagePostOffice =office;
-      //  pack.packageRoutes.add(office);
-     //   pack.postOffice = office;
+        //  pack.shipmentPackages.get(0).packagePostOffice =office;
+        //  pack.packageRoutes.add(office);
+        //   pack.postOffice = office;
         pack.destination = form.get("destination");
         pack.trackingNum = (UUID.randomUUID().toString());
 
@@ -140,7 +140,7 @@ public class PackageController extends Controller {
             return redirect(routes.Application.index());
         }
 
-       Package pack = Package.finder.byId(id);
+        Package pack = Package.finder.byId(id);
         List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
         List<Package> packages = new ArrayList<>();
         for (int i=0;i<shipments.size();i++){
@@ -162,7 +162,7 @@ public class PackageController extends Controller {
 
         for (int i=0; i<shipments1.size();i++){
 
-                packages.add(shipments1.get(i).packageId);
+            packages.add(shipments1.get(i).packageId);
 
         }
 
