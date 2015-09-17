@@ -376,18 +376,19 @@ public class UserController extends Controller {
     }
 
     public Result officeWorkerPanel() {
-
+        List<Package> packages = new ArrayList<>();
         User u1 = SessionHelper.getCurrentUser(ctx());
         if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.OFFICE_WORKER) {
             return redirect(routes.Application.index());
         }
         PostOffice userOffice = u1.postOffice;
-        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packagePostOffice", userOffice).findList();
-        List<Package> packages = new ArrayList<>();
-        for(int i=0;i<shipments.size();i++){
-            packages.add(shipments.get(i).packageId);
-        }
+        if(userOffice.shipmentOffices != null) {
+            List<Shipment> shipments = Shipment.shipmentFinder.where().eq("postOfficeId", userOffice).findList();
 
+            for (int i = 0; i < shipments.size(); i++) {
+                packages.add(shipments.get(i).packageId);
+            }
+        }
         return ok(officeworkerpanel.render(packages));
     }
 

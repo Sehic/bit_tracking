@@ -23,9 +23,7 @@ import java.lang.System;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by mladen.teofilovic on 09/09/15.
@@ -249,7 +247,6 @@ public class PostOfficeController extends Controller {
         packageWithRoute.status = StatusHelper.READY_FOR_SHIPPING;
 
         String []arr = route.split(" ");
-
             for(int j = 0; j<arr.length; j++) {
                 PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
                 System.out.println(p.name);
@@ -260,6 +257,10 @@ public class PostOfficeController extends Controller {
                 ship.packageId = packageWithRoute;
                 if(j==0) {
                     ship.status = StatusHelper.READY_FOR_SHIPPING;
+                    Calendar c = Calendar.getInstance();
+                    Date date =  c.getTime();
+                    ship.dateCreated = date;
+
                 }else
                     ship.status = StatusHelper.ON_ROUTE;
 
