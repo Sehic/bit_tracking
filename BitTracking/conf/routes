@@ -46,7 +46,7 @@ POST          /checktrack                                   @controllers.Applica
 
 GET           /adminpanel/makeroute/:id                     @controllers.PostOfficeController.listRoutes(id: Long)
 POST          /adminpanel/makeroute/create                  @controllers.PostOfficeController.createRoute()
-POST          /adminpanel/makeroute/save/id                 @controllers.PostOfficeController.saveRoute(id: Long)
+POST          /adminpanel/makeroute/save/:id                 @controllers.PostOfficeController.saveRoute(id: Long)
 
 GET           /officeworkerpanel                            @controllers.UserController.officeWorkerPanel()
 

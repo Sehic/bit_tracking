@@ -92,8 +92,15 @@ public class PackageController extends Controller {
     public Result deletePackage(Long id) {
 
         Package p = Package.findPackageById(id);
+
         User user = SessionHelper.getCurrentUser(ctx());
         if (user != null || user.typeOfUser == UserType.OFFICE_WORKER || user.typeOfUser == UserType.ADMIN) {
+            for(int i = 0; i < p.shipmentPackages.size(); i++) {
+
+                p.shipmentPackages.remove(i);
+                Ebean.delete(p.shipmentPackages.get(i));
+            }
+
             Ebean.delete(p);
             return ok(packageadd.render(PostOffice.findOffice.findList()));
         } else {
@@ -142,6 +149,7 @@ public class PackageController extends Controller {
                 Ebean.update(shipments.get(i));
                 shipments.get(i+1).status = StatusHelper.READY_FOR_SHIPPING;
                 Ebean.update(shipments.get(i+1));
+                break;
             }else{
                 for (int j=0;j<shipments.size();j++){
                     shipments.get(j).status=StatusHelper.DELIVERED;
@@ -157,9 +165,6 @@ public class PackageController extends Controller {
                 packages.add(shipments1.get(i).packageId);
 
         }
-
-
-
 
         return ok(deliveryworkerpanel.render(packages));
     }

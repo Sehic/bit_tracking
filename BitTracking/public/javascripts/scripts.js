@@ -26,6 +26,24 @@ $(document).ready(function(){
 });
 
 
+$('body').on('click', 'a[data-role="delete"]', function(e){
+    e.preventDefault();
+    $toDelete = $(this);
+    var conf = bootbox.confirm("Delete?", function(result){
+        if(result != null){
+            $.ajax({
+                url: $toDelete.attr("href"),
+                method: "delete"
+            }).success(function(response){
+                $toDelete.parents($toDelete.attr("data-delete-parent")).remove();
+            });
+        }
+    });
+
+
+});
+
+
 
 
 $(".dropdown-menu li a").click(function () {
