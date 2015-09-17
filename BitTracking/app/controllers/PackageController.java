@@ -81,7 +81,7 @@ public class PackageController extends Controller {
 
 
         Ebean.save(pack);
-        return ok(adminpackage.render(Package.finder.findList()));
+        return redirect(routes.PackageController.adminPackage());
     }
 
     /**
@@ -92,8 +92,15 @@ public class PackageController extends Controller {
     public Result deletePackage(Long id) {
 
         Package p = Package.findPackageById(id);
+
         User user = SessionHelper.getCurrentUser(ctx());
         if (user != null || user.typeOfUser == UserType.OFFICE_WORKER || user.typeOfUser == UserType.ADMIN) {
+            for(int i = 0; i < p.shipmentPackages.size(); i++) {
+
+                p.shipmentPackages.remove(i);
+                Ebean.delete(p.shipmentPackages.get(i));
+            }
+
             Ebean.delete(p);
             return ok(packageadd.render(PostOffice.findOffice.findList()));
         } else {
