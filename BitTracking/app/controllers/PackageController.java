@@ -150,8 +150,6 @@ public class PackageController extends Controller {
             }
         }
 
-
-
         List<Shipment> shipments1 = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", u1.postOffice).findList();
 
         for (int i=0; i<shipments1.size();i++){
