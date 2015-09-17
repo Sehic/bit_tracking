@@ -77,7 +77,6 @@ public class PackageController extends Controller {
         pack.destination = form.get("destination");
         pack.trackingNum = (UUID.randomUUID().toString());
 
-
         Ebean.save(pack);
         return ok(adminpackage.render(Package.finder.findList()));
     }
@@ -134,4 +133,7 @@ public class PackageController extends Controller {
 
         return ok(packagedetails.render(Package.findPackageById(id), PostOffice.findOffice.findList()));
     }
+
+
+
 }

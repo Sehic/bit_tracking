@@ -1,23 +1,13 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.*;
 
 import play.mvc.*;
 import play.test.*;
-import play.data.DynamicForm;
-import play.data.validation.ValidationError;
-import play.data.validation.Constraints.RequiredValidator;
-import play.i18n.Lang;
-import play.libs.F;
 import play.libs.F.*;
-import play.twirl.api.Content;
 
 import static play.test.Helpers.*;
-import static org.junit.Assert.*;
+import static org.fest.assertions.Assertions.*;
+
+import static org.fluentlenium.core.filter.FilterConstructor.*;
 
 
 /**
@@ -26,20 +16,45 @@ import static org.junit.Assert.*;
 * If you are interested in mocking a whole application, see the wiki for more details.
 *
 */
-public class ApplicationTest {
+public class ApplicationTest extends  WithApplication{
+
 
     @Test
-    public void simpleCheck() {
-        int a = 1 + 1;
-        assertEquals(2, a);
+    public void testHome() {
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
+            public void invoke(TestBrowser browser) {
+                browser.goTo("http://localhost:9000");
+                assertThat(browser.pageSource()).contains("BIT Tracking ");
+            }
+        });
     }
 
-    @Test
-    public void renderTemplate() {
-        Content html = views.html.index.render("Your new application is ready.");
-        assertEquals("text/html", contentType(html));
-        assertTrue(contentAsString(html).contains("Your new application is ready."));
-    }
+  /*  @Test
+    public void testLogIn() {
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
+            public void invoke(TestBrowser browser) {
+                browser.goTo("http://localhost:9000/login");
+                assertThat(browser.pageSource()).contains("Log In");
+                assertThat(browser.title().equals("Sign In"));
+            }
+        });
+    }*/
+
+  /*  @Test
+    public void testRegister(){
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
+            public void invoke(TestBrowser browser) {
+                browser.goTo("http://localhost:9000/register");
+                browser.fill("#inputName").with("Bruce");
+                browser.fill("#inputLastName").with("Eckel");
+                browser.fill("inputEmail3").with("be@mail.de");
+                browser.fill("#inputPassword3").with("123456");
+                browser.fill("#inputPassword4").with("123456");
+                browser.submit("#submituserform");
+
+            }
+        });
+    }*/
 
 
 }

@@ -40,9 +40,11 @@ POST          /adminpanel/package/addpackage            @controllers.PackageCont
 DELETE        /adminpanel/package/delete/:id            @controllers.PackageController.deletePackage(id: Long)
 GET           /adminpanel/package/update/:id            @controllers.PackageController.editPackage(id: Long)
 POST          /adminpanel/package/update/:id            @controllers.PackageController.updatePackage(id: Long)
+GET           /adminpanel/dworkerpanel                  @controllers.Application.deliveryWorkerPanel()
 
 GET           /trackpackage/                            @controllers.Application.trackPackage()
 POST          /checktrack                               @controllers.Application.checkTrackingNumber()
+
 
 
 

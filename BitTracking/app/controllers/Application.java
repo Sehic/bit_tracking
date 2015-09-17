@@ -168,16 +168,27 @@ public class Application extends Controller {
         return ok(officeworkeradd.render(postOffices));
     }
 
+    public Result deliveryWorkerPanel(){
+        User user = SessionHelper.getCurrentUser(ctx());
+        if(user == null || user.typeOfUser != UserType.ADMIN){
+            return redirect(routes.Application.index());
+        }
+        List<PostOffice> postOffices = PostOffice.findOffice.findList();
+        return ok(dworkerpanel.render(user,postOffices));
+    }
+
     public Result trackPackage(){
         return ok(trackpackage.render());
     }
 
-    public Result checkTrackingNumber(){
+    public Result checkTrackingNumber() {
         DynamicForm form = Form.form().bindFromRequest();
         System.out.println(form.data().toString());
         String trackingNumber = form.data().get("trackingNumber");
         Package p = Package.findPackageByTrackingNumber(trackingNumber);
         return ok(p.toString());
     }
+
+
 
 }

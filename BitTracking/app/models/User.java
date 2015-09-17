@@ -87,7 +87,7 @@ public class User extends Model {
     }
 
 
-    public static Finder<String, User> find = new Finder<String, User>(String.class, User.class);
+    public static Finder<String, User> find = new Finder<>(User.class);
 
     /**
      * Method that checks if user exists in database

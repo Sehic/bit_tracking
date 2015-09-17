@@ -25,6 +25,7 @@ public class Package extends Model {
     @Constraints.Required
     public String destination;
 
+
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 
     public static List<Package> findByPostOffice(Long id) {

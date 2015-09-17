@@ -1,6 +1,6 @@
 package models;
 
-import play.db.ebean.Model;
+import com.avaje.ebean.Model;
 
 import javax.persistence.*;
 
@@ -9,7 +9,7 @@ import javax.persistence.*;
  */
 
 @Entity
-public class Location {
+public class Location extends Model{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
@@ -25,7 +25,7 @@ public class Location {
         this.y = y;
     }
 
-    public static Model.Finder<Long, Location> findLocation = new Model.Finder<Long, Location>(Long.class, Location.class);
+    public static Finder<Long, Location> findLocation = new Finder<Long, Location>( Location.class);
 
     public static Location findLocationById(Long id) {
 

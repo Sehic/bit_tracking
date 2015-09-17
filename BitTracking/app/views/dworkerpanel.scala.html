@@ -1,0 +1,154 @@
+@(user: User)(offices: List[PostOffice])
+
+@adminmain("Post Offices") {
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-bordered table-hover table-condensed">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Initial Destination</th>
+              <th>Final Destination</th>
+              <th>Current Location</th>
+              <th>Status</th>
+              <th>Office</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+
+              <td> 1</td>
+
+              <td> name_name</td>
+
+              <td>
+                <div class="col-md-2">
+                  <div class="btn-group">
+
+                    <button class="btn btn-default" >
+                      Office
+                    </button>
+                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a href="#"></a>
+                      </li>
+                      <li>
+                        <a href="#">Office#2</a>
+                      </li>
+                      <li>
+                        <a href="#">Office#3</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </td>
+
+
+              <td>
+                <div class="col-md-2">
+                  <div class="btn-group">
+
+                    <button class="btn btn-default">
+                      Office
+                    </button>
+                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a href="#">Office#1</a>
+                      </li>
+                      <li>
+                        <a href="#">Office#2</a>
+                      </li>
+                      <li>
+                        <a href="#">Office#3</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </td>
+
+
+              <td>
+                <div class="col-md-2">
+                  <div class="btn-group">
+
+                    <button class="btn btn-default" >
+                      Office
+                    </button>
+                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a href="#">Office#1</a>
+                      </li>
+                      <li>
+                        <a href="#">Office#2</a>
+                      </li>
+                      <li>
+                        <a href="#">Office#3</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </td>
+
+              <td>
+              <div class="col-md-12">
+
+                <button type="button" class="btn btn-info btn-block active btn-sm">
+                  Status
+                </button>
+              </div>
+            </td>
+
+              <td>
+                <div class="col-md-2">
+                  <div class="btn-group">
+
+                    <button class="btn btn-default">
+                      PostOffice
+                    </button>
+                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a href="#">Office#1</a>
+                      </li>
+                      <li>
+                        <a href="#">Office#2</a>
+                      </li>
+                      <li>
+                        <a href="#">Office#3</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+  <div class = "container-fluid">
+    <div class="row">
+      <div class="col-md-10">
+      </div>
+      <div class="col-md-2">
+
+        <button type="button" class="btn btn-success btn-block active btn-sm" >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+}

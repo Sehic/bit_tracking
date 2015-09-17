@@ -27,7 +27,7 @@ public class ImagePath extends Model {
         this.profilePhoto = profilePhoto;
     }
 
-    public static Model.Finder<Long, ImagePath> findImage = new Model.Finder<Long, ImagePath>(Long.class, ImagePath.class);
+    public static Finder<Long, ImagePath> findImage = new Finder<Long, ImagePath>(ImagePath.class);
 
     public static ImagePath findByUser(User user){
         ImagePath path = findImage.where().eq("profilePhoto", user).findUnique();
