@@ -49,7 +49,7 @@ public class Package extends Model {
 
     @Override
     public String toString() {
-        return trackingNum + " " + destination;
+        return trackingNum + " " + shipmentPackages.get(0).postOfficeId.name +" " +destination + " " + shipmentPackages.get(shipmentPackages.size()-1).status.toString();
     }
 
 

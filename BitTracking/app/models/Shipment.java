@@ -1,10 +1,12 @@
 package models;
 
 import helpers.StatusHelper;
+import play.data.format.Formats;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
-import java.util.List;
+
+import java.util.Date;
 
 /**
  * Created by Mladen13 on 16.9.2015.
@@ -21,6 +23,8 @@ public class Shipment extends Model {
     @Column
     @Enumerated(EnumType.STRING)
     public StatusHelper status;
+    @Formats.DateTime(pattern="dd/MM/yyyy")
+    public Date dateCreated;
 
     public Shipment(){
 

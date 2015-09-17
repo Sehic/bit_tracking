@@ -20,6 +20,27 @@
               }
           });
       }
+
+
+  </script>
+    <script>
+  $(function() {
+    $( "#dialog" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 1000
+      },
+      hide: {
+        effect: "explode",
+        duration: 1000
+      }
+    });
+
+    $( "#opener" ).click(function() {
+      $( "#dialog" ).dialog( "open" );
+    });
+  });
   </script>
   <ol class="breadcrumb">
     <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
@@ -63,19 +84,25 @@
           }
 
 
-        <td><a href="@routes.PackageController.editPackage(pack.id)" class="btn btn-link">@pack.destination</a></td>
+        <td><a href="@routes.PackageController.editPackage(pack.id)">@pack.destination</a></td>
 
           @if(pack.shipmentPackages.size()!=0) {
               @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
                   @if(shipmentFromThisPackage.postOfficeId.id == workerOffice.id) {
                       <td>@shipmentFromThisPackage.postOfficeId.name</td>
-                      <td>@shipmentFromThisPackage.status</td>
+                      <td>
+                          <div id="dialog" title="Date and time">
+                              <p>@shipmentFromThisPackage.dateCreated</p>
+                          </div>
+
+                          <a href="#" id="opener">@shipmentFromThisPackage.status</a>
+                      </td>
                   }
               }
 
           }
 
-        <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>
+        <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')">Delete</a></td>
       </tr>
     }
 

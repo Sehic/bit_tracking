@@ -252,6 +252,7 @@ public class PostOfficeController extends Controller {
     }
 
     public Result saveRoute(Long id) {
+        User user = SessionHelper.getCurrentUser(ctx());
         DynamicForm form = Form.form().bindFromRequest();
         String route = form.data().get("route");
         Package packageWithRoute = Package.findPackageById(id);
@@ -275,7 +276,10 @@ public class PostOfficeController extends Controller {
         }
         Ebean.update(packageWithRoute);
 
-        return redirect(routes.PackageController.adminPackage());
+        if (user.typeOfUser == UserType.ADMIN)
+            return redirect(routes.PackageController.adminPackage());
+        else
+            return redirect(routes.UserController.officeWorkerPanel());
     }
 
     public Result changeRoute(Long id) {

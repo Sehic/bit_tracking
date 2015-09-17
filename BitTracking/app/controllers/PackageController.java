@@ -12,9 +12,7 @@ import play.mvc.Result;
 import views.html.*;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by USER on 9.9.2015.
@@ -73,15 +71,16 @@ public class PackageController extends Controller {
         PostOffice office = PostOffice.findPostOffice(Long.parseLong(id));
 
         Package pack = new Package();
-      //  pack.shipmentPackages.get(0).packagePostOffice =office;
-      //  pack.packageRoutes.add(office);
-     //   pack.postOffice = office;
         pack.destination = form.get("destination");
         pack.trackingNum = (UUID.randomUUID().toString());
 
 
         Ebean.save(pack);
-        return ok(adminpackage.render(Package.finder.findList()));
+        if (user.typeOfUser == UserType.ADMIN)
+            return ok(adminpackage.render(Package.finder.findList()));
+        else
+            return redirect(routes.PostOfficeController.listRoutes(pack.id));
+
     }
 
     /**
@@ -139,6 +138,9 @@ public class PackageController extends Controller {
         for (int i=0;i<shipments.size();i++){
             if(shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING && i!=shipments.size()-1){
                 shipments.get(i).status = StatusHelper.OUT_FOR_DELIVERY;
+                Calendar c = Calendar.getInstance();
+                Date date =  c.getTime();
+                shipments.get(i).dateCreated = date;
                 Ebean.update(shipments.get(i));
                 shipments.get(i+1).status = StatusHelper.READY_FOR_SHIPPING;
                 Ebean.update(shipments.get(i+1));
