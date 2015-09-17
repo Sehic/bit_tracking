@@ -7,13 +7,13 @@ $(document).ready(function(){
         $.ajax({
             url: "/adminpanel/makeroute/create",
             method: "POST",
-            data:"name="+valueOfSelect,
+            data:"name="+valueOfSelect
         }).success(function(response){
             var str = response;
             console.log("Response = "+response);
             var splitted = str.split(",");
             $('.selectOffice').empty();
-            saveValueOfSelect+=valueOfSelect+" ";
+            saveValueOfSelect+=valueOfSelect+",";
             $('#finalRoute').attr("value", saveValueOfSelect);
             for(var i=0;i<splitted.length;i++){
 

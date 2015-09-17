@@ -2,15 +2,14 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import helpers.SessionHelper;
-import models.PostOffice;
-import models.User;
-import models.UserType;
+import helpers.StatusHelper;
+import models.*;
+import models.Package;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.*;
-import models.Package;
 
 
 import java.util.List;
@@ -109,7 +108,7 @@ public class PackageController extends Controller {
     public Result updatePackage(Long id) {
 
         User user = SessionHelper.getCurrentUser(ctx());
-        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
+        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER && user.typeOfUser != UserType.DELIVERY_WORKER) {
             return redirect("/");
         }
         DynamicForm form = Form.form().bindFromRequest();
@@ -117,11 +116,27 @@ public class PackageController extends Controller {
         String officeid = form.bindFromRequest().field("officePost").value();
         PostOffice office = PostOffice.findPostOffice(Long.parseLong(officeid));
         pack.shipmentPackages.get(0).postOfficeId = office;
-     //   pack.packageRoutes.add(office);
-    //    pack.postOffice = office;
+        //   pack.packageRoutes.add(office);
+        //    pack.postOffice = office;
         pack.destination = form.get("destination");
+        String status = form.bindFromRequest().field("drop").value();
+        if (status.equals("1")){
+            pack.status = StatusHelper.READY_FOR_SHIPPING;
+        } else if (status.equals("2")){
+            pack.status = StatusHelper.ON_ROUTE;
+        } else if (status.equals("3")){
+            pack.status = StatusHelper.OUT_FOR_DELIVERY;
+        } else if (status.equals("4")){
+            pack.status = StatusHelper.DELIVERED;
+        }
+        pack.deliveryWorkers.add(user);
+        user.packages.add(pack);
         Ebean.update(pack);
-        return ok(adminpackage.render(Package.finder.findList()));
+        Ebean.update(user);
+
+        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).findList();
+
+        return ok(deliveryworkerpanel.render(user.packages, shipments));
     }
 
     /**
@@ -137,5 +152,38 @@ public class PackageController extends Controller {
         }
 
         return ok(packagedetails.render(Package.findPackageById(id), PostOffice.findOffice.findList()));
+    }
+
+    public Result updateStatus(Long id){
+        User user = SessionHelper.getCurrentUser(ctx());
+        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER && user.typeOfUser != UserType.DELIVERY_WORKER) {
+            return redirect("/");
+        }
+        DynamicForm form = Form.form().bindFromRequest();
+        Package pack = Package.findPackageById(id);
+        String status = form.bindFromRequest().field("drop").value();
+        if (pack.shipmentPackages.size()!=0) {
+            if (status.equals("1")) {
+                pack.shipmentPackages.get(0).status = StatusHelper.READY_FOR_SHIPPING;
+            } else if (status.equals("2")) {
+                pack.shipmentPackages.get(0).status = StatusHelper.ON_ROUTE;
+            } else if (status.equals("3")) {
+                pack.shipmentPackages.get(0).status = StatusHelper.OUT_FOR_DELIVERY;
+            } else if (status.equals("4")) {
+                pack.shipmentPackages.get(0).status = StatusHelper.DELIVERED;
+            }
+        }
+        Ebean.update(pack);
+        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).findList();
+
+        return ok(deliveryworkerpanel.render(user.packages, shipments));
+    }
+
+    public Result changePackageStatus(Long id){
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
+            return redirect(routes.Application.index());
+        }
+        return ok(packagestatus.render(Package.findPackageById(id)));
     }
 }

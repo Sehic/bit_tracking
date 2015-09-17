@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h3>
-                        Add Office Worker
+                        Add Worker
                     </h3>
                 </div>
             </div> <!--End register title  row-->
@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <p>
-                        Please use the form below to create a Office Worker account. Required fields are indicated with *.
+                        Please use the form below to create a Worker account. Required fields are indicated with *.
                     </p>
                 </div>
             </div><!--End paragraf row-->
@@ -25,7 +25,7 @@
             <div class="row">
                 <div class="col-md-12">
 
-                @helper.form(action = routes.UserController.addOfficeWorker(), 'class -> "form-horizontal", 'role -> "form") {
+                @helper.form(action = routes.UserController.addWorker(), 'class -> "form-horizontal", 'role -> "form") {
 
 
                     <div class="form-group">
@@ -86,9 +86,20 @@
                         <br/>
                         <div class="col-sm-offset-2 col-sm-10">
                             <select name="postOffice">
+                                <option value="">Choose Post Office</option>
                             @for(office <- offices) {
+
                                 <option value="@office.name">@office.name</option>
                             }
+
+                            </select>
+                        </div>
+
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <select name="userType">
+
+                                <option value="1">Office Worker</option>
+                                <option value="2">Delivery Worker</option>
 
                             </select>
                         </div>

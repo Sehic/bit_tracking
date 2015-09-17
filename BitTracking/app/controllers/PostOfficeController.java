@@ -220,7 +220,7 @@ public class PostOfficeController extends Controller {
 
         }
 
-        return redirect("/adminpanel");
+        return redirect("/adminpanel/postoffice");
 
     }
 
@@ -258,7 +258,7 @@ public class PostOfficeController extends Controller {
 
         packageWithRoute.status = StatusHelper.READY_FOR_SHIPPING;
 
-        String[] arr = route.split(" ");
+        String[] arr = route.split(",");
 
         for (int j = 0; j < arr.length; j++) {
             PostOffice p = PostOffice.findPostOfficeByName(arr[j]);

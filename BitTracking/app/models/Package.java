@@ -30,6 +30,9 @@ public class Package extends Model {
     @Enumerated(EnumType.STRING)
     public StatusHelper status;
 
+    @ManyToMany
+    public List<User> deliveryWorkers = new ArrayList<>();
+
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 
     public static List<Package> findByPostOffice(Long id) {

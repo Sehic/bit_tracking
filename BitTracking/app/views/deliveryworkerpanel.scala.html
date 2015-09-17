@@ -1,0 +1,103 @@
+@(packages: List[models.Package])(availablePackages: List[Shipment])
+@adminmain("Delivery Worker Packages") {
+
+  <ol class="breadcrumb">
+    <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
+    <li><a href="#">Manage Users</a></li>
+    <li class="active">Tables</li>
+  </ol>
+  <h1>Delivery Worker Panel</h1>
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="table-responsive">
+        <h4 class="margin-bottom-15">Delivery Worker Packages</h4>
+        <table class="table table-striped table-hover table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Tracking Number</th>
+              <th>Status</th>
+              <th>Post Office</th>
+              <th>Destination</th>
+            </tr>
+          </thead>
+          <tbody>
+          @for(pack <- packages) {
+            <tr>
+              <td>@pack.id</td>
+              <td>@pack.trackingNum</td>
+              <td><a href="@routes.PackageController.changePackageStatus(pack.id)">@pack.status</a></td>
+              @if(pack.shipmentPackages.size()!=0) {
+                <td>@pack.shipmentPackages.get(0).postOfficeId.name</td>
+              }else{
+                <td></td>
+              }
+              <td>@pack.destination</td>
+            </tr>
+          }
+
+          </tbody>
+        </table>
+      </div>
+
+      <ul class="pagination pull-right">
+        <li class="disabled"><a href="#">&laquo;</a></li>
+        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">4 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">5 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">&raquo;</a></li>
+      </ul>
+    </div>
+  </div>
+
+
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="table-responsive">
+        <h4 class="margin-bottom-15">Available Packages</h4>
+        <table class="table table-striped table-hover table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Tracking Number</th>
+              <th>Status</th>
+              <th>Post Office</th>
+              <th>Destination</th>
+            </tr>
+          </thead>
+          <tbody>
+          @for(shipment <- availablePackages) {
+            <tr>
+              <td>@shipment.packageId.id</td>
+              <td>@shipment.packageId.trackingNum</td>
+
+                <td><a href="@routes.PackageController.changePackageStatus(shipment.packageId.id)">@shipment.status</a></td>
+                <td>@shipment.postOfficeId.name</td>
+
+              <td>@shipment.packageId.destination</td>
+            </tr>
+          }
+
+          </tbody>
+        </table>
+      </div>
+
+      <ul class="pagination pull-right">
+        <li class="disabled"><a href="#">&laquo;</a></li>
+        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">4 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">5 <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">&raquo;</a></li>
+      </ul>
+    </div>
+  </div>
+
+}

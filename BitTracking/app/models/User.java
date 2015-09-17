@@ -11,6 +11,7 @@ import play.db.ebean.Model;
 
 import java.lang.Override;
 import java.lang.String;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -46,6 +47,9 @@ public class User extends Model {
 
     @OneToMany(mappedBy = "profilePhoto", cascade = CascadeType.ALL)
     public ImagePath imagePath;
+
+    @ManyToMany(mappedBy = "deliveryWorkers")
+    public List<Package> packages = new ArrayList<>();
 
 
     public User() {

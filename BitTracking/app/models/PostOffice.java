@@ -37,8 +37,6 @@ public class PostOffice extends Model {
     @OneToOne
     public Location place;
 
-    @Enumerated(EnumType.STRING)
-    public StatusHelper packageStatus;
 
     public PostOffice(){
 

@@ -31,8 +31,6 @@ create table post_office (
   name                      varchar(255),
   address                   varchar(255),
   place_id                  bigint,
-  package_status            integer,
-  constraint ck_post_office_package_status check (package_status in ('1','2','4','3')),
   constraint uq_post_office_place_id unique (place_id),
   constraint pk_post_office primary key (id))
 ;
@@ -59,6 +57,12 @@ create table user (
 ;
 
 
+create table package_user (
+  package_id                     bigint not null,
+  user_id                        bigint not null,
+  constraint pk_package_user primary key (package_id, user_id))
+;
+
 create table linked_offices (
   post_officeA_id                bigint not null,
   post_officeB_id                bigint not null,
@@ -77,6 +81,10 @@ create index ix_user_postOffice_5 on user (post_office_id);
 
 
 
+alter table package_user add constraint fk_package_user_package_01 foreign key (package_id) references package (id) on delete restrict on update restrict;
+
+alter table package_user add constraint fk_package_user_user_02 foreign key (user_id) references user (id) on delete restrict on update restrict;
+
 alter table linked_offices add constraint fk_linked_offices_post_office_01 foreign key (post_officeA_id) references post_office (id) on delete restrict on update restrict;
 
 alter table linked_offices add constraint fk_linked_offices_post_office_02 foreign key (post_officeB_id) references post_office (id) on delete restrict on update restrict;
@@ -90,6 +98,8 @@ drop table image_path;
 drop table location;
 
 drop table package;
+
+drop table package_user;
 
 drop table post_office;
 

@@ -319,7 +319,7 @@ public class UserController extends Controller {
         return redirect(routes.Application.adminPanel());
     }
 
-    public Result addOfficeWorker() {
+    public Result addWorker() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
 
@@ -335,6 +335,7 @@ public class UserController extends Controller {
         String email = boundForm.bindFromRequest().field("email").value();
         //Getting post office name
         String postOffice = boundForm.bindFromRequest().field("postOffice").value();
+        String userType = boundForm.bindFromRequest().field("userType").value();
         //Proceeding value and creating post office with it
         PostOffice wantedPostOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
 
@@ -355,22 +356,27 @@ public class UserController extends Controller {
                     lastName = lastName.substring(0,1).toUpperCase()+lastName.substring(1);
 
                     u = new User(firstName, lastName, newPassword, email, wantedPostOffice);
+                    if(userType.equals("1")){
+                        u.typeOfUser= UserType.OFFICE_WORKER;
+                    }else {
+                        u.typeOfUser =UserType.DELIVERY_WORKER;
+                    }
 
-                    Ebean.save(u);
+                            Ebean.save(u);
                     flash("registered", "Welcome, " + u.firstName + "!");
-                    return redirect(routes.Application.officeWorkersList());
+                    return redirect(routes.Application.adminTables());
                 } else {
                     flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters, one number, and one sign, or you entered different passwords");
-                    return redirect(routes.Application.registerOfficeWorker());
+                    return redirect(routes.Application.registerWorker());
                 }
             } else {
                 flash("errorName", "Your name or last name should have only letters.");
-                return redirect(routes.Application.registerOfficeWorker());
+                return redirect(routes.Application.registerWorker());
                 //return ok(register.render());
             }
         } else {
             flash("errorEmail", "E-mail address already exists!");
-            return redirect(routes.Application.registerOfficeWorker());
+            return redirect(routes.Application.registerWorker());
         }
 
     }
@@ -382,7 +388,7 @@ public class UserController extends Controller {
             return redirect(routes.Application.index());
         }
         PostOffice userOffice = u1.postOffice;
-        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packagePostOffice", userOffice).findList();
+        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("postOfficeId", userOffice).findList();
         List<Package> packages = new ArrayList<>();
         for(int i=0;i<shipments.size();i++){
             packages.add(shipments.get(i).packageId);

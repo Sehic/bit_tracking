@@ -1,11 +1,9 @@
 package controllers;
 
 import helpers.SessionHelper;
-import models.PostOffice;
-import models.User;
-import models.UserType;
+import helpers.StatusHelper;
+import models.*;
 import models.Package;
-import models.Location;
 import play.*;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -162,7 +160,7 @@ public class Application extends Controller {
      *
      * @return
      */
-    public Result registerOfficeWorker() {
+    public Result registerWorker() {
         User u1 = SessionHelper.getCurrentUser(ctx());
         if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
             return redirect(routes.Application.index());
@@ -181,6 +179,25 @@ public class Application extends Controller {
         String trackingNumber = form.data().get("trackingNumber");
         Package p = Package.findPackageByTrackingNumber(trackingNumber);
         return ok(p.toString());
+    }
+
+    public Result deliveryWorkersList() {
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+        return ok(deliveryworkerslist.render(User.find.where().eq("typeOfUser", UserType.DELIVERY_WORKER).findList()));
+    }
+
+    public Result deliveryWorkerPanel(){
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
+            return redirect(routes.Application.index());
+        }
+
+        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).findList();
+
+        return ok(deliveryworkerpanel.render(u1.packages, shipments));
     }
 
 }
