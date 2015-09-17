@@ -133,21 +133,31 @@ public class PackageController extends Controller {
             return redirect(routes.Application.index());
         }
 
-
        Package pack = Package.finder.byId(id);
         List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
         List<Package> packages = new ArrayList<>();
-        shipments.get(0).status = StatusHelper.OUT_FOR_DELIVERY;
-        Ebean.update(shipments.get(0));
-        shipments.get(1).status = StatusHelper.READY_FOR_SHIPPING;
-        Ebean.update(shipments.get(1));
+        for (int i=0;i<shipments.size();i++){
+            if(shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING && i!=shipments.size()-1){
+                shipments.get(i).status = StatusHelper.OUT_FOR_DELIVERY;
+                Ebean.update(shipments.get(i));
+                shipments.get(i+1).status = StatusHelper.READY_FOR_SHIPPING;
+                Ebean.update(shipments.get(i+1));
+            }else{
+                for (int j=0;j<shipments.size();j++){
+                    shipments.get(j).status=StatusHelper.DELIVERED;
+                    Ebean.update(shipments.get(j));
+                }
+            }
+        }
 
-        List<Shipment> shipments1 = Shipment.shipmentFinder.where().eq("postOfficeId", u1.postOffice).findList();
+
+
+        List<Shipment> shipments1 = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", u1.postOffice).findList();
 
         for (int i=0; i<shipments1.size();i++){
-            if(shipments1.get(i).status == StatusHelper.READY_FOR_SHIPPING){
+
                 packages.add(shipments1.get(i).packageId);
-            }
+
         }
 
 
