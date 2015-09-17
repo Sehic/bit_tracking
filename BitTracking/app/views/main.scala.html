@@ -164,6 +164,12 @@
                                     </li> <!--Admin panel tab in navigation bar-->
                                 }
 
+                                @if(currentUser != null && currentUser.typeOfUser == UserType.DELIVERY_WORKER) {
+                                    <li>
+                                        <a href="@routes.Application.deliveryWorkerPanel()">Delivery Worker Panel</a>
+                                    </li> <!--Admin panel tab in navigation bar-->
+                                }
+
                             </ul>
 
                                 <!--=========== LOG IN REGISTER TAB in NAVIGATION BAR===========-->

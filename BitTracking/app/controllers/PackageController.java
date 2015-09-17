@@ -12,6 +12,7 @@ import play.mvc.Result;
 import views.html.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -107,36 +108,7 @@ public class PackageController extends Controller {
      */
     public Result updatePackage(Long id) {
 
-        User user = SessionHelper.getCurrentUser(ctx());
-        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER && user.typeOfUser != UserType.DELIVERY_WORKER) {
-            return redirect("/");
-        }
-        DynamicForm form = Form.form().bindFromRequest();
-        Package pack = Package.findPackageById(id);
-        String officeid = form.bindFromRequest().field("officePost").value();
-        PostOffice office = PostOffice.findPostOffice(Long.parseLong(officeid));
-        pack.shipmentPackages.get(0).postOfficeId = office;
-        //   pack.packageRoutes.add(office);
-        //    pack.postOffice = office;
-        pack.destination = form.get("destination");
-        String status = form.bindFromRequest().field("drop").value();
-        if (status.equals("1")){
-            pack.status = StatusHelper.READY_FOR_SHIPPING;
-        } else if (status.equals("2")){
-            pack.status = StatusHelper.ON_ROUTE;
-        } else if (status.equals("3")){
-            pack.status = StatusHelper.OUT_FOR_DELIVERY;
-        } else if (status.equals("4")){
-            pack.status = StatusHelper.DELIVERED;
-        }
-        pack.deliveryWorkers.add(user);
-        user.packages.add(pack);
-        Ebean.update(pack);
-        Ebean.update(user);
-
-        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).findList();
-
-        return ok(deliveryworkerpanel.render(user.packages, shipments));
+        return TODO;
     }
 
     /**
@@ -155,28 +127,33 @@ public class PackageController extends Controller {
     }
 
     public Result updateStatus(Long id){
-        User user = SessionHelper.getCurrentUser(ctx());
-        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER && user.typeOfUser != UserType.DELIVERY_WORKER) {
-            return redirect("/");
+
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
+            return redirect(routes.Application.index());
         }
-        DynamicForm form = Form.form().bindFromRequest();
-        Package pack = Package.findPackageById(id);
-        String status = form.bindFromRequest().field("drop").value();
-        if (pack.shipmentPackages.size()!=0) {
-            if (status.equals("1")) {
-                pack.shipmentPackages.get(0).status = StatusHelper.READY_FOR_SHIPPING;
-            } else if (status.equals("2")) {
-                pack.shipmentPackages.get(0).status = StatusHelper.ON_ROUTE;
-            } else if (status.equals("3")) {
-                pack.shipmentPackages.get(0).status = StatusHelper.OUT_FOR_DELIVERY;
-            } else if (status.equals("4")) {
-                pack.shipmentPackages.get(0).status = StatusHelper.DELIVERED;
+
+
+       Package pack = Package.finder.byId(id);
+        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
+        List<Package> packages = new ArrayList<>();
+        shipments.get(0).status = StatusHelper.OUT_FOR_DELIVERY;
+        Ebean.update(shipments.get(0));
+        shipments.get(1).status = StatusHelper.READY_FOR_SHIPPING;
+        Ebean.update(shipments.get(1));
+
+        List<Shipment> shipments1 = Shipment.shipmentFinder.where().eq("postOfficeId", u1.postOffice).findList();
+
+        for (int i=0; i<shipments1.size();i++){
+            if(shipments1.get(i).status == StatusHelper.READY_FOR_SHIPPING){
+                packages.add(shipments1.get(i).packageId);
             }
         }
-        Ebean.update(pack);
-        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).findList();
 
-        return ok(deliveryworkerpanel.render(user.packages, shipments));
+
+
+
+        return ok(deliveryworkerpanel.render(packages));
     }
 
     public Result changePackageStatus(Long id){
