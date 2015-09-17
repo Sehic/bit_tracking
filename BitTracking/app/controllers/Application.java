@@ -196,15 +196,14 @@ public class Application extends Controller {
             return redirect(routes.Application.index());
         }
 
-        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("postOfficeId", u1.postOffice).findList();
+        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", u1.postOffice).findList();
         List<Package> packages = new ArrayList<>();
         for (int i=0; i<shipments.size();i++){
-            if(shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING){
+
                 packages.add(shipments.get(i).packageId);
-            }
+            System.out.println(packages.get(i).destination);
         }
 
-        packages.remove(0);
 
         return ok(deliveryworkerpanel.render(packages));
     }

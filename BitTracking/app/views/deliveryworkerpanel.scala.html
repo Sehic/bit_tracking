@@ -1,68 +1,79 @@
+@import helpers.StatusHelper
 @(packages: List[models.Package])
-@adminmain("Delivery Worker Packages") {
+    @adminmain("Delivery Worker Packages") {
 
-  <ol class="breadcrumb">
-    <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
-    <li><a href="#">Manage Users</a></li>
-    <li class="active">Tables</li>
-  </ol>
-  <h1>Delivery Worker Panel</h1>
+        <ol class="breadcrumb">
+            <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
+            <li><a href="#">Manage Users</a></li>
+            <li class="active">Tables</li>
+        </ol>
+        <h1>Delivery Worker Panel</h1>
 
-  <div class="row">
-    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
 
-      <div class="table-responsive">
-        <h4 class="margin-bottom-15">Delivery Worker Packages</h4>
-        <table class="table table-striped table-hover table-bordered">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Tracking Number</th>
-              <th>Status</th>
-              <th>Post Office</th>
-              <th>Next Destination</th>
-              <th>Final Destination</th>
-              <th>Check</th>
-            </tr>
-          </thead>
-          <tbody>
-          @for(pack <- packages) {
-            <tr>
-              <td>@pack.id</td>
-              <td>@pack.trackingNum</td>
-              @if(pack.shipmentPackages.size()!=0) {
-                <td>@pack.shipmentPackages.get(0).status</td>
-                <td>@pack.shipmentPackages.get(0).postOfficeId.name</td>
-              <td>@pack.shipmentPackages.get(1).postOfficeId.name</td>
+                <div class="table-responsive">
+                    <h4 class="margin-bottom-15">Delivery Worker Packages</h4>
+                    <table class="table table-striped table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tracking Number</th>
+                                <th>Status</th>
+                                <th>Post Office</th>
+                                <th>Next Destination</th>
+                                <th>Final Destination</th>
+                                <th>Check</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(pack <- packages) {
+                            <tr>
+                                <td>@pack.id</td>
+                                <td>@pack.trackingNum</td>
+                                @if(pack.shipmentPackages.size() != 0) {
+                                    @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
+                                        @if(shipmentFromThisPackage.status == StatusHelper.READY_FOR_SHIPPING) {
+                                            <td>@shipmentFromThisPackage.status</td>
+                                            <td>@shipmentFromThisPackage.postOfficeId.name</td>
+                                                <!--ovdje ce bit problem kad dodjemo do zadnjeg elementa niza
+                  array out of bounds, logicno mi mada nisam testiro,
+                   zapravo nece, jer ako onda nece bit zadovoljen if uslov, posto na krajnjoj
+                   destinaciji kad je pokrenes nece bit status ready nego
+                   delivered, tako da bi ovo uvijek trebalo radit!-->
+                                            <td>@pack.shipmentPackages.get(i + 1).postOfficeId.name</td>
+                                        }
 
-              }else{
-                <td></td>
-                <td></td>
-              }
+                                    }
+                                } else {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
 
-              <td>@pack.destination</td>
+                                <td>@pack.destination</td>
 
-              @helper.form(routes.PackageController.updateStatus(pack.id),'id->"forma", 'class->"form-horizontal", 'role->"form"){
-                <td><button type="submit" class="btn-default">Done</button></td>
-              }
-            </tr>
-          }
+                                @helper.form(routes.PackageController.updateStatus(pack.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
+                                    <td><button type="submit" class="btn-default">Done</button></td>
+                                }
+                            </tr>
+                        }
 
-          </tbody>
-        </table>
-      </div>
+                        </tbody>
+                    </table>
+                </div>
 
-      <ul class="pagination pull-right">
-        <li class="disabled"><a href="#">&laquo;</a></li>
-        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">4 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">5 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">&raquo;</a></li>
-      </ul>
-    </div>
-  </div>
+                <ul class="pagination pull-right">
+                    <li class="disabled"><a href="#">&laquo;</a></li>
+                    <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">4 <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">5 <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">&raquo;</a></li>
+                </ul>
+            </div>
+        </div>
 
 
-}
+    }

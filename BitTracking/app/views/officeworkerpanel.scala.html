@@ -1,4 +1,4 @@
-@(packs: java.util.List[models.Package])
+@(packs: java.util.List[models.Package], workerOffice: PostOffice)
 @adminmain("Office Worker Panel") {
   <script>
       function del(urlToDel) {
@@ -64,10 +64,17 @@
 
 
         <td><a href="@routes.PackageController.editPackage(pack.id)" class="btn btn-link">@pack.destination</a></td>
+
           @if(pack.shipmentPackages.size()!=0) {
-              <td>@pack.shipmentPackages.get(0).postOfficeId.name</td>
+              @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
+                  @if(shipmentFromThisPackage.postOfficeId.id == workerOffice.id) {
+                      <td>@shipmentFromThisPackage.postOfficeId.name</td>
+                      <td>@shipmentFromThisPackage.status</td>
+                  }
+              }
+
           }
-        <td><a onclick="post('@routes.PostOfficeController.changeRoute(pack.id)')" class="btn btn-link">@pack.status</a></td>
+
         <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>
       </tr>
     }
