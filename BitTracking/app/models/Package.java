@@ -30,7 +30,7 @@ public class Package extends Model {
     @Enumerated(EnumType.STRING)
     public StatusHelper status;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "packages")
     public List<User> deliveryWorkers = new ArrayList<>();
 
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);

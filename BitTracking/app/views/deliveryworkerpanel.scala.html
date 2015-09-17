@@ -28,7 +28,7 @@
                         <tr>
                             <td>@pack.id</td>
                             <td>@pack.trackingNum</td>
-                            <td><a href="@routes.PackageController.editPackage(pack.id)">@pack.status</a></td>
+                            <td><a href="@routes.PackageController.changePackageStatus(pack.id)">@pack.status</a></td>
                             @if(pack.shipmentPackages.size()!=0) {
                                 <td>@pack.shipmentPackages.get(0).postOfficeId.name</td>
                             }else{

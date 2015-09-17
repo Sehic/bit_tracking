@@ -136,9 +136,9 @@ public class PackageController extends Controller {
         }
         pack.deliveryWorkers.add(user);
         user.packages.add(pack);
-        Ebean.update(user);
         Ebean.update(pack);
-        return ok(adminpackage.render(Package.finder.findList()));
+        Ebean.update(user);
+        return ok(deliveryworkerpanel.render(user.packages, Package.finder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).findList()));
     }
 
     /**
@@ -154,5 +154,34 @@ public class PackageController extends Controller {
         }
 
         return ok(packagedetails.render(Package.findPackageById(id), PostOffice.findOffice.findList()));
+    }
+
+    public Result updateStatus(Long id){
+        User user = SessionHelper.getCurrentUser(ctx());
+        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER && user.typeOfUser != UserType.DELIVERY_WORKER) {
+            return redirect("/");
+        }
+        DynamicForm form = Form.form().bindFromRequest();
+        Package pack = Package.findPackageById(id);
+        String status = form.bindFromRequest().field("drop").value();
+        if (status.equals("1")){
+            pack.status = StatusHelper.READY_FOR_SHIPPING;
+        } else if (status.equals("2")){
+            pack.status = StatusHelper.ON_ROUTE;
+        } else if (status.equals("3")){
+            pack.status = StatusHelper.OUT_FOR_DELIVERY;
+        } else if (status.equals("4")){
+            pack.status = StatusHelper.DELIVERED;
+        }
+        Ebean.update(pack);
+        return ok(deliveryworkerpanel.render(user.packages, Package.finder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).findList()));
+    }
+
+    public Result changePackageStatus(Long id){
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
+            return redirect(routes.Application.index());
+        }
+        return ok(packagestatus.render(Package.findPackageById(id)));
     }
 }
