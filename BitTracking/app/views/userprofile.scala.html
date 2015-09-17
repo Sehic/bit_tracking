@@ -6,129 +6,125 @@
 
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-12" style="margin-top : 9 %">
-                    <h2>User Profile </h2>
+                <div class="col-md-12" style="margin-top: 2%" >
+                    <h2 style="text-align: center">User Profile </h2>
                 </div>
             </div>
-
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-
-                            <!--======IMAGE UPLOAD========-->
-                        <div class="col-md-3">
-                            <div class="row">
-                                <div class="col-md-12" style="margin-bottom: 6%">
-                                    <div class="text-center">
-                                        @if(path != null) {
-                                            <img src="@path.image_url" class="avatar img-circle" alt="avatar" height="100" width="100">
-                                        } else {
-                                            <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
-                                        }
-                                        <h6>Profile photo</h6>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div> <!--Ends Image upload-->
-
-
-                            <div class="row">
-                                <div class="col-md-12">
-
-
-                                    <div class="form-group">
-
-                                        <label for="firstName" class="col-sm-2 control-label">
-                                            First Name:
-                                        </label>
-                                        <div class="col-sm-10">
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></span>
-                                                <input type="text" name="firstName" disabled class="form-control" id="firstName" value="@user.firstName" required="required">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br/>
-                                    <br/>
-                                    <div class="form-group">
-
-                                        <label for="lastName" class="col-sm-2 control-label">
-                                            Last Name:
-                                        </label>
-                                        <div class="col-sm-10">
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></span>
-                                                <input type="text" name="lastName" disabled class="form-control" id="lastName" value="@user.lastName" required="required">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br/>
-                                    <br/>
-                                    <div class="form-group">
-
-                                        <label for="email" class="col-sm-2 control-label" >
-                                            Email:
-                                        </label>
-                                        <div class="col-sm-10">
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></span>
-
-                                                <input name="email" disabled type="email" class="form-control" value="@user.email">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br/>
-                                    <br/>
-                                    @helper.form(action = routes.UserController.updateUserType(user.id), 'class -> "form-horizontal", 'role -> "form") {
-
-                                        <div class="col-sm-2"></div>
-                                        <div class="col-sm-3">
-                                        @if(currentUser != null && currentUser.typeOfUser == UserType.ADMIN) {
-                                            <div class="well carousel-search hidden-md" style="background-color: transparent">
-
-                                                <select name="userType">
-                                                    <option value="@user.typeOfUser">@user.typeOfUser</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Office Worker">Office Worker</option>
-                                                    <option value="Registered User">Registered User</option>
-                                                </select>
-
-                                            </div>
-
-                                            <div class="well carousel-search hidden-sm">
-
-                                                <select name="postOffice">
-                                                    <option value=""></option>
-                                                    @for(office <- offices) {
-
-                                                        <option value="@office.name">@office.name</option>
-                                                    }
-
-                                                </select>
-                                            </div>
-
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-10">
-                                                <input type="submit" class="btn btn-primary" value="Save Changes">
-                                                <span></span>
-                                                <input type="reset" class="btn btn-default" value="Cancel">
-                                            </div>
-                                        </div>
-                                    }
-                                    }
-                                </div>
-                            </div>
-
+                <!--======IMAGE UPLOAD========-->
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom: 6%">
+                        <div class="text-center">
+                            @if(path != null) {
+                                <img src="@path.image_url" class="avatar img-circle" alt="avatar" height="100" width="100">
+                            } else {
+                                <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
+                            }
+                            <h6>Profile photo</h6>
+                        </div>
                     </div>
                 </div>
+            </div> <!--Ends Image upload-->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="firstName" class="col-sm-2 control-label" style="text-align: right">
+                            First Name:
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></span>
+                                <input type="text" name="firstName" disabled class="form-control" id="firstName" value="@user.firstName" required="required">
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="form-group">
+
+                        <label for="lastName" class="col-sm-2 control-label" style="text-align: right">
+                            Last Name:
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></span>
+                                <input type="text" name="lastName" disabled class="form-control" id="lastName" value="@user.lastName" required="required">
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="form-group">
+
+                        <label for="email" class="col-sm-2 control-label" style="text-align: right" >
+                            Email:
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></span>
+
+                                <input name="email" disabled type="email" class="form-control" value="@user.email">
+
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    @helper.form(action = routes.UserController.updateUserType(user.id), 'class -> "form-horizontal", 'role -> "form") {
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-sm-2" style="text-align: right"><strong>Select User Type:</strong></div>
+                                         <div class="col-sm-10">
+                                              @if(currentUser != null && currentUser.typeOfUser == UserType.ADMIN) {
+
+                                                 <select class="form-control" name="userType">
+                                                     <option value="@user.typeOfUser"><strong>@user.typeOfUser</strong></option>
+                                                        <option value="Admin">Admin</option>
+                                                            <option value="Office Worker">Office Worker</option>
+                                                    <option value="Registered User">Registered User</option>
+                                                 </select>
+                                              </div>
+                                </div>
+                            </div>
+                            <br/>
+
+                            <div class="row">
+                            <div class="col-md-12">
+                            <div class="col-sm-2" style="text-align: right"><strong>Select Office:</strong></div>
+                                <div class="col-sm-10">
+
+                                    <select class="form-control" name="postOffice">
+                                        <option value=""><strong>Assigned Office</strong></option>
+                                        @for(office <- offices) {
+
+                                            <option value="@office.name">@office.name</option>
+                                    }
+
+                                    </select>
+                                </div>
+                            </div>
+                            </div>
+                            <br>
+
+
+                            <div class="container-fluid">
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <input type="submit" class="btn btn-primary btn-sm" value="Save Changes">
+                                        <span></span>
+                                        <input type="reset" class="btn btn-default btn-sm" value="Cancel">
+                                     </div>
+                                </div>
+                            </div>
+                    }
+                    }
+                </div>
             </div>
+        </div>
+        </div>
         </div>
 
     }
