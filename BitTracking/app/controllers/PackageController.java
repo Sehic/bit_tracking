@@ -12,9 +12,7 @@ import play.mvc.Result;
 import views.html.*;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by USER on 9.9.2015.
@@ -81,7 +79,10 @@ public class PackageController extends Controller {
 
 
         Ebean.save(pack);
-        return ok(adminpackage.render(Package.finder.findList()));
+        if (user.typeOfUser == UserType.ADMIN)
+            return ok(adminpackage.render(Package.finder.findList()));
+        else
+            return redirect(routes.PostOfficeController.listRoutes(pack.id));
     }
 
     /**
@@ -92,8 +93,15 @@ public class PackageController extends Controller {
     public Result deletePackage(Long id) {
 
         Package p = Package.findPackageById(id);
+
         User user = SessionHelper.getCurrentUser(ctx());
         if (user != null || user.typeOfUser == UserType.OFFICE_WORKER || user.typeOfUser == UserType.ADMIN) {
+            for(int i = 0; i < p.shipmentPackages.size(); i++) {
+
+                p.shipmentPackages.remove(i);
+                Ebean.delete(p.shipmentPackages.get(i));
+            }
+
             Ebean.delete(p);
             return ok(packageadd.render(PostOffice.findOffice.findList()));
         } else {
@@ -139,6 +147,9 @@ public class PackageController extends Controller {
         for (int i=0;i<shipments.size();i++){
             if(shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING && i!=shipments.size()-1){
                 shipments.get(i).status = StatusHelper.OUT_FOR_DELIVERY;
+                Calendar c = Calendar.getInstance();
+                Date date = c.getTime();
+                shipments.get(i).dateCreated = date;
                 Ebean.update(shipments.get(i));
                 shipments.get(i+1).status = StatusHelper.READY_FOR_SHIPPING;
                 Ebean.update(shipments.get(i+1));
@@ -146,6 +157,9 @@ public class PackageController extends Controller {
             }else{
                 for (int j=0;j<shipments.size();j++){
                     shipments.get(j).status=StatusHelper.DELIVERED;
+                    Calendar c = Calendar.getInstance();
+                    Date date = c.getTime();
+                    shipments.get(i).dateCreated = date;
                     Ebean.update(shipments.get(j));
                 }
             }

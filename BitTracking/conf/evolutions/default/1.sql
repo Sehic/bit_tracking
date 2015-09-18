@@ -40,6 +40,7 @@ create table shipment (
   post_office_id_id         bigint,
   package_id_id             bigint,
   status                    integer,
+  date_created              datetime(6),
   constraint ck_shipment_status check (status in ('1','2','4','3')),
   constraint pk_shipment primary key (id))
 ;

@@ -225,14 +225,25 @@ public class PostOfficeController extends Controller {
     }
 
     public Result listRoutes(Long id) {
+
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+
         List<PostOffice> offices = PostOffice.findOffice.findList();
         Package officePackage = Package.findPackageById(id);
-
 
         return ok(makearoute.render(offices, officePackage));
     }
 
     public Result createRoute() {
+
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+
         DynamicForm form = Form.form().bindFromRequest();
 
         String nextOffice = form.data().get("name");
@@ -252,6 +263,12 @@ public class PostOfficeController extends Controller {
     }
 
     public Result saveRoute(Long id) {
+
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+            return redirect(routes.Application.index());
+        }
+
         DynamicForm form = Form.form().bindFromRequest();
         String route = form.data().get("route");
         Package packageWithRoute = Package.findPackageById(id);
@@ -275,7 +292,10 @@ public class PostOfficeController extends Controller {
         }
         Ebean.update(packageWithRoute);
 
-        return redirect(routes.PackageController.adminPackage());
+        if (u1.typeOfUser == UserType.ADMIN)
+            return redirect(routes.PackageController.adminPackage());
+        else
+            return redirect(routes.UserController.officeWorkerPanel());
     }
 
     public Result changeRoute(Long id) {

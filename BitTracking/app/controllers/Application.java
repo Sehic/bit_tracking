@@ -170,13 +170,13 @@ public class Application extends Controller {
         return ok(officeworkeradd.render(postOffices));
     }
 
-    public Result trackPackage(){
+    public Result trackPackage() {
         return ok(trackpackage.render());
     }
 
-    public Result checkTrackingNumber(){
+    public Result checkTrackingNumber() {
+
         DynamicForm form = Form.form().bindFromRequest();
-        System.out.println(form.data().toString());
         String trackingNumber = form.data().get("trackingNumber");
         Package p = Package.findPackageByTrackingNumber(trackingNumber);
         return ok(p.toString());
@@ -190,7 +190,7 @@ public class Application extends Controller {
         return ok(deliveryworkerslist.render(User.find.where().eq("typeOfUser", UserType.DELIVERY_WORKER).findList()));
     }
 
-    public Result deliveryWorkerPanel(){
+    public Result deliveryWorkerPanel() {
         User u1 = SessionHelper.getCurrentUser(ctx());
         if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
             return redirect(routes.Application.index());
@@ -198,12 +198,11 @@ public class Application extends Controller {
 
         List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", u1.postOffice).findList();
         List<Package> packages = new ArrayList<>();
-        for (int i=0; i<shipments.size();i++){
+        for (int i = 0; i < shipments.size(); i++) {
 
-                packages.add(shipments.get(i).packageId);
+            packages.add(shipments.get(i).packageId);
             System.out.println(packages.get(i).destination);
         }
-
 
         return ok(deliveryworkerpanel.render(packages));
     }
