@@ -80,7 +80,7 @@ public class PackageController extends Controller {
 
         Ebean.save(pack);
         if (user.typeOfUser == UserType.ADMIN)
-            return ok(adminpackage.render(Package.finder.findList()));
+            return redirect(routes.PackageController.adminPackage());
         else
             return redirect(routes.PostOfficeController.listRoutes(pack.id));
     }
