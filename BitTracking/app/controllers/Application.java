@@ -175,7 +175,7 @@ public class Application extends Controller {
     }
 
     public Result checkTrackingNumber() {
-        
+
         DynamicForm form = Form.form().bindFromRequest();
         String trackingNumber = form.data().get("trackingNumber");
         Package p = Package.findPackageByTrackingNumber(trackingNumber);

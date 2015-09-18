@@ -3,13 +3,9 @@
     <head>
         <script language="JavaScript" type="text/javascript">
 $(document).ready(function() {
-
         $("#formmenu").accordion();
-
          $("#trackSubmit").click(function(){
-
             var number = $("#trackingNumber").val();
-
                 $.ajax({
                      url: "@routes.Application.checkTrackingNumber()",
                       data: "trackingNumber="+number,
@@ -19,10 +15,11 @@ $(document).ready(function() {
                        var splitted = s.split(" ");
                       $("#trackForm").show();
                       $('#number').html(splitted[0]);
-                      $('#destination').html(splitted[1]);
+                      $('#shipFrom').html(splitted[1]);
+                      $('#destination').html(splitted[2]);
+                      $('#status').html(splitted[3]);
                  })
                  })
-
                });
             </script>
     </head>
@@ -58,14 +55,17 @@ $(document).ready(function() {
                 <thead>
                     <tr>
                         <th>Tracking number</th>
-                        <th>Destination</th>
+                        <th>Ship from</th>
+                        <th>Ship to</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td id="number"></td>
+                        <td id="shipFrom"></td>
                         <td id="destination"></td>
+                        <td id="status"></td>
                     </tr>
                 </tbody>
             </table>

@@ -292,7 +292,10 @@ public class PostOfficeController extends Controller {
         }
         Ebean.update(packageWithRoute);
 
-        return redirect(routes.PackageController.adminPackage());
+        if (u1.typeOfUser == UserType.ADMIN)
+            return redirect(routes.PackageController.adminPackage());
+        else
+            return redirect(routes.UserController.officeWorkerPanel());
     }
 
     public Result changeRoute(Long id) {

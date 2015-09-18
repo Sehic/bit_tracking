@@ -53,13 +53,13 @@
           }
 
 
-        <td><a href="@routes.PackageController.editPackage(pack.id)" class="btn btn-link">@pack.destination</a></td>
+        <td><a href="@routes.PackageController.editPackage(pack.id)">@pack.destination</a></td>
           @if(pack.shipmentPackages.size()!=0) {
               <td>@pack.shipmentPackages.get(0).postOfficeId.name</td>
           }else{
               <td></td>
           }
-        <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>
+        <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')">Delete</a></td>
       </tr>
     }
 

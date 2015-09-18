@@ -43,6 +43,7 @@
         <th>Destination</th>
         <th>Post Office</th>
         <th>Status</th>
+          <th>Timestamp</th>
         <th>Delete</th>
       </tr>
     </thead>
@@ -63,19 +64,24 @@
           }
 
 
-        <td><a href="@routes.PackageController.editPackage(pack.id)" class="btn btn-link">@pack.destination</a></td>
+        <td><a href="@routes.PackageController.editPackage(pack.id)">@pack.destination</a></td>
 
           @if(pack.shipmentPackages.size()!=0) {
               @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
                   @if(shipmentFromThisPackage.postOfficeId.id == workerOffice.id) {
                       <td>@shipmentFromThisPackage.postOfficeId.name</td>
                       <td>@shipmentFromThisPackage.status</td>
+                      @if(shipmentFromThisPackage.dateCreated !=null) {
+                          <td>@shipmentFromThisPackage.dateCreated</td>
+                      }else {
+                          <td></td>
+                      }
                   }
               }
 
           }
 
-        <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>
+        <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')">Delete</a></td>
       </tr>
     }
 
