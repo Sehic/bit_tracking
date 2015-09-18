@@ -145,7 +145,7 @@ public class PackageController extends Controller {
         List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
         List<Package> packages = new ArrayList<>();
         for (int i=0;i<shipments.size();i++){
-            if(shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING && i!=shipments.size()-1){
+            if(shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING && i!=shipments.size()-2){
                 shipments.get(i).status = StatusHelper.OUT_FOR_DELIVERY;
                 Calendar c = Calendar.getInstance();
                 Date date = c.getTime();

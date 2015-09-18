@@ -49,7 +49,11 @@ public class Package extends Model {
 
     @Override
     public String toString() {
-        return trackingNum + " " + shipmentPackages.get(0).postOfficeId.name +" " +destination + " " + shipmentPackages.get(shipmentPackages.size()-1).status.toString();
+        if (shipmentPackages.get(shipmentPackages.size()-1).status == StatusHelper.DELIVERED) {
+            return trackingNum + " " + shipmentPackages.get(0).postOfficeId.name +" " +destination + " " + StatusHelper.DELIVERED.toString();
+        } else {
+            return trackingNum + " " + shipmentPackages.get(0).postOfficeId.name + " " + destination + " " + StatusHelper.OUT_FOR_DELIVERY.toString();
+        }
     }
 
 

@@ -227,7 +227,7 @@ public class PostOfficeController extends Controller {
     public Result listRoutes(Long id) {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser !=UserType.OFFICE_WORKER) {
             return redirect(routes.Application.index());
         }
 
@@ -240,7 +240,7 @@ public class PostOfficeController extends Controller {
     public Result createRoute() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser !=UserType.OFFICE_WORKER) {
             return redirect(routes.Application.index());
         }
 
@@ -265,7 +265,7 @@ public class PostOfficeController extends Controller {
     public Result saveRoute(Long id) {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
+        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser !=UserType.OFFICE_WORKER) {
             return redirect(routes.Application.index());
         }
 
