@@ -43,9 +43,12 @@
           @for(linkedOffice <- postOffice.postOfficesA) {
              @linkedOffice.name
           }
+
+
           </td>
-          <td align="center"><a href="@routes.PostOfficeController.postOfficeDetails(postOffice.id)" class="btn btn-info">Edit</a></td>
-        <td><a href="@routes.PostOfficeController.deleteOffice(postOffice.id)" class="btn btn-link">Delete</a></td>
+          <td align="left"><a href="@routes.PostOfficeController.postOfficeDetails(postOffice.id)" class="btn btn-info">Edit</a></td>
+        <td>
+            <a href="@routes.PostOfficeController.deleteOffice(postOffice.id)" class="btn btn-link">Delete</a></td>
       </tr>
     }
 
