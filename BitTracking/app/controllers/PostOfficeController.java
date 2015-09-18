@@ -281,6 +281,9 @@ public class PostOfficeController extends Controller {
             PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
 
             Shipment ship = new Shipment();
+            if(p == null){
+                return redirect(routes.PostOfficeController.listRoutes(id));
+            }
             ship.postOfficeId = p;
             ship.packageId = packageWithRoute;
             if (j == 0) {
