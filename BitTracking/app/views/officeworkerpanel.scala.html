@@ -90,12 +90,15 @@
               @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
                   @if(shipmentFromThisPackage.postOfficeId.id == workerOffice.id) {
                       <td>@shipmentFromThisPackage.postOfficeId.name</td>
-                      <td>
+                      @if(shipmentFromThisPackage.status.toString.equals("DELIVERED")) {
                           <div id="dialog" title="Date and time">
                               <p>@shipmentFromThisPackage.dateCreated</p>
                           </div>
-
+                          <td>
                           <a href="#" id="opener">@shipmentFromThisPackage.status</a>
+                      }else{
+                          @shipmentFromThisPackage.status
+                      }
                       </td>
                   }
               }
