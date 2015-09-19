@@ -22,6 +22,8 @@ create table package (
   tracking_num              varchar(255),
   destination               varchar(255),
   status                    integer,
+  weight                    double,
+  price                     double,
   constraint ck_package_status check (status in ('1','2','4','3')),
   constraint pk_package primary key (id))
 ;

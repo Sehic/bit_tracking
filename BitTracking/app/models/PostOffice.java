@@ -1,7 +1,6 @@
 package models;
 
 import com.avaje.ebean.Model;
-import com.avaje.ebean.Model.*;
 import helpers.StatusHelper;
 import play.data.validation.Constraints;
 
@@ -56,7 +55,7 @@ public class PostOffice extends Model {
         this.place = place;
     }
 
-    public static Model.Finder<Long, PostOffice> findOffice = new Model.Finder<Long, PostOffice>(Long.class, PostOffice.class);
+    public static Finder<Long, PostOffice> findOffice = new Finder<Long, PostOffice>(Long.class, PostOffice.class);
 
     public static PostOffice findPostOffice(Long id) {
 

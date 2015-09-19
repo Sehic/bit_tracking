@@ -33,6 +33,12 @@ public class Package extends Model {
     @ManyToMany
     public List<User> deliveryWorkers = new ArrayList<>();
 
+    @Column
+    public Double weight;
+
+    @Column
+    public Double price;
+
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 
     public static List<Package> findByPostOffice(Long id) {

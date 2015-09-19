@@ -1,28 +1,19 @@
 package controllers;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
+import com.avaje.ebean.Ebean;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
 import models.Package;
-import play.*;
 import play.data.DynamicForm;
 import play.data.Form;
-import play.mvc.*;
+import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.adminlinkoffices;
+import views.html.adminpostofficedetails;
+import views.html.owmakeroute;
 
-import views.html.*;
-
-import com.avaje.ebean.Ebean;
-import play.Logger;
-
-import java.io.IOException;
-import java.lang.System;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -144,7 +135,6 @@ public class PostOfficeController extends Controller {
         office.address = newOfficeForm.bindFromRequest().field("address").value();
         Ebean.update(office);
 
-
         return redirect(routes.Application.adminPostOffice());
 
     }
@@ -231,8 +221,9 @@ public class PostOfficeController extends Controller {
             return redirect(routes.Application.index());
         }
 
-        List<PostOffice> offices = PostOffice.findOffice.findList();
         Package officePackage = Package.findPackageById(id);
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+
 
         return ok(owmakeroute.render(offices, officePackage));
     }

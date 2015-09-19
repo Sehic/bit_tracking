@@ -145,24 +145,30 @@ public class PackageController extends Controller {
         List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
         List<Package> packages = new ArrayList<>();
         for (int i=0;i<shipments.size();i++){
-            if(shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING && i!=shipments.size()-2){
+            if(shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING){
                 shipments.get(i).status = StatusHelper.OUT_FOR_DELIVERY;
+                System.out.println(shipments.get(i).postOfficeId.name);
                 Calendar c = Calendar.getInstance();
                 Date date = c.getTime();
                 shipments.get(i).dateCreated = date;
                 Ebean.update(shipments.get(i));
-                shipments.get(i+1).status = StatusHelper.READY_FOR_SHIPPING;
-                Ebean.update(shipments.get(i+1));
-                break;
-            }else{
-                for (int j=0;j<shipments.size();j++){
-                    shipments.get(j).status=StatusHelper.DELIVERED;
-                    Calendar c = Calendar.getInstance();
-                    Date date = c.getTime();
-                    shipments.get(i).dateCreated = date;
-                    Ebean.update(shipments.get(j));
+                if(i!=shipments.size()-2) {
+                    shipments.get(i + 1).status = StatusHelper.READY_FOR_SHIPPING;
+                    Ebean.update(shipments.get(i + 1));
+                }else{
+
+                    for (int j=0;j<shipments.size();j++){
+                        shipments.get(j).status=StatusHelper.DELIVERED;
+                        Calendar c1 = Calendar.getInstance();
+                        Date date1 = c1.getTime();
+                        shipments.get(i).dateCreated = date1;
+                        Ebean.update(shipments.get(j));
+                    }
                 }
+                break;
             }
+
+
         }
 
         List<Shipment> shipments1 = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", u1.postOffice).findList();
