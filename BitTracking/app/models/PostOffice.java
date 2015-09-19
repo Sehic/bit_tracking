@@ -1,9 +1,9 @@
 package models;
 
+import com.avaje.ebean.Model;
 import com.avaje.ebean.Model.*;
 import helpers.StatusHelper;
 import play.data.validation.Constraints;
-import play.db.ebean.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import java.util.List;
  */
 @Entity
 public class PostOffice extends Model {
+
     @Id
     public Long id;
     @Column
