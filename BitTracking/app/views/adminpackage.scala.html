@@ -1,23 +1,38 @@
 @(packs: java.util.List[models.Package])
 @adminmain("Package") {
-  <script>
-      function del(urlToDel) {
-          $.ajax({
-              url: urlToDel,
-              type: 'DELETE',
-              success: function(results) {
-                  location.reload();
-              }
-          });
-      }
+    <head>
+        <script >
+            $("#search").keyup(function() {
+                    $.ajax({
+                    //data: "search="+search,
+                    type: "post",
+                    url: "/adminpanel/package/json"
+                    }).success(function(response) {
+                        console.log(response);
+                    });
+            });
+        </script>
+
+        <script>
+            function del(urlToDel) {
+              $.ajax({
+                  url: urlToDel,
+                  type: 'DELETE',
+                  success: function(results) {
+                      location.reload();
+                  }
+              });
+            }
   </script>
+    </head>
+
   <ol class="breadcrumb">
     <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
     <li class="active">Package</li>
   </ol>
   <h2>Package</h2>
 
-    <input id="search" type="search" placeholder="search">
+    <input id="search" name="search" type="search" placeholder="search">
 
   <a href="@routes.PackageController.addPackage()"><button type="button" class="btn btn-info btn-lg" data-toggle="modal">Add package</button></a>
 
