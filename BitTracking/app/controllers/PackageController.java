@@ -48,7 +48,7 @@ public class PackageController extends Controller {
 
         List<PostOffice> offices = PostOffice.findOffice.findList();
         if (offices == null || offices.size() == 0) {
-            return ok(postofficeadd.render());
+            return ok(adminpostofficeadd.render());
         }
 
         return ok(packageadd.render(PostOffice.findOffice.findList()));

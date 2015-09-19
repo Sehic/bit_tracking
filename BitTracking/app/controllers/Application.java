@@ -153,7 +153,7 @@ public class Application extends Controller {
         }
 
 
-        return ok(postofficeadd.render());
+        return ok(adminpostofficeadd.render());
     }
 
     /**
@@ -167,7 +167,7 @@ public class Application extends Controller {
             return redirect(routes.Application.index());
         }
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
-        return ok(officeworkeradd.render(postOffices));
+        return ok(adminworkeradd.render(postOffices));
     }
 
     public Result trackPackage() {

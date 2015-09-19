@@ -97,7 +97,7 @@ public class PostOfficeController extends Controller {
         if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
             return redirect(routes.Application.index());
         }
-        return ok(postofficedetails.render(PostOffice.findPostOffice(id)));
+        return ok(adminpostofficedetails.render(PostOffice.findPostOffice(id)));
     }
 
     /**
@@ -173,7 +173,7 @@ public class PostOfficeController extends Controller {
             }
         }
 
-        return ok(linkoffices.render(postOffices, office));
+        return ok(adminlinkoffices.render(postOffices, office));
     }
 
     /**
@@ -234,7 +234,7 @@ public class PostOfficeController extends Controller {
         List<PostOffice> offices = PostOffice.findOffice.findList();
         Package officePackage = Package.findPackageById(id);
 
-        return ok(makearoute.render(offices, officePackage));
+        return ok(owmakeroute.render(offices, officePackage));
     }
 
     public Result createRoute() {
