@@ -40,6 +40,7 @@ POST          /adminpanel/package/addpackage                @controllers.Package
 DELETE        /adminpanel/package/delete/:id                @controllers.PackageController.deletePackage(id: Long)
 GET           /adminpanel/package/update/:id                @controllers.PackageController.editPackage(id: Long)
 POST          /adminpanel/package/update/:id                @controllers.PackageController.updatePackage(id: Long)
+POST          /adminpanel/package/json                      @controllers.PackageController.allIntoJson()
 
 GET           /trackpackage/                                @controllers.Application.trackPackage()
 POST          /checktrack                                   @controllers.Application.checkTrackingNumber()
@@ -56,6 +57,8 @@ GET           /adminpanel/deliveryworkers                   @controllers.Applica
 GET           /adminpanel/deliveryworkers/panel             @controllers.Application.deliveryWorkerPanel()
 GET           /adminpanel/deliveryworkers/status/:id        @controllers.PackageController.changePackageStatus(id: Long)
 POST          /adminpanel/deliveryworkers/status/:id        @controllers.PackageController.updateStatus(id: Long)
+
+
 
 
 

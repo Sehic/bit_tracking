@@ -1,12 +1,14 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.databind.JsonNode;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
 import models.Package;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.*;
@@ -25,12 +27,10 @@ public class PackageController extends Controller {
      * @return
      */
     public Result adminPackage() {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.OFFICE_WORKER) {
+        User user = SessionHelper.getCurrentUser(ctx());
+        if (user == null || (user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER)) {
             return redirect(routes.Application.index());
         }
-
         return ok(adminpackage.render(Package.finder.findList()));
     }
 
@@ -188,5 +188,11 @@ public class PackageController extends Controller {
             return redirect(routes.Application.index());
         }
         return ok(packagestatus.render(Package.findPackageById(id)));
+    }
+
+    public Result allIntoJson(){
+        List<Package> packages = Package.finder.findList();
+        JsonNode json = Json.toJson(packages);
+        return ok(json);
     }
 }

@@ -23,6 +23,22 @@ $(document).ready(function(){
         }).error(function(response){
         });
     });
+
+
+        $("#search").keyup(function() {
+            var search = $("#search").val();
+            var myexp = new RegExp(search, "i");
+            $.ajax({
+                //data: "search="+search,
+                type: "post",
+                url: "/adminpanel/package/json"
+            }).success(function(response) {
+                console.log(response);
+
+            })
+        });
+
+
 });
 
 
