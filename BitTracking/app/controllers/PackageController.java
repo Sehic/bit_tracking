@@ -71,14 +71,15 @@ public class PackageController extends Controller {
         PostOffice office = PostOffice.findPostOffice(Long.parseLong(id));
 
         Package pack = new Package();
-        //  pack.shipmentPackages.get(0).packagePostOffice =office;
-        //  pack.packageRoutes.add(office);
-        //   pack.postOffice = office;
+
         pack.destination = form.get("destination");
         pack.trackingNum = (UUID.randomUUID().toString());
-
-
         Ebean.save(pack);
+
+        Shipment ship = new Shipment();
+        ship.packageId = pack;
+        ship.postOfficeId=office;
+        ship.save();
         if (user.typeOfUser == UserType.ADMIN)
             return redirect(routes.PackageController.adminPackage());
         else
@@ -144,6 +145,7 @@ public class PackageController extends Controller {
         Package pack = Package.finder.byId(id);
         List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
         List<Package> packages = new ArrayList<>();
+
         for (int i=0;i<shipments.size();i++){
             if(shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING){
                 shipments.get(i).status = StatusHelper.OUT_FOR_DELIVERY;

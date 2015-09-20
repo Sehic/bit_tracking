@@ -41,7 +41,7 @@
         <td>@pack.id</td>
         <td>@pack.trackingNum</td>
 
-          @if(pack.shipmentPackages.size() == 0) {
+          @if(pack.shipmentPackages.size() < 2) {
               <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
           }else {
               <td>
