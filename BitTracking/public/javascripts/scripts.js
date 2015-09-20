@@ -40,7 +40,39 @@ $(document).ready(function () {
         }).error(function (response) {
         });
     });
+
+    $("#search").keyup(function() {
+        var search = $("#search").val();
+        var exp = new RegExp(search, "i");
+        $.ajax({
+            beforeSend: function() {
+                $("#searchPackages").html("Searching...")
+            },
+            url: '/adminpanel/package/json',
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+                var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th>Destination</th></tr></thead><tbody>';
+                $.each(response, function(key, val) {
+                    if (val.destination.search(exp) != -1) {
+                        tbody += '<tr class="succes"><td>' + val.id + '</td>'
+                        tbody += '<td>' + val.trackingNum + '</td>';
+                        tbody += '<td>' + val.destination + '</td>';
+                        tbody += '</tr>';
+                    }
+                });
+                tbody += '</tbody>';
+                $("#searchPackages").html(tbody);
+            }
+        });
+    });
+
+
 });
+
+
+
+
 
 
 $('body').on('click', 'a[data-role="delete"]', function (e) {

@@ -1,6 +1,6 @@
 @(packs: java.util.List[models.Package])
-@adminmain("Package") {
-  <script>
+    @adminmain("Package") {
+        <script>
       function del(urlToDel) {
           $.ajax({
               url: urlToDel,
@@ -11,59 +11,68 @@
           });
       }
   </script>
-  <ol class="breadcrumb">
-    <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
-    <li class="active">Package</li>
-  </ol>
-  <h2>Package</h2>
+        <ol class="breadcrumb">
+            <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
+            <li class="active">Package</li>
+        </ol>
+        <h2>Package</h2>
 
-  <a href="@routes.PackageController.addPackage()"><button type="button" class="btn btn-info btn-lg" data-toggle="modal">Add package</button></a>
+        <div class="row">
+            <div class="col-md-7">
+                <a href="@routes.PackageController.addPackage()"><button type="button" class="btn btn-info btn-group-xs" data-toggle="modal">
+                    Add package</button></a>
+            </div>
+            <div class="col-md-5">
+                <input id="search" class="form-control" name="search" type="search" placeholder="Search">
+            </div>
 
-  <div class="table-responsive">
+        </div>
 
-  </div>
+        <div class="table-responsive">
 
-  <h4 class="margin-bottom-15">List of packages</h4>
-  <table class="table table-striped table-hover table-bordered">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Tracking Number</th>
-          <th>Route</th>
-        <th>Destination</th>
-        <th>Post Office</th>
-        <th>Delete</th>
-      </tr>
-    </thead>
-    <tbody>
-    @for(pack <- packs) {
-      <tr class="succes">
-        <td>@pack.id</td>
-        <td>@pack.trackingNum</td>
+        </div>
 
-          @if(pack.shipmentPackages.size() < 2) {
-              <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
-          }else {
-              <td>
+        <h4 class="margin-bottom-15">List of packages</h4>
+        <table id="searchPackages" class="table table-striped table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tracking Number</th>
+                    <th>Route</th>
+                    <th>Destination</th>
+                    <th>Post Office</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(pack <- packs) {
+                <tr class="succes">
+                    <td>@pack.id</td>
+                    <td>@pack.trackingNum</td>
 
-              @for(shipments: Shipment <- pack.shipmentPackages) {
-                  @shipments.postOfficeId.name
-              }
-              </td>
-          }
+                    @if(pack.shipmentPackages.size() < 2) {
+                        <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
+                    } else {
+                        <td>
+
+                        @for(shipments: Shipment <- pack.shipmentPackages) {
+                            @shipments.postOfficeId.name
+                        }
+                        </td>
+                    }
 
 
-        <td><a href="@routes.PackageController.editPackage(pack.id)">@pack.destination</a></td>
-          @if(pack.shipmentPackages.size()!=0) {
-              <td>@pack.shipmentPackages.get(0).postOfficeId.name</td>
-          }else{
-              <td></td>
-          }
-          <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>
-      </tr>
+                    <td><a href="@routes.PackageController.editPackage(pack.id)">@pack.destination</a></td>
+                    @if(pack.shipmentPackages.size() != 0) {
+                        <td>@pack.shipmentPackages.get(0).postOfficeId.name</td>
+                    } else {
+                        <td></td>
+                    }
+                    <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>
+                </tr>
+            }
+
+            </tbody>
+        </table>
+
     }
-
-    </tbody>
-  </table>
-
-}

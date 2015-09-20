@@ -1,10 +1,12 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.databind.JsonNode;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
 import models.Package;
+import play.libs.Json;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -190,5 +192,19 @@ public class PackageController extends Controller {
             return redirect(routes.Application.index());
         }
         return ok(packagestatus.render(Package.findPackageById(id)));
+    }
+
+    public Result allIntoJson(){
+        List<Package> packs = Package.finder.findList();
+        List<Package> packages = new ArrayList<>();
+        for (int i = 0; i < packs.size(); i++) {
+            Package p = new Package();
+            p.id = packs.get(i).id;
+            p.trackingNum = packs.get(i).trackingNum;
+            p.destination = packs.get(i).destination;
+            packages.add(p);
+        }
+        JsonNode json = Json.toJson(packages);
+        return ok(json);
     }
 }
