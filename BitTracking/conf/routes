@@ -51,8 +51,6 @@ POST          /adminpanel/makeroute/save/id                 @controllers.PostOff
 
 GET           /officeworkerpanel                            @controllers.UserController.officeWorkerPanel()
 
-POST          /adminpanel/package/changeRoute/:id           @controllers.PostOfficeController.changeRoute(id: Long)
-
 GET           /adminpanel/deliveryworkers                   @controllers.Application.deliveryWorkersList()
 GET           /adminpanel/deliveryworkers/panel             @controllers.Application.deliveryWorkerPanel()
 GET           /adminpanel/deliveryworkers/status/:id        @controllers.PackageController.changePackageStatus(id: Long)
