@@ -25,30 +25,31 @@ $(document).ready(function(){
     });
 
 
-        $("#search").keyup(function() {
-            var search = $("#search").val();
-            var exp = new RegExp(search, "i");
-            $.ajax({
-                beforeSend: function() {
-                    $("#edin").html("Searching...")
-                },
-                url: '/adminpanel/package/json',
-                type: 'POST',
-                success: function(response) {
-                    var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th>Destination</th></tr></thead><tbody>';
-                    $.each(response, function(key, val) {
-                        if(val.destination.search(exp) != -1) {
-                            tbody += '<tr class="succes"><td>' + val.id + '</td>'
-                            tbody += '<td>' + val.trackingNum + '</td>';
-                            tbody += '<td>' + val.destination + '</td>';
-                            tbody += '</tr>';
-                        }
-                    });
-                    tbody += '</tbody>';
-                    $("#edin").html(tbody);
-                }
-            });
+    $("#search").keyup(function() {
+        var search = $("#search").val();
+        var exp = new RegExp(search, "i");
+        $.ajax({
+            beforeSend: function() {
+                $("#edin").html("Searching...")
+            },
+            url: '/adminpanel/package/json',
+            type: 'POST',
+            success: function(response) {
+                var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th>Destination</th><th>Post Office</th></tr></thead><tbody>';
+                $.each(response, function(key, val) {
+                    if (val.office != null && (val.destination.search(exp) != -1 || val.office.search(exp) != -1)) {
+                        tbody += '<tr class="succes"><td>' + val.id + '</td>'
+                        tbody += '<td>' + val.trackingNum + '</td>';
+                        tbody += '<td>' + val.destination + '</td>';
+                        tbody += '<td>' + val.office + '</td>';
+                        tbody += '</tr>';
+                    }
+                });
+                tbody += '</tbody>';
+                $("#edin").html(tbody);
+            }
         });
+    });
 
 
 });

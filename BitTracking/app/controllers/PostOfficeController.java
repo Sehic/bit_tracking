@@ -284,6 +284,7 @@ public class PostOfficeController extends Controller {
 
             Ebean.save(ship);
         }
+        packageWithRoute.office = packageWithRoute.shipmentPackages.get(0).postOfficeId.name;
         Ebean.update(packageWithRoute);
 
         if (u1.typeOfUser == UserType.ADMIN)

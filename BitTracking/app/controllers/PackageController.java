@@ -200,6 +200,7 @@ public class PackageController extends Controller {
             p.id = packs.get(i).id;
             p.trackingNum = packs.get(i).trackingNum;
             p.destination = packs.get(i).destination;
+            p.office = packs.get(i).office;
             packages.add(p);
         }
         JsonNode json = Json.toJson(packages);

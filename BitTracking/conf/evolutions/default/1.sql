@@ -19,6 +19,7 @@ create table location (
 
 create table package (
   id                        bigint auto_increment not null,
+  office                    varchar(255),
   tracking_num              varchar(255),
   destination               varchar(255),
   status                    integer,

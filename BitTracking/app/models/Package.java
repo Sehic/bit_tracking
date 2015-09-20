@@ -21,6 +21,9 @@ public class Package extends Model {
     public List<Shipment> shipmentPackages = new ArrayList<>();
 
     @Column
+    public String office;
+
+    @Column
     public String trackingNum;
 
     @Column(length = 255)
