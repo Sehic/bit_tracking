@@ -222,10 +222,9 @@ public class PostOfficeController extends Controller {
         }
 
         Package officePackage = Package.findPackageById(id);
-        List<PostOffice> offices = PostOffice.findOffice.findList();
+        PostOffice office = officePackage.shipmentPackages.get(0).postOfficeId;
 
-
-        return ok(owmakeroute.render(offices, officePackage));
+        return ok(owmakeroute.render(office.postOfficesA, officePackage));
     }
 
     public Result createRoute() {
@@ -240,7 +239,9 @@ public class PostOfficeController extends Controller {
         String nextOffice = form.data().get("name");
 
         PostOffice mainOffice = PostOffice.findOffice.where().eq("name", nextOffice).findUnique();
+
         List<PostOffice> linkedOffices = mainOffice.postOfficesA;
+
 
         String officesString = "";
         for (int i = 0; i < linkedOffices.size(); i++) {
@@ -261,30 +262,31 @@ public class PostOfficeController extends Controller {
         }
 
         DynamicForm form = Form.form().bindFromRequest();
-        String route = form.data().get("route");
+
+        String route = form.get("route");
+
         Package packageWithRoute = Package.findPackageById(id);
 
-        packageWithRoute.status = StatusHelper.READY_FOR_SHIPPING;
+        Shipment initialOfficeShip = Shipment.shipmentFinder.where().eq("packageId",packageWithRoute).findUnique();
+        initialOfficeShip.status=StatusHelper.READY_FOR_SHIPPING;
+        initialOfficeShip.update();
 
         String[] arr = route.split(",");
+
 
         for (int j = 0; j < arr.length; j++) {
             PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
 
-            Shipment ship = new Shipment();
             if(p == null){
-                return redirect(routes.PostOfficeController.listRoutes(id));
+                return redirect(routes.PackageController.adminPackage());
             }
+            Shipment ship = new Shipment();
             ship.postOfficeId = p;
             ship.packageId = packageWithRoute;
-            if (j == 0) {
-                ship.status = StatusHelper.READY_FOR_SHIPPING;
-            } else
-                ship.status = StatusHelper.ON_ROUTE;
+            ship.status = StatusHelper.ON_ROUTE;
 
             Ebean.save(ship);
         }
-        Ebean.update(packageWithRoute);
 
         if (u1.typeOfUser == UserType.ADMIN)
             return redirect(routes.PackageController.adminPackage());

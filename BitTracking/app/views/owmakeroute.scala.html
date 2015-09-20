@@ -11,7 +11,16 @@
 
 
     <div class="row">
+        <hr/>
+        <div class="form-group">
 
+            <label for="initialPostOffice" class="col-sm-3 control-label">
+                Initial Post Office
+            </label>
+            <div class="col-sm-9">
+                <input name="initialPostOffice" value="@officePackage.shipmentPackages.get(0).postOfficeId.name" type="text" class="form-control" style="font-size:11px; font-style: italic " disabled>
+            </div>
+        </div>
 
     </div>
     <div class="row">

@@ -1,10 +1,12 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import com.fasterxml.jackson.databind.JsonNode;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
 import models.Package;
+import play.libs.Json;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -71,14 +73,15 @@ public class PackageController extends Controller {
         PostOffice office = PostOffice.findPostOffice(Long.parseLong(id));
 
         Package pack = new Package();
-        //  pack.shipmentPackages.get(0).packagePostOffice =office;
-        //  pack.packageRoutes.add(office);
-        //   pack.postOffice = office;
+
         pack.destination = form.get("destination");
         pack.trackingNum = (UUID.randomUUID().toString());
-
-
         Ebean.save(pack);
+
+        Shipment ship = new Shipment();
+        ship.packageId = pack;
+        ship.postOfficeId=office;
+        ship.save();
         if (user.typeOfUser == UserType.ADMIN)
             return redirect(routes.PackageController.adminPackage());
         else
@@ -144,6 +147,7 @@ public class PackageController extends Controller {
         Package pack = Package.finder.byId(id);
         List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
         List<Package> packages = new ArrayList<>();
+
         for (int i=0;i<shipments.size();i++){
             if(shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING){
                 shipments.get(i).status = StatusHelper.OUT_FOR_DELIVERY;
@@ -188,5 +192,19 @@ public class PackageController extends Controller {
             return redirect(routes.Application.index());
         }
         return ok(packagestatus.render(Package.findPackageById(id)));
+    }
+
+    public Result allIntoJson(){
+        List<Package> packs = Package.finder.findList();
+        List<Package> packages = new ArrayList<>();
+        for (int i = 0; i < packs.size(); i++) {
+            Package p = new Package();
+            p.id = packs.get(i).id;
+            p.trackingNum = packs.get(i).trackingNum;
+            p.destination = packs.get(i).destination;
+            packages.add(p);
+        }
+        JsonNode json = Json.toJson(packages);
+        return ok(json);
     }
 }

@@ -1,40 +1,89 @@
-$(document).ready(function(){
+$(document).ready(function () {
     var valueOfSelect;
-    var saveValueOfSelect="";
-    // for any form on this page do the follofing
-    $('#addToRoute').click(function(){
+    var saveValueOfSelect = "";
+    var alreadyOnRoute = "";
+    // for any form on this page do the following
+    $('#addToRoute').click(function () {
         valueOfSelect = $('.selectOffice :selected').text();
+        alreadyOnRoute += $('.selectOffice :selected').text() + ",";
+        var alreadyOnRouteSplitted = alreadyOnRoute.split(",");
+        for (var i = 0; i < alreadyOnRouteSplitted.length; i++) {
+            console.log(alreadyOnRouteSplitted[0]);
+        }
         $.ajax({
             url: "/adminpanel/makeroute/create",
             method: "POST",
-            data:"name="+valueOfSelect
-        }).success(function(response){
+            data: "name=" + valueOfSelect
+        }).success(function (response) {
             var str = response;
-            console.log("Response = "+response);
+            console.log("Response = " + response);
             var splitted = str.split(",");
             $('.selectOffice').empty();
-            saveValueOfSelect+=valueOfSelect+",";
+            saveValueOfSelect += valueOfSelect + ",";
             $('#finalRoute').attr("value", saveValueOfSelect);
-            for(var i=0;i<splitted.length;i++){
+            for (var j = 0; j < alreadyOnRouteSplitted.length - 1; j++) {
 
-                $('.selectOffice').append("<option value="+splitted[i]+">"+splitted[i]+"</option>");
+                for (var i = 0; i < splitted.length; i++) {
+                    if (alreadyOnRouteSplitted[j] == splitted[i]) {
+                        var index = splitted.indexOf(splitted[i]);
+                        if (index > -1) {
+                            splitted.splice(index, 1);
+                        }
+                    }
+                }
             }
 
-        }).error(function(response){
+            for (var i = 0; i < splitted.length; i++) {
+                $('.selectOffice').append("<option value=" + splitted[i] + ">" + splitted[i] + "</option>");
+            }
+
+        }).error(function (response) {
         });
     });
+
+    $("#search").keyup(function() {
+        var search = $("#search").val();
+        var exp = new RegExp(search, "i");
+        $.ajax({
+            beforeSend: function() {
+                $("#searchPackages").html("Searching...")
+            },
+            url: '/adminpanel/package/json',
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+                var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th>Destination</th></tr></thead><tbody>';
+                $.each(response, function(key, val) {
+                    if (val.destination.search(exp) != -1) {
+                        tbody += '<tr class="succes"><td>' + val.id + '</td>'
+                        tbody += '<td>' + val.trackingNum + '</td>';
+                        tbody += '<td>' + val.destination + '</td>';
+                        tbody += '</tr>';
+                    }
+                });
+                tbody += '</tbody>';
+                $("#searchPackages").html(tbody);
+            }
+        });
+    });
+
+
 });
 
 
-$('body').on('click', 'a[data-role="delete"]', function(e){
+
+
+
+
+$('body').on('click', 'a[data-role="delete"]', function (e) {
     e.preventDefault();
     $toDelete = $(this);
-    var conf = bootbox.confirm("Delete?", function(result){
-        if(result != null){
+    var conf = bootbox.confirm("Delete?", function (result) {
+        if (result != null) {
             $.ajax({
                 url: $toDelete.attr("href"),
                 method: "delete"
-            }).success(function(response){
+            }).success(function (response) {
                 $toDelete.parents($toDelete.attr("data-delete-parent")).remove();
             });
         }
@@ -42,8 +91,6 @@ $('body').on('click', 'a[data-role="delete"]', function(e){
 
 
 });
-
-
 
 
 $(".dropdown-menu li a").click(function () {
