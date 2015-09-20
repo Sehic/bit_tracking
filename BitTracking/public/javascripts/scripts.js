@@ -24,8 +24,6 @@ $(document).ready(function(){
         });
     });
 
-    var omar;
-
     $("#search").keyup(function() {
         var search = $("#search").val();
         var exp = new RegExp(search, "i");
@@ -36,9 +34,8 @@ $(document).ready(function(){
             url: '/adminpanel/package/json',
             type: 'POST',
             success: function(response) {
-                omar = response;
                 var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th><a id="destination">Destination</a></th><th>Post Office</th></tr></thead><tbody>';
-                //response = _.sortBy(response, "destination");
+                response = _.sortBy(response, "destination");
                 $.each(response, function(key, val) {
                     if (val.office != null && (val.destination.search(exp) != -1 || val.office.search(exp) != -1)) {
                         tbody += '<tr class="succes"><td>' + val.id + '</td>'
@@ -53,22 +50,6 @@ $(document).ready(function(){
 
             }
         });
-    });
-
-    $('#destination').click(function() {
-        omar = _.sortBy(omar, "destination");
-        var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th><a id="destination">Destination</a></th><th>Post Office</th></tr></thead><tbody>';
-        $.each(omar, function(key, val) {
-            //if (val.office != null && (val.destination.search(exp) != -1 || val.office.search(exp) != -1)) {
-                tbody += '<tr class="succes"><td>' + val.id + '</td>'
-                tbody += '<td>' + val.trackingNum + '</td>';
-                tbody += '<td>' + val.destination + '</td>';
-                tbody += '<td>' + val.office + '</td>';
-                tbody += '</tr>';
-            //}
-        });
-        tbody += '</tbody>';
-        $("#edin").html(tbody);
     });
 
 });
