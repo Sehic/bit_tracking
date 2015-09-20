@@ -27,15 +27,27 @@ $(document).ready(function(){
 
         $("#search").keyup(function() {
             var search = $("#search").val();
-            var myexp = new RegExp(search, "i");
+            var exp = new RegExp(search, "i");
             $.ajax({
-                //data: "search="+search,
-                type: "post",
-                url: "/adminpanel/package/json"
-            }).success(function(response) {
-                console.log(response);
-
-            })
+                beforeSend: function() {
+                    $("#edin").html("Searching...")
+                },
+                url: '/adminpanel/package/json',
+                type: 'POST',
+                success: function(response) {
+                    var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th>Destination</th></tr></thead><tbody>';
+                    $.each(response, function(key, val) {
+                        if(val.destination.search(exp) != -1) {
+                            tbody += '<tr class="succes"><td>' + val.id + '</td>'
+                            tbody += '<td>' + val.trackingNum + '</td>';
+                            tbody += '<td>' + val.destination + '</td>';
+                            tbody += '</tr>';
+                        }
+                    });
+                    tbody += '</tbody>';
+                    $("#edin").html(tbody);
+                }
+            });
         });
 
 

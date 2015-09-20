@@ -2,14 +2,31 @@
 @adminmain("Package") {
     <head>
         <script >
-            $("#search").keyup(function() {
-                    $.ajax({
-                    //data: "search="+search,
-                    type: "post",
-                    url: "/adminpanel/package/json"
-                    }).success(function(response) {
-                        console.log(response);
+            $(document).ready(function(){
+                $("#search").keyup(function() {
+                    var search = $("#search").val();
+                    var exp = new RegExp(search, "i");
+                        $.ajax({
+                        beforeSend: function() {
+                            $("#edin").html("Searching...")
+                        },
+                        url: '/adminpanel/package/json',
+                        type: 'POST',
+                        success: function(response) {
+                            var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th>Destination</th></tr></thead><tbody>';
+                            $.each(response, function(key, val) {
+                                if(val.destination.search(exp) != -1) {
+                                    tbody += '<tr class="succes"><td>' + val.id + '</td>'
+                                    tbody += '<td>' + val.trackingNum + '</td>';
+                                    tbody += '<td>' + val.destination + '</td>';
+                                    tbody += '</tr>';
+                                }
+                            });
+                            tbody += '</tbody>';
+                            $("#edin").html(tbody);
+                        }
                     });
+                });
             });
         </script>
 
@@ -32,7 +49,7 @@
   </ol>
   <h2>Package</h2>
 
-    <input id="search" name="search" type="search" placeholder="search">
+    <input id="search" name="search" type="search" placeholder="search by destination">
 
   <a href="@routes.PackageController.addPackage()"><button type="button" class="btn btn-info btn-lg" data-toggle="modal">Add package</button></a>
 
@@ -41,7 +58,7 @@
   </div>
 
   <h4 class="margin-bottom-15">List of packages</h4>
-  <table class="table table-striped table-hover table-bordered">
+  <table id="edin" class="table table-striped table-hover table-bordered">
     <thead>
       <tr>
         <th>#</th>
