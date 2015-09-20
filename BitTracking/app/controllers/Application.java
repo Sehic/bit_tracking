@@ -1,5 +1,6 @@
 package controllers;
 
+import helpers.Authenticators;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
@@ -70,12 +71,11 @@ public class Application extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result adminPanel() {
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
+
         return ok(adminindex.render(User.find.findList()));
+
     }
 
     /**
@@ -83,12 +83,8 @@ public class Application extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result adminMaps() {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
 
         if (Location.findLocation.findList().size() > 0)
             return ok(adminmaps.render(Location.findLocation.findList()));
@@ -101,11 +97,8 @@ public class Application extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result adminTables() {
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
 
         return ok(admintables.render(User.find.findList(), PostOffice.findOffice.findList(), Package.finder.findList()));
     }
@@ -115,12 +108,8 @@ public class Application extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result officeWorkersList() {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
 
         return ok(officeworkerlist.render(User.findOfficeWorkers()));
     }
@@ -130,12 +119,8 @@ public class Application extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result adminPostOffice() {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
 
         List<PostOffice> list = PostOffice.findOffice.findList();
         return ok(adminpostoffice.render(list));
@@ -146,12 +131,8 @@ public class Application extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result addPostOffice() {
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
-
 
         return ok(adminpostofficeadd.render());
     }
@@ -161,11 +142,9 @@ public class Application extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result registerWorker() {
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
+
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
         return ok(adminworkeradd.render(postOffices));
     }
@@ -181,12 +160,9 @@ public class Application extends Controller {
         Package p = Package.findPackageByTrackingNumber(trackingNumber);
         return ok(p.toString());
     }
-
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result deliveryWorkersList() {
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
+
         return ok(deliveryworkerslist.render(User.find.where().eq("typeOfUser", UserType.DELIVERY_WORKER).findList()));
     }
 

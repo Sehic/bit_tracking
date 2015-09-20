@@ -1,7 +1,7 @@
 package controllers;
 
-
 import com.avaje.ebean.Ebean;
+import helpers.Authenticators;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
@@ -10,6 +10,7 @@ import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 import views.html.adminlinkoffices;
 import views.html.adminpostofficedetails;
 import views.html.owmakeroute;
@@ -32,16 +33,13 @@ public class PostOfficeController extends Controller {
      * @param id - represents office id
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result deleteOffice(Long id) {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
 
         PostOffice office = PostOffice.findPostOffice(id);
         Location place = Location.findLocationById(office.place.id);
         Ebean.delete(place);
+
         return redirect(routes.Application.adminPostOffice());
     }
 
@@ -50,18 +48,15 @@ public class PostOfficeController extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result addNewOffice() {
 
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
-
         Form<PostOffice> boundForm = officeForm.bindFromRequest();
-        String name = boundForm.bindFromRequest().field("name").value();
-        String address = boundForm.bindFromRequest().field("address").value();
-        String lon = boundForm.bindFromRequest().field("longitude").value();
-        String lat = boundForm.bindFromRequest().field("latitude").value();
+
+        String name = boundForm.get().name;
+        String address = boundForm.get().address;
+        String lon = boundForm.field("longitude").value();
+        String lat = boundForm.field("latitude").value();
 
         if (lon == null || lat == null) {
             return redirect(routes.Application.adminPostOffice());
@@ -83,11 +78,9 @@ public class PostOfficeController extends Controller {
      * @param id - post office id
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result postOfficeDetails(Long id) {
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
+
         return ok(adminpostofficedetails.render(PostOffice.findPostOffice(id)));
     }
 
@@ -97,12 +90,8 @@ public class PostOfficeController extends Controller {
      * @param Id
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result updateOffice(Long Id) {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
 
         PostOffice office = PostOffice.findPostOffice(Id);
         Location place = Location.findLocationById(office.place.id);
@@ -115,8 +104,8 @@ public class PostOfficeController extends Controller {
             return redirect(routes.Application.adminPanel());
         }
         Form<PostOffice> newOfficeForm = officeForm.fill(office);
-        String lon = newOfficeForm.bindFromRequest().field("longitude").value();
-        String lat = newOfficeForm.bindFromRequest().field("latitude").value();
+        String lon = newOfficeForm.field("longitude").value();
+        String lat = newOfficeForm.field("latitude").value();
 
         if (lon == null || lat == null) {
             return redirect(routes.Application.adminPostOffice());
@@ -131,8 +120,8 @@ public class PostOfficeController extends Controller {
             office.place = place;
         }
 
-        office.name = newOfficeForm.bindFromRequest().field("name").value();
-        office.address = newOfficeForm.bindFromRequest().field("address").value();
+        office.name = newOfficeForm.field("name").value();
+        office.address = newOfficeForm.field("address").value();
         Ebean.update(office);
 
         return redirect(routes.Application.adminPostOffice());
@@ -144,12 +133,8 @@ public class PostOfficeController extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result linkPostOffices(Long id) {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
 
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
         PostOffice office = PostOffice.findOffice.byId(id);
@@ -171,12 +156,8 @@ public class PostOfficeController extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result savePostOffices() {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
 
         Form<PostOffice> boundForm = officeForm.bindFromRequest();
 
@@ -294,12 +275,6 @@ public class PostOfficeController extends Controller {
             return redirect(routes.UserController.officeWorkerPanel());
     }
 
-    public Result changeRoute(Long id) {
-        Package p = Package.findPackageById(id);
-        p.status = StatusHelper.OUT_FOR_DELIVERY;
-        Ebean.update(p);
-        return redirect(routes.UserController.officeWorkerPanel());
-    }
 
 
 }
