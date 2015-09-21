@@ -195,18 +195,4 @@ public class PackageController extends Controller {
         }
         return ok(packagestatus.render(Package.findPackageById(id)));
     }
-
-    public Result allIntoJson() {
-        List<Package> packs = Package.finder.findList();
-        List<Package> packages = new ArrayList<>();
-        for (int i = 0; i < packs.size(); i++) {
-            Package p = new Package();
-            p.id = packs.get(i).id;
-            p.trackingNum = packs.get(i).trackingNum;
-            p.destination = packs.get(i).destination;
-            packages.add(p);
-        }
-        JsonNode json = Json.toJson(packages);
-        return ok(json);
-    }
 }

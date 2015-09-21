@@ -1,29 +1,5 @@
 @main("Track your package") {
 
-    <head>
-        <script language="JavaScript" type="text/javascript">
-$(document).ready(function() {
-        $("#formmenu").accordion();
-         $("#trackSubmit").click(function(){
-            var number = $("#trackingNumber").val();
-                $.ajax({
-                     url: "@routes.Application.checkTrackingNumber()",
-                      data: "trackingNumber="+number,
-                       type: "POST"
-                }).success(function (response) {
-                       var s = response;
-                       var splitted = s.split(" ");
-                      $("#trackForm").show();
-                      $('#number').html(splitted[0]);
-                      $('#shipFrom').html(splitted[1]);
-                      $('#destination').html(splitted[2]);
-                      $('#status').html(splitted[3]);
-                 })
-                 })
-               });
-            </script>
-    </head>
-
     <menu id="formmenu">
         <div class="container-fluid">
             <div class="row">

@@ -1,7 +1,8 @@
+//Calling table sort and search
 $(document).ready(function() {
     $('#example').DataTable();
 } );
-
+//Method that append values to input field, and saving it to database
 $(document).ready(function () {
     var valueOfSelect;
     var saveValueOfSelect = "";
@@ -12,7 +13,9 @@ $(document).ready(function () {
 
     // for any form on this page do the following
     $('#addToRoute').click(function () {
+        //getting value from select box
         valueOfSelect = $('.selectOffice :selected').text();
+        //saving values into string
         alreadyOnRoute += $('.selectOffice :selected').text() + ",";
         var alreadyOnRouteSplitted = alreadyOnRoute.split(",");
 
@@ -22,14 +25,14 @@ $(document).ready(function () {
             data: "name=" + valueOfSelect
         }).success(function (response) {
             var str = response;
-
-            console.log("Response = " + response);
             var splitted = str.split(",");
+            //Removing elements from selectbox
             $('.selectOffice').empty();
             saveValueOfSelect += valueOfSelect + ",";
-
-
+            //Adding new elements to selectbox
             $('#finalRoute').attr("value", saveValueOfSelect);
+            //Comparing select box values and input field values
+            //If we find same input, remove it from select box
             for (var j = 0; j < alreadyOnRouteSplitted.length - 1; j++) {
 
                 for (var i = 0; i < splitted.length; i++) {
@@ -41,14 +44,12 @@ $(document).ready(function () {
                     }
                 }
             }
-
+            //Removing user click possibilities when he comes to final destination
             if (counter>0) {
-
                 $('.selectOffice').empty();
                 return;
-
             }
-
+            //Searching for final destination
             for (var i = 0; i < splitted.length; i++) {
                 $('.selectOffice').append("<option value=" + splitted[i] + ">" + splitted[i] + "</option>");
                 if (splitted[i]==destinationOffice) {
@@ -56,55 +57,46 @@ $(document).ready(function () {
                 }
 
             }
-
+            //Case when we have only one office between start and end destination
             var splitFirstOffice = saveValueOfSelect.split(',');
             if(splitFirstOffice[0]== destinationOffice){
                 $('.selectOffice').empty();
                 return;
             }
-
+            //Click button clear and reload page
             $('#clearFromRoute').click(function(){
-
                 window.location.reload();
             });
-
-
         }).error(function (response) {
         });
     });
-
-    $("#search").keyup(function() {
-        var search = $("#search").val();
-        var exp = new RegExp(search, "i");
-        $.ajax({
-            beforeSend: function() {
-                $("#searchPackages").html("Searching...")
-            },
-            url: '/adminpanel/package/json',
-            type: 'POST',
-            success: function(response) {
-                console.log(response);
-                var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th>Destination</th></tr></thead><tbody>';
-                $.each(response, function(key, val) {
-                    if (val.destination.search(exp) != -1) {
-                        tbody += '<tr class="succes"><td>' + val.id + '</td>'
-                        tbody += '<td>' + val.trackingNum + '</td>';
-                        tbody += '<td>' + val.destination + '</td>';
-                        tbody += '</tr>';
-                    }
-                });
-                tbody += '</tbody>';
-                $("#searchPackages").html(tbody);
-            }
-        });
-    });
 });
-
+//Method that shows package status for public user
+$(document).ready(function() {
+    $("#formmenu").accordion();
+    $("#trackSubmit").click(function(){
+        var number = $("#trackingNumber").val();
+        $.ajax({
+            url: "/checktrack",
+            data: "trackingNumber="+number,
+            type: "POST"
+        }).success(function (response) {
+            var s = response;
+            var splitted = s.split(" ");
+            $("#trackForm").show();
+            $('#number').html(splitted[0]);
+            $('#shipFrom').html(splitted[1]);
+            $('#destination').html(splitted[2]);
+            $('#status').html(splitted[3]);
+        })
+    })
+});
+//Method that is globaly used when we delete something
 $(document).ready(function(){
     $('body').on('click', 'a[data-role="delete"]', function (e) {
         e.preventDefault();
         $toDelete = $(this);
-        var conf = bootbox.confirm("Delete?", function (result) {
+        var conf = bootbox.confirm("Are you sure that you want to delete this?", function (result) {
             if (result == true) {
                 $.ajax({
                     url: $toDelete.attr("href"),
@@ -115,16 +107,6 @@ $(document).ready(function(){
             }
         });
     });
-});
-
-
-$(".dropdown-menu li a").click(function () {
-    var selText = $(this).text();
-    $(this).parents('.btn-group').find('.dropdown-toggle').html(selText + ' <span class="caret"></span>');
-});
-
-$("#btnSearch").click(function () {
-    alert($('.btn-select').text() + ", " + $('.btn-select2').text());
 });
 
 
