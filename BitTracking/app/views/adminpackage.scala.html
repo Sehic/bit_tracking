@@ -5,17 +5,24 @@
             <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
             <li class="active">Package</li>
         </ol>
-        <h2>Package</h2>
+        <h1>Package</h1>
+
+    <div class="row margin-bottom-30">
+        <div class="col-md-12">
+            <ul class="nav nav-pills">
+                <li><a href="@routes.Application.adminTables()">User <span class="badge"></span></a></li>
+                <li><a href="@routes.Application.adminPostOffice()">Post Office <span class="badge"></span></a></li>
+                <li class="active"><a href="#">
+                    Package <span class="badge">@packs.size</span></a></li>
+            </ul>
+        </div>
+    </div>
 
         <div class="row">
             <div class="col-md-7">
-                <a href="@routes.PackageController.addPackage()"><button type="button" class="btn btn-info btn-group-xs" data-toggle="modal">
+                <a href="@routes.PackageController.addPackage()"><button type="button" class="btn btn-primary btn-group-xs" data-toggle="modal">
                     Add package</button></a>
             </div>
-            <div class="col-md-5">
-                <input id="search" class="form-control" name="search" type="search" placeholder="Search">
-            </div>
-
         </div>
 
         <div class="table-responsive">
@@ -23,7 +30,7 @@
         </div>
 
         <h4 class="margin-bottom-15">List of packages</h4>
-        <table id="searchPackages" class="table table-striped table-hover table-bordered">
+    <table id="example" class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>#</th>
