@@ -2,6 +2,8 @@ $(document).ready(function () {
     var valueOfSelect;
     var saveValueOfSelect = "";
     var alreadyOnRoute = "";
+    var destinationOffice = $('#getDestinationOffice').val();
+    var counter=0;
     // for any form on this page do the following
     $('#addToRoute').click(function () {
         valueOfSelect = $('.selectOffice :selected').text();
@@ -20,6 +22,7 @@ $(document).ready(function () {
             var splitted = str.split(",");
             $('.selectOffice').empty();
             saveValueOfSelect += valueOfSelect + ",";
+
             $('#finalRoute').attr("value", saveValueOfSelect);
             for (var j = 0; j < alreadyOnRouteSplitted.length - 1; j++) {
 
@@ -33,9 +36,20 @@ $(document).ready(function () {
                 }
             }
 
+            if (counter>0) {
+
+                $('.selectOffice').empty();
+                return;
+
+            }
+
             for (var i = 0; i < splitted.length; i++) {
                 $('.selectOffice').append("<option value=" + splitted[i] + ">" + splitted[i] + "</option>");
+                if(splitted[i]==destinationOffice) {
+                    counter++;
+                }
             }
+            console.log(counter);
 
         }).error(function (response) {
         });
