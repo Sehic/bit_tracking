@@ -237,6 +237,9 @@ public class UserController extends Controller {
             return redirect(routes.Application.index());
         }
         User user = User.findById(id);
+        if(user == null || user.typeOfUser == UserType.ADMIN){
+            return redirect(routes.Application.index());
+        }
         Ebean.delete(user);
         return redirect(routes.Application.adminTables());
     }

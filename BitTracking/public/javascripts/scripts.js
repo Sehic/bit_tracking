@@ -3,31 +3,33 @@ $(document).ready(function () {
     var saveValueOfSelect = "";
     var alreadyOnRoute = "";
     var destinationOffice = $('#getDestinationOffice').val();
+    var initialOffice = $('#getInitialOffice').val();
     var counter=0;
+
     // for any form on this page do the following
     $('#addToRoute').click(function () {
         valueOfSelect = $('.selectOffice :selected').text();
         alreadyOnRoute += $('.selectOffice :selected').text() + ",";
         var alreadyOnRouteSplitted = alreadyOnRoute.split(",");
-        for (var i = 0; i < alreadyOnRouteSplitted.length; i++) {
-            console.log(alreadyOnRouteSplitted[0]);
-        }
+
         $.ajax({
             url: "/adminpanel/makeroute/create",
             method: "POST",
             data: "name=" + valueOfSelect
         }).success(function (response) {
             var str = response;
+
             console.log("Response = " + response);
             var splitted = str.split(",");
             $('.selectOffice').empty();
             saveValueOfSelect += valueOfSelect + ",";
 
+
             $('#finalRoute').attr("value", saveValueOfSelect);
             for (var j = 0; j < alreadyOnRouteSplitted.length - 1; j++) {
 
                 for (var i = 0; i < splitted.length; i++) {
-                    if (alreadyOnRouteSplitted[j] == splitted[i]) {
+                    if (alreadyOnRouteSplitted[j] == splitted[i] || splitted[i]==initialOffice) {
                         var index = splitted.indexOf(splitted[i]);
                         if (index > -1) {
                             splitted.splice(index, 1);
@@ -45,11 +47,23 @@ $(document).ready(function () {
 
             for (var i = 0; i < splitted.length; i++) {
                 $('.selectOffice').append("<option value=" + splitted[i] + ">" + splitted[i] + "</option>");
-                if(splitted[i]==destinationOffice) {
+                if (splitted[i]==destinationOffice) {
                     counter++;
                 }
+
             }
-            console.log(counter);
+
+            var splitFirstOffice = saveValueOfSelect.split(',');
+            if(splitFirstOffice[0]== destinationOffice){
+                $('.selectOffice').empty();
+                return;
+            }
+
+            $('#clearFromRoute').click(function(){
+
+                window.location.reload();
+            });
+
 
         }).error(function (response) {
         });
@@ -80,31 +94,23 @@ $(document).ready(function () {
             }
         });
     });
-
 });
 
-
-
-
-
-
-
-
-$('body').on('click', 'a[data-role="delete"]', function (e) {
-    e.preventDefault();
-    $toDelete = $(this);
-    var conf = bootbox.confirm("Delete?", function (result) {
-        if (result != null) {
-            $.ajax({
-                url: $toDelete.attr("href"),
-                method: "delete"
-            }).success(function (response) {
-                $toDelete.parents($toDelete.attr("data-delete-parent")).remove();
-            });
-        }
+$(document).ready(function(){
+    $('body').on('click', 'a[data-role="delete"]', function (e) {
+        e.preventDefault();
+        $toDelete = $(this);
+        var conf = bootbox.confirm("Delete?", function (result) {
+            if (result == true) {
+                $.ajax({
+                    url: $toDelete.attr("href"),
+                    method: "delete"
+                }).success(function (response) {
+                    $toDelete.parents($toDelete.attr("data-delete-parent")).remove();
+                });
+            }
+        });
     });
-
-
 });
 
 

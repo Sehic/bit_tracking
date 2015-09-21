@@ -18,7 +18,7 @@
                 Initial Post Office
             </label>
             <div class="col-sm-9">
-                <input name="initialPostOffice" value="@officePackage.shipmentPackages.get(0).postOfficeId.name" type="text" class="form-control" style="font-size:13px; font-style: italic " disabled>
+                <input id="getInitialOffice" name="initialPostOffice" value="@officePackage.shipmentPackages.get(0).postOfficeId.name" type="text" class="form-control" style="font-size:13px; font-style: italic " readonly>
             </div>
         </div>
 
@@ -65,9 +65,15 @@
     </div>
     <div class="row">
 
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <button id="addToRoute" type="button" class="btn btn-default pull-left">
                 Add to route
+            </button>
+        </div>
+
+        <div class="col-sm-3">
+            <button id="clearFromRoute" type="button" class="btn btn-default pull-left">
+                Clear
             </button>
         </div>
 

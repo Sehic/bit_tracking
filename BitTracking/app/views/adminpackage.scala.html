@@ -1,16 +1,6 @@
 @(packs: java.util.List[models.Package])
     @adminmain("Package") {
-        <script>
-      function del(urlToDel) {
-          $.ajax({
-              url: urlToDel,
-              type: 'DELETE',
-              success: function(results) {
-                  location.reload();
-              }
-          });
-      }
-  </script>
+
         <ol class="breadcrumb">
             <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
             <li class="active">Package</li>
@@ -68,7 +58,7 @@
                     } else {
                         <td></td>
                     }
-                    <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>
+                    <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input class="btn-link" type="button" value="Delete"></a></td>
                 </tr>
             }
 

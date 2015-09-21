@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import helpers.Authenticators;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
@@ -11,6 +12,7 @@ import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 import views.html.*;
 
 
@@ -26,12 +28,8 @@ public class PackageController extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result adminPackage() {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.OFFICE_WORKER) {
-            return redirect(routes.Application.index());
-        }
 
         return ok(adminpackage.render(Package.finder.findList()));
     }
@@ -58,6 +56,7 @@ public class PackageController extends Controller {
 
     /**
      * Method that saves package to database using (packageadd.scala.html) form
+     *
      * @return
      */
     public Result savePackage() {
@@ -80,7 +79,7 @@ public class PackageController extends Controller {
 
         Shipment ship = new Shipment();
         ship.packageId = pack;
-        ship.postOfficeId=office;
+        ship.postOfficeId = office;
         ship.save();
         if (user.typeOfUser == UserType.ADMIN)
             return redirect(routes.PackageController.adminPackage());
@@ -90,6 +89,7 @@ public class PackageController extends Controller {
 
     /**
      * Method that deletes package from database
+     *
      * @param id - tracking number
      * @return
      */
@@ -99,7 +99,7 @@ public class PackageController extends Controller {
 
         User user = SessionHelper.getCurrentUser(ctx());
         if (user != null || user.typeOfUser == UserType.OFFICE_WORKER || user.typeOfUser == UserType.ADMIN) {
-            for(int i = 0; i < p.shipmentPackages.size(); i++) {
+            for (int i = 0; i < p.shipmentPackages.size(); i++) {
 
                 p.shipmentPackages.remove(i);
                 Ebean.delete(p.shipmentPackages.get(i));
@@ -114,6 +114,7 @@ public class PackageController extends Controller {
 
     /**
      * Method that updates package informations (packagedetails.scala.html)
+     *
      * @param id
      * @return
      */
@@ -124,6 +125,7 @@ public class PackageController extends Controller {
 
     /**
      * Method that is used for opening up form for editing package (adminpackage.scala.html)
+     *
      * @param id
      * @return
      */
@@ -137,7 +139,7 @@ public class PackageController extends Controller {
         return ok(packagedetails.render(Package.findPackageById(id), PostOffice.findOffice.findList()));
     }
 
-    public Result updateStatus(Long id){
+    public Result updateStatus(Long id) {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
         if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
@@ -146,23 +148,23 @@ public class PackageController extends Controller {
 
         Package pack = Package.finder.byId(id);
         List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
-        List<Package> packages = new ArrayList<>();
 
-        for (int i=0;i<shipments.size();i++){
-            if(shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING){
+
+        for (int i = 0; i < shipments.size(); i++) {
+            if (shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING) {
                 shipments.get(i).status = StatusHelper.OUT_FOR_DELIVERY;
                 System.out.println(shipments.get(i).postOfficeId.name);
                 Calendar c = Calendar.getInstance();
                 Date date = c.getTime();
                 shipments.get(i).dateCreated = date;
                 Ebean.update(shipments.get(i));
-                if(i!=shipments.size()-2) {
+                if (i != shipments.size() - 2) {
                     shipments.get(i + 1).status = StatusHelper.READY_FOR_SHIPPING;
                     Ebean.update(shipments.get(i + 1));
-                }else{
+                } else {
 
-                    for (int j=0;j<shipments.size();j++){
-                        shipments.get(j).status=StatusHelper.DELIVERED;
+                    for (int j = 0; j < shipments.size(); j++) {
+                        shipments.get(j).status = StatusHelper.DELIVERED;
                         Calendar c1 = Calendar.getInstance();
                         Date date1 = c1.getTime();
                         shipments.get(i).dateCreated = date1;
@@ -174,10 +176,10 @@ public class PackageController extends Controller {
 
 
         }
-
+        List<Package> packages = new ArrayList<>();
         List<Shipment> shipments1 = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", u1.postOffice).findList();
 
-        for (int i=0; i<shipments1.size();i++){
+        for (int i = 0; i < shipments1.size(); i++) {
 
             packages.add(shipments1.get(i).packageId);
 
@@ -186,7 +188,7 @@ public class PackageController extends Controller {
         return ok(deliveryworkerpanel.render(packages));
     }
 
-    public Result changePackageStatus(Long id){
+    public Result changePackageStatus(Long id) {
         User u1 = SessionHelper.getCurrentUser(ctx());
         if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
             return redirect(routes.Application.index());
@@ -194,7 +196,7 @@ public class PackageController extends Controller {
         return ok(packagestatus.render(Package.findPackageById(id)));
     }
 
-    public Result allIntoJson(){
+    public Result allIntoJson() {
         List<Package> packs = Package.finder.findList();
         List<Package> packages = new ArrayList<>();
         for (int i = 0; i < packs.size(); i++) {

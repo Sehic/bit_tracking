@@ -23,10 +23,12 @@ GET           /adminpanel/tables                            @controllers.Applica
 GET           /adminpanel/tables/addpostoffice              @controllers.Application.addPostOffice()
 GET           /adminpanel/preferences/:id                   @controllers.UserController.adminPreferences(id: Long)
 GET           /adminpanel/tables/:id                        @controllers.UserController.deleteUser(id: Long)
+DELETE        /adminpanel/tables/:id                        @controllers.UserController.deleteUser(id: Long)
 
 GET           /adminpanel/postoffice                        @controllers.Application.adminPostOffice()
 GET           /adminpanel/postoffice/details/:id            @controllers.PostOfficeController.postOfficeDetails(id: Long)
 GET           /adminpanel/postoffice/:id                    @controllers.PostOfficeController.deleteOffice(id:Long)
+DELETE        /adminpanel/postoffice/:id                    @controllers.PostOfficeController.deleteOffice(id:Long)
 POST          /adminpanel/postoffice                        @controllers.PostOfficeController.addNewOffice()
 POST          /adminpanel/postoffice/details/:id            @controllers.PostOfficeController.updateOffice(id: Long)
 
@@ -37,6 +39,7 @@ POST          /adminpanel/officeworkers/add                 @controllers.UserCon
 GET           /adminpanel/package/                          @controllers.PackageController.adminPackage()
 GET           /adminpanel/package/addpackage                @controllers.PackageController.addPackage()
 POST          /adminpanel/package/addpackage                @controllers.PackageController.savePackage()
+GET           /adminpanel/package/delete/:id                @controllers.PackageController.deletePackage(id: Long)
 DELETE        /adminpanel/package/delete/:id                @controllers.PackageController.deletePackage(id: Long)
 GET           /adminpanel/package/update/:id                @controllers.PackageController.editPackage(id: Long)
 POST          /adminpanel/package/update/:id                @controllers.PackageController.updatePackage(id: Long)
