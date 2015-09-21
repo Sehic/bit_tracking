@@ -36,12 +36,8 @@ public class PackageController extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result addPackage() {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.OFFICE_WORKER) {
-            return redirect(routes.Application.index());
-        }
 
         List<PostOffice> offices = PostOffice.findOffice.findList();
         if (offices == null || offices.size() == 0) {
@@ -56,12 +52,9 @@ public class PackageController extends Controller {
      *
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result savePackage() {
 
-        User user = SessionHelper.getCurrentUser(ctx());
-        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
-            return redirect("/");
-        }
         DynamicForm form = Form.form().bindFromRequest();
 
         String id = form.bindFromRequest().field("officePost").value();
@@ -78,6 +71,7 @@ public class PackageController extends Controller {
         ship.packageId = pack;
         ship.postOfficeId = office;
         ship.save();
+        User user = SessionHelper.getCurrentUser(ctx());
         if (user.typeOfUser == UserType.ADMIN)
             return redirect(routes.PackageController.adminPackage());
         else
@@ -90,12 +84,11 @@ public class PackageController extends Controller {
      * @param id - tracking number
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result deletePackage(Long id) {
 
         Package p = Package.findPackageById(id);
 
-        User user = SessionHelper.getCurrentUser(ctx());
-        if (user != null || user.typeOfUser == UserType.OFFICE_WORKER || user.typeOfUser == UserType.ADMIN) {
             for (int i = 0; i < p.shipmentPackages.size(); i++) {
 
                 p.shipmentPackages.remove(i);
@@ -104,9 +97,7 @@ public class PackageController extends Controller {
 
             Ebean.delete(p);
             return ok(packageadd.render(PostOffice.findOffice.findList()));
-        } else {
-            return redirect("/");
-        }
+
     }
 
     /**
@@ -126,26 +117,17 @@ public class PackageController extends Controller {
      * @param id
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result editPackage(Long id) {
-
-        User user = SessionHelper.getCurrentUser(ctx());
-        if (user == null || user.typeOfUser != UserType.ADMIN && user.typeOfUser != UserType.OFFICE_WORKER) {
-            return redirect("/");
-        }
-
         return ok(packagedetails.render(Package.findPackageById(id), PostOffice.findOffice.findList()));
     }
-
+    @Security.Authenticated(Authenticators.AdminDeliveryWorkerFilter.class)
     public Result updateStatus(Long id) {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
-            return redirect(routes.Application.index());
-        }
 
         Package pack = Package.finder.byId(id);
         List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
-
 
         for (int i = 0; i < shipments.size(); i++) {
             if (shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING) {
@@ -159,7 +141,6 @@ public class PackageController extends Controller {
                     shipments.get(i + 1).status = StatusHelper.READY_FOR_SHIPPING;
                     Ebean.update(shipments.get(i + 1));
                 } else {
-
                     for (int j = 0; j < shipments.size(); j++) {
                         shipments.get(j).status = StatusHelper.DELIVERED;
                         Calendar c1 = Calendar.getInstance();
@@ -170,8 +151,6 @@ public class PackageController extends Controller {
                 }
                 break;
             }
-
-
         }
         List<Package> packages = new ArrayList<>();
         List<Shipment> shipments1 = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", u1.postOffice).findList();
@@ -179,17 +158,12 @@ public class PackageController extends Controller {
         for (int i = 0; i < shipments1.size(); i++) {
 
             packages.add(shipments1.get(i).packageId);
-
         }
-
         return ok(deliveryworkerpanel.render(packages));
     }
-
+    @Security.Authenticated(Authenticators.AdminDeliveryWorkerFilter.class)
     public Result changePackageStatus(Long id) {
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
-            return redirect(routes.Application.index());
-        }
+
         return ok(packagestatus.render(Package.findPackageById(id)));
     }
 }

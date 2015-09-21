@@ -73,7 +73,6 @@ $(document).ready(function () {
 });
 //Method that shows package status for public user
 $(document).ready(function() {
-    $("#formmenu").accordion();
     $("#trackSubmit").click(function(){
         var number = $("#trackingNumber").val();
         $.ajax({

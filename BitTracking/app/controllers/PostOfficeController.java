@@ -142,12 +142,11 @@ public class PostOfficeController extends Controller {
 
         for (int i = 0; i < mainOfficeRelationList.size(); i++) {
             for (int j = 0; j < postOffices.size(); j++) {
-                if(mainOfficeRelationList.get(i).id == postOffices.get(j).id){
+                if (mainOfficeRelationList.get(i).id == postOffices.get(j).id) {
                     postOffices.remove(j);
                 }
             }
         }
-
         return ok(adminlinkoffices.render(postOffices, office));
     }
 
@@ -190,17 +189,11 @@ public class PostOfficeController extends Controller {
             Ebean.save(linkedPostOffice);
 
         }
-
         return redirect("/adminpanel/postoffice");
-
     }
 
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result listRoutes(Long id) {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser !=UserType.OFFICE_WORKER) {
-            return redirect(routes.Application.index());
-        }
 
         Package officePackage = Package.findPackageById(id);
         PostOffice office = officePackage.shipmentPackages.get(0).postOfficeId;
@@ -208,12 +201,8 @@ public class PostOfficeController extends Controller {
         return ok(owmakeroute.render(office.postOfficesA, officePackage));
     }
 
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result createRoute() {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser !=UserType.OFFICE_WORKER) {
-            return redirect(routes.Application.index());
-        }
 
         DynamicForm form = Form.form().bindFromRequest();
 
@@ -223,7 +212,6 @@ public class PostOfficeController extends Controller {
 
         List<PostOffice> linkedOffices = mainOffice.postOfficesA;
 
-
         String officesString = "";
         for (int i = 0; i < linkedOffices.size(); i++) {
             officesString += linkedOffices.get(i).name;
@@ -231,16 +219,11 @@ public class PostOfficeController extends Controller {
                 officesString += ",";
             }
         }
-
         return ok(officesString);
     }
 
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result saveRoute(Long id) {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser !=UserType.OFFICE_WORKER) {
-            return redirect(routes.Application.index());
-        }
 
         DynamicForm form = Form.form().bindFromRequest();
 
@@ -248,17 +231,16 @@ public class PostOfficeController extends Controller {
 
         Package packageWithRoute = Package.findPackageById(id);
 
-        Shipment initialOfficeShip = Shipment.shipmentFinder.where().eq("packageId",packageWithRoute).findUnique();
-        initialOfficeShip.status=StatusHelper.READY_FOR_SHIPPING;
+        Shipment initialOfficeShip = Shipment.shipmentFinder.where().eq("packageId", packageWithRoute).findUnique();
+        initialOfficeShip.status = StatusHelper.READY_FOR_SHIPPING;
         initialOfficeShip.update();
 
         String[] arr = route.split(",");
 
-
         for (int j = 0; j < arr.length; j++) {
             PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
 
-            if(p == null){
+            if (p == null) {
                 return redirect(routes.PackageController.adminPackage());
             }
             Shipment ship = new Shipment();
@@ -268,13 +250,10 @@ public class PostOfficeController extends Controller {
 
             Ebean.save(ship);
         }
-
+        User u1 = SessionHelper.getCurrentUser(ctx());
         if (u1.typeOfUser == UserType.ADMIN)
             return redirect(routes.PackageController.adminPackage());
         else
             return redirect(routes.UserController.officeWorkerPanel());
     }
-
-
-
 }

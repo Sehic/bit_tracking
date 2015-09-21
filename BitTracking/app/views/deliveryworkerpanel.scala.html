@@ -3,9 +3,9 @@
     @adminmain("Delivery Worker Packages") {
 
         <ol class="breadcrumb">
-            <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
-            <li><a href="#">Manage Users</a></li>
-            <li class="active">Tables</li>
+            <li><a href="@routes.Application.adminPanel()">Delivery Worker Panel</a></li>
+            <li><a href="#">Manage Packages</a></li>
+            <li class="active">Packages</li>
         </ol>
         <h1>Delivery Worker Panel</h1>
 
@@ -36,11 +36,7 @@
                                         @if(shipmentFromThisPackage.status == StatusHelper.READY_FOR_SHIPPING) {
                                             <td>@shipmentFromThisPackage.status</td>
                                             <td>@shipmentFromThisPackage.postOfficeId.name</td>
-                                                <!--ovdje ce bit problem kad dodjemo do zadnjeg elementa niza
-                  array out of bounds, logicno mi mada nisam testiro,
-                   zapravo nece, jer ako onda nece bit zadovoljen if uslov, posto na krajnjoj
-                   destinaciji kad je pokrenes nece bit status ready nego
-                   delivered, tako da bi ovo uvijek trebalo radit!-->
+
                                             @if(i!=pack.shipmentPackages.size()-1) {
                                                 <td>@pack.shipmentPackages.get(i + 1).postOfficeId.name</td>
                                             }else{
@@ -67,15 +63,6 @@
                     </table>
                 </div>
 
-                <ul class="pagination pull-right">
-                    <li class="disabled"><a href="#">&laquo;</a></li>
-                    <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">4 <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">5 <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">&raquo;</a></li>
-                </ul>
             </div>
         </div>
 
