@@ -33,10 +33,10 @@ public class Package extends Model {
     @ManyToMany
     public List<User> deliveryWorkers = new ArrayList<>();
 
-    @Column
+    @Column(precision=10, scale=2)
     public Double weight;
 
-    @Column
+    @Column(precision=10, scale=2)
     public Double price;
 
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
@@ -61,6 +61,8 @@ public class Package extends Model {
             return trackingNum + " " + shipmentPackages.get(0).postOfficeId.name + " " + destination + " " + StatusHelper.OUT_FOR_DELIVERY.toString();
         }
     }
+
+
 
 
 

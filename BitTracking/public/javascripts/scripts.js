@@ -66,12 +66,21 @@ $(document).ready(function () {
             type: 'POST',
             success: function(response) {
                 console.log(response);
-                var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th>Destination</th></tr></thead><tbody>';
+                var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th>Route</th><th>Destination</th><th>Post Office</th><th>Weight</th><th>Price</th><th>Delete</th></tr></thead><tbody>';
                 $.each(response, function(key, val) {
-                    if (val.destination.search(exp) != -1) {
+                    if (val.destination.search(exp) != -1 || val.postOffice.search(exp) != -1) {
                         tbody += '<tr class="succes"><td>' + val.id + '</td>'
                         tbody += '<td>' + val.trackingNum + '</td>';
+                        if(val.route != null){
+                            tbody += '<td>' + val.route + '</td>';
+                        } else {
+                            tbody += '<td><a href=\"/adminpanel/makeroute/' + val.id + '\" class="btn btn-link">Add Route</a></td>'
+                        }
                         tbody += '<td>' + val.destination + '</td>';
+                        tbody += '<td>' + val.postOffice + '</td>';
+                        tbody += '<td>' + val.weight + ' kg</td>';
+                        tbody += '<td>' + val.price + ' KM</td>';
+                        tbody += '<td><a onclick=\"del(\'/adminpanel/package/delete/' + val.id + '\')" class="btn btn-link">Delete</a></td>'
                         tbody += '</tr>';
                     }
                 });
@@ -83,8 +92,80 @@ $(document).ready(function () {
 
 });
 
+function sortByWeight() {
+    $.ajax({
+        beforeSend: function() {
+            $("#searchPackages").html("Sorting...")
+        },
+        url: '/adminpanel/package/json',
+        type: 'POST',
+        success: function(response) {
+            response = _.sortBy(response, "weight");
+            console.log(response);
+            var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th>Route</th><th>Destination</th><th>Post Office</th><th>Weight</th><th>Price</th><th>Delete</th></tr></thead><tbody>';
+            $.each(response, function(key, val) {
+                tbody += '<tr class="succes"><td>' + val.id + '</td>'
+                tbody += '<td>' + val.trackingNum + '</td>';
+                if(val.route != null){
+                    tbody += '<td>' + val.route + '</td>';
+                } else {
+                    tbody += '<td><a href=\"/adminpanel/makeroute/' + val.id + '\" class="btn btn-link">Add Route</a></td>'
+                }
+                tbody += '<td>' + val.destination + '</td>';
+                tbody += '<td>' + val.postOffice + '</td>';
+                tbody += '<td>' + val.weight + ' kg</td>';
+                tbody += '<td>' + val.price + ' KM</td>';
+                tbody += '<td><a onclick=\"del(\'/adminpanel/package/delete/' + val.id + '\')" class="btn btn-link">Delete</a></td>'
+                tbody += '</tr>';
+            });
+            tbody += '</tbody>';
+            $("#searchPackages").html(tbody);
+        }
+    });
+}
+
+function sortByPrice() {
+    $.ajax({
+        beforeSend: function() {
+            $("#searchPackages").html("Sorting...")
+        },
+        url: '/adminpanel/package/json',
+        type: 'POST',
+        success: function(response) {
+            response = _.sortBy(response, "price");
+            console.log(response);
+            var tbody = '<thead><tr><th>#</th><th>Tracking Number</th><th>Route</th><th>Destination</th><th>Post Office</th><th>Weight</th><th>Price</th><th>Delete</th></tr></thead><tbody>';
+            $.each(response, function(key, val) {
+                tbody += '<tr class="succes"><td>' + val.id + '</td>'
+                tbody += '<td>' + val.trackingNum + '</td>';
+                if(val.route != null){
+                    tbody += '<td>' + val.route + '</td>';
+                } else {
+                    tbody += '<td><a href=\"/adminpanel/makeroute/' + val.id + '\" class="btn btn-link">Add Route</a></td>'
+                }
+                tbody += '<td>' + val.destination + '</td>';
+                tbody += '<td>' + val.postOffice + '</td>';
+                tbody += '<td>' + val.weight + ' kg</td>';
+                tbody += '<td>' + val.price + ' KM</td>';
+                tbody += '<td><a onclick=\"del(\'/adminpanel/package/delete/' + val.id + '\')" class="btn btn-link">Delete</a></td>'
+                tbody += '</tr>';
+            });
+            tbody += '</tbody>';
+            $("#searchPackages").html(tbody);
+        }
+    });
+}
 
 
+function del(urlToDel) {
+    $.ajax({
+        url: urlToDel,
+        type: 'DELETE',
+        success: function(results) {
+            location.reload();
+        }
+    });
+};
 
 
 

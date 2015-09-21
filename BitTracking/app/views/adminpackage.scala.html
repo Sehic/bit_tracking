@@ -23,6 +23,8 @@
                     Add package</button></a>
             </div>
             <div class="col-md-5">
+                <input id="weight" onclick="sortByWeight()" type="submit" value="Sort by weight">
+                <input id="price" onclick="sortByPrice()" type="submit" value="Sort by price">
                 <input id="search" class="form-control" name="search" type="search" placeholder="Search">
             </div>
 
@@ -41,6 +43,8 @@
                     <th>Route</th>
                     <th>Destination</th>
                     <th>Post Office</th>
+                    <th>Weight</th>
+                    <th>Price</th>
                     <th>Delete</th>
                 </tr>
             </thead>
@@ -68,6 +72,8 @@
                     } else {
                         <td></td>
                     }
+                    <td>@pack.weight kg</td>
+                    <td>@pack.price KM</td>
                     <td><a onclick="del('@routes.PackageController.deletePackage(pack.id)')" class="btn btn-link">Delete</a></td>
                 </tr>
             }

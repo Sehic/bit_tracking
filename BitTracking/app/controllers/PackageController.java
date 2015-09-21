@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import helpers.PackageList;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
@@ -75,6 +76,8 @@ public class PackageController extends Controller {
         Package pack = new Package();
 
         pack.destination = form.get("destination");
+        pack.price = Double.parseDouble(form.get("price"));
+        pack.weight = Double.parseDouble(form.get("weight"));
         pack.trackingNum = (UUID.randomUUID().toString());
         Ebean.save(pack);
 
@@ -100,8 +103,6 @@ public class PackageController extends Controller {
         User user = SessionHelper.getCurrentUser(ctx());
         if (user != null || user.typeOfUser == UserType.OFFICE_WORKER || user.typeOfUser == UserType.ADMIN) {
             for(int i = 0; i < p.shipmentPackages.size(); i++) {
-
-                p.shipmentPackages.remove(i);
                 Ebean.delete(p.shipmentPackages.get(i));
             }
 
@@ -196,12 +197,20 @@ public class PackageController extends Controller {
 
     public Result allIntoJson(){
         List<Package> packs = Package.finder.findList();
-        List<Package> packages = new ArrayList<>();
+        List<PackageList> packages = new ArrayList<>();
         for (int i = 0; i < packs.size(); i++) {
-            Package p = new Package();
+            PackageList p = new PackageList();
             p.id = packs.get(i).id;
             p.trackingNum = packs.get(i).trackingNum;
+            if (packs.get(i).shipmentPackages.size() > 1) {
+                for (int j = 0; j < packs.get(i).shipmentPackages.size(); j++) {
+                    p.route += packs.get(i).shipmentPackages.get(j).postOfficeId.name;
+                }
+            }
+            p.postOffice = packs.get(i).shipmentPackages.get(0).postOfficeId.name;
             p.destination = packs.get(i).destination;
+            p.weight = packs.get(i).weight;
+            p.price = packs.get(i).price;
             packages.add(p);
         }
         JsonNode json = Json.toJson(packages);
