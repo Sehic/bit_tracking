@@ -140,14 +140,12 @@ public class PackageController extends Controller {
     public Result updateStatus(Long id){
 
         User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
-            return redirect(routes.Application.index());
-        }
-
         Package pack = Package.finder.byId(id);
+
+        if (u1 != null && (u1.typeOfUser == UserType.ADMIN || u1.typeOfUser == UserType.DELIVERY_WORKER)) {
+
         List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
         List<Package> packages = new ArrayList<>();
-
         for (int i=0;i<shipments.size();i++){
             if(shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING){
                 shipments.get(i).status = StatusHelper.OUT_FOR_DELIVERY;
@@ -156,35 +154,45 @@ public class PackageController extends Controller {
                 Date date = c.getTime();
                 shipments.get(i).dateCreated = date;
                 Ebean.update(shipments.get(i));
-                if(i!=shipments.size()-2) {
-                    shipments.get(i + 1).status = StatusHelper.READY_FOR_SHIPPING;
-                    Ebean.update(shipments.get(i + 1));
-                }else{
-
-                    for (int j=0;j<shipments.size();j++){
-                        shipments.get(j).status=StatusHelper.DELIVERED;
-                        Calendar c1 = Calendar.getInstance();
-                        Date date1 = c1.getTime();
-                        shipments.get(i).dateCreated = date1;
-                        Ebean.update(shipments.get(j));
-                    }
-                }
+                shipments.get(i + 1).status = StatusHelper.RECEIVED;
+                Ebean.update(shipments.get(i + 1));
                 break;
             }
-
-
         }
-
         List<Shipment> shipments1 = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", u1.postOffice).findList();
-
         for (int i=0; i<shipments1.size();i++){
-
             packages.add(shipments1.get(i).packageId);
-
         }
-
         return ok(deliveryworkerpanel.render(packages));
-    }
+    }else if(u1 != null && u1.typeOfUser == UserType.OFFICE_WORKER){
+            List<Shipment> shipments = Shipment.shipmentFinder.where().eq("postOfficeId", u1.postOffice).findList();
+            List<Package> packages = new ArrayList<>();
+            for (int i=0;i<shipments.size();i++){
+                packages.add(shipments.get(i).packageId);
+                if(shipments.get(i).packageId.id == pack.id){
+                    if(pack.destination.equals(u1.postOffice.address)){
+                        packages.remove(i);
+                        List<Shipment> shipmentss = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
+                        for (int j=0;j<shipmentss.size();j++){
+                            shipmentss.get(j).status = StatusHelper.DELIVERED;
+                            Ebean.update(shipmentss.get(j));
+                        }
+                        int last = shipmentss.size()-1;
+                        Calendar c = Calendar.getInstance();
+                        Date date = c.getTime();
+                        shipmentss.get(last).dateCreated = date;
+                        Ebean.update(shipmentss.get(last));
+                        packages.add(shipmentss.get(last).packageId);
+                        break;
+                    }
+                    shipments.get(i).status = StatusHelper.READY_FOR_SHIPPING;
+                    Ebean.update(shipments.get(i));
+                    }
+                }
+                return ok(officeworkerpanel.render(packages, u1.postOffice));
+        }
+        return redirect(routes.Application.index());
+}
 
     public Result changePackageStatus(Long id){
         User u1 = SessionHelper.getCurrentUser(ctx());
