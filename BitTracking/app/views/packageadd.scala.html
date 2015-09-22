@@ -1,4 +1,5 @@
-@(offices: List[PostOffice])(text: Form[models.Package])
+@import helpers.SessionHelper
+@(offices: List[PostOffice])(text: Form[models.Package])(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
     @adminmain("Add Package") {
         <div class="container-fluid">
                 <!--Register title row -->
@@ -20,7 +21,7 @@
                     <div class="form-group">
 
                         <label for="Destination" class="col-sm-2 control-box">
-                            Destination:
+                            Recipient Address:
                         </label>
                         <div class="col-sm-10">
                             <input name="destination" type="text" class="form-control" id="destination" required="required">
@@ -56,14 +57,18 @@
                     <div class="form-group">
 
                         <label for="postOffices" class="col-sm-2 control-box">
-                            Post Office:
+                            Initial Post Office:
                         </label>
                         <div class="col-md-2">
-                        <select  name="officePost" required="required">
-                        @for(office <- offices) {
-                            <option value="@office.id">@office.name</option>
-                        }
-                        </select>
+                            @if(currentUser.typeOfUser==UserType.ADMIN) {
+                                <select name="officePost" required="required">
+                                @for(office <- offices) {
+                                    <option value="@office.name">@office.name</option>
+                                }
+                                </select>
+                            }else{
+                                <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="officePost" type="text" readonly/>
+                            }
                         </div>
                     </div>
 

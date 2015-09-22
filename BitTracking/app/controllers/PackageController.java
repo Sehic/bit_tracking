@@ -40,12 +40,13 @@ public class PackageController extends Controller {
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result addPackage() {
 
+        User u1 = SessionHelper.getCurrentUser(ctx());
         List<PostOffice> offices = PostOffice.findOffice.findList();
         if (offices == null || offices.size() == 0) {
             return ok(adminpostofficeadd.render());
         }
 
-        return ok(packageadd.render(PostOffice.findOffice.findList(), newPackage));
+        return ok(packageadd.render(PostOffice.findOffice.findList(), newPackage, u1));
     }
 
     /**
@@ -55,24 +56,25 @@ public class PackageController extends Controller {
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result savePackage() {
-
+        User u1 = SessionHelper.getCurrentUser(ctx());
         Form<models.Package> boundForm = newPackage.bindFromRequest();
 
-        String id = boundForm.field("officePost").value();
-
-        PostOffice office = PostOffice.findPostOffice(Long.parseLong(id));
+        String officeName = boundForm.field("officePost").value();
+        PostOffice office = PostOffice.findPostOfficeByName(officeName);
         Package pack = new Package();
+
         try {
             pack = boundForm.get();
+
             pack.trackingNum = (UUID.randomUUID().toString());
-            
+
             pack.save();
 
         } catch (IllegalStateException e) {
 
             flash("wrongFormatBoth", "Please insert numbers only!");
 
-            return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm));
+            return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm, u1));
         }
 
         Shipment ship = new Shipment();
@@ -103,7 +105,7 @@ public class PackageController extends Controller {
         }
 
         Ebean.delete(p);
-        return ok(packageadd.render(PostOffice.findOffice.findList(), newPackage));
+   return redirect(routes.PackageController.adminPackage());
 
     }
 
