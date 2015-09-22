@@ -38,6 +38,8 @@
                     <th>Route</th>
                     <th>Destination</th>
                     <th>Post Office</th>
+                    <th>Weight</th>
+                    <th>Price</th>
                     <th>Delete</th>
                 </tr>
             </thead>
@@ -65,6 +67,8 @@
                     } else {
                         <td></td>
                     }
+                    <td>@pack.weight kg</td>
+                    <td>@pack.price KM</td>
                     <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input class="btn-link" type="button" value="Delete"></a></td>
                 </tr>
             }

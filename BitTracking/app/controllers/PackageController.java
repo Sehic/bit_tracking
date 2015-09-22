@@ -6,6 +6,7 @@ import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.Package;
 import models.*;
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -19,6 +20,8 @@ import java.util.*;
  * Created by USER on 9.9.2015.
  */
 public class PackageController extends Controller {
+
+    private static final Form<Package> newPackage = new Form<Package>(Package.class);
 
     /**
      * Method that shows up list of all packages in post office
@@ -44,7 +47,7 @@ public class PackageController extends Controller {
             return ok(adminpostofficeadd.render());
         }
 
-        return ok(packageadd.render(PostOffice.findOffice.findList()));
+        return ok(packageadd.render(PostOffice.findOffice.findList(), newPackage));
     }
 
     /**
@@ -65,7 +68,36 @@ public class PackageController extends Controller {
 
         pack.destination = form.get("destination");
         pack.trackingNum = (UUID.randomUUID().toString());
-        Ebean.save(pack);
+
+        boolean weightOkay = true;
+        boolean priceOkay = true;
+
+        try {
+            pack.weight = Double.parseDouble(form.get("weight"));
+        } catch (NumberFormatException e) {
+            weightOkay = false;
+        }
+
+        try {
+            pack.price = Double.parseDouble(form.get("price"));
+        } catch (NumberFormatException e) {
+            priceOkay = false;
+        }
+
+        if (!priceOkay && !weightOkay) {
+            flash("wrongFormatBoth", "Please insert numbers only!");
+        } else if (!priceOkay) {
+            flash("wrongFormatPrice", "Please insert numbers only!");
+        } else if (!weightOkay) {
+            flash("wrongFormatWeight", "Please insert numbers only!");
+        }
+
+        Form<models.Package> boundForm = newPackage.bindFromRequest();
+        if (!priceOkay || !weightOkay) {
+            return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm));
+        }
+
+        pack.save();
 
         Shipment ship = new Shipment();
         ship.packageId = pack;
@@ -89,14 +121,13 @@ public class PackageController extends Controller {
 
         Package p = Package.findPackageById(id);
 
-            for (int i = 0; i < p.shipmentPackages.size(); i++) {
+        for (int i = 0; i < p.shipmentPackages.size(); i++) {
 
-                p.shipmentPackages.remove(i);
-                Ebean.delete(p.shipmentPackages.get(i));
-            }
+            Ebean.delete(p.shipmentPackages.get(i));
+        }
 
-            Ebean.delete(p);
-            return ok(packageadd.render(PostOffice.findOffice.findList()));
+        Ebean.delete(p);
+        return ok(packageadd.render(PostOffice.findOffice.findList(), newPackage));
 
     }
 
@@ -121,6 +152,7 @@ public class PackageController extends Controller {
     public Result editPackage(Long id) {
         return ok(packagedetails.render(Package.findPackageById(id), PostOffice.findOffice.findList()));
     }
+
     @Security.Authenticated(Authenticators.AdminDeliveryWorkerFilter.class)
     public Result updateStatus(Long id) {
 
@@ -161,6 +193,7 @@ public class PackageController extends Controller {
         }
         return ok(deliveryworkerpanel.render(packages));
     }
+
     @Security.Authenticated(Authenticators.AdminDeliveryWorkerFilter.class)
     public Result changePackageStatus(Long id) {
 
