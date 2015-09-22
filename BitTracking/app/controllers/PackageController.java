@@ -65,10 +65,7 @@ public class PackageController extends Controller {
         try {
             pack = boundForm.get();
             pack.trackingNum = (UUID.randomUUID().toString());
-
-            System.out.println(pack.weight);
-            System.out.println(pack.price);
-
+            
             pack.save();
 
         } catch (IllegalStateException e) {
@@ -136,17 +133,18 @@ public class PackageController extends Controller {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
         Package pack = Package.finder.byId(id);
-        if (u1 != null && (u1.typeOfUser == UserType.ADMIN || u1.typeOfUser == UserType.DELIVERY_WORKER)) {
+        Calendar c = null;
+        Date date = null;
 
+        if (u1 != null && (u1.typeOfUser == UserType.ADMIN || u1.typeOfUser == UserType.DELIVERY_WORKER)) {
 
             List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
 
             for (int i = 0; i < shipments.size(); i++) {
                 if (shipments.get(i).status == StatusHelper.READY_FOR_SHIPPING) {
                     shipments.get(i).status = StatusHelper.OUT_FOR_DELIVERY;
-                    System.out.println(shipments.get(i).postOfficeId.name);
-                    Calendar c = Calendar.getInstance();
-                    Date date = c.getTime();
+                    c = Calendar.getInstance();
+                    date = c.getTime();
                     shipments.get(i).dateCreated = date;
                     Ebean.update(shipments.get(i));
                     shipments.get(i + 1).status = StatusHelper.RECEIVED;
@@ -155,37 +153,37 @@ public class PackageController extends Controller {
                 }
             }
             List<Package> packages = new ArrayList<>();
-            List<Shipment> shipments1 = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", u1.postOffice).findList();
+            List<Shipment> shipmentByOfficeAndStatus = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", u1.postOffice).findList();
 
-            for (int i = 0; i < shipments1.size(); i++) {
+            for (int i = 0; i < shipmentByOfficeAndStatus.size(); i++) {
 
-                packages.add(shipments1.get(i).packageId);
+                packages.add(shipmentByOfficeAndStatus.get(i).packageId);
             }
             return ok(deliveryworkerpanel.render(packages));
 
         } else if (u1 != null && u1.typeOfUser == UserType.OFFICE_WORKER) {
-            List<Shipment> shipments = Shipment.shipmentFinder.where().eq("postOfficeId", u1.postOffice).findList();
+            List<Shipment> shipmentsByPostOffice = Shipment.shipmentFinder.where().eq("postOfficeId", u1.postOffice).findList();
             List<Package> packages = new ArrayList<>();
-            for (int i = 0; i < shipments.size(); i++) {
-                packages.add(shipments.get(i).packageId);
-                if (shipments.get(i).packageId.id == pack.id) {
+            for (int i = 0; i < shipmentsByPostOffice.size(); i++) {
+                packages.add(shipmentsByPostOffice.get(i).packageId);
+                if (shipmentsByPostOffice.get(i).packageId.id == pack.id) {
                     if (pack.destination.equals(u1.postOffice.address)) {
                         packages.remove(i);
-                        List<Shipment> shipmentss = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
-                        for (int j = 0; j < shipmentss.size(); j++) {
-                            shipmentss.get(j).status = StatusHelper.DELIVERED;
-                            Ebean.update(shipmentss.get(j));
+                        List<Shipment> shipmentByPackage = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
+                        for (int j = 0; j < shipmentByPackage.size(); j++) {
+                            shipmentByPackage.get(j).status = StatusHelper.DELIVERED;
+                            Ebean.update(shipmentByPackage.get(j));
                         }
-                        int last = shipmentss.size() - 1;
-                        Calendar c = Calendar.getInstance();
-                        Date date = c.getTime();
-                        shipmentss.get(last).dateCreated = date;
-                        Ebean.update(shipmentss.get(last));
-                        packages.add(shipmentss.get(last).packageId);
+                        int last = shipmentByPackage.size() - 1;
+                        c = Calendar.getInstance();
+                        date = c.getTime();
+                        shipmentByPackage.get(last).dateCreated = date;
+                        Ebean.update(shipmentByPackage.get(last));
+                        packages.add(shipmentByPackage.get(last).packageId);
                         break;
                     }
-                    shipments.get(i).status = StatusHelper.READY_FOR_SHIPPING;
-                    Ebean.update(shipments.get(i));
+                    shipmentsByPostOffice.get(i).status = StatusHelper.READY_FOR_SHIPPING;
+                    Ebean.update(shipmentsByPostOffice.get(i));
                 }
             }
             return ok(officeworkerpanel.render(packages, u1.postOffice));

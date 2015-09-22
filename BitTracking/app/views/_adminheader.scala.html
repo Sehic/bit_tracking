@@ -1,0 +1,96 @@
+@import helpers.SessionHelper
+@()(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
+
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="navbar-header">
+        @if(currentUser.typeOfUser == UserType.ADMIN) {
+            <div class="logo"><h1>Admin Panel</h1></div>
+        }
+        @if(currentUser.typeOfUser == UserType.OFFICE_WORKER) {
+            <div class="logo"><h1>Office Worker Panel</h1></div>
+        }
+        @if(currentUser.typeOfUser == UserType.DELIVERY_WORKER) {
+            <div class="logo"><h1>Delivery Worker Panel</h1></div>
+        }
+
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+
+    </div>
+    <ul class="nav navbar-inverse pull-right">
+
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>
+                @if(currentUser != null && currentUser.typeOfUser == UserType.OFFICE_WORKER) {
+                    Office Worker
+                } else {
+                    Admin
+                }
+                <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="@routes.UserController.userProfile(currentUser.id)"><i class="fa fa-fw fa-user"></i>
+                        Profile</a>
+                </li>
+                <li>
+                    <a href="@routes.UserController.adminPreferences(currentUser.id)"><i class="fa fa-fw fa-gear"></i>
+                        Settings</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="javascript:;" data-toggle="modal" data-target="#confirmModal"><i class="fa fa-sign-out"></i>
+                        Log Out</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+
+<div class="template-page-wrapper">
+    <div class="navbar-collapse collapse templatemo-sidebar">
+        <ul class="templatemo-sidebar-menu">
+            <li>
+                <form class="navbar-form">
+                    <input type="text" class="form-control" id="templatemo_search_box" placeholder="Search...">
+                    <span class="btn btn-default">Go</span>
+                </form>
+            </li>
+            <li class="active"><a href="@routes.Application.adminPanel()"><i class="fa fa-home"></i>
+                Dashboard</a>
+            </li>
+            <li class="sub">
+                <a href="javascript:;">
+                    <i class="fa fa-database"></i>
+                    Menu <div class="pull-right"><span class="caret"></span></div>
+                </a>
+                <ul class="templatemo-submenu">
+                    <li><a href="@routes.Application.index()">Home</a></li>
+                    <li><a href="#">Ship</a></li>
+                    <li><a href="#">Track</a></li>
+                    <li><a href="#">Locations</a></li>
+                    <li><a href="#">BT Solutions</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </li>
+            <li><a href="@routes.Application.adminMaps()"><i class="fa fa-map-marker"></i> <span class="badge pull-right">
+                1</span>
+                Maps</a>
+            </li>
+            <li><a href="@routes.Application.adminTables()"><i class="fa fa-users"></i> <span class="badge pull-right">
+                NEW</span>
+                Manage</a>
+            </li>
+            <li><a href="@routes.UserController.adminPreferences(currentUser.id)"><i class="fa fa-cog"></i>
+                Preferences</a>
+            </li>
+            <li><a href="javascript:;" data-toggle="modal" data-target="#confirmModal"><i class="fa fa-sign-out"></i>
+                Sign Out</a>
+            </li>
+        </ul>
+    </div> <!--/.navbar-collapse -->
+</div>

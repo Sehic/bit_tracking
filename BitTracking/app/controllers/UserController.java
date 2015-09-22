@@ -312,10 +312,13 @@ public class UserController extends Controller {
             user.typeOfUser = UserType.OFFICE_WORKER;
             user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
 
-        } else {
+        } else if(userType.equals("Delivery Worker")) {
 
+            user.typeOfUser = UserType.DELIVERY_WORKER;
+            user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
+
+        }else {
             user.typeOfUser = UserType.REGISTERED_USER;
-
         }
         Ebean.update(user);
 

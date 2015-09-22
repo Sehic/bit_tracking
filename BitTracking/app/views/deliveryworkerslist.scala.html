@@ -18,25 +18,25 @@
             </ul>
         </div>
     </div>
+    <hr/>
+            <a href="@routes.Application.registerWorker()"><button type="button" class="btn btn-primary btn-group-sm">
+                Add Delivery Worker</button></a>
+    <hr/>
 
-    <div class="btn-group pull-right" id="templatemo_sort_btn">
-        <a href="@routes.Application.registerWorker()"><button type="button" class="btn btn-primary btn-lg">
-            Add Delivery Worker</button></a>
-
-    </div>
 
     <div class="row">
         <div class="col-md-12">
 
             <div class="table-responsive">
                 <h4 class="margin-bottom-15">Delivery Workers List</h4>
-                <table id="example" class="display" cellspacing="0" width="100%">
+                <table id="example" class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
+                            <th>Post Office</th>
                             <th>User Profile</th>
                             <th>Delete</th>
                         </tr>
@@ -48,6 +48,9 @@
                             <td><a href="@routes.Application.deliveryWorkerPanel()">@user.firstName</a></td>
                             <td><a href="@routes.Application.deliveryWorkerPanel()">@user.lastName</a></td>
                             <td>@user.email</td>
+                            @if(user.postOffice != null) {
+                                <td>@user.postOffice.name</td>
+                            }
                             <td><form action="@routes.UserController.userProfile(user.id)"><input type="submit" value="Edit"></form></td>
                             <td><a data-role="delete" data-delete-parent="tr" href="@routes.UserController.deleteUser(user.id)" role="button"><input type="button" value="Delete"></a></td>
                         </tr>
