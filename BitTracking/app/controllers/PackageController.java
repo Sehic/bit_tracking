@@ -58,46 +58,29 @@ public class PackageController extends Controller {
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result savePackage() {
 
-        DynamicForm form = Form.form().bindFromRequest();
+        Form<models.Package> boundForm = newPackage.bindFromRequest();
 
-        String id = form.bindFromRequest().field("officePost").value();
+        String id = boundForm.field("officePost").value();
 
         PostOffice office = PostOffice.findPostOffice(Long.parseLong(id));
-
         Package pack = new Package();
-
-        pack.destination = form.get("destination");
-        pack.trackingNum = (UUID.randomUUID().toString());
-
-        boolean weightOkay = true;
-        boolean priceOkay = true;
-
         try {
-            pack.weight = Double.parseDouble(form.get("weight"));
-        } catch (NumberFormatException e) {
-            weightOkay = false;
-        }
+            pack = boundForm.get();
+            pack.trackingNum = (UUID.randomUUID().toString());
 
-        try {
-            pack.price = Double.parseDouble(form.get("price"));
-        } catch (NumberFormatException e) {
-            priceOkay = false;
-        }
+            System.out.println(pack.weight);
+            System.out.println(pack.price);
 
-        if (!priceOkay && !weightOkay) {
-            flash("wrongFormatBoth", "Please insert numbers only!");
-        } else if (!priceOkay) {
-            flash("wrongFormatPrice", "Please insert numbers only!");
-        } else if (!weightOkay) {
-            flash("wrongFormatWeight", "Please insert numbers only!");
-        }
+            pack.save();
 
-        Form<models.Package> boundForm = newPackage.bindFromRequest();
-        if (!priceOkay || !weightOkay) {
+        }catch(IllegalStateException e){
+
+                flash("wrongFormatBoth", "Please insert numbers only!");
+
             return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm));
         }
 
-        pack.save();
+
 
         Shipment ship = new Shipment();
         ship.packageId = pack;
