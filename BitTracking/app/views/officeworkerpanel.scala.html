@@ -24,45 +24,57 @@
         <th>Post Office</th>
         <th>Status</th>
           <th>Timestamp</th>
+          <th>Change status</th>
         <th>Delete</th>
       </tr>
     </thead>
     <tbody>
     @for(pack <- packs) {
-      <tr class="succes">
-        <td>@pack.id</td>
-        <td>@pack.trackingNum</td>
-          @if(pack.shipmentPackages == null) {
-              <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
-          }else {
-              <td>
+        <tr class="succes">
+            <td>@pack.id</td>
+            <td>@pack.trackingNum</td>
+            @if(pack.shipmentPackages == null) {
+                <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
+            }else {
+                <td>
 
-              @for(shipments: Shipment <- pack.shipmentPackages) {
-              @shipments.postOfficeId.name
-              }
-              </td>
-          }
+                @for(shipments: Shipment <- pack.shipmentPackages) {
+                    @shipments.postOfficeId.name
+                }
+                </td>
+            }
 
 
-        <td><a href="@routes.PackageController.editPackage(pack.id)">@pack.destination</a></td>
+            <td><a href="@routes.PackageController.editPackage(pack.id)">@pack.destination</a></td>
 
-          @if(pack.shipmentPackages.size()!=0) {
-              @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
-                  @if(shipmentFromThisPackage.postOfficeId.id == workerOffice.id) {
-                      <td>@shipmentFromThisPackage.postOfficeId.name</td>
-                      <td>@shipmentFromThisPackage.status</td>
-                      @if(shipmentFromThisPackage.dateCreated !=null) {
-                          <td>@shipmentFromThisPackage.dateCreated</td>
-                      }else {
-                          <td></td>
-                      }
-                  }
-              }
+            @if(pack.shipmentPackages.size()!=0) {
+                @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
+                    @if(shipmentFromThisPackage.postOfficeId.id == workerOffice.id) {
+                        <td>@shipmentFromThisPackage.postOfficeId.name</td>
+                        <td>@shipmentFromThisPackage.status</td>
+                        @if(shipmentFromThisPackage.dateCreated !=null) {
+                            <td>@shipmentFromThisPackage.dateCreated</td>
+                        }else {
+                            <td></td>
+                        }
+                        @if(shipmentFromThisPackage.status == helpers.StatusHelper.RECEIVED){
+                            @helper.form(routes.PackageController.updateStatus(pack.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
+                                <td><button type="submit" class="btn-default">Done</button></td>
+                            }
 
-          }
-          <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input class="btn-link" type="button" value="Delete"></a></td>
+                        }else {
+                            <td></td>
+                        }
+                        @if(shipmentFromThisPackage.status == helpers.StatusHelper.DELIVERED){
+                            <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input class="btn-link" type="button" value="Delete"></a></td>
+                        }else {
+                            <td></td>
+                        }
+                    }
+                }
 
-      </tr>
+            }
+        </tr>
     }
 
     </tbody>

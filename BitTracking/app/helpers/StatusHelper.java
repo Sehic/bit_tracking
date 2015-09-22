@@ -13,5 +13,7 @@ public enum StatusHelper {
     @EnumValue("3")
     OUT_FOR_DELIVERY,
     @EnumValue("4")
-    DELIVERED
+    DELIVERED,
+    @EnumValue("5")
+    RECEIVED
 }

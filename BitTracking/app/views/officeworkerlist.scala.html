@@ -55,7 +55,7 @@
                                 <td></td>
                             }
                             <td><form action="@routes.UserController.userProfile(user.id)"><input type="submit" value="Edit"></form></td>
-                            <td><form action="@routes.UserController.deleteUser(user.id)"><input type="submit" value="Delete"></form></td>
+                            <td><a data-role="delete" data-delete-parent="tr" href="@routes.UserController.deleteUser(user.id)" role="button"><input type="button" value="Delete"></a></td>
                         </tr>
                     }
 
