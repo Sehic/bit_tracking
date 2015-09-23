@@ -116,7 +116,6 @@ $(document).ready(function () {
     });
 });
 
-
 $(document).ready(function () {
     $("#inputEmail3").blur(function () {
         var email = $("#inputEmail3").val();
@@ -125,16 +124,16 @@ $(document).ready(function () {
             type: "post",
             data: "email=" + email
         }).success(function (response) {
-
+            $('#buttonsubmit').prop('disabled', false);
         }).error(function (response) {
             $("#mailError").text("Email already exists");
+            $('#buttonsubmit').prop('disabled', true);
         })
     });
 });
-
 //Cookie controller
 function setCookies() {
-    var email = document.getElementById("inputEmail3").value;
+    var email = document.getElementById("inputEmail").value;
     if (document.getElementById("box1").checked) {
         document.cookie = "email=" + email + "; expires=Thu, 18 Dec 2020 12:00:00 UTC";
     }

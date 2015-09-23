@@ -88,27 +88,20 @@
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <b style="color : red">
-                            @if(flash.containsKey("errorEmptyName")) {
-                                @flash.get("errorEmptyName")
-                            } else {
 
-                                @if(flash.containsKey("errorEmail")) {
-                                    @flash.get("errorEmail")
-                                }
-                                @if(flash.containsKey("errorPassword")) {
-                                    @flash.get("errorPassword")
-                                }
-                                @if(flash.containsKey("errorName")) {
-                                    @flash.get("errorName")
-                                }
-                            }</b>
+                                @flash.get("errorEmptyName")
+                                @flash.get("errorEmail")
+                                @flash.get("errorPassword")
+                                @flash.get("errorName")
+
+                            </b>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
 
-                            <input type="submit" class="btn btn-information btn-info" value="Register">
+                            <input id="buttonsubmit" type="submit" class="btn btn-information btn-info" value="Register">
 
                         </div>
                     </div>

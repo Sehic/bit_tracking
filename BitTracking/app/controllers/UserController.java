@@ -64,7 +64,12 @@ public class UserController extends Controller {
 
         Form<User> boundForm = newUser.bindFromRequest();
         //Creating user using form values (register.scala.html)
-        User userFromForm = boundForm.get();
+        User userFromForm = new User();
+        try {
+            userFromForm = boundForm.get();
+        }catch(Exception e){
+            return badRequest(register.render(boundForm));
+        }
         //Getting password confirmation field on this way because it is not attribute
         String repassword = boundForm.bindFromRequest().field("repassword").value();
         //Creating new user where we will check if mail exists in database
