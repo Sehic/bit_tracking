@@ -52,8 +52,10 @@ public class User extends Model {
     public List<Package> packages = new ArrayList<>();
 
 
-    public User() {
-    }
+    /**
+     * Empty constructor for user
+     */
+    public User() {}
 
     /**
      * Constructor for registered user
@@ -87,11 +89,10 @@ public class User extends Model {
         this.email = email;
         this.typeOfUser = UserType.OFFICE_WORKER;
         this.postOffice = postOffice;
-
     }
 
 
-    public static Finder<String, User> find = new Finder<String, User>(String.class, User.class);
+    public static Finder<String, User> find = new Finder<String, User>(User.class);
 
     /**
      * Method that checks if user exists in database
@@ -101,12 +102,11 @@ public class User extends Model {
      * @return - user if it finds him, otherwise null
      */
     public static User findEmailAndPassword(String email, String password) {
-
-        List<User> list = find.where().eq("email", email).eq("password", password).findList();
-        if (list.size() == 0) {
-            return null;
+        User user = find.where().eq("email", email).eq("password", password).findUnique();
+        if (user != null) {
+            return user;
         }
-        return (User) (list.get(0));
+        return null;
     }
 
 
@@ -117,11 +117,11 @@ public class User extends Model {
      * @return null if email doesnt exist in database, otherwise 1
      */
     public static User checkEmail(String email) {
-        List<User> listEmail = find.where().eq("email", email).findList();
-        if (listEmail.size() == 0) {
-            return null;
+        User user = find.where().eq("email", email).findUnique();
+        if (user != null) {
+            return user;
         }
-        return (User) (listEmail.get(0));
+        return null;
     }
 
     /**
@@ -131,8 +131,9 @@ public class User extends Model {
      */
     public static boolean checkName(String name) {
         for (int i = 0; i < name.length(); i++) {
-            if ((name.charAt(i) < 65) || (name.charAt(i) > 90 &&
-                    name.charAt(i) < 97) || (name.charAt(i) > 122 && name.charAt(i) < 262) ||
+            if ((name.charAt(i) < 65) ||
+                    (name.charAt(i) > 90 && name.charAt(i) < 97) ||
+                    (name.charAt(i) > 122 && name.charAt(i) < 262) ||
                     (name.charAt(i) > 263 && name.charAt(i) < 268) ||
                     (name.charAt(i) > 269 && name.charAt(i) < 272) ||
                     (name.charAt(i) > 273 && name.charAt(i) < 352) ||
@@ -145,7 +146,8 @@ public class User extends Model {
     }
 
     /**
-     * Checks if password has more then 6 letters
+     * Checks if password has more then 6 letters,
+     * and does it contain at least one number and one letter
      * @param password
      * @return
      */
@@ -169,8 +171,7 @@ public class User extends Model {
     }
 
     public static User findById(Long longId) {
-        String id = longId.toString();
-        User user = find.byId(id);
+        User user = find.byId(longId.toString());
         if (user != null) {
             return user;
         }
@@ -181,6 +182,13 @@ public class User extends Model {
         return find.where().eq("typeOfUser", UserType.OFFICE_WORKER).findList();
     }
 
+    public static List<User> findDeliverWorkers() {
+        return find.where().eq("typeOfUser", UserType.DELIVERY_WORKER).findList();
+    }
+
+    public static List<User> findRegisteredUsers() {
+        return find.where().eq("typeOfUser", UserType.REGISTERED_USER).findList();
+    }
 
     @Override
     public String toString() {
