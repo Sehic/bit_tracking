@@ -207,6 +207,7 @@ public class UserController extends Controller {
      * @param id - user on that id
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result updateUser(Long id) {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
@@ -227,6 +228,7 @@ public class UserController extends Controller {
         if (User.checkName(user.firstName) && User.checkName(user.lastName)) {
             if (user.password.equals(repassword)) {
                 user.password = getEncriptedPasswordMD5(user.password);
+
                 Ebean.update(user);
                 if (user.typeOfUser != UserType.ADMIN) {
                     return redirect(routes.Application.index());
@@ -243,13 +245,9 @@ public class UserController extends Controller {
      * @param id - user id
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result deleteUser(Long id) {
 
-        User u1 = SessionHelper.getCurrentUser(ctx());
-
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
         User user = User.findById(id);
         if (user == null || user.typeOfUser == UserType.ADMIN) {
             return redirect(routes.Application.index());
@@ -264,13 +262,10 @@ public class UserController extends Controller {
      * @param id
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result adminPreferences(Long id) {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
-
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
 
         User user = User.findById(id);
         if (user == null || u1.id != user.id) {
@@ -310,6 +305,7 @@ public class UserController extends Controller {
      * @param id - edited user id
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result updateUserType(Long id) {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
