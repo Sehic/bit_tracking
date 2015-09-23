@@ -100,12 +100,11 @@ public class PackageController extends Controller {
         Package p = Package.findPackageById(id);
 
         for (int i = 0; i < p.shipmentPackages.size(); i++) {
-
-            Ebean.delete(p.shipmentPackages.get(i));
+            p.shipmentPackages.get(i).delete();
         }
 
-        Ebean.delete(p);
-   return redirect(routes.PackageController.adminPackage());
+        p.delete();
+        return redirect(routes.PackageController.adminPackage());
 
     }
 

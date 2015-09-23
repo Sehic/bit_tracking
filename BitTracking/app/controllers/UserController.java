@@ -33,7 +33,6 @@ public class UserController extends Controller {
 
     private static final Form<User> newUser = new Form<User>(User.class);
 
-
     /**
      * This method is used for checking if user inserted data is valid.
      *
@@ -105,16 +104,14 @@ public class UserController extends Controller {
 
         u = new User(u.firstName, u.lastName, newPassword, u.email);
 
-        Ebean.save(u);
+        u.save();
 
         if (u.id == 1) {
             u.typeOfUser = UserType.ADMIN;
-            Ebean.update(u);
+            u.update();
         }
 
         return redirect(routes.Application.login());
-
-
     }
 
     /**
@@ -180,14 +177,14 @@ public class UserController extends Controller {
                     path = new ImagePath();
                     path.image_url = "/assets/images/" + fileName;
                     path.profilePhoto = user;
-                    Ebean.save(path);
+                    path.save();
                     user.imagePath = path;
-                    Ebean.update(user);
+                    user.update();
                 } else {
                     String deletePic = "./public/images/" + path.image_url.split("/", 4)[3];
                     Logger.info(deletePic);
                     path.image_url = "/assets/images/" + fileName;
-                    Ebean.update(path);
+                    path.update();
                     FileUtils.deleteQuietly(new File(deletePic));
                 }
 
@@ -200,14 +197,12 @@ public class UserController extends Controller {
         }
     }
 
-
     /**
      * Method that updates user firstname, lastname and password
      *
      * @param id - user on that id
      * @return
      */
-    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result updateUser(Long id) {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
@@ -217,26 +212,32 @@ public class UserController extends Controller {
             return redirect(routes.Application.index());
         }
 
-        Form<User> filledForm = newUser.fill(user);
+        Form<User> filledForm = newUser.bindFromRequest();
 
-        user.firstName = filledForm.bindFromRequest().field("firstName").value();
-        user.lastName = filledForm.bindFromRequest().field("lastName").value();
-        user.password = filledForm.bindFromRequest().field("password").value();
+        user.firstName = filledForm.field("firstName").value();
+        user.lastName = filledForm.field("lastName").value();
+        user.password = filledForm.field("password").value();
 
-        String repassword = filledForm.bindFromRequest().field("repassword").value();
-
-        if (User.checkName(user.firstName) && User.checkName(user.lastName)) {
-            if (user.password.equals(repassword)) {
-                user.password = getEncriptedPasswordMD5(user.password);
-
-                Ebean.update(user);
-                if (user.typeOfUser != UserType.ADMIN) {
-                    return redirect(routes.Application.index());
-                }
-                return redirect(routes.Application.adminPanel());
-            }
+        String repassword = filledForm.field("repassword").value();
+        ImagePath path = ImagePath.findByUser(user);
+        if (!User.checkName(user.firstName)) {
+            flash("errorName", "Your name should have only letters.");
+            return badRequest(editprofile.render(user, path));
         }
-        return redirect(routes.Application.login());
+
+        if (!User.checkName(user.lastName)) {
+            flash("errorLastName", "Your last name should have only letters.");
+            return badRequest(editprofile.render(user, path));
+        }
+
+        if (!user.password.equals(repassword)) {
+
+            return badRequest(editprofile.render(user, path));
+        }
+            user.password = getEncriptedPasswordMD5(user.password);
+            user.update();
+
+        return redirect(routes.UserController.userProfile(user.id));
     }
 
     /**
@@ -252,7 +253,7 @@ public class UserController extends Controller {
         if (user == null || user.typeOfUser == UserType.ADMIN) {
             return redirect(routes.Application.index());
         }
-        Ebean.delete(user);
+        user.delete();
         return redirect(routes.Application.adminTables());
     }
 
@@ -333,7 +334,7 @@ public class UserController extends Controller {
         } else {
             user.typeOfUser = UserType.REGISTERED_USER;
         }
-        Ebean.update(user);
+        user.update();
 
         return redirect(routes.Application.adminPanel());
     }
@@ -364,22 +365,22 @@ public class UserController extends Controller {
 
         if (!u.checkName(u.firstName)) {
             flash("errorName", "Your name should have only letters.");
-            return ok(adminworkeradd.render(postOffices, boundForm));
+            return badRequest(adminworkeradd.render(postOffices, boundForm));
         }
 
         if (!u.checkName(u.lastName)) {
             flash("errorLastName", "Your last name should have only letters.");
-            return ok(adminworkeradd.render(postOffices, boundForm));
+            return badRequest(adminworkeradd.render(postOffices, boundForm));
         }
 
         if (!u.checkPassword(u.password)) {
             flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters and one number");
-            return ok(adminworkeradd.render(postOffices, boundForm));
+            return badRequest(adminworkeradd.render(postOffices, boundForm));
         }
 
         if (!u.password.equals(repassword)) {
             flash("errorTwoPasswords", "You entered different passwords");
-            return ok(adminworkeradd.render(postOffices, boundForm));
+            return badRequest(adminworkeradd.render(postOffices, boundForm));
         }
 
         String newPassword = getEncriptedPasswordMD5(password);
@@ -393,14 +394,11 @@ public class UserController extends Controller {
         } else {
             u.typeOfUser = UserType.DELIVERY_WORKER;
         }
-
         u.save();
 
         return redirect(routes.Application.adminTables());
 
-
     }
-
 
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result officeWorkerPanel() {

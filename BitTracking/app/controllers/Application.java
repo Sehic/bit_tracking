@@ -178,7 +178,6 @@ public class Application extends Controller {
         for (int i = 0; i < shipments.size(); i++) {
 
             packages.add(shipments.get(i).packageId);
-            System.out.println(packages.get(i).destination);
         }
 
         return ok(deliveryworkerpanel.render(packages));
