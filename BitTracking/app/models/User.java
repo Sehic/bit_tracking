@@ -190,4 +190,12 @@ public class User extends Model {
                 ", password=" + password +
                 ", email=" + email;
     }
+
+    public static class UserFormHelper{
+
+        public String firstName;
+        public String lastName;
+        public String password;
+        public String email;
+    }
 }

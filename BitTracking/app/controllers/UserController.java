@@ -1,11 +1,13 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import helpers.Authenticators;
 import helpers.CurrentUser;
 import helpers.SessionHelper;
 import models.*;
 import models.Package;
 import play.Logger;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -69,39 +71,50 @@ public class UserController extends Controller {
         //Creating new user where we will check if mail exists in database
         User u = User.checkEmail(userFromForm.email);
         //If user is not found, that means we can proceed creating new user
-        if (u == null) {
-            u = new User(userFromForm.firstName, userFromForm.lastName, userFromForm.password, userFromForm.email);
-
-            if (u.checkName(u.firstName) && u.checkName(u.lastName)) {
-
-                if (u.checkPassword(u.password) && u.password.equals(repassword)) {
-                    String newPassword = getEncriptedPasswordMD5(u.password);
-
-                    u.firstName = u.firstName.substring(0,1).toUpperCase() + u.firstName.substring(1);
-                    u.lastName = u.lastName.substring(0,1).toUpperCase() + u.lastName.substring(1);
-
-                    u = new User(u.firstName, u.lastName, newPassword, u.email);
-
-                    Ebean.save(u);
-                    if (u.id == 1) {
-                        u.typeOfUser = UserType.ADMIN;
-                        Ebean.update(u);
-                    }
-                    flash("registered", "Welcome, " + u.firstName + "!");
-                    return redirect(routes.Application.login());
-                } else {
-                    flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters, one number, and one sign, or you entered different passwords");
-                    return badRequest(register.render(boundForm));
-                }
-            } else {
-                flash("errorName", "Your name or last name should have only letters.");
-                return badRequest(register.render(boundForm));
-                //return ok(register.render());
-            }
-        } else {
+        if (u != null) {
             flash("errorEmail", "E-mail address already exists!");
             return badRequest(register.render(boundForm));
         }
+
+        u = new User(userFromForm.firstName, userFromForm.lastName, userFromForm.password, userFromForm.email);
+
+        if (!u.checkName(u.firstName)) {
+            flash("errorName", "Your name should have only letters.");
+            return badRequest(register.render(boundForm));
+        }
+
+        if (!u.checkName(u.lastName)) {
+            flash("errorLastName", "Your last name should have only letters.");
+            return badRequest(register.render(boundForm));
+        }
+
+        if (!u.checkPassword(u.password)) {
+            flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters and one number");
+            return badRequest(register.render(boundForm));
+        }
+
+        if (!u.password.equals(repassword)) {
+            flash("errorTwoPasswords", "You entered different passwords");
+            return badRequest(register.render(boundForm));
+        }
+
+        String newPassword = getEncriptedPasswordMD5(u.password);
+
+        u.firstName = u.firstName.substring(0, 1).toUpperCase() + u.firstName.substring(1);
+        u.lastName = u.lastName.substring(0, 1).toUpperCase() + u.lastName.substring(1);
+
+        u = new User(u.firstName, u.lastName, newPassword, u.email);
+
+        Ebean.save(u);
+
+        if (u.id == 1) {
+            u.typeOfUser = UserType.ADMIN;
+            Ebean.update(u);
+        }
+
+        return redirect(routes.Application.login());
+
+
     }
 
     /**
@@ -226,6 +239,7 @@ public class UserController extends Controller {
 
     /**
      * Method that deletes user from database
+     *
      * @param id - user id
      * @return
      */
@@ -237,7 +251,7 @@ public class UserController extends Controller {
             return redirect(routes.Application.index());
         }
         User user = User.findById(id);
-        if(user == null || user.typeOfUser == UserType.ADMIN){
+        if (user == null || user.typeOfUser == UserType.ADMIN) {
             return redirect(routes.Application.index());
         }
         Ebean.delete(user);
@@ -246,6 +260,7 @@ public class UserController extends Controller {
 
     /**
      * Method that opens up admin profile (adminpreferences.scala.html)
+     *
      * @param id
      * @return
      */
@@ -267,6 +282,7 @@ public class UserController extends Controller {
 
     /**
      * Method that opens up user profile (userprofile.scala.html)
+     *
      * @param id - edited user id
      * @return
      */
@@ -290,6 +306,7 @@ public class UserController extends Controller {
 
     /**
      * Method that is used for updating type of user (userprofile.scala.html)
+     *
      * @param id - edited user id
      * @return
      */
@@ -312,12 +329,12 @@ public class UserController extends Controller {
             user.typeOfUser = UserType.OFFICE_WORKER;
             user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
 
-        } else if(userType.equals("Delivery Worker")) {
+        } else if (userType.equals("Delivery Worker")) {
 
             user.typeOfUser = UserType.DELIVERY_WORKER;
             user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
 
-        }else {
+        } else {
             user.typeOfUser = UserType.REGISTERED_USER;
         }
         Ebean.update(user);
@@ -325,20 +342,15 @@ public class UserController extends Controller {
         return redirect(routes.Application.adminPanel());
     }
 
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result addWorker() {
 
-        User u1 = SessionHelper.getCurrentUser(ctx());
-
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN) {
-            return redirect(routes.Application.index());
-        }
-
         Form<User> boundForm = newUser.bindFromRequest();
-        String firstName = boundForm.bindFromRequest().field("firstName").value();
-        String lastName = boundForm.bindFromRequest().field("lastName").value();
-        String password = boundForm.bindFromRequest().field("password").value();
-        String repassword = boundForm.bindFromRequest().field("repassword").value();
-        String email = boundForm.bindFromRequest().field("email").value();
+        String firstName = boundForm.field("firstName").value();
+        String lastName = boundForm.field("lastName").value();
+        String password = boundForm.field("password").value();
+        String repassword = boundForm.field("repassword").value();
+        String email = boundForm.field("email").value();
         //Getting post office name
         String postOffice = boundForm.bindFromRequest().field("postOffice").value();
         String userType = boundForm.bindFromRequest().field("userType").value();
@@ -346,61 +358,77 @@ public class UserController extends Controller {
         PostOffice wantedPostOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
 
         User u = User.checkEmail(email);
-        if (u == null) {
-            u = new User(firstName, lastName, password, email, wantedPostOffice);
-
-            if (firstName.length() == 0 || lastName.length() == 0 || password.length() == 0 || repassword.length() == 0 || email.length() == 0) {
-                flash("errorEmptyName", "Please fill all fields!");
-            }
-
-            if (u.checkName(firstName) && u.checkName(lastName)) {
-
-                if (u.checkPassword(password) && password.equals(repassword)) {
-                    String newPassword = getEncriptedPasswordMD5(password);
-
-                    firstName = firstName.substring(0,1).toUpperCase()+firstName.substring(1);
-                    lastName = lastName.substring(0,1).toUpperCase()+lastName.substring(1);
-
-                    u = new User(firstName, lastName, newPassword, email, wantedPostOffice);
-                    if(userType.equals("1")){
-                        u.typeOfUser= UserType.OFFICE_WORKER;
-                    }else {
-                        u.typeOfUser =UserType.DELIVERY_WORKER;
-                    }
-
-                            Ebean.save(u);
-                    flash("registered", "Welcome, " + u.firstName + "!");
-                    return redirect(routes.Application.adminTables());
-                } else {
-                    flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters, one number, and one sign, or you entered different passwords");
-                    return redirect(routes.Application.registerWorker());
-                }
-            } else {
-                flash("errorName", "Your name or last name should have only letters.");
-                return redirect(routes.Application.registerWorker());
-                //return ok(register.render());
-            }
-        } else {
+        List<PostOffice> postOffices = PostOffice.findOffice.findList();
+        if (u != null) {
             flash("errorEmail", "E-mail address already exists!");
-            return redirect(routes.Application.registerWorker());
+            return ok(adminworkeradd.render(postOffices, boundForm));
         }
+        u = new User(firstName, lastName, password, email, wantedPostOffice);
+
+
+        if (!u.checkName(u.firstName)) {
+            flash("errorName", "Your name should have only letters.");
+            return ok(adminworkeradd.render(postOffices, boundForm));
+        }
+
+        if (!u.checkName(u.lastName)) {
+            flash("errorLastName", "Your last name should have only letters.");
+            return ok(adminworkeradd.render(postOffices, boundForm));
+        }
+
+        if (!u.checkPassword(u.password)) {
+            flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters and one number");
+            return ok(adminworkeradd.render(postOffices, boundForm));
+        }
+
+        if (!u.password.equals(repassword)) {
+            flash("errorTwoPasswords", "You entered different passwords");
+            return ok(adminworkeradd.render(postOffices, boundForm));
+        }
+
+        String newPassword = getEncriptedPasswordMD5(password);
+
+        firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
+        lastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
+
+        u = new User(firstName, lastName, newPassword, email, wantedPostOffice);
+        if (userType.equals("1")) {
+            u.typeOfUser = UserType.OFFICE_WORKER;
+        } else {
+            u.typeOfUser = UserType.DELIVERY_WORKER;
+        }
+
+        u.save();
+
+        return redirect(routes.Application.adminTables());
+
 
     }
 
+
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result officeWorkerPanel() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.OFFICE_WORKER) {
-            return redirect(routes.Application.index());
-        }
+
         PostOffice userOffice = u1.postOffice;
         List<Shipment> shipments = Shipment.shipmentFinder.where().eq("postOfficeId", userOffice).findList();
         List<Package> packages = new ArrayList<>();
-        for(int i=0;i<shipments.size();i++){
+        for (int i = 0; i < shipments.size(); i++) {
             packages.add(shipments.get(i).packageId);
         }
 
         return ok(officeworkerpanel.render(packages, u1.postOffice));
+    }
+
+    public Result findEmail() {
+        DynamicForm form = Form.form().bindFromRequest();
+        String email = form.data().get("email");
+        User user = User.checkEmail(email);
+        if (user != null) {
+            return badRequest();
+        }
+        return ok();
     }
 
 

@@ -1,6 +1,10 @@
 @(packs: java.util.List[models.Package])
 @adminmain("Package") {
 
+    <head>
+        <meta http-equiv="Refresh" content="10">
+    </head>
+
     <ol class="breadcrumb">
         <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
         <li class="active">Package</li>
@@ -67,7 +71,7 @@
                 }
                 <td>@pack.weight kg</td>
                 <td>@pack.price KM</td>
-                <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input class="btn-link" type="button" value="Delete"></a></td>
+                <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input type="button" value="Delete"></a></td>
             </tr>
         }
 

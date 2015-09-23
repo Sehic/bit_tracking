@@ -107,7 +107,8 @@ public class PostOfficeController extends Controller {
         if (office == null) {
             return redirect(routes.Application.adminPanel());
         }
-        Form<PostOffice> newOfficeForm = officeForm.fill(office);
+       // Form<PostOffice> newOfficeForm = officeForm.fill(office);
+        Form<PostOffice> newOfficeForm = officeForm.bindFromRequest();
         String lon = newOfficeForm.field("longitude").value();
         String lat = newOfficeForm.field("latitude").value();
 

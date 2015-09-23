@@ -144,9 +144,10 @@ public class Application extends Controller {
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result registerWorker() {
-
+        Form<User> userForm =
+                Form.form(User.class);
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
-        return ok(adminworkeradd.render(postOffices));
+        return ok(adminworkeradd.render(postOffices, userForm));
     }
 
     public Result trackPackage() {

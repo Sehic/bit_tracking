@@ -1,7 +1,7 @@
 //Calling table sort and search
-$(document).ready(function() {
+$(document).ready(function () {
     $('#example').DataTable();
-} );
+});
 //Method that append values to input field, and saving it to database
 $(document).ready(function () {
     var valueOfSelect;
@@ -9,7 +9,7 @@ $(document).ready(function () {
     var alreadyOnRoute = "";
     var destinationOffice = $('#getDestinationOffice').val();
     var initialOffice = $('#getInitialOffice').val();
-    var counter=0;
+    var counter = 0;
 
     // for any form on this page do the following
     $('#addToRoute').click(function () {
@@ -36,7 +36,7 @@ $(document).ready(function () {
             for (var j = 0; j < alreadyOnRouteSplitted.length - 1; j++) {
 
                 for (var i = 0; i < splitted.length; i++) {
-                    if (alreadyOnRouteSplitted[j] == splitted[i] || splitted[i]==initialOffice) {
+                    if (alreadyOnRouteSplitted[j] == splitted[i] || splitted[i] == initialOffice) {
                         var index = splitted.indexOf(splitted[i]);
                         if (index > -1) {
                             splitted.splice(index, 1);
@@ -45,26 +45,26 @@ $(document).ready(function () {
                 }
             }
             //Removing user click possibilities when he comes to final destination
-            if (counter>0) {
+            if (counter > 0) {
                 $('.selectOffice').empty();
                 return;
             }
             //Searching for final destination
             for (var i = 0; i < splitted.length; i++) {
                 $('.selectOffice').append("<option value=" + splitted[i] + ">" + splitted[i] + "</option>");
-                if (splitted[i]==destinationOffice) {
+                if (splitted[i] == destinationOffice) {
                     counter++;
                 }
 
             }
             //Case when we have only one office between start and end destination
             var splitFirstOffice = saveValueOfSelect.split(',');
-            if(splitFirstOffice[0]== destinationOffice){
+            if (splitFirstOffice[0] == destinationOffice) {
                 $('.selectOffice').empty();
                 return;
             }
             //Click button clear and reload page
-            $('#clearFromRoute').click(function(){
+            $('#clearFromRoute').click(function () {
                 window.location.reload();
             });
         }).error(function (response) {
@@ -72,26 +72,35 @@ $(document).ready(function () {
     });
 });
 //Method that shows package status for public user
-$(document).ready(function() {
-    $("#trackSubmit").click(function(){
+$(document).ready(function () {
+    $("#trackSubmit").click(function () {
         var number = $("#trackingNumber").val();
         $.ajax({
             url: "/checktrack",
-            data: "trackingNumber="+number,
+            data: "trackingNumber=" + number,
             type: "POST"
         }).success(function (response) {
             var s = response;
-            var splitted = s.split(" ");
+            var splitted = s.split(",");
             $("#trackForm").show();
             $('#number').html(splitted[0]);
-            $('#shipFrom').html(splitted[1]);
-            $('#destination').html(splitted[2]);
-            $('#status').html(splitted[3]);
+            $('#weight').html(splitted[1]);
+            $('#price').html(splitted[2]);
+            $('#shipFrom').html(splitted[3]);
+            $('#destination').html(splitted[4]);
+
+            if (splitted[5] == "null") {
+                $('#time').html("");
+            } else {
+                $('#time').html(splitted[5]);
+            }
+
+            $('#status').html(splitted[6]);
         })
     })
 });
 //Method that is globaly used when we delete something
-$(document).ready(function(){
+$(document).ready(function () {
     $('body').on('click', 'a[data-role="delete"]', function (e) {
         e.preventDefault();
         $toDelete = $(this);
@@ -109,10 +118,25 @@ $(document).ready(function(){
 });
 
 
+$(document).ready(function () {
+    $("#inputEmail3").blur(function () {
+        var email = $("#inputEmail3").val();
+        $.ajax({
+            url: "register/check",
+            type: "post",
+            data: "email=" + email
+        }).success(function (response){
+
+        }).error(function (response) {
+            $("#mailError").text("Email already exists");
+        })
+    });
+
+});
+
 function checkEmail() {
     var email = document.getElementById("inputEmail3").value;
     var filter = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-
     if (!filter.test(email)) {
         document.getElementById("mailError").innerHTML = "Invalid E-mail.";
     } else {
@@ -121,14 +145,11 @@ function checkEmail() {
 }
 
 function checkFirstName() {
-
     var firstName = document.getElementById("inputName").value;
     var filter = /^[a-zA-Z]+$/;
-
     if (firstName.length == 0) {
         document.getElementById("nameError").innerHTML = "This field is required";
     } else {
-
         if (!filter.test(firstName)) {
             document.getElementById("nameError").innerHTML = "Only letters allowed.";
         } else {
@@ -138,14 +159,11 @@ function checkFirstName() {
 }
 
 function checkLastName() {
-
     var lastName = document.getElementById("inputLastName").value;
     var filter = /^[a-zA-Z]+$/;
-
     if (lastName.length == 0) {
         document.getElementById("lastNameError").innerHTML = "This field is required";
     } else {
-
         if (!filter.test(lastName)) {
             document.getElementById("lastNameError").innerHTML = "Only letters allowed.";
         } else {
@@ -156,12 +174,9 @@ function checkLastName() {
 
 function checkPassword() {
     var password = document.getElementById("inputPassword3").value;
-
     if (password.length == 0) {
         document.getElementById("passError").innerHTML = "This field is required";
     } else {
-
-
         if (password.length < 6) {
             document.getElementById("passError").innerHTML = "Password must have at least 6 characters.";
         } else if (password.search(/\d/) == -1) {
