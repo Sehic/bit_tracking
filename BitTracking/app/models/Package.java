@@ -56,9 +56,9 @@ public class Package extends Model {
     @Override
     public String toString() {
         if (shipmentPackages.get(shipmentPackages.size()-1).status == StatusHelper.DELIVERED) {
-            return trackingNum + " " + shipmentPackages.get(0).postOfficeId.name +" " +destination + " " + StatusHelper.DELIVERED.toString();
+            return trackingNum + "," + weight +","+ price +","+ shipmentPackages.get(0).postOfficeId.name +"," +destination + ","+shipmentPackages.get(0).dateCreated+"," + StatusHelper.DELIVERED.toString();
         } else {
-            return trackingNum + " " + shipmentPackages.get(0).postOfficeId.name + " " + destination + " " + StatusHelper.OUT_FOR_DELIVERY.toString();
+            return trackingNum + "," + weight +","+ price +","+ shipmentPackages.get(0).postOfficeId.name +"," +destination + ","+shipmentPackages.get(0).dateCreated+"," + StatusHelper.OUT_FOR_DELIVERY.toString();
         }
     }
 

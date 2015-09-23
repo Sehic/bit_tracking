@@ -66,7 +66,7 @@
       resultsMap.setCenter(results[0].geometry.location);
        marker = new google.maps.Marker({
         map: resultsMap,
-        position: results[0].geometry.location,
+        position: results[0].geometry.location
       });
       document.getElementById("longitude").value = results[0].geometry.location.lng();
       document.getElementById("latitude").value = results[0].geometry.location.lat();

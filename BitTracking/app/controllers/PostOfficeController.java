@@ -35,14 +35,14 @@ public class PostOfficeController extends Controller {
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result deleteOffice(Long id) {
-
         PostOffice office = PostOffice.findPostOffice(id);
-        Location place = Location.findLocationById(office.place.id);
-        Ebean.delete(place);
-
+        for (int i = 0; i<office.shipmentOffices.size(); i++){
+            office.shipmentOffices.remove(i);
+            office.update();
+        }
+        Ebean.delete(office);
         return redirect(routes.Application.adminPostOffice());
     }
-
     /**
      * Method that adds new office to database using (adminpostoffice.scala.html)
      *
@@ -101,17 +101,21 @@ public class PostOfficeController extends Controller {
         Location place = Location.findLocationById(office.place.id);
 
         if (place == null) {
+            System.out.println("Place je null");
             return redirect(routes.Application.adminPostOffice());
         }
 
         if (office == null) {
+            System.out.println("Office je null");
             return redirect(routes.Application.adminPanel());
         }
-        Form<PostOffice> newOfficeForm = officeForm.fill(office);
-        String lon = newOfficeForm.field("longitude").value();
-        String lat = newOfficeForm.field("latitude").value();
+       // Form<PostOffice> newOfficeForm = officeForm.fill(office);
+        Form<PostOffice> forma = officeForm.bindFromRequest();
+        String lon = forma.field("longitude").value();
+        String lat = forma.field("latitude").value();
 
         if (lon == null || lat == null) {
+            System.out.println("lat ili lon je null");
             return redirect(routes.Application.addPostOffice());
         }
 
@@ -122,7 +126,7 @@ public class PostOfficeController extends Controller {
             x = Double.parseDouble(lon);
             y = Double.parseDouble(lat);
         } catch (NumberFormatException e) {
-
+            System.out.println("Parse je null");
             return redirect(routes.Application.addPostOffice());
         }
 
@@ -132,8 +136,8 @@ public class PostOfficeController extends Controller {
         office.place = place;
 
 
-        office.name = newOfficeForm.field("name").value();
-        office.address = newOfficeForm.field("address").value();
+        office.name = forma.field("name").value();
+        office.address = forma.field("address").value();
         Ebean.update(office);
 
         return redirect(routes.Application.adminPostOffice());

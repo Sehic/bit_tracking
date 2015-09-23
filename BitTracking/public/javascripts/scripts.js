@@ -81,12 +81,15 @@ $(document).ready(function() {
             type: "POST"
         }).success(function (response) {
             var s = response;
-            var splitted = s.split(" ");
+            var splitted = s.split(",");
             $("#trackForm").show();
             $('#number').html(splitted[0]);
-            $('#shipFrom').html(splitted[1]);
-            $('#destination').html(splitted[2]);
-            $('#status').html(splitted[3]);
+            $('#weight').html(splitted[1]);
+            $('#price').html(splitted[2]);
+            $('#shipFrom').html(splitted[3]);
+            $('#destination').html(splitted[4]);
+            $('#time').html(splitted[5]);
+            $('#status').html(splitted[6]);
         })
     })
 });
