@@ -1,6 +1,7 @@
 package helpers;
 
 import controllers.routes;
+import play.mvc.Http;
 import play.mvc.Http.Context;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -25,6 +26,10 @@ public class SessionHelper extends Security.Authenticator {
     @Override
     public Result onUnauthorized(Context ctx){
         return redirect(routes.Application.index());
+    }
+
+    public SessionHelper() {
+        super();
     }
 
 }

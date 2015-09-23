@@ -59,6 +59,8 @@ GET           /adminpanel/deliveryworkers/panel             @controllers.Applica
 GET           /adminpanel/deliveryworkers/status/:id        @controllers.PackageController.changePackageStatus(id: Long)
 POST          /adminpanel/deliveryworkers/status/:id        @controllers.PackageController.updateStatus(id: Long)
 
+POST        /register/check                                 @controllers.UserController.findEmail()
+
 
 
 

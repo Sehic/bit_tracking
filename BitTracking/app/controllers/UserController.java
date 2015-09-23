@@ -6,6 +6,7 @@ import helpers.SessionHelper;
 import models.*;
 import models.Package;
 import play.Logger;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -399,6 +400,17 @@ public class UserController extends Controller {
 
         return ok(officeworkerpanel.render(packages, u1.postOffice));
     }
+
+    public Result findEmail() {
+        DynamicForm form = Form.form().bindFromRequest();
+        String email = form.data().get("email");
+        User user = User.checkEmail(email);
+        if (user != null) {
+            return ok("error");
+        }
+        return ok();
+    }
+
 
 
 }

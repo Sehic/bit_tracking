@@ -183,4 +183,40 @@ public class Application extends Controller {
         return ok(deliveryworkerpanel.render(packages));
     }
 
+    /**
+     * Added on 22.09. by Emina
+     */
+    private static Form<User> userForm = Form.form(User.class);
+    //handles the form submit
+    public Result formSubmit(){
+        //get the form data from the request - do this only once
+        Form<User> binded = userForm.bindFromRequest();
+        //if we have errors just return a bad request
+        if(binded.hasErrors()){
+            flash("error", "check your inputs");
+            return badRequest();
+        } else {
+            //get the object from the form, for revere take a look at someForm.fill(myObject)
+            User p = binded.get();
+            p.save();
+            flash("success", "post added");
+            return redirect("/");
+        }
+
+    }
+
+    /**
+     * This will just validate the form for the AJAX call
+     * @return ok if there are no errors or a JSON object representing the errors
+     */
+    public Result validateForm(){
+        Form<User> binded = userForm.bindFromRequest();
+        if(binded.hasErrors()){
+            return badRequest(binded.errorsAsJson());
+        } else {
+            return ok("we good, we good");
+        }
+    }
+
+
 }

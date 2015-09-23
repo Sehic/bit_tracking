@@ -31,6 +31,16 @@
     <body>
 
         <div class="container"><!-- Main container contains all components-->
+            @if(flash.containsKey("error")){
+                <div class="alert alert-danger">
+                @flash.get("error")
+                </div>
+            }
+            @if(flash.containsKey("success")){
+                <div class="alert alert-success">
+                @flash.get("success")
+                </div>
+            }
 
             <!--=============HEADER============== -->
 

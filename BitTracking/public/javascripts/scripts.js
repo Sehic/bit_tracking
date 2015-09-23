@@ -1,3 +1,19 @@
+$(document).ready(function() {
+    $("#inputEmail3").blur(function() {
+        var email = $("#inputEmail3").val();
+        $.ajax({
+            url: "register/check",
+            type: "post",
+            data: "email="+email
+        }).success(function(response) {
+            if (response === "error") {
+                $("#mailError").text("Email already exists");
+            }
+        })
+    })
+});
+
+
 $(document).ready(function () {
     var valueOfSelect;
     var saveValueOfSelect = "";

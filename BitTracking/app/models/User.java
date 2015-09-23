@@ -3,11 +3,10 @@ package models;
 
 import javax.persistence.*;
 
-import com.avaje.ebean.Ebean;
-import play.data.format.Formats;
+import com.avaje.ebean.Model;
+import controllers.UserController;
 import play.data.validation.Constraints;
 import play.db.*;
-import play.db.ebean.Model;
 
 import java.lang.Override;
 import java.lang.String;
@@ -51,6 +50,10 @@ public class User extends Model {
     @ManyToMany(mappedBy = "deliveryWorkers")
     public List<Package> packages = new ArrayList<>();
 
+    public String repassword;
+
+    public static Finder<String, User> finder = new Finder<String, User>(User.class);
+
 
     public User() {
     }
@@ -91,7 +94,8 @@ public class User extends Model {
     }
 
 
-    public static Finder<String, User> find = new Finder<String, User>(String.class, User.class);
+    public static Finder<String, User> find = new Finder<>(User.class);
+
 
     /**
      * Method that checks if user exists in database
@@ -101,12 +105,7 @@ public class User extends Model {
      * @return - user if it finds him, otherwise null
      */
     public static User findEmailAndPassword(String email, String password) {
-
-        List<User> list = find.where().eq("email", email).eq("password", password).findList();
-        if (list.size() == 0) {
-            return null;
-        }
-        return (User) (list.get(0));
+        return find.where().eq("email", email).eq("password", password).findUnique();
     }
 
 
@@ -117,22 +116,20 @@ public class User extends Model {
      * @return null if email doesnt exist in database, otherwise 1
      */
     public static User checkEmail(String email) {
-        List<User> listEmail = find.where().eq("email", email).findList();
-        if (listEmail.size() == 0) {
-            return null;
-        }
-        return (User) (listEmail.get(0));
+        return find.where().eq("email", email).findUnique();
     }
 
     /**
      * This method checks if entered character are only letters from A to  Z
+     *
      * @param name
      * @return
      */
     public static boolean checkName(String name) {
         for (int i = 0; i < name.length(); i++) {
-            if ((name.charAt(i) < 65) || (name.charAt(i) > 90 &&
-                    name.charAt(i) < 97) || (name.charAt(i) > 122 && name.charAt(i) < 262) ||
+            if ((name.charAt(i) < 65) ||
+                    (name.charAt(i) > 90 && name.charAt(i) < 97) ||
+                    (name.charAt(i) > 122 && name.charAt(i) < 262) ||
                     (name.charAt(i) > 263 && name.charAt(i) < 268) ||
                     (name.charAt(i) > 269 && name.charAt(i) < 272) ||
                     (name.charAt(i) > 273 && name.charAt(i) < 352) ||
@@ -146,6 +143,7 @@ public class User extends Model {
 
     /**
      * Checks if password has more then 6 letters
+     *
      * @param password
      * @return
      */
@@ -169,8 +167,7 @@ public class User extends Model {
     }
 
     public static User findById(Long longId) {
-        String id = longId.toString();
-        User user = find.byId(id);
+        User user = find.byId(longId.toString());
         if (user != null) {
             return user;
         }
@@ -179,6 +176,14 @@ public class User extends Model {
 
     public static List<User> findOfficeWorkers() {
         return find.where().eq("typeOfUser", UserType.OFFICE_WORKER).findList();
+    }
+
+    public static List<User> findDeliveryWorkers() {
+        return find.where().eq("typeOfUser", UserType.DELIVERY_WORKER).findList();
+    }
+
+    public static List<User> findRegisteredUsers() {
+        return find.where().eq("typeOfUser", UserType.REGISTERED_USER).findList();
     }
 
 
