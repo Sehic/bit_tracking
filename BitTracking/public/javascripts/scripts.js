@@ -88,7 +88,6 @@ $(document).ready(function () {
             $('#price').html(splitted[2]);
             $('#shipFrom').html(splitted[3]);
             $('#destination').html(splitted[4]);
-
             if (splitted[5] == "null") {
                 $('#time').html("");
             } else {
@@ -125,15 +124,26 @@ $(document).ready(function () {
             url: "register/check",
             type: "post",
             data: "email=" + email
-        }).success(function (response){
+        }).success(function (response) {
 
         }).error(function (response) {
             $("#mailError").text("Email already exists");
         })
     });
-
 });
 
+//Cookie controller
+function setCookies() {
+    var email = document.getElementById("inputEmail3").value;
+    if (document.getElementById("box1").checked) {
+        document.cookie = "email=" + email + "; expires=Thu, 18 Dec 2020 12:00:00 UTC";
+    }
+}
+function deleteCookies() {
+    document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+}
+
+//Registration validation
 function checkEmail() {
     var email = document.getElementById("inputEmail3").value;
     var filter = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
