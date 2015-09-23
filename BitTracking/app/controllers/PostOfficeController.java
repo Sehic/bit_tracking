@@ -58,12 +58,16 @@ public class PostOfficeController extends Controller {
         String lon = boundForm.field("longitude").value();
         String lat = boundForm.field("latitude").value();
 
-        if (lon == null || lat == null) {
-            return redirect(routes.Application.adminPostOffice());
-        }
+        Double x = null;
+        Double y = null;
 
-        Double x = Double.parseDouble(lon);
-        Double y = Double.parseDouble(lat);
+        try {
+            x = Double.parseDouble(lon);
+            y = Double.parseDouble(lat);
+        } catch (NumberFormatException e) {
+            flash("wrongAddress", "Entered place does not exists!");
+            return redirect(routes.Application.addPostOffice());
+        }
         Location place = new Location(x, y);
         Ebean.save(place);
         PostOffice p = new PostOffice(name, address, place);
@@ -108,17 +112,25 @@ public class PostOfficeController extends Controller {
         String lat = newOfficeForm.field("latitude").value();
 
         if (lon == null || lat == null) {
-            return redirect(routes.Application.adminPostOffice());
+            return redirect(routes.Application.addPostOffice());
         }
 
-        if (lon != "") {
-            Double x = Double.parseDouble(lon);
-            Double y = Double.parseDouble(lat);
-            place.x = x;
-            place.y = y;
-            Ebean.update(place);
-            office.place = place;
+        Double x = null;
+        Double y = null;
+
+        try {
+            x = Double.parseDouble(lon);
+            y = Double.parseDouble(lat);
+        } catch (NumberFormatException e) {
+
+            return redirect(routes.Application.addPostOffice());
         }
+
+        place.x = x;
+        place.y = y;
+        Ebean.update(place);
+        office.place = place;
+
 
         office.name = newOfficeForm.field("name").value();
         office.address = newOfficeForm.field("address").value();

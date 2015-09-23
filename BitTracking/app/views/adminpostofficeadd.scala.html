@@ -34,6 +34,7 @@
                     </label>
                     <div class="col-sm-10">
                         <input name="address" type="text" class="form-control" id="address" required="required">
+                        <span id="wrongAddress" class="alert-danger" data-error-for="" >@flash.get("wrongAddress")</span>
                         <input id="longitude" name="longitude" type="hidden">
                         <input id="latitude" name="latitude" type="hidden">
                     </div>

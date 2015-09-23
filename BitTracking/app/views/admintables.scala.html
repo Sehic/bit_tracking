@@ -62,7 +62,7 @@
                             <td>@user.lastName</td>
                             <td>@user.email</td>
                             <td>@user.typeOfUser</td>
-                            <td><form action="@routes.UserController.userProfile(user.id)"><input type="submit" value="Edit"></form></td>
+                            <td><a href="@routes.UserController.userProfile(user.id)"><input type="submit" value="Edit"></a></td>
                             @if(user.typeOfUser != UserType.ADMIN) {
 
                                 <td><a data-role="delete" data-delete-parent="tr" href="@routes.UserController.deleteUser(user.id)" role="button"><input type="button" value="Delete"></a></td>

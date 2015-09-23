@@ -70,7 +70,7 @@ public class PackageController extends Controller {
 
             pack.save();
 
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | NumberFormatException e) {
 
             flash("wrongFormatBoth", "Please insert numbers only!");
 
