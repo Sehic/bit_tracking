@@ -71,7 +71,7 @@ public class UserController extends Controller {
         User u = User.checkEmail(userFromForm.email);
         //If user is not found, that means we can proceed creating new user
         if (u == null) {
-            u = new User(userFromForm.firstName, userFromForm.lastName, userFromForm.password, userFromForm.email);
+            u = new User(userFromForm.firstName, userFromForm.lastName, userFromForm.email, userFromForm.password);
 
             if (u.checkName(u.firstName) && u.checkName(u.lastName)) {
 
@@ -81,7 +81,7 @@ public class UserController extends Controller {
                     u.firstName = u.firstName.substring(0,1).toUpperCase() + u.firstName.substring(1);
                     u.lastName = u.lastName.substring(0,1).toUpperCase() + u.lastName.substring(1);
 
-                    u = new User(u.firstName, u.lastName, newPassword, u.email);
+                    u = new User(u.firstName, u.lastName,u.email, newPassword);
 
                     Ebean.save(u);
                     if (u.id == 1) {
@@ -323,6 +323,10 @@ public class UserController extends Controller {
         return redirect(routes.Application.adminPanel());
     }
 
+    /**
+     *
+     * @return
+     */
     public Result addWorker() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());

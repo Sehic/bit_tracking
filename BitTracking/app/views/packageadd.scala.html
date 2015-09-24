@@ -96,6 +96,20 @@
     map.setCenter(marker.getPosition());
     });
   </script>
+                        <script >
+                             function loadPosts(){
+		$.ajax({
+			url: 'posts.php',
+			success: function(data) {
+				$("#post-list").html(data);
+				setTimeout("loadPosts()", 10000);
+			}
+		});
+	}
+	$(function(){
+		loadPosts();
+	});
+                        </script>
                     </div>
                 </div>
             </div>
