@@ -60,7 +60,7 @@
           }
           </td>
           <td><a href="@routes.PostOfficeController.postOfficeDetails(postOffice.id)"><input type="submit" value="Edit"></a></td>
-          <td><a data-role="delete" data-delete-parent="tr" href="@routes.PostOfficeController.deleteOffice(postOffice.id)" role="button"><input type="button" value="Delete"></a></td>
+          <td><a data-role="delete" data-delete-parent="tr" href="@routes.PostOfficeController.deleteOffice(postOffice.id)" role="button"><input id="deleteButton" type="button" value="Delete"></a></td>
 
       </tr>
     }

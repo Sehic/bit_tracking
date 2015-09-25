@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
   "org.webjars" % "bootstrap" % "3.3.5",
 "org.apache.directory.studio" % "org.apache.commons.io" % "2.4",
   "com.google.code.gson" % "gson" % "2.3.1",
+  "com.cloudinary" % "cloudinary" % "1.0.14",
 "org.easytesting" % "fest-assert" % "1.4" % Test
 )
 

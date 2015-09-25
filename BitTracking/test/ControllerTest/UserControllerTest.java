@@ -1,19 +1,12 @@
 package ControllerTest;
 
-import com.google.common.collect.ImmutableMap;
-import controllers.UserController;
 import controllers.routes;
 import org.junit.Test;
 import play.mvc.Result;
-import play.test.*;
-import play.mvc.*;
 
+import static org.fest.assertions.Assertions.assertThat;
 import static play.mvc.Http.Status.SEE_OTHER;
-import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.*;
-import static org.fest.assertions.Assertions.*;
-import static org.junit.Assert.*;
-import play.twirl.api.Content;
 /**
  * Created by emina on 16.9.2015.
  */
