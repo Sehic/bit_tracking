@@ -46,7 +46,8 @@ $(document).ready(function () {
             }
             //Removing user click possibilities when he comes to final destination
             if (counter > 0) {
-                $('.selectOffice').empty();
+                $('.selectOffice').remove();
+                $('#addToRoute').prop('disabled', true);
                 return;
             }
             //Searching for final destination
@@ -60,19 +61,26 @@ $(document).ready(function () {
             //Case when we have only one office between start and end destination
             var splitFirstOffice = saveValueOfSelect.split(',');
             if (splitFirstOffice[0] == destinationOffice) {
-                $('.selectOffice').empty();
+                $('.selectOffice').remove();
+                $('#addToRoute').prop('disabled', true);
                 return;
             }
-            //Click button clear and reload page
-            $('#clearFromRoute').click(function () {
-                window.location.reload();
-            });
+
         }).error(function (response) {
         });
     });
 });
+
+$(document).ready(function (){
+    //Click button clear and reload page
+    $('#clearFromRoute').click(function () {
+        window.location.reload();
+    });
+});
+
 //Method that shows package status for public user
 $(document).ready(function () {
+
     $("#trackSubmit").click(function () {
         var number = $("#trackingNumber").val();
         $.ajax({

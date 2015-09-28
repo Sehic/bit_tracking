@@ -15,13 +15,13 @@
 
     <div class="col-md-12">
 
-        <table class="table table-striped table-hover table-bordered">
+        <table id="example" class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Name</th>
                     <th>Adress</th>
-                    <th>Edit</th>
+                    <th>Linked To</th>
                     <th>Link To</th>
                 </tr>
             </thead>
@@ -32,7 +32,11 @@
                     <td>@office.id</td>
                     <td><input name="mainOfficeName" value="@office.name" type="text" style="background-color: transparent; border: 0px"/></td>
                     <td>@office.address</td>
-                    <td><a href="@routes.PostOfficeController.postOfficeDetails(office.id)" class="btn btn-link"><button>Edit</button></a></td>
+                    <td>
+                        @for(linkedToThisOffice <- office.postOfficesA){
+                            @linkedToThisOffice.name<br>
+                        }
+                    </td>
                     <td>
                     @for(postOffice <- postOffices) {
                         @if(postOffice.name != office.name){

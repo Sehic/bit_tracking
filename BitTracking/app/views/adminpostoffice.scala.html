@@ -56,7 +56,7 @@
           <td><a href="@routes.PostOfficeController.linkPostOffices(postOffice.id)">Link</a></td>
           <td>
           @for(linkedOffice <- postOffice.postOfficesA) {
-             @linkedOffice.name
+             @linkedOffice.name|
           }
           </td>
           <td><a href="@routes.PostOfficeController.postOfficeDetails(postOffice.id)"><input type="submit" value="Edit"></a></td>

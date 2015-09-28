@@ -71,27 +71,10 @@
                         </div>
                         <br/>
                         <br/>
-                        @if(currentUser != null && currentUser.typeOfUser == UserType.ADMIN) {
-                        <div class="form-group">
 
-                            <label for="typeOfUser" class="col-sm-2 control-label" style="text-align : right" >
-                                User Type:
-                            </label>
-                            <div class="col-sm-10">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></span>
-
-                                    <input id="typeOfUser" name="userType" disabled type="text" class="form-control" value="@user.typeOfUser">
-
-                                </div>
-                            </div>
-                        </div>
-                        <br/>
-                        <br/>
-                        <br/>
                         @helper.form(action = routes.UserController.updateUserType(user.id), 'class -> "form-horizontal", 'role -> "form") {
 
-
+                            @if(currentUser != null && currentUser.typeOfUser == UserType.ADMIN) {
                                     @if(currentUser.id != user.id) {
                                         <div class="row">
                                             <div class="col-md-12">
@@ -99,11 +82,32 @@
                                                     Select User Type:</strong></div>
                                                 <div class="col-sm-10">
                                                     <select class="form-control" name="userType">
-                                                        <option value="">Change User Role</option>
-                                                        <option value="Admin">Admin</option>
-                                                        <option value="Delivery Worker">Delivery Worker</option>
-                                                        <option value="Office Worker">Office Worker</option>
-                                                        <option value="Registered User">Registered User</option>
+                                                        @if(user.typeOfUser==UserType.ADMIN){
+                                                            <option value="Admin">Admin</option>
+                                                            <option value="Delivery Worker">Delivery Worker</option>
+                                                            <option value="Office Worker">Office Worker</option>
+                                                            <option value="Registered User">Registered User</option>
+                                                        }
+                                                        @if(user.typeOfUser==UserType.DELIVERY_WORKER){
+                                                            <option value="Delivery Worker">Delivery Worker</option>
+                                                            <option value="Admin">Admin</option>
+                                                            <option value="Office Worker">Office Worker</option>
+                                                            <option value="Registered User">Registered User</option>
+                                                        }
+                                                        @if(user.typeOfUser==UserType.OFFICE_WORKER){
+                                                            <option value="Office Worker">Office Worker</option>
+                                                            <option value="Admin">Admin</option>
+                                                            <option value="Delivery Worker">Delivery Worker</option>
+                                                            <option value="Registered User">Registered User</option>
+                                                        }
+                                                        @if(user.typeOfUser==UserType.REGISTERED_USER){
+                                                            <option value="Registered User">Registered User</option>
+                                                            <option value="Admin">Admin</option>
+                                                            <option value="Delivery Worker">Delivery Worker</option>
+                                                            <option value="Office Worker">Office Worker</option>
+
+                                                        }
+
                                                     </select>
 
                                                 </div>
