@@ -92,8 +92,8 @@
                     <div class="form-group">
 
                         <div class="col-sm-offset-3 col-sm-3">
-                            <select class="form-control" name="postOffice">
-                                <option value="">Choose Post Office</option>
+                            <select id="sortAlphabetically" class="form-control" name="postOffice">
+                                <option value="">--Choose Post Office--</option>
                                 @for(office <- offices) {
 
                                     <option value="@office.name">@office.name</option>
@@ -106,8 +106,9 @@
                         <div class="col-sm-offset-3 col-sm-3">
                             <select class="form-control" name="userType">
 
-                                <option value="1">Office Worker</option>
                                 <option value="2">Delivery Worker</option>
+                                <option value="1">Office Worker</option>
+
 
                             </select>
                         </div>

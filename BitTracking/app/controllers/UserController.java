@@ -338,6 +338,7 @@ public class UserController extends Controller {
 
         } else if(userType.equals("Registered User")) {
             user.typeOfUser = UserType.REGISTERED_USER;
+            user.postOffice = null;
         }
         user.update();
 
