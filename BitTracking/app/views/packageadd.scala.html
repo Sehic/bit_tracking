@@ -61,7 +61,7 @@
                         </label>
                         <div class="col-md-2">
                             @if(currentUser.typeOfUser==UserType.ADMIN) {
-                                <select name="officePost" required="required">
+                                <select name="officePost" required="required" id="choose">
                                 @for(office <- offices) {
                                     <option value="@office.name">@office.name</option>
                                 }
