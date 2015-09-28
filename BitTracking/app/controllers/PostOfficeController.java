@@ -129,7 +129,6 @@ public class PostOfficeController extends Controller {
         Ebean.update(place);
         office.place = place;
 
-
         office.name = newOfficeForm.field("name").value();
         office.address = newOfficeForm.field("address").value();
         Ebean.update(office);

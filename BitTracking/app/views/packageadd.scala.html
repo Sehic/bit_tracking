@@ -1,4 +1,5 @@
 @import helpers.SessionHelper
+@import java.util.Collections
 @(offices: List[PostOffice])(text: Form[models.Package])(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
     @adminmain("Add Package") {
         <div class="container-fluid">

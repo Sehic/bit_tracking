@@ -336,7 +336,7 @@ public class UserController extends Controller {
             user.typeOfUser = UserType.DELIVERY_WORKER;
             user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
 
-        } else {
+        } else if(userType.equals("Registered User")) {
             user.typeOfUser = UserType.REGISTERED_USER;
         }
         user.update();
