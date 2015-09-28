@@ -74,7 +74,7 @@ public class PackageController extends Controller {
 
             flash("wrongFormatBoth", "Please insert numbers only!");
 
-            return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm, u1));
+            return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm, u1)); 
         }
 
         Shipment ship = new Shipment();
