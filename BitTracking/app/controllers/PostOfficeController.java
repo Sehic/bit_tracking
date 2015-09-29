@@ -6,12 +6,14 @@ import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
 import models.Package;
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import views.html.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -156,7 +158,7 @@ public class PostOfficeController extends Controller {
                 }
             }
         }
-        return ok(adminlinkoffices.render(postOffices, office));
+        return ok(adminlinkoffices.render(postOffices, mainOfficeRelationList, office));
     }
 
     /**
@@ -174,6 +176,7 @@ public class PostOfficeController extends Controller {
         List<String> checkBoxValues = new ArrayList<>();
         for (int i = 0; i < postOffices.size(); i++) {
             String office = boundForm.bindFromRequest().field(postOffices.get(i).name).value();
+            System.out.println(office);
             checkBoxValues.add(office);
 
         }
@@ -189,7 +192,18 @@ public class PostOfficeController extends Controller {
         String officeName = boundForm.bindFromRequest().field("mainOfficeName").value();
 
         PostOffice mainPostOffice = PostOffice.findOffice.where().eq("name", officeName).findUnique();
-        //Saving offices and their relationship to database
+        List<PostOffice> relationOffices = mainPostOffice.postOfficesA;
+
+        if (relationOffices.size() != 0) {
+            for (int i = 0; i < relationOffices.size(); i++) {
+                relationOffices.get(i).postOfficesA.remove(mainPostOffice);
+                Ebean.update(relationOffices.get(i));
+            }
+            mainPostOffice.postOfficesA.clear();
+            Ebean.update(mainPostOffice);
+        }
+        
+        //    Saving offices and their relationship to database
         for (int i = 0; i < postOffices.size(); i++) {
             PostOffice linkedPostOffice = postOffices.get(i);
             mainPostOffice.postOfficesA.add(linkedPostOffice);
@@ -200,6 +214,7 @@ public class PostOfficeController extends Controller {
         }
         return redirect("/adminpanel/postoffice");
     }
+
 
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result listRoutes(Long id) {

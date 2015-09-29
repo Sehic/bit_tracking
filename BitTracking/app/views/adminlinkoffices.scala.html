@@ -1,66 +1,71 @@
 @import helpers._
 
-@(postOffices: List[PostOffice], office: PostOffice)
-@adminmain("Link Offices") {
+@(postOffices: List[PostOffice], mainOfficeRelationList: List[PostOffice], office: PostOffice)
+    @adminmain("Link Offices") {
 
-    <ol class="breadcrumb">
-        <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
-        <li><a href="#">Manage Users</a></li>
-        <li class="active">Link Offices</li>
-    </ol>
+        <ol class="breadcrumb">
+            <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
+            <li><a href="#">Manage Users</a></li>
+            <li class="active">Link Offices</li>
+        </ol>
 
-    <h1>Link Offices</h1>
+        <h1>Link Offices</h1>
 
-    <div class="row margin-bottom-30"></div>
+        <div class="row margin-bottom-30"></div>
 
-    <div class="col-md-12">
+        <div class="col-md-12">
 
-        <table class="table table-striped table-hover table-bordered">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Adress</th>
-                    <th>Linked To</th>
-                    <th>Link To</th>
-                </tr>
-            </thead>
-            <tbody>
-            @helper.form(action = routes.PostOfficeController.savePostOffices()) {
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Adress</th>
+                        <th>Linked To</th>
+                        <th>Link To</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @helper.form(action = routes.PostOfficeController.savePostOffices(), 'class -> "form-horizontal", 'role -> "form") {
 
-                <tr>
-                    <td>@office.id</td>
-                    <td><input name="mainOfficeName" value="@office.name" type="text" style="background-color: transparent; border: 0px"/></td>
-                    <td>@office.address</td>
-                    <td>
-                        @for(linkedToThisOffice <- office.postOfficesA){
-                            @linkedToThisOffice.name<br>
+                    <tr>
+                        <td>@office.id</td>
+                        <td><input name="mainOfficeName" value="@office.name" type="text" style="background-color : transparent ; border : 0px" readonly/></td>
+                        <td>@office.address</td>
+                        <td>
+                        @for(linkedToThisOffice <- office.postOfficesA) {
+                            @linkedToThisOffice.name <br>
                         }
-                    </td>
-                    <td>
-                    @for(postOffice <- postOffices) {
-                        @if(postOffice.name != office.name){
-                            <input type="checkbox" name="@postOffice.name" value="@postOffice.name"> @postOffice.name <br>
+                        </td>
+                        <td>
+                            @for(mainRelationOffice <- mainOfficeRelationList) {
+                                <input type="checkbox" name="@mainRelationOffice.name" value="@mainRelationOffice.name" checked="checked"> @mainRelationOffice.name <br>
                             }
-                    }
-                    </td>
-                </tr>
 
-            </tbody>
-        </table>
+                            @for(postOffice <- postOffices) {
+                                @if(postOffice.name != office.name) {
+                                    <input type="checkbox" name="@postOffice.name" value="@postOffice.name"> @postOffice.name <br>
+                                }
+                            }
+
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
             <input class="btn btn-primary" type="submit" value="Save Relations"/>
-        }
+            }
 
-        <ul class="pagination pull-right">
-            <li class="disabled"><a href="#">&laquo;</a></li>
-            <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">4 <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">5 <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">&raquo;</a></li>
-        </ul>
+            <ul class="pagination pull-right">
+                <li class="disabled"><a href="#">&laquo;</a></li>
+                <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">2 <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">3 <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">4 <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">5 <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">&raquo;</a></li>
+            </ul>
 
-    </div>
+        </div>
 
-}
+    }
