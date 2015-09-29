@@ -91,7 +91,7 @@ public class User extends Model {
     }
 
 
-    public static Finder<String, User> find = new Finder<String, User>(String.class, User.class);
+    public static Finder<String, User> find = new Finder<String, User>(User.class);
 
     /**
      * Method that checks if user exists in database
@@ -100,6 +100,11 @@ public class User extends Model {
      * @param password - inserted user password
      * @return - user if it finds him, otherwise null
      */
+
+    public static List<User> findUsersByPostOffice(PostOffice office) {
+        return find.where().eq("postOffice", office).findList();
+    }
+
     public static User findEmailAndPassword(String email, String password) {
 
         List<User> list = find.where().eq("email", email).eq("password", password).findList();

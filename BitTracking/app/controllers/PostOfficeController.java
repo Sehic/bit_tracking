@@ -35,6 +35,13 @@ public class PostOfficeController extends Controller {
 
         PostOffice office = PostOffice.findPostOffice(id);
         Location place = Location.findLocationById(office.place.id);
+
+        List<User> users = User.findUsersByPostOffice(office);
+        for (int i = 0; i < users.size(); i++) {
+            users.get(i).postOffice = null;
+            users.get(i).update();
+        }
+
         Ebean.delete(place);
 
         return redirect(routes.Application.adminPostOffice());
