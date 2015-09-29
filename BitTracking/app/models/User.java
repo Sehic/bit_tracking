@@ -93,6 +93,11 @@ public class User extends Model {
 
     public static Finder<String, User> find = new Finder<String, User>(String.class, User.class);
 
+
+    public static List<User> findUsersByPostOffice(PostOffice office) {
+        return find.where().eq("postOffice", office).findList();
+    }
+
     /**
      * Method that checks if user exists in database
      *

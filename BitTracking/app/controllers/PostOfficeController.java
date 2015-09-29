@@ -37,6 +37,13 @@ public class PostOfficeController extends Controller {
 
         PostOffice office = PostOffice.findPostOffice(id);
         Location place = Location.findLocationById(office.place.id);
+
+        List<User> users = User.findUsersByPostOffice(office);
+        for (int i = 0; i < users.size(); i++) {
+            users.get(i).postOffice = null;
+            users.get(i).update();
+        }
+
         Ebean.delete(place);
 
         return redirect(routes.Application.adminPostOffice());
@@ -176,9 +183,7 @@ public class PostOfficeController extends Controller {
         List<String> checkBoxValues = new ArrayList<>();
         for (int i = 0; i < postOffices.size(); i++) {
             String office = boundForm.bindFromRequest().field(postOffices.get(i).name).value();
-            System.out.println(office);
             checkBoxValues.add(office);
-
         }
         //Removing null elements from list
         checkBoxValues.removeAll(Collections.singleton(null));
@@ -202,7 +207,6 @@ public class PostOfficeController extends Controller {
             mainPostOffice.postOfficesA.clear();
             Ebean.update(mainPostOffice);
         }
-        
         //    Saving offices and their relationship to database
         for (int i = 0; i < postOffices.size(); i++) {
             PostOffice linkedPostOffice = postOffices.get(i);
@@ -210,7 +214,6 @@ public class PostOfficeController extends Controller {
             linkedPostOffice.postOfficesA.add(mainPostOffice);
             Ebean.save(mainPostOffice);
             Ebean.save(linkedPostOffice);
-
         }
         return redirect("/adminpanel/postoffice");
     }
