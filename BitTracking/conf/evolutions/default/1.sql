@@ -20,13 +20,14 @@ create table location (
 create table package (
   id                        bigint auto_increment not null,
   tracking_num              varchar(255),
+  recipient_address         varchar(255),
   destination               varchar(255),
   status                    integer,
   weight                    double(10,2),
   price                     double(10,2),
   package_type              integer,
-  ship_from                 varchar(255),
-  ship_to                   varchar(255),
+  sender_name               varchar(255),
+  recipient_name            varchar(255),
   constraint ck_package_status check (status in ('5','1','2','4','3')),
   constraint ck_package_package_type check (package_type in ('4','2','1','3')),
   constraint pk_package primary key (id))

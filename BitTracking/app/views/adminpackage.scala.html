@@ -40,8 +40,8 @@
                     <th>From</th>
                     <th>To</th>
                     <th>Route</th>
-                    <th>Destination</th>
-                    <th>Post Office</th>
+                    <th>Initial Post Office</th>
+                    <th>Recipient Address</th>
                     <th>Package type</th>
                     <th>Weight</th>
                     <th>Price</th>
@@ -53,8 +53,8 @@
                 <tr class="succes">
                     <td>@pack.id</td>
                     <td>@pack.trackingNum</td>
-                    <td>@pack.shipFrom</td>
-                    <td>@pack.shipTo</td>
+                    <td>@pack.senderName</td>
+                    <td>@pack.recipientName</td>
 
                     @if(pack.shipmentPackages.size() < 2) {
                         <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
@@ -66,14 +66,13 @@
                         }
                         </td>
                     }
-
-
-                    <td>@pack.destination</td>
                     @if(pack.shipmentPackages.size() != 0) {
                         <td>@pack.shipmentPackages.get(0).postOfficeId.name</td>
                     } else {
                         <td></td>
                     }
+                    <td>@pack.recipientAddress</td>
+
                     <td>@pack.packageType</td>
                     <td>@pack.weight kg</td>
                     <td>@pack.price KM</td>

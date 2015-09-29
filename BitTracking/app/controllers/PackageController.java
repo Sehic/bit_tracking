@@ -63,6 +63,8 @@ public class PackageController extends Controller {
         PostOffice office = PostOffice.findPostOfficeByName(officeName);
         Package pack = new Package();
 
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+
         try {
             pack = boundForm.get();
 

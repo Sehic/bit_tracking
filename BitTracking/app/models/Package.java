@@ -26,6 +26,10 @@ public class Package extends Model {
 
     @Column(length = 255)
     @Constraints.Required
+    public String recipientAddress;
+
+    @Column(length = 255)
+    @Constraints.Required
     public String destination;
 
     @Enumerated(EnumType.STRING)
@@ -45,9 +49,10 @@ public class Package extends Model {
     public PackageType packageType;
 
     @Column(length = 255)
-    public String shipFrom;
+    public String senderName;
+
     @Column(length = 255)
-    public String shipTo;
+    public String recipientName;
 
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 

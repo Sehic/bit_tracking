@@ -2,147 +2,163 @@
 @import helpers.SessionHelper
 
 @(offices: List[PostOffice])(text: Form[models.Package])(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
-    @adminmain("Add Package") {
-        <div class="container-fluid">
-                <!--Register title row -->
-            <div class="row">
-                <div class="col-md-12">
-                    <h3>
-                        Add Package
-                    </h3>
-                    <br/>
-                </div>
-            </div> <!--End register title  row-->
-
-            <!--=======Form row============ -->
-            <div class="row">
-                <div class="col-md-12">
-
-                @helper.form(action = routes.PackageController.savePackage(), 'class -> "form-horizontal", 'role -> "form") {
-
-                    <div class="form-group">
-
-                        <label for="Destination" class="col-sm-2 control-box">
-                            Recipient Address:
-                        </label>
-                        <div class="col-sm-10">
-                            <input name="destination" type="text" class="form-control" id="destination" required="required">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="RecipientName" class="col-sm-2 control-box">
-                            Recipient Name:
-                        </label>
-                        <div class="col-sm-10">
-                            <input name="shipTo" type="text" class="form-control" id="RecipientName" required="required" value="@text("shipTo").value">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="SenderName" class="col-sm-2 control-box">
-                            Sender Name:
-                        </label>
-                        <div class="col-sm-10">
-                            <input name="shipFrom" type="text" class="form-control" id="SenderName" required="required" value="@text("shipFrom").value">
-                        </div>
-                    </div>
-
-
-                    <div class="form-group">
-                        <label for="packageType" class="col-sm-2 control-box">
-                            Type of Package:
-                        </label>
-                        <div class="col-sm-2">
-                            <select class="form-control" name="packageType">
-
-                                <option value="@PackageType.BOX">@PackageType.BOX</option>
-                                <option value="@PackageType.ENVELOPE">@PackageType.ENVELOPE</option>
-                                <option value="@PackageType.FLYER">@PackageType.FLYER</option>
-                                <option value="@PackageType.TUBE">@PackageType.TUBE</option>
-
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="weight" class="col-sm-2 control-box">
-                            Weight (kg):
-                        </label>
-                        <div class="col-sm-10">
-
-                            <input name="weight" value="@text("weight").value" type="text" class="form-control" id="weight" required="required">
-                            <span id="both" class="alert-danger" data-error-for="" >@flash.get("wrongFormatBoth")</span>
-
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="price" class="col-sm-2 control-box">
-                            Price (KM):
-                        </label>
-                        <div class="col-sm-10">
-
-                            <input name="price" value="@text("price").value" type="text" class="form-control" id="price" required="required">
-                            <span id="both1" class="alert-danger" data-error-for="" >@flash.get("wrongFormatBoth")</span>
-
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="postOffices" class="col-sm-2 control-box">
-                            Initial Post Office:
-                        </label>
-                        <div class="col-md-2">
-                            @if(currentUser.typeOfUser==UserType.ADMIN) {
-                                <select id="sortAlphabetically" class="form-control" name="officePost" required="required">
-                                @for(office <- offices) {
-                                    <option value="@office.name">@office.name</option>
-                                }
-                                </select>
-                            }else{
-                                <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="officePost" type="text" readonly/>
-                            }
-                        </div>
-                    </div>
-
-                </div>
+@adminmain("Add Package") {
+    <div class="container-fluid">
+            <!--Register title row -->
+        <div class="row">
+            <div class="col-md-12">
+                <h3>
+                    Add Package
+                </h3>
+                <br/>
             </div>
+        </div> <!--End register title  row-->
 
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10" style="margin-bottom: 3%">
+        <!--=======Form row============ -->
+        <div class="row">
+            <div class="col-md-12">
 
-                    <input type="submit" class="btn btn-primary" value="Add Package">
+            @helper.form(action = routes.PackageController.savePackage(), 'class -> "form-horizontal", 'role -> "form") {
 
+                <div class="form-group">
+
+                    <label for="senderName" class="col-sm-2 control-box">
+                        Sender Name:
+                    </label>
+                    <div class="col-sm-10">
+                        <input name="senderName" type="text" class="form-control" id="senderName" required="required" value="@text("shipFrom").value">
+                    </div>
                 </div>
+
+                <div class="form-group">
+
+                    <label for="recipientName" class="col-sm-2 control-box">
+                        Recipient Name:
+                    </label>
+                    <div class="col-sm-10">
+                        <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="@text("shipTo").value">
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="recipientAddress" class="col-sm-2 control-box">
+                        Recipient Address:
+                    </label>
+                    <div class="col-sm-10">
+                        <input name="recipientAddress" type="text" class="form-control" id="recipientAddress" required="required" value="@text("recipientAddress").value">
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="postOffices" class="col-sm-2 control-box">
+                        Initial Post Office:
+                    </label>
+                    <div class="col-md-3">
+                    @if(currentUser.typeOfUser == UserType.ADMIN) {
+                        <select id="sortAlphabetically" class="form-control" name="officePost" required="required">
+                        @for(office <- offices) {
+                            <option value="@office.name">@office.name</option>
+                        }
+                        </select>
+                    } else {
+                        <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="officePost" type="text" readonly/>
+                    }
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="destination" class="col-sm-2 control-box">
+                        Final Post Office:
+                    </label>
+                    <div class="col-md-3">
+
+                        <select id="sortAlphabetically" class="form-control" name="destination" required="required">
+                        @for(office <- offices) {
+                            <option value="@office.name">@office.name</option>
+                        }
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="packageType" class="col-sm-2 control-box">
+                        Type of Package:
+                    </label>
+                    <div class="col-sm-2">
+                        <select class="form-control" name="packageType">
+
+                            <option value="@PackageType.BOX">@PackageType.BOX</option>
+                            <option value="@PackageType.ENVELOPE">@PackageType.ENVELOPE</option>
+                            <option value="@PackageType.FLYER">@PackageType.FLYER</option>
+                            <option value="@PackageType.TUBE">@PackageType.TUBE</option>
+
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="weight" class="col-sm-2 control-box">
+                        Weight (kg):
+                    </label>
+                    <div class="col-sm-10">
+
+                        <input name="weight" value="@text("weight").value" type="text" class="form-control" id="weight" required="required">
+                        <span id="both" class="alert-danger" data-error-for="" >@flash.get("wrongFormatBoth")</span>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label for="price" class="col-sm-2 control-box">
+                        Price (KM):
+                    </label>
+                    <div class="col-sm-10">
+
+                        <input name="price" value="@text("price").value" type="text" class="form-control" id="price" required="required">
+                        <span id="both1" class="alert-danger" data-error-for="" >@flash.get("wrongFormatBoth")</span>
+
+                    </div>
+                </div>
+
             </div>
+        </div>
 
-            <div class="templatemo-maps">
-                <div class="row">
-                    <div class="col-md-12 col-sm-12 margin-bottom-30">
-                        <div id="map" style="position: relative; height: 700px; width: auto"></div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10" style="margin-bottom : 3%">
+
+                <input type="submit" class="btn btn-primary" value="Add Package">
+
+            </div>
+        </div>
+    }
+
+
+        <div class="templatemo-maps">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 margin-bottom-30">
+                    <div id="map" style="position: relative; height: 700px; width: auto"></div>
 
 
 
-                        <script type="text/javascript">
+                    <script type="text/javascript">
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 11,
     center: new google.maps.LatLng(43.8331, 18.3039),
       mapTypeId: google.maps.MapTypeId.ROADMAP
   });
   var geocoder = new google.maps.Geocoder();
-
    var marker;
-  document.getElementById('destination').addEventListener('blur', function() {
+  document.getElementById('recipientAddress').addEventListener('blur', function() {
     geocodeAddress(geocoder, map);
   });
     function geocodeAddress(geocoder, resultsMap) {
-  var address = document.getElementById('destination').value;
+  var address = document.getElementById('recipientAddress').value;
   geocoder.geocode({'address': address}, function(results, status) {
     if (status === google.maps.GeocoderStatus.OK) {
       resultsMap.setCenter(results[0].geometry.location);
@@ -166,15 +182,12 @@
     map.setCenter(marker.getPosition());
     });
   </script>
-                    </div>
                 </div>
             </div>
-
-
-
-        }
-
         </div>
 
 
-    }
+    </div>
+
+
+}
