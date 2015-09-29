@@ -46,7 +46,7 @@ public class PackageController extends Controller {
             return ok(adminpostofficeadd.render());
         }
 
-        return ok(packageadd.render(PostOffice.findOffice.findList(), newPackage, u1));
+        return ok(packageadd.render(offices, newPackage, u1));
     }
 
     /**
