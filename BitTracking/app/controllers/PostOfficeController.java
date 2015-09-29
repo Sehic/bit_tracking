@@ -6,6 +6,7 @@ import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
 import models.Package;
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -192,18 +193,17 @@ public class PostOfficeController extends Controller {
 
         PostOffice mainPostOffice = PostOffice.findOffice.where().eq("name", officeName).findUnique();
         List<PostOffice> relationOffices = mainPostOffice.postOfficesA;
-        // if(relationOffices.size()!=0) {
-        for (int i = 0; i < relationOffices.size(); i++) {
-            relationOffices.get(i).postOfficesA.remove(mainPostOffice);
-            mainPostOffice.postOfficesA.remove(relationOffices.get(i));
+
+        if (relationOffices.size() != 0) {
+            for (int i = 0; i < relationOffices.size(); i++) {
+                relationOffices.get(i).postOfficesA.remove(mainPostOffice);
+                Ebean.update(relationOffices.get(i));
+            }
+            mainPostOffice.postOfficesA.clear();
             Ebean.update(mainPostOffice);
-            Ebean.update(relationOffices.get(i));
-
         }
-        //   }
-
-
-    //    Saving offices and their relationship to database
+        
+        //    Saving offices and their relationship to database
         for (int i = 0; i < postOffices.size(); i++) {
             PostOffice linkedPostOffice = postOffices.get(i);
             mainPostOffice.postOfficesA.add(linkedPostOffice);
