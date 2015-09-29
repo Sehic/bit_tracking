@@ -39,6 +39,18 @@ public class Package extends Model {
     @Column(precision=10, scale=2)
     public Double price;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    public PackageType packageType;
+
+    @Column(length = 255)
+    public String shipFrom;
+
+    @Column(length = 255)
+    public String shipTo;
+
+
+
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 
     public static List<Package> findByPostOffice(Long id) {
@@ -51,6 +63,10 @@ public class Package extends Model {
 
     public static Package findPackageByTrackingNumber(String num){
         return finder.where().eq("trackingNum", num).findUnique();
+    }
+
+    public static List<Package> findPackageByPackageType(String type){
+        return finder.where().eq("packageType", type).findList();
     }
 
     @Override
