@@ -1,5 +1,6 @@
 package models;
 
+import helpers.PackageType;
 import helpers.StatusHelper;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
@@ -33,11 +34,20 @@ public class Package extends Model {
     @ManyToMany
     public List<User> deliveryWorkers = new ArrayList<>();
 
-    @Column(precision=10, scale=2)
+    @Column(precision = 10, scale = 2)
     public Double weight;
 
-    @Column(precision=10, scale=2)
+    @Column(precision = 10, scale = 2)
     public Double price;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    public PackageType packageType;
+
+    @Column(length = 255)
+    public String shipFrom;
+    @Column(length = 255)
+    public String shipTo;
 
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 
@@ -45,27 +55,26 @@ public class Package extends Model {
         return finder.where().eq("postOffice", id).findList();
     }
 
-    public static Package findPackageById(Long id){
+    public static Package findPackageById(Long id) {
         return finder.where().eq("id", id).findUnique();
     }
 
-    public static Package findPackageByTrackingNumber(String num){
+    public static Package findPackageByTrackingNumber(String num) {
         return finder.where().eq("trackingNum", num).findUnique();
+    }
+
+    public static List<Package> findPackageByPackageType(String type) {
+        return finder.where().eq("packageType", type).findList();
     }
 
     @Override
     public String toString() {
-        if (shipmentPackages.get(shipmentPackages.size()-1).status == StatusHelper.DELIVERED) {
-            return trackingNum + "," + weight +","+ price +","+ shipmentPackages.get(0).postOfficeId.name +"," +destination + ","+shipmentPackages.get(0).dateCreated+"," + StatusHelper.DELIVERED.toString();
+        if (shipmentPackages.get(shipmentPackages.size() - 1).status == StatusHelper.DELIVERED) {
+            return trackingNum + "," + weight + "," + price + "," + shipmentPackages.get(0).postOfficeId.name + "," + destination + "," + shipmentPackages.get(0).dateCreated + "," + StatusHelper.DELIVERED.toString();
         } else {
-            return trackingNum + "," + weight +","+ price +","+ shipmentPackages.get(0).postOfficeId.name +"," +destination + ","+shipmentPackages.get(0).dateCreated+"," + StatusHelper.OUT_FOR_DELIVERY.toString();
+            return trackingNum + "," + weight + "," + price + "," + shipmentPackages.get(0).postOfficeId.name + "," + destination + "," + shipmentPackages.get(0).dateCreated + "," + StatusHelper.OUT_FOR_DELIVERY.toString();
         }
     }
-
-
-
-
-
 
 
 }

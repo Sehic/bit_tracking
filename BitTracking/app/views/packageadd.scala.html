@@ -1,3 +1,4 @@
+@import helpers.PackageType
 @import helpers.SessionHelper
 
 @(offices: List[PostOffice])(text: Form[models.Package])(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
@@ -26,6 +27,43 @@
                         </label>
                         <div class="col-sm-10">
                             <input name="destination" type="text" class="form-control" id="destination" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="RecipientName" class="col-sm-2 control-box">
+                            Recipient Name:
+                        </label>
+                        <div class="col-sm-10">
+                            <input name="shipTo" type="text" class="form-control" id="RecipientName" required="required" value="@text("shipTo").value">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="SenderName" class="col-sm-2 control-box">
+                            Sender Name:
+                        </label>
+                        <div class="col-sm-10">
+                            <input name="shipFrom" type="text" class="form-control" id="SenderName" required="required" value="@text("shipFrom").value">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="packageType" class="col-sm-2 control-box">
+                            Type of Package:
+                        </label>
+                        <div class="col-sm-2">
+                            <select class="form-control" name="packageType">
+
+                                <option value="@PackageType.BOX">@PackageType.BOX</option>
+                                <option value="@PackageType.ENVELOPE">@PackageType.ENVELOPE</option>
+                                <option value="@PackageType.FLYER">@PackageType.FLYER</option>
+                                <option value="@PackageType.TUBE">@PackageType.TUBE</option>
+
+                            </select>
                         </div>
                     </div>
 
@@ -62,7 +100,7 @@
                         </label>
                         <div class="col-md-2">
                             @if(currentUser.typeOfUser==UserType.ADMIN) {
-                                <select id="sortAlphabetically" name="officePost" required="required">
+                                <select id="sortAlphabetically" class="form-control" name="officePost" required="required">
                                 @for(office <- offices) {
                                     <option value="@office.name">@office.name</option>
                                 }
