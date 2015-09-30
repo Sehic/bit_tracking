@@ -22,6 +22,7 @@ POST          /adminpanel/linkoffices                       @controllers.PostOff
 GET           /adminpanel/maps                              @controllers.Application.adminMaps()
 GET           /adminpanel/tables                            @controllers.Application.adminTables()
 GET           /adminpanel/tables/addpostoffice              @controllers.Application.addPostOffice()
+POST          /adminpanel/tables/addpostoffice/checkname    @controllers.PostOfficeController.checkOfficeName()
 GET           /adminpanel/preferences/:id                   @controllers.UserController.adminPreferences(id: Long)
 GET           /adminpanel/tables/:id                        @controllers.UserController.deleteUser(id: Long)
 DELETE        /adminpanel/tables/:id                        @controllers.UserController.deleteUser(id: Long)

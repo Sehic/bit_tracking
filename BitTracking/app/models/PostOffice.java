@@ -70,4 +70,8 @@ public class PostOffice extends Model {
         return findOffice.where().eq("name", name).findUnique();
     }
 
+    public static PostOffice findPostOfficeByAddress(String address){
+        return findOffice.where().eq("address", address).findUnique();
+    }
+
 }

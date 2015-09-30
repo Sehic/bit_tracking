@@ -135,6 +135,18 @@ $(document).ready(function () {
                     method: "delete"
                 }).success(function (response) {
                     $toDelete.parents($toDelete.attr("data-delete-parent")).remove();
+                }).error(function(response){
+                    bootbox.dialog({
+                       message:"Post Office is active. You should remove relations with other offices and packages!",
+                        title: "You can't delete this office!",
+                        buttons: {
+                            success: {
+                                label: "Ok",
+                                className: "btn btn-primary"
+                            }
+                        }
+                    });
+             //   bootbox.alert("You can't delete this office!");
                 });
             }
         });
@@ -150,12 +162,51 @@ $(document).ready(function () {
             data: "email=" + email
         }).success(function (response) {
             $('#buttonsubmit').prop('disabled', false);
+            $("#mailError").remove();
         }).error(function (response) {
             $("#mailError").text("Email already exists");
             $('#buttonsubmit').prop('disabled', true);
         })
     });
 });
+
+$(document).ready(function () {
+    $('#address, #nameAddOffice').blur(function () {
+        var name = $("#nameAddOffice").val();
+        var address = $("#address").val();
+        $.ajax({
+            url: "/adminpanel/tables/addpostoffice/checkname",
+            type: "post",
+            data: "name=" + name+"&address="+ address
+        }).success(function (response) {
+            $('#buttonsubmit').prop('disabled', false);
+            $("#equalName").empty();
+            $("#wrongAddress").empty();
+        }).error(function (response) {
+            var nesto = response.responseText;
+
+            if(nesto === "1"){
+                $("#equalName").text("Office with this name already exists!");
+                $("#wrongAddress").text("Office with this address already exists!");
+            }
+            if(nesto === "2"){
+
+                $("#wrongAddress").empty();
+                $("#equalName").text("Office with this name already exists!");
+
+            }
+            if(nesto === "X"){
+                $("#equalName").empty();
+                $("#wrongAddress").text("Office with this address already exists!");
+
+            }
+
+
+            $('#buttonsubmit').prop('disabled', true);
+        })
+    });
+});
+
 //Cookie controller
 function setCookies() {
     var email = document.getElementById("inputEmail").value;

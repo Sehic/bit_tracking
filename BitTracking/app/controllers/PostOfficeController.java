@@ -283,4 +283,22 @@ public class PostOfficeController extends Controller {
         else
             return redirect(routes.UserController.officeWorkerPanel());
     }
+
+    public Result checkOfficeName() {
+        DynamicForm form = Form.form().bindFromRequest();
+        String officeName = form.data().get("name");
+        String officeAddress = form.data().get("address");
+        PostOffice officeByName = PostOffice.findPostOfficeByName(officeName);
+        PostOffice officeByAddress = PostOffice.findPostOfficeByAddress(officeAddress);
+        if (officeByName != null & officeByAddress!=null) {
+            return badRequest("1");
+        }
+        if(officeByName!=null){
+            return badRequest("2");
+        }
+        if(officeByAddress!=null){
+            return badRequest("X");
+        }
+        return ok();
+    }
 }
