@@ -24,7 +24,7 @@
                     <legend ><h5 style="color: #419641"><strong>Destination</strong></h5></legend>
                 <div class="form-group col-md-12">
                     <label for="recipientName" class="col-sm-2" style="font-size: 12px">
-                        Recipient Name:
+                        Recipient's Name:
                     </label>
                     <div class="col-sm-10">
                         <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="@text("shipTo").value">
@@ -47,6 +47,7 @@
                     </label>
                     <div class="col-md-3">
                         <select id="sortAlphabetically" class="form-control" name="destination" required="required">
+                            <option class="default">--Select one--</option>
                         @for(office <- offices) {
                             <option value="@office.name">@office.name</option>
                         }
@@ -61,7 +62,6 @@
                <legend><h5 style="color: #419641"><strong>Origination</strong></h5></legend>
 
                 <div class="form-group col-md-12">
-
                     <label for="senderName" class="col-sm-2" style="font-size: 12px">
                         Sender's Name:
                     </label>
@@ -88,6 +88,7 @@
                     <div class="col-md-3">
                     @if(currentUser.typeOfUser == UserType.ADMIN) {
                         <select id="sortAlphabetically" class="form-control" name="officePost" required="required">
+                            <option class="default">--Select one--</option>
                         @for(office <- offices) {
                             <option value="@office.name">@office.name</option>
                         }
@@ -109,7 +110,7 @@
                <legend><h5 style="color: #419641"><strong>Service Options</strong></h5></legend>
                  <div class="form-group col-md-12">
                     <label for="weight" class="col-sm-2" style="font-size: 12px">
-                        Weight:
+                        Package Weight:
                     </label>
                     <div class="col-sm-10">
                         <input placeholder="Weight in kgs" name="weight" value="@text("weight").value" type="text" class="form-control" id="weight" required="required">
@@ -119,7 +120,7 @@
 
                 <div class="form-group col-md-12">
                     <label for="price" class="col-sm-2" style="font-size: 12px">
-                        Price:
+                        Package Price:
                     </label>
                     <div class="col-sm-10">
                         <input placeholder="Price in KM" name="price" value="@text("price").value" type="text" class="form-control" id="price" required="required">
@@ -134,6 +135,7 @@
                     </label>
                     <div class="col-sm-3">
                         <select class="form-control" name="packageType">
+                            <option class="default">--Select one--</option>
                             <option value="@PackageType.BOX">@PackageType.BOX</option>
                             <option value="@PackageType.ENVELOPE">@PackageType.ENVELOPE</option>
                             <option value="@PackageType.FLYER">@PackageType.FLYER</option>
