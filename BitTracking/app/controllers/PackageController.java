@@ -7,6 +7,7 @@ import helpers.StatusHelper;
 import models.Package;
 import models.*;
 import play.data.Form;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -28,8 +29,11 @@ public class PackageController extends Controller {
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result adminPackage() {
-
         return ok(adminpackage.render(Package.finder.findList()));
+    }
+
+    public  Result json(){
+        return ok(Json.toJson(Package.finder.findList()));
     }
 
     /**

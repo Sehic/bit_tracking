@@ -60,6 +60,7 @@ GET           /adminpanel/deliveryworkers/status/:id        @controllers.Package
 POST          /adminpanel/deliveryworkers/status/:id        @controllers.PackageController.updateStatus(id: Long)
 
 
+GET           /adminpanel/json                              @controllers.PackageController.json()
 
 
 

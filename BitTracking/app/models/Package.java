@@ -1,5 +1,7 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import helpers.StatusHelper;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
@@ -18,6 +20,7 @@ public class Package extends Model {
     public Long id;
 
     @OneToMany(mappedBy = "packageId")
+    @JsonManagedReference
     public List<Shipment> shipmentPackages = new ArrayList<>();
 
     @Column

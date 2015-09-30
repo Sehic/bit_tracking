@@ -1,6 +1,35 @@
 @(packs: java.util.List[models.Package])
 @adminmain("Package") {
 
+<script>
+    $(document).ready(
+            function() {
+                setInterval(function() {
+                    $.ajax({
+                        url: "/adminpanel/json",
+                        type: "GET",
+                        dataType: "json"
+                    }).success(function (response) {
+                        var trHTML = '';
+                        var i;
+                        for (i =0; i<response.length; i++){
+                          trHTML += '<tr><td>' + response[i].id + '</td><td>' + response[i].trackingNum + '</td>';
+                          console.log(response[i].shipmentPackages);
+                          if(response[i].shipmentPackages.size() < 2){
+                                trHTML += '<td><a href='+ routes.PostOfficeController.listRoutes(response[i].id)+'>'+"Add Route"+'</a></td>';
+                          }else{
+
+                          }
+                          trHTML += '<td>' + response[i].destination + '</td>';
+                          trHTML += '<td>' + "Office" + '</td><td>' + response[i].weight + '</td><td>' + response[i].price + '</td>';
+                          trHTML += '<td><a href='+routes.PackageController.deletePackage(response[i].id)+'>'+'Delete'+'</a></td></tr>';
+
+                        }
+                        $('#example1').html(trHTML);
+                    })
+                }, 3000);
+            });
+</script>
 
 
     <ol class="breadcrumb">
@@ -45,18 +74,7 @@
                 <th>Delete</th>
             </tr>
         </thead>
-        <tbody>
-                <tr class="succes">
-                    <td id="pack"></td>
-                    <td id="trackingNum"></td>
-                    <td id="route"></td>
-                    <td id="destination"></td>
-                    <td id="officeName"></td>
-                    <td id="weight"></td>
-                    <td id="price"></td>
-                    <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input type="button" value="Delete"></a></td>
-                </tr>
-        </tbody>
+        <tbody id="example1"></tbody>
     </table>
     </div>
 

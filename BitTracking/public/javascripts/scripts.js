@@ -123,6 +123,7 @@ $(document).ready(function () {
         })
     })
 });
+
 //Method that is globaly used when we delete something
 $(document).ready(function () {
     $('body').on('click', 'a[data-role="delete"]', function (e) {
