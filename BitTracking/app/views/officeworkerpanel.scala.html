@@ -45,7 +45,7 @@
             }
 
 
-            <td><a href="@routes.PackageController.editPackage(pack.id)">@pack.destination</a></td>
+            <td>@pack.destination</td>
 
             @if(pack.shipmentPackages.size()!=0) {
                 @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {

@@ -9,131 +9,140 @@
             <div class="col-md-12">
                 <h3>
                     Add Package
-                </h3>
+                </h3><br/>
+                <h5>This form is used to schedule a shipment with Bit Tracking. Fill out the form and click "Add Package" to obtain rate information for this shipment.</h5>
                 <br/>
             </div>
         </div> <!--End register title  row-->
 
         <!--=======Form row============ -->
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
+                    <!--Start origination-->
+                @helper.form(action = routes.PackageController.savePackage(), 'class -> "form-horizontal", 'role -> "form") {
+                    <fieldset>
+                        <legend ><h5 style="color: #419641"><strong>Destination</strong></h5></legend>
+                        <div class="form-group col-md-12">
+                            <label for="recipientName" class="col-sm-2" style="font-size: 12px">
+                                Recipient's Name:
+                            </label>
+                            <div class="col-sm-10">
+                                <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="@text("shipTo").value">
+                            </div>
+                        </div>
 
-            @helper.form(action = routes.PackageController.savePackage(), 'class -> "form-horizontal", 'role -> "form") {
+                        <div class="form-group col-md-12">
+                            <label for="recipientAddress" class="col-sm-2" style="font-size: 12px">
+                                Recipient's Address:
+                            </label>
+                            <div class="col-sm-10">
+                                <input name="recipientAddress" type="text" class="form-control" id="recipientAddress" required="required" value="@text("recipientAddress").value">
+                            </div>
+                        </div>
 
-                <div class="form-group">
 
-                    <label for="senderName" class="col-sm-2 control-box">
-                        Sender Name:
-                    </label>
-                    <div class="col-sm-10">
-                        <input name="senderName" type="text" class="form-control" id="senderName" required="required" value="@text("shipFrom").value">
+                        <div class="form-group col-md-12">
+                            <label for="destination" class="col-sm-2" style="font-size: 12px">
+                                Final Post Office:
+                            </label>
+                            <div class="col-md-5">
+                                <select id="sortAlphabetically" class="form-control" name="destination" required="required">
+                                    <option class="default">--Select one--</option>
+                                    @for(office <- offices) {
+                                        <option value="@office.name">@office.name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div></fieldset>
+                </div> <!--ends Destionation-->
+
+            <!--Starts Origination-->
+            <div class="col-md-6">
+                <fieldset>
+                    <legend><h5 style="color: #419641"><strong>Origination</strong></h5></legend>
+
+                    <div class="form-group col-md-12">
+                        <label for="senderName" class="col-sm-2" style="font-size: 12px">
+                            Sender's Name:
+                        </label>
+                        <div class="col-sm-10">
+                            <input placeholder="" name="senderName" type="text" class="form-control" id="senderName" required="required" value="@text("senderName").value">
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-
-                    <label for="recipientName" class="col-sm-2 control-box">
-                        Recipient Name:
-                    </label>
-                    <div class="col-sm-10">
-                        <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="@text("shipTo").value">
-                    </div>
-                </div>
-
-                <div class="form-group">
-
-                    <label for="recipientAddress" class="col-sm-2 control-box">
-                        Recipient Address:
-                    </label>
-                    <div class="col-sm-10">
-                        <input name="recipientAddress" type="text" class="form-control" id="recipientAddress" required="required" value="@text("recipientAddress").value">
-                    </div>
-                </div>
-
-                <div class="form-group">
-
-                    <label for="postOffices" class="col-sm-2 control-box">
-                        Initial Post Office:
-                    </label>
-                    <div class="col-md-3">
-                    @if(currentUser.typeOfUser == UserType.ADMIN) {
-                        <select id="sortAlphabetically" class="form-control" name="officePost" required="required">
-                        @for(office <- offices) {
-                            <option value="@office.name">@office.name</option>
+                    <div class="form-group col-md-12">
+                        <label for="postOffices" class="col-sm-2" style="font-size: 12px">
+                            Initial Post Office:
+                        </label>
+                        <div class="col-md-5">
+                        @if(currentUser.typeOfUser == UserType.ADMIN) {
+                            <select id="sortAlphabetically" class="form-control" name="officePost" required="required">
+                                <option class="default">--Select one--</option>
+                                @for(office <- offices) {
+                                    <option value="@office.name">@office.name</option>
+                                }
+                            </select>
+                        } else {
+                            <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="officePost" type="text" readonly/>
                         }
-                        </select>
-                    } else {
-                        <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="officePost" type="text" readonly/>
-                    }
+                        </div>
                     </div>
-                </div>
+                </fieldset>
 
-                <div class="form-group">
+            </div>
 
-                    <label for="destination" class="col-sm-2 control-box">
-                        Final Post Office:
-                    </label>
-                    <div class="col-md-3">
+        </div> <!--Ends origination-->
 
-                        <select id="sortAlphabetically" class="form-control" name="destination" required="required">
-                        @for(office <- offices) {
-                            <option value="@office.name">@office.name</option>
-                        }
-                        </select>
-
+        <!--Starts Service Options-->
+        <div class="row">
+            <div class="col-md-6">
+                <fieldset>
+                    <legend><h5 style="color: #419641"><strong>Service Options</strong></h5></legend>
+                    <div class="form-group col-md-12">
+                        <label for="weight" class="col-sm-2" style="font-size: 12px">
+                            Package Weight:
+                        </label>
+                        <div class="col-sm-10">
+                            <input placeholder="Weight in kgs" name="weight" value="@text("weight").value" type="text" class="form-control" id="weight" required="required">
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="packageType" class="col-sm-2 control-box">
-                        Type of Package:
-                    </label>
-                    <div class="col-sm-2">
-                        <select class="form-control" name="packageType">
-
-                            <option value="@PackageType.BOX">@PackageType.BOX</option>
-                            <option value="@PackageType.ENVELOPE">@PackageType.ENVELOPE</option>
-                            <option value="@PackageType.FLYER">@PackageType.FLYER</option>
-                            <option value="@PackageType.TUBE">@PackageType.TUBE</option>
-
-                        </select>
+                    <div class="form-group col-md-12">
+                        <label for="price" class="col-sm-2" style="font-size: 12px">
+                            Package Price:
+                        </label>
+                        <div class="col-sm-10">
+                            <input placeholder="Price in KM" name="price" value="@text("price").value" type="text" class="form-control" id="price" required="required">
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
 
-                    <label for="weight" class="col-sm-2 control-box">
-                        Weight (kg):
-                    </label>
-                    <div class="col-sm-10">
-
-                        <input name="weight" value="@text("weight").value" type="text" class="form-control" id="weight" required="required">
-                        <span id="both" class="alert-danger" data-error-for="" >@flash.get("wrongFormatBoth")</span>
-
+                    <div class="form-group col-md-12">
+                        <label for="packageType" class="col-sm-2" style="font-size: 12px">
+                            Type of Package:
+                        </label>
+                        <div class="col-sm-5">
+                            <select class="form-control" name="packageType">
+                                <option class="default">--Select one--</option>
+                                <option value="@PackageType.BOX">@PackageType.BOX</option>
+                                <option value="@PackageType.ENVELOPE">@PackageType.ENVELOPE</option>
+                                <option value="@PackageType.FLYER">@PackageType.FLYER</option>
+                                <option value="@PackageType.TUBE">@PackageType.TUBE</option>
+                            </select>
+                        </div>
                     </div>
+                </fieldset>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group col-md-12">
+                    <b style="font-size: 20px; color:red">@flash.get("wrongFormatBoth")</b>
                 </div>
-
-                <div class="form-group">
-
-                    <label for="price" class="col-sm-2 control-box">
-                        Price (KM):
-                    </label>
-                    <div class="col-sm-10">
-
-                        <input name="price" value="@text("price").value" type="text" class="form-control" id="price" required="required">
-                        <span id="both1" class="alert-danger" data-error-for="" >@flash.get("wrongFormatBoth")</span>
-
-                    </div>
-                </div>
-
             </div>
         </div>
 
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10" style="margin-bottom : 3%">
-
+            <div class="col-sm-12" style="margin-bottom : 3%; padding-left: 9.8%" >
                 <input type="submit" class="btn btn-primary" value="Add Package">
-
             </div>
         </div>
     }

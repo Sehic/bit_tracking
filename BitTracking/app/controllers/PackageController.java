@@ -74,7 +74,7 @@ public class PackageController extends Controller {
 
         } catch (IllegalStateException | NumberFormatException e) {
 
-            flash("wrongFormatBoth", "Please insert numbers only!");
+            flash("wrongFormatBoth", "Please fill this form with correct values!");
 
             return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm, u1));
         }
