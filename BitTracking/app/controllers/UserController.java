@@ -1,5 +1,6 @@
 package controllers;
 
+import com.avaje.ebean.Ebean;
 import helpers.Authenticators;
 import helpers.SessionHelper;
 import models.*;
@@ -167,16 +168,27 @@ public class UserController extends Controller {
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart picture = body.getFile("picture");
         ImagePath path = ImagePath.findByUser(user);
-        if (picture != null) {
+
+        if (path == null) {
+
             File file = picture.getFile();
 
-            user.imagePath = ImagePath.create(file);
+            user.imagePath = ImagePath.create(file, user);
 
+            return redirect("/mybt/editprofile/" + user.id);
+
+        }else {
+
+            Ebean.delete(path);
+
+            File file = picture.getFile();
+
+            user.imagePath = ImagePath.create(file, user);
 
             return redirect("/mybt/editprofile/" + user.id);
 
         }
-        return redirect(routes.Application.index());
+
     }
 
     /**
