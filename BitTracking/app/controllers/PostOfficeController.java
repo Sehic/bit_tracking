@@ -14,6 +14,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 import views.html.*;
 
+import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,6 +63,14 @@ public class PostOfficeController extends Controller {
 
         String name = boundForm.get().name;
         String address = boundForm.get().address;
+
+        PostOffice officeByName = PostOffice.findPostOfficeByName(name);
+        PostOffice officeByAddress = PostOffice.findPostOfficeByAddress(address);
+
+        if(officeByName != null || officeByAddress != null){
+            return redirect(routes.Application.addPostOffice());
+        }
+
         String lon = boundForm.field("longitude").value();
         String lat = boundForm.field("latitude").value();
 
@@ -258,8 +267,12 @@ public class PostOfficeController extends Controller {
         String route = form.get("route");
 
         Package packageWithRoute = Package.findPackageById(id);
-
-        Shipment initialOfficeShip = Shipment.shipmentFinder.where().eq("packageId", packageWithRoute).findUnique();
+        Shipment initialOfficeShip = new Shipment();
+        try {
+            initialOfficeShip = Shipment.shipmentFinder.where().eq("packageId", packageWithRoute).findUnique();
+        }catch(PersistenceException e){
+            return redirect(routes.PostOfficeController.listRoutes(id));
+        }
         initialOfficeShip.status = StatusHelper.READY_FOR_SHIPPING;
         initialOfficeShip.update();
 

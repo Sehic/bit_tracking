@@ -171,7 +171,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('#address, #nameAddOffice').blur(function () {
+    $('#address, #nameAddOffice').keyup(function () {
         var name = $("#nameAddOffice").val();
         var address = $("#address").val();
         $.ajax({
