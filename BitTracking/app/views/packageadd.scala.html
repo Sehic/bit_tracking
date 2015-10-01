@@ -35,7 +35,7 @@
                                 Recipient's Name:
                             </label>
                             <div class="col-sm-10">
-                                <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="@text("shipTo").value">
+                                <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="@text("recipientName").value">
                             </div>
                         </div>
 
@@ -67,6 +67,7 @@
                                     }
                                 </select>
                             </div>
+                            <span id="wrongFinalOffice" class="alert-danger" data-error-for="" >@flash.get("wrongFinalOffice")</span>
                         </div></fieldset>
                 </div> <!--ends Destionation-->
 
@@ -100,6 +101,7 @@
                             <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="officePost" type="text" readonly/>
                         }
                         </div>
+                        <span id="wrongInitialOffice" class="alert-danger" data-error-for="" >@flash.get("wrongInitialOffice")</span>
                     </div>
                 </fieldset>
 

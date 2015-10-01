@@ -61,12 +61,22 @@ public class PackageController extends Controller {
 
         String officeName = boundForm.field("officePost").value();
         PostOffice office = PostOffice.findPostOfficeByName(officeName);
+        if(office == null){
+            flash("wrongInitialOffice", "Please choose one office!");
+            return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm, u1));
+        }
         Package pack = new Package();
 
         List<PostOffice> offices = PostOffice.findOffice.findList();
 
         try {
             pack = boundForm.get();
+
+            PostOffice officeByName = PostOffice.findPostOfficeByName(pack.destination);
+            if(officeByName== null){
+                flash("wrongFinalOffice", "Please choose one office!");
+                return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm, u1));
+            }
 
             pack.trackingNum = (UUID.randomUUID().toString());
 
