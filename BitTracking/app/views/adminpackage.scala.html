@@ -14,8 +14,8 @@
         <div class="row margin-bottom-30">
             <div class="col-md-12">
                 <ul class="nav nav-pills">
-                    <li><a href="@routes.Application.adminTables()">User <span class="badge"></span></a></li>
-                    <li><a href="@routes.Application.adminPostOffice()">Post Office <span class="badge"></span></a></li>
+                    <li><a href="@routes.Application.adminTables()">User <span class="badge">@User.find.findList().size()</span></a></li>
+                    <li><a href="@routes.Application.adminPostOffice()">Post Office <span class="badge">@PostOffice.findOffice.findList().size()</span></a></li>
                     <li class="active"><a href="#">
                         Package <span class="badge">@packs.size</span></a></li>
                 </ul>

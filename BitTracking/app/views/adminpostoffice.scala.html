@@ -11,11 +11,11 @@
     <div class="row margin-bottom-30">
         <div class="col-md-12">
             <ul class="nav nav-pills">
-                <li><a href="@routes.Application.adminTables()">User <span class="badge"></span></a></li>
+                <li><a href="@routes.Application.adminTables()">User <span class="badge">@User.find.findList().size()</span></a></li>
                 <li class="active"><a href="#">Post Office <span class="badge">
                 @postOffices.size</span></a></li>
                 <li><a href="@routes.PackageController.adminPackage()">
-                    Package <span class="badge"></span></a></li>
+                    Package <span class="badge">@models.Package.finder.findList().size()</span></a></li>
             </ul>
         </div>
     </div>

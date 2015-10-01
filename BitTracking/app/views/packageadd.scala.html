@@ -49,7 +49,13 @@
                                 <select id="sortAlphabetically" class="form-control" name="destination" required="required">
                                     <option class="default">--Select one--</option>
                                     @for(office <- offices) {
-                                        <option value="@office.name">@office.name</option>
+                                        @if(currentUser.postOffice !=null){
+                                            @if(currentUser.postOffice.id != office.id){
+                                                <option value="@office.name">@office.name</option>
+                                            }
+                                        }else {
+                                            <option value="@office.name">@office.name</option>
+                                        }
                                     }
                                 </select>
                             </div>

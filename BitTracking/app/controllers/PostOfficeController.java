@@ -41,6 +41,7 @@ public class PostOfficeController extends Controller {
         List<User> users = User.findUsersByPostOffice(office);
         for (int i = 0; i < users.size(); i++) {
             users.get(i).postOffice = null;
+            users.get(i).typeOfUser = UserType.REGISTERED_USER;
             users.get(i).update();
         }
 
