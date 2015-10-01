@@ -42,6 +42,10 @@ public class Application extends Controller {
      * @return
      */
     public Result login() {
+        User u = SessionHelper.getCurrentUser(ctx());
+        if(u!=null){
+            return redirect(routes.Application.index());
+        }
         Form<User> newUser = new Form<User>(User.class);
         return ok(login.render("", newUser));
     }
@@ -62,6 +66,10 @@ public class Application extends Controller {
      * @return
      */
     public Result register() {
+        User u = SessionHelper.getCurrentUser(ctx());
+        if(u!=null){
+            return redirect(routes.Application.index());
+        }
         Form<User> newUser = new Form<User>(User.class);
         return ok(register.render(newUser));
     }
