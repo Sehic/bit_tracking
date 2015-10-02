@@ -1,0 +1,119 @@
+@(user: User, path: ImagePath)
+@import helper._
+@main("Edit your profile") {
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="row">
+                    <div class="col-md-3" style="margin-top: 6%">
+                        <div>
+                            <h3 style="text-align: center">User Profile </h3>
+                        </div>
+
+                            <!--======IMAGE UPLOAD========-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="text-center">
+                                    @if(path != null) {
+                                        <img src="@path.image_url" class="avatar img-circle" alt="avatar" height="100" width="100">
+                                    } else {
+                                        <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
+                                    }
+                                    <h6>Upload photo...</h6>
+
+                                    <form action="@routes.UserController.uploadPicture()" method="post" enctype="multipart/form-data">
+                                        <input type="file" name="picture" accept="image/*" class="form-control">
+                                        <input type="submit">
+                                    </form>
+                                </div>
+                            </div> <!--Ends Image upload-->
+                        </div>
+                    </div>
+
+                        <!--===========EDIT PROFILE==============-->
+
+                    <div class="col-md-9" style="margin-top: 6%">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 style="text-align: center">Edit Profile</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 style="text-align: center">Personal information</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                            @helper.form(action = routes.UserController.updateUser(user.id), 'class -> "form-horizontal", 'role -> "form") {
+                                <div class="form-group">
+
+                                    <label for="inputName" class="col-sm-2 control-label">
+                                        First Name:
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" onblur="checkFirstName()" name="firstName" class="form-control" id="inputName" value="@user.firstName" required="required">
+                                        <span id="nameError" class="alert-danger" data-error-for="" ></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="inputLastName" class="col-sm-2 control-label">
+                                        Last Name:
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input type="text" onblur="checkLastName()" name="lastName" class="form-control" id="inputLastName" value="@user.lastName" required="required">
+                                        <span id="lastNameError" class="alert-danger" data-error-for="" ></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="inputPassword3" class="col-sm-2 control-label" >
+                                        Password:
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+
+                                            <input name="password" id="inputPassword3" onblur="checkPassword()" type="password" class="form-control" placeholder="Password">
+                                            <span id="passError" class="alert-danger" data-error-for="" ></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label for="inputPassword3" class="col-sm-2 control-label">
+                                        Confirm Password:
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+
+                                            <input name="repassword" id="inputPassword4" onblur="checkPasswords()" type="password" class="form-control" placeholder="Password">
+                                            <span id="repassError" class="alert-danger" data-error-for="" ></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <input type="submit" class="btn btn-primary btn-sm" value="Save Changes">
+                                        <span></span>
+                                        <input type="reset" class="btn btn-default btn-sm" value="Cancel">
+                                    </div>
+                                </div>
+                            }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

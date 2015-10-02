@@ -1,0 +1,47 @@
+@(places: java.util.List[models.Location])
+@adminmain("Post Offices") {
+
+    <ol class="breadcrumb">
+        <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
+        <li><a href="#">Maps</a></li>
+        <li class="active">Location</li>
+    </ol>
+    <h1>Maps</h1>
+    <div>
+        <input id="loc" type="hidden" value="@places.toString()">
+    </div>
+    <div class="templatemo-maps">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 margin-bottom-30">
+                <div id="map" style="position: relative; height: 700px; width: auto"></div>
+                <script type="text/javascript">
+
+     var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 5,
+    center: new google.maps.LatLng(43.8331, 18.3039),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+// Construct a new InfoWindow.
+   var list = document.getElementById("loc").value;
+
+    var i, marker;
+
+    @for(place <- places) {
+
+     marker = new google.maps.Marker({
+        position: new google.maps.LatLng(@place.y
+                    , @place.x),
+        map: map
+        });
+        }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+    google.maps.event.addDomListener(window, 'resize', function() {
+    map.setCenter(marker.getPosition());
+    });
+  </script>
+            </div>
+        </div>
+    </div>
+
+}

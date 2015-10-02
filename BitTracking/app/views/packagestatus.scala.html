@@ -1,0 +1,63 @@
+@(pack: models.Package)
+
+@import helper._
+@adminmain("Package Details") {
+    <ol class="breadcrumb" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+        <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
+        <li><a href="@routes.PackageController.addPackage()">Package</a></li>
+        <li class="active">Details</li>
+    </ol>
+
+    @helper.form(action = routes.PackageController.updateStatus(pack.id), 'class -> "form-horizontal", 'role -> "form") {
+
+
+        <h1>Package Status</h1>
+
+        <div class="form-group">
+
+            <label for="destination" class="col-sm-2 control-box">
+                Destination:
+            </label>
+            <div class="col-sm-10">
+            @pack.destination
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="status" class="col-sm-2 control-box">
+                Current status:
+            </label>
+            @if(pack.shipmentPackages.size()!=0){
+            <div class="col-sm-10">@pack.shipmentPackages.get(0).status
+            }else{
+                <div class="col-sm-10">NO STATUS
+            }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="status" class="col-sm-2 control-box">
+                Change status:
+            </label>
+            <div class="col-sm-10">
+                <div id="change">
+                    <select name="drop">
+                        <option value="1">READY FOR SHIPPING</option>
+                        <option value="2">ON ROUTE</option>
+                        <option value="3">OUT FOR DELIVERY</option>
+                        <option value="4">DELIVERED</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <input type="submit" style="margin-bottom: 2%" class="btn btn-primary" value="Save changes">
+        </div>
+
+
+    }
+
+
+}

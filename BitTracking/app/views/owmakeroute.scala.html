@@ -1,0 +1,90 @@
+@(postOffices: List[PostOffice], officePackage: models.Package)
+    @adminmain("Make a route") {
+
+        <ol class="breadcrumb">
+            <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
+            <li><a href="#">Manage Post Office</a></li>
+            <li class="active">Make a route</li>
+        </ol>
+
+        <h2>Make package route</h2>
+
+
+        <div class="row">
+            <hr/>
+            <div class="form-group">
+
+                <label for="initialPostOffice" class="col-sm-3 control-label">
+                    Initial Post Office
+                </label>
+                <div class="col-sm-9">
+                    <input id="getInitialOffice" name="initialPostOffice" value="@officePackage.shipmentPackages.get(0).postOfficeId.name" type="text" class="form-control" style="font-size : 13 px ; font-style : italic " readonly>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <hr/>
+
+        </div>
+
+        <div class="row">
+        @helper.form(routes.PostOfficeController.saveRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
+
+            <div class="col-md-2">
+                <select name="postOffices" class="selectOffice form-control sortAlphabetically">
+                @for(office <- postOffices) {
+                    <option value="@office.name">@office.name</option>
+                }
+
+                </select>
+            </div>
+
+            <div class="col-md-0">
+                <button id="addToRoute" type="button" style="margin-right: 1%" class="btn btn-default pull-left">
+                    Add
+                </button>
+            </div>
+
+            <div class="col-md-0">
+                <button id="clearFromRoute" type="button" class="btn btn-default pull-left">
+                    Clear
+                </button>
+            </div>
+
+            <div id="routeForm" class="col-md-9 pull-right">
+                <input id="finalRoute" name="route" class="form-control" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <hr/>
+            <div class="form-group">
+
+                <label for="destinationOffice" class="col-sm-3 control-label">
+                    Destination Post Office
+                </label>
+                <div class="col-sm-9">
+                    <input id="getDestinationOffice" name="destinationOffice" value="@officePackage.shipmentPackages.get(0).packageId.destination" type="text" class="form-control" style="font-size:13px; font-style: italic " readonly>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <hr/>
+        </div>
+        <div class="row">
+
+
+
+            <div class="col-sm-9 col-sm-offset-3">
+                <button type="submit" class="btn btn-primary">
+                    Finalize
+                </button>
+            </div>
+
+        </div>
+    }
+    }

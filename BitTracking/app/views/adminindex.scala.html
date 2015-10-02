@@ -1,0 +1,74 @@
+@(users: List[User])
+    @adminmain("Admin Panel") {
+        <ol class="breadcrumb">
+            <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
+            <li><a href="#">Dashboard</a></li>
+            <li class="active">Overview</li>
+        </ol>
+        <h1>Dashboard</h1>
+        <p><strong><em>Admin</em></strong> - Maintains a list of post offices with their addresses. Maintains a list of allowed post office to post office delivery connections. Can edit all application data.</p>
+        <p><strong><em>Office Worker</em></strong> - Adds new packages into the system, with the start post office, and the destination address. Allowed to manually determine the post office that is closest
+            to the destination address, and to enter the shortest allowed post office to post office route that the package must take to travel from the initial post office to the destination post office.</p>
+        <p><strong><em>Delivery Worker</em></strong> - Selects groups of packages available for delivery in the same post office (these packages receive status "out for delivery", and their tracking log receives new entry
+            that shows that package has departed from the post office). Marks packages as delivered (these packages can be delivered to their final destination (placed in the "delivered" status, with new
+            tracking log entry for the final delivery), or could be delivered to an intermediate/destination post office (placed in "at post office" status, with the new post office information, and with new
+            tracking log entry showing that package arrived at the specific post office)).
+        <p><strong><em>Registered users</em></strong> - Views package tracking log. </p>
+
+
+        <div class="row">
+            <div class="col-md-7">
+                <div class="templatemo-panels">
+                    <div class="row">
+
+                        <div class="col-md-10 col-sm-7 margin-bottom-30">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">Users</div>
+                                <div class="panel-body">
+                                    <table id="example" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Email</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @for(user <- users) {
+                                            <tr>
+                                                <td>@user.id</td>
+                                                <td>@user.firstName</td>
+                                                <td>@user.lastName</td>
+                                                <td>@user.email</td>
+                                            </tr>
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <span class="btn btn-primary"><a href="@routes.Application.adminTables()">See Tables</a></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="templatemo-progress">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active">
+                            <h4 class="list-group-item-heading">Latest Data</h4>
+                            <p class="list-group-item-text">
+                                Admin users maintains a list of post offices with post office names and addresses. Admin maintains a list of allowed links from one post office to another post office. In other words, each post office has a list of other (nearby) post offices that packages can be sent to, on their route to the final destination address.</p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <h4 class="list-group-item-heading">Older Data</h4>
+                            <p class="list-group-item-text">
+                                Office Workers receive packages from senders and enter packages them into the system, thus beginning the package routing and tracking process. Each new package is entered into the system with their initial post office, the destination address, and the tracking number.</p>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }

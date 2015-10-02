@@ -1,0 +1,214 @@
+@import helpers.PackageType
+@import helpers.SessionHelper
+
+@(offices: List[PostOffice])(text: Form[models.Package])(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
+@adminmain("Add Package") {
+    <div class="container-fluid">
+            <!--Register title row -->
+        <div class="row">
+            <div class="col-md-12">
+                <h3>
+                    Add Package
+                </h3><br/>
+                <h5>This form is used to schedule a shipment with Bit Tracking. Fill out the form and click "Add Package" to obtain rate information for this shipment.</h5>
+                <br/>
+            </div>
+        </div> <!--End register title  row-->
+
+        <div class="col-md-12">
+            @if(flash.containsKey("wrongFormatBoth")) {
+                <div class="alert alert-danger col-md-12">
+                    <b style="font-size : 18 px ; color : red"><center>@flash.get("wrongFormatBoth")</center></b>
+                </div>
+            }
+        </div>
+
+        <!--=======Form row============ -->
+        <div class="row">
+
+                @helper.form(action = routes.PackageController.savePackage(), 'class -> "form-horizontal", 'role -> "form") {
+
+                    <!--Starts Origination-->
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend><h5 style="color: #419641"><strong>Origination</strong></h5></legend>
+
+                        <div class="form-group col-md-12">
+                            <label for="senderName" class="col-sm-2" style="font-size: 12px">
+                                Sender's Name:
+                            </label>
+                            <div class="col-sm-10">
+                                <input placeholder="" name="senderName" type="text" class="form-control" id="senderName" required="required" value="@text("senderName").value">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label for="postOffices" class="col-sm-2" style="font-size: 12px">
+                                Initial Post Office:
+                            </label>
+                            <div class="col-md-5">
+                            @if(currentUser.typeOfUser == UserType.ADMIN) {
+                                <select class="form-control sortAlphabetically" name="officePost" required="required">
+                                    <option class="default">--Select one--</option>
+                                    @for(office <- offices) {
+                                        <option value="@office.name">@office.name</option>
+                                    }
+                                </select>
+                            } else {
+                                <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="officePost" type="text" readonly/>
+                            }
+                            </div>
+                            <span id="wrongInitialOffice" class="alert-danger" data-error-for="" >@flash.get("wrongInitialOffice")</span>
+                        </div>
+                    </fieldset>
+
+                </div>
+                    <div class="col-md-6">
+                            <!--Start origination-->
+                    <fieldset>
+                        <legend ><h5 style="color: #419641"><strong>Destination</strong></h5></legend>
+                        <div class="form-group col-md-12">
+                            <label for="recipientName" class="col-sm-2" style="font-size: 12px">
+                                Recipient's Name:
+                            </label>
+                            <div class="col-sm-10">
+                                <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="@text("recipientName").value">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label for="recipientAddress" class="col-sm-2" style="font-size: 12px">
+                                Recipient's Address:
+                            </label>
+                            <div class="col-sm-10">
+                                <input name="recipientAddress" type="text" class="form-control" id="recipientAddress" required="required" value="@text("recipientAddress").value">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group col-md-12">
+                            <label for="destination" class="col-sm-2" style="font-size: 12px">
+                                Final Post Office:
+                            </label>
+                            <div class="col-md-5">
+                                <select class="form-control sortAlphabetically" name="destination" required="required">
+                                    <option class="default">--Select one--</option>
+                                    @for(office <- offices) {
+                                        @if(currentUser.postOffice !=null){
+                                            @if(currentUser.postOffice.id != office.id){
+                                                <option value="@office.name">@office.name</option>
+                                            }
+                                        }else {
+                                            <option value="@office.name">@office.name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <span id="wrongFinalOffice" class="alert-danger" data-error-for="" >@flash.get("wrongFinalOffice")</span>
+                        </div></fieldset>
+                </div> <!--ends Destionation-->
+
+        </div> <!--Ends origination-->
+
+        <!--Starts Service Options-->
+        <div class="row">
+            <div class="col-md-6">
+                <fieldset>
+                    <legend><h5 style="color: #419641"><strong>Service Options</strong></h5></legend>
+                    <div class="form-group col-md-12">
+                        <label for="weight" class="col-sm-2" style="font-size: 12px">
+                            Package Weight:
+                        </label>
+                        <div class="col-sm-10">
+                            <input placeholder="Weight in kg" name="weight" value="@text("weight").value" type="text" class="form-control" id="weight" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label for="price" class="col-sm-2" style="font-size: 12px">
+                            Package Price:
+                        </label>
+                        <div class="col-sm-10">
+                            <input placeholder="Price in KM" name="price" value="@text("price").value" type="text" class="form-control" id="price" required="required">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-12">
+                        <label for="packageType" class="col-sm-2" style="font-size: 12px">
+                            Type of Package:
+                        </label>
+                        <div class="col-sm-5">
+                            <select class="form-control" name="packageType">
+                                <option class="default">--Select one--</option>
+                                <option value="@PackageType.BOX">@PackageType.BOX</option>
+                                <option value="@PackageType.ENVELOPE">@PackageType.ENVELOPE</option>
+                                <option value="@PackageType.FLYER">@PackageType.FLYER</option>
+                                <option value="@PackageType.TUBE">@PackageType.TUBE</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-12" style="margin-bottom : 3%; padding-left: 9.8%" >
+                <input type="submit" class="btn btn-primary" value="Add Package">
+            </div>
+        </div>
+    }
+
+
+        <div class="templatemo-maps">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 margin-bottom-30">
+                    <div id="map" style="position: relative; height: 700px; width: auto"></div>
+
+
+
+                    <script type="text/javascript">
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 11,
+    center: new google.maps.LatLng(43.8331, 18.3039),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+  var geocoder = new google.maps.Geocoder();
+   var marker;
+  document.getElementById('recipientAddress').addEventListener('blur', function() {
+    geocodeAddress(geocoder, map);
+  });
+    function geocodeAddress(geocoder, resultsMap) {
+  var address = document.getElementById('recipientAddress').value;
+  geocoder.geocode({'address': address}, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK) {
+      resultsMap.setCenter(results[0].geometry.location);
+       marker = new google.maps.Marker({
+        map: resultsMap,
+        position: results[0].geometry.location,
+      });
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+    map.addListener('center_changed', function() {
+    // 3 seconds after the center of the map has changed, pan back to the marker
+    window.setTimeout(function() {
+      map.panTo(marker.getPosition());
+    }, 3000);
+  });
+    google.maps.event.addDomListener(window, 'load', initialize);
+    google.maps.event.addDomListener(window, 'resize', function() {
+    map.setCenter(marker.getPosition());
+    });
+  </script>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+}
