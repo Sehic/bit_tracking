@@ -25,9 +25,46 @@
 
         <!--=======Form row============ -->
         <div class="row">
-            <div class="col-md-6">
-                    <!--Start origination-->
+
                 @helper.form(action = routes.PackageController.savePackage(), 'class -> "form-horizontal", 'role -> "form") {
+
+                    <!--Starts Origination-->
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend><h5 style="color: #419641"><strong>Origination</strong></h5></legend>
+
+                        <div class="form-group col-md-12">
+                            <label for="senderName" class="col-sm-2" style="font-size: 12px">
+                                Sender's Name:
+                            </label>
+                            <div class="col-sm-10">
+                                <input placeholder="" name="senderName" type="text" class="form-control" id="senderName" required="required" value="@text("senderName").value">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label for="postOffices" class="col-sm-2" style="font-size: 12px">
+                                Initial Post Office:
+                            </label>
+                            <div class="col-md-5">
+                            @if(currentUser.typeOfUser == UserType.ADMIN) {
+                                <select class="form-control sortAlphabetically" name="officePost" required="required">
+                                    <option class="default">--Select one--</option>
+                                    @for(office <- offices) {
+                                        <option value="@office.name">@office.name</option>
+                                    }
+                                </select>
+                            } else {
+                                <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="officePost" type="text" readonly/>
+                            }
+                            </div>
+                            <span id="wrongInitialOffice" class="alert-danger" data-error-for="" >@flash.get("wrongInitialOffice")</span>
+                        </div>
+                    </fieldset>
+
+                </div>
+                    <div class="col-md-6">
+                            <!--Start origination-->
                     <fieldset>
                         <legend ><h5 style="color: #419641"><strong>Destination</strong></h5></legend>
                         <div class="form-group col-md-12">
@@ -54,7 +91,7 @@
                                 Final Post Office:
                             </label>
                             <div class="col-md-5">
-                                <select id="sortAlphabetically" class="form-control" name="destination" required="required">
+                                <select class="form-control sortAlphabetically" name="destination" required="required">
                                     <option class="default">--Select one--</option>
                                     @for(office <- offices) {
                                         @if(currentUser.postOffice !=null){
@@ -71,42 +108,6 @@
                         </div></fieldset>
                 </div> <!--ends Destionation-->
 
-            <!--Starts Origination-->
-            <div class="col-md-6">
-                <fieldset>
-                    <legend><h5 style="color: #419641"><strong>Origination</strong></h5></legend>
-
-                    <div class="form-group col-md-12">
-                        <label for="senderName" class="col-sm-2" style="font-size: 12px">
-                            Sender's Name:
-                        </label>
-                        <div class="col-sm-10">
-                            <input placeholder="" name="senderName" type="text" class="form-control" id="senderName" required="required" value="@text("senderName").value">
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-12">
-                        <label for="postOffices" class="col-sm-2" style="font-size: 12px">
-                            Initial Post Office:
-                        </label>
-                        <div class="col-md-5">
-                        @if(currentUser.typeOfUser == UserType.ADMIN) {
-                            <select id="sortAlphabetically" class="form-control" name="officePost" required="required">
-                                <option class="default">--Select one--</option>
-                                @for(office <- offices) {
-                                    <option value="@office.name">@office.name</option>
-                                }
-                            </select>
-                        } else {
-                            <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="officePost" type="text" readonly/>
-                        }
-                        </div>
-                        <span id="wrongInitialOffice" class="alert-danger" data-error-for="" >@flash.get("wrongInitialOffice")</span>
-                    </div>
-                </fieldset>
-
-            </div>
-
         </div> <!--Ends origination-->
 
         <!--Starts Service Options-->
@@ -119,7 +120,7 @@
                             Package Weight:
                         </label>
                         <div class="col-sm-10">
-                            <input placeholder="Weight in kgs" name="weight" value="@text("weight").value" type="text" class="form-control" id="weight" required="required">
+                            <input placeholder="Weight in kg" name="weight" value="@text("weight").value" type="text" class="form-control" id="weight" required="required">
                         </div>
                     </div>
 

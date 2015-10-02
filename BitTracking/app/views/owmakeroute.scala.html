@@ -33,7 +33,7 @@
         @helper.form(routes.PostOfficeController.saveRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
 
             <div class="col-md-2">
-                <select name="postOffices" class="selectOffice form-control">
+                <select name="postOffices" class="selectOffice form-control sortAlphabetically">
                 @for(office <- postOffices) {
                     <option value="@office.name">@office.name</option>
                 }

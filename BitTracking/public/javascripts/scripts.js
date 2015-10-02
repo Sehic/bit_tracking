@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 function sortDropDownListByText() {
 // Loop for each select element on the page.
-    $('#sortAlphabetically').each(function() {
+    $('.sortAlphabetically').each(function() {
 // Keep track of the selected option.
         var selectedValue = $(this).val();
         $(this).html($('option', $(this)).sort(function(a, b) {
@@ -14,6 +14,17 @@ function sortDropDownListByText() {
         $(this).val(selectedValue);
     });
 }
+
+var sortByText = function (a, b) {
+    return $.trim($(a).text()) > $.trim($(b).text());
+}
+$(document).ready(function () {
+
+    var sorted = $('#stuff label').sort(sortByText);
+    $('#stuff').append(sorted);
+
+});
+
 
 //Calling table sort and search
 $(document).ready(function () {
