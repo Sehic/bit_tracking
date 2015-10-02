@@ -1,83 +1,88 @@
 @(packs: java.util.List[models.Package], workerOffice: PostOffice)
 @adminmain("Office Worker Panel") {
 
-  <ol class="breadcrumb">
-    <li class="active">Office Worker Panel</li>
-  </ol>
-  <h2>Packages</h2>
+    <ol class="breadcrumb">
+        <li class="active">Office Worker Panel</li>
+    </ol>
+    <h2>Packages</h2>
     <hr/>
 
-  <a href="@routes.PackageController.addPackage()"><button type="button" class="btn btn-primary btn-group-sm" data-toggle="modal">Add new package</button></a>
+    <a href="@routes.PackageController.addPackage()"><button type="button" class="btn btn-primary btn-group-sm" data-toggle="modal">
+        Add new package</button></a>
     <hr/>
-  <div class="table-responsive">
+    <div class="table-responsive">
 
-  </div>
+    </div>
 
-  <h4 class="margin-bottom-15">List of packages</h4>
+    <h4 class="margin-bottom-15">List of packages</h4>
     <table id="example" class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Tracking Number</th>
-        <th>Route</th>
-        <th>Destination</th>
-        <th>Post Office</th>
-        <th>Status</th>
-          <th>Timestamp</th>
-          <th>Change status</th>
-        <th>Delete</th>
-      </tr>
-    </thead>
-    <tbody>
-    @for(pack <- packs) {
-        <tr class="succes">
-            <td>@pack.id</td>
-            <td>@pack.trackingNum</td>
-            @if(pack.shipmentPackages == null) {
-                <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
-            }else {
-                <td>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tracking Number</th>
+                <th>Sender Name</th>
+                <th>Recipient Name</th>
+                <th>Route</th>
+                <th>Destination</th>
+                <th>Post Office</th>
+                <th>Status</th>
+                <th>Timestamp</th>
+                <th>Change status</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for(pack <- packs) {
+            <tr class="succes">
+                <td>@pack.id</td>
+                <td>@pack.trackingNum</td>
+                <td>"@pack.senderName"</td>
+                <td>"@pack.recipientName"</td>
+                @if(pack.shipmentPackages == null) {
+                    <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
+                } else {
+                    <td>
 
-                @for(shipments: Shipment <- pack.shipmentPackages) {
-                    @shipments.postOfficeId.name
+                    @for(shipments: Shipment <- pack.shipmentPackages) {
+                        @shipments.postOfficeId.name
+                    }
+                    </td>
                 }
-                </td>
-            }
 
 
-            <td>@pack.destination</td>
+                <td>@pack.destination</td>
 
-            @if(pack.shipmentPackages.size()!=0) {
-                @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
-                    @if(shipmentFromThisPackage.postOfficeId.id == workerOffice.id) {
-                        <td>@shipmentFromThisPackage.postOfficeId.name</td>
-                        <td>@shipmentFromThisPackage.status</td>
-                        @if(shipmentFromThisPackage.dateCreated !=null) {
-                            <td>@shipmentFromThisPackage.dateCreated</td>
-                        }else {
-                            <td></td>
-                        }
-                        @if(shipmentFromThisPackage.status == helpers.StatusHelper.RECEIVED){
-                            @helper.form(routes.PackageController.updateStatus(pack.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
-                                <td><button type="submit" class="btn-default">Done</button></td>
+                @if(pack.shipmentPackages.size() != 0) {
+                    @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
+                        @if(shipmentFromThisPackage.postOfficeId.id == workerOffice.id) {
+                            <td>@shipmentFromThisPackage.postOfficeId.name</td>
+                            <td>@shipmentFromThisPackage.status</td>
+                            @if(shipmentFromThisPackage.dateCreated != null) {
+                                <td>@shipmentFromThisPackage.dateCreated</td>
+                            } else {
+                                <td></td>
                             }
+                            @if(shipmentFromThisPackage.status == helpers.StatusHelper.RECEIVED) {
+                                @helper.form(routes.PackageController.updateStatus(pack.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
+                                    <td><button type="submit" class="btn-default">Done</button></td>
+                                }
 
-                        }else {
-                            <td></td>
-                        }
-                        @if(shipmentFromThisPackage.status == helpers.StatusHelper.DELIVERED){
-                            <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input class="btn-link" type="button" value="Delete"></a></td>
-                        }else {
-                            <td></td>
+                            } else {
+                                <td></td>
+                            }
+                            @if(shipmentFromThisPackage.status == helpers.StatusHelper.DELIVERED) {
+                                <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input class="btn-link" type="button" value="Delete"></a></td>
+                            } else {
+                                <td></td>
+                            }
                         }
                     }
+
                 }
+            </tr>
+        }
 
-            }
-        </tr>
-    }
-
-    </tbody>
-  </table>
+        </tbody>
+    </table>
 
 }

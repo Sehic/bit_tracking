@@ -21,6 +21,9 @@
                             <tr>
                                 <th>#</th>
                                 <th>Tracking Number</th>
+                                <th>Sender Name</th>
+                                <th>Recipient Name</th>
+                                <th>Recipient Address</th>
                                 <th>Status</th>
                                 <th>Post Office</th>
                                 <th>Next Destination</th>
@@ -33,6 +36,9 @@
                             <tr>
                                 <td>@pack.id</td>
                                 <td>@pack.trackingNum</td>
+                                <td>@pack.senderName</td>
+                                <td>@pack.recipientName</td>
+                                <td>@pack.recipientAddress</td>
                                 @if(pack.shipmentPackages.size() != 0) {
                                     @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
                                         @if(shipmentFromThisPackage.status == StatusHelper.READY_FOR_SHIPPING) {
