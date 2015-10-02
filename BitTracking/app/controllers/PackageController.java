@@ -193,7 +193,7 @@ public class PackageController extends Controller {
         for (int i = 0; i < shipmentsByPostOffice.size(); i++) {
             packages.add(shipmentsByPostOffice.get(i).packageId);
             if (shipmentsByPostOffice.get(i).packageId.id == pack.id) {
-                if (pack.destination.equals(u1.postOffice.address)) {
+                if (pack.destination.equals(u1.postOffice.name)) {
                     packages.remove(i);
                     List<Shipment> shipmentByPackage = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
                     for (int j = 0; j < shipmentByPackage.size(); j++) {
