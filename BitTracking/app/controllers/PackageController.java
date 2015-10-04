@@ -46,7 +46,9 @@ public class PackageController extends Controller {
             return ok(adminpostofficeadd.render());
         }
 
-        return ok(packageadd.render(offices, newPackage, u1));
+        List<Location> locations = Location.findLocation.findList();
+
+        return ok(packageadd.render(offices, locations, newPackage, u1));
     }
 
     /**
@@ -59,11 +61,12 @@ public class PackageController extends Controller {
         User u1 = SessionHelper.getCurrentUser(ctx());
         Form<models.Package> boundForm = newPackage.bindFromRequest();
 
-        String officeName = boundForm.field("officePost").value();
-        PostOffice office = PostOffice.findPostOfficeByName(officeName);
+        String officeAddress = boundForm.field("officePost").value();
+        PostOffice office = PostOffice.findPostOfficeByAddress(officeAddress);
+        List<Location> locations = Location.findLocation.findList();
         if(office == null){
             flash("wrongInitialOffice", "Please choose one office!");
-            return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm, u1));
+            return badRequest(packageadd.render(PostOffice.findOffice.findList(), locations, boundForm, u1));
         }
         Package pack = new Package();
 
@@ -75,7 +78,7 @@ public class PackageController extends Controller {
             PostOffice officeByName = PostOffice.findPostOfficeByName(pack.destination);
             if(officeByName== null){
                 flash("wrongFinalOffice", "Please choose one office!");
-                return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm, u1));
+                return badRequest(packageadd.render(PostOffice.findOffice.findList(), locations, boundForm, u1));
             }
 
             pack.trackingNum = (UUID.randomUUID().toString());
@@ -86,7 +89,7 @@ public class PackageController extends Controller {
 
             flash("wrongFormatBoth", "Please fill this form with correct values!");
 
-            return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm, u1));
+            return badRequest(packageadd.render(PostOffice.findOffice.findList(), locations, boundForm, u1));
         }
 
         Shipment ship = new Shipment();

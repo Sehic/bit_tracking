@@ -191,4 +191,10 @@ public class Application extends Controller {
         return ok(deliveryworkerpanel.render(packages));
     }
 
+    public Result apiRoute(){
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+
+        return ok(apiroute.render(offices));
+    }
+
 }
