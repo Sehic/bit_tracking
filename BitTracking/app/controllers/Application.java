@@ -5,6 +5,9 @@ import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
 import models.Package;
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.HtmlEmail;
 import play.*;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -206,6 +209,40 @@ public class Application extends Controller {
             }
         }
         return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+    }
+
+    public Result contactUs() {
+        return ok(contactus.render());
+    }
+
+    public Result sendEmail() {
+        DynamicForm form = Form.form().bindFromRequest();
+        String name = form.get("name");
+        Logger.info(name);
+        String email = form.get("email");
+        Logger.info(email);
+        String message = form.get("message");
+        Logger.info(message);
+        try {
+            HtmlEmail mail = new HtmlEmail();
+            mail.setSubject("BitTracking Contact");
+            mail.setFrom(email);
+            mail.addTo("Contact <edin.pilavdzic@bitcamp.ba>");
+            mail.setMsg(name);
+            mail.setHtmlMsg(String.format("<html><body><strong> Name: %s </strong> <p> Email: %s </p> <p> Message: </p> <p><i> %s </i></p> </body></html>",
+                    name, email, message));
+            mail.setHostName("smtp.googlemail.com");
+            mail.setStartTLSEnabled(true);
+            mail.setSSLOnConnect(true);
+            mail.setAuthenticator(new DefaultAuthenticator(
+                    Play.application().configuration().getString("username"),
+                    Play.application().configuration().getString("password")
+            ));
+            mail.send();
+        } catch (EmailException e) {
+            e.printStackTrace();
+        }
+        return redirect(routes.Application.index());
     }
 
 }

@@ -63,6 +63,9 @@ GET           /user                                             @controllers.App
 POST          /user                                             @controllers.PackageController.userSavePackage()
 POST          /user/:id                                         @controllers.PackageController.approveReject(id: Long)
 
+GET           /contact                                          @controllers.Application.contactUs()
+POST          /contact                                          @controllers.Application.sendEmail()
+
 
 
 

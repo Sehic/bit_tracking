@@ -1,0 +1,13 @@
+@main("Contact Us") {
+    <h1>Bit Tracking Contact Form</h1>
+    <br>
+    <form action="@routes.Application.sendEmail()" method="POST">
+        <p><label for="name">Your name:</label></p>
+        <p><input type="text" id="name" name="name" placeholder="Your name"></p>
+        <p><label for="email">Your e-mail address:</label></p>
+        <p><input type="text" id="email" name="email" placeholder="Your email address"></p>
+        <p><label for="message">Message:</label></p>
+        <p><textarea id="message" name="message" rows="4" cols="50" placeholder="Write to us..."></textarea></p>
+        <p><input type="submit" value="Send"></p>
+    </form>
+}
