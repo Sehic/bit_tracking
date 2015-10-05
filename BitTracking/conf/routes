@@ -60,6 +60,9 @@ GET           /adminpanel/deliveryworkers/panel                 @controllers.App
 GET           /adminpanel/deliveryworkers/status/:id            @controllers.PackageController.changePackageStatus(id: Long)
 POST          /adminpanel/deliveryworkers/status/:id            @controllers.PackageController.updateStatus(id: Long)
 
+GET           /user                                             @controllers.Application.userPanel()
+POST          /user                                             @controllers.PackageController.userSavePackage()
+POST        /user/:id                              @controllers.PackageController.approveReject(id: Long)
 
 
 

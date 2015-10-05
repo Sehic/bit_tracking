@@ -139,6 +139,12 @@
                         </li> <!--Admin panel tab in navigation bar-->
                     }
 
+                    @if(currentUser != null && currentUser.typeOfUser == UserType.REGISTERED_USER) {
+                        <li>
+                            <a href="@routes.Application.userPanel()">My Tracking Panel</a>
+                        </li> <!--Admin panel tab in navigation bar-->
+                    }
+
                 </ul>
 
                     <!--=========== LOG IN REGISTER TAB in NAVIGATION BAR===========-->

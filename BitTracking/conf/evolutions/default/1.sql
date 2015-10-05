@@ -28,6 +28,7 @@ create table package (
   package_type              integer,
   sender_name               varchar(255),
   recipient_name            varchar(255),
+  approved                  tinyint(1) default 0,
   constraint ck_package_status check (status in ('5','1','2','4','3')),
   constraint ck_package_package_type check (package_type in ('4','2','1','3')),
   constraint pk_package primary key (id))

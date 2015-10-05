@@ -191,4 +191,12 @@ public class Application extends Controller {
         return ok(deliveryworkerpanel.render(packages));
     }
 
+    public Result userPanel() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        if (user == null) {
+            return redirect(routes.Application.index());
+        }
+        return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+    }
+
 }

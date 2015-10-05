@@ -36,7 +36,7 @@ public class Package extends Model {
     public StatusHelper status;
 
     @ManyToMany
-    public List<User> deliveryWorkers = new ArrayList<>();
+    public List<User> users = new ArrayList<>();
 
     @Column(precision = 10, scale = 2)
     public Double weight;
@@ -54,6 +54,8 @@ public class Package extends Model {
     @Column(length = 255)
     public String recipientName;
 
+    public Boolean approved = null;
+
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 
     public static List<Package> findByPostOffice(Long id) {
@@ -70,6 +72,14 @@ public class Package extends Model {
 
     public static List<Package> findPackageByPackageType(String type) {
         return finder.where().eq("packageType", type).findList();
+    }
+
+    public static List<Package> findPackagesByUser(User user) {
+        return finder.where().eq("users", user).findList();
+    }
+
+    public static List<Package> findPackagesWaitingForApproval(){
+        return finder.where().eq("approved", null).findList();
     }
 
     @Override

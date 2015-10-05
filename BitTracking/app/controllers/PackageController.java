@@ -2,10 +2,13 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import helpers.Authenticators;
+import helpers.PackageType;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.Package;
 import models.*;
+import play.Logger;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -79,6 +82,7 @@ public class PackageController extends Controller {
             }
 
             pack.trackingNum = (UUID.randomUUID().toString());
+            pack.approved = true;
 
             pack.save();
 
@@ -212,7 +216,7 @@ public class PackageController extends Controller {
                 Ebean.update(shipmentsByPostOffice.get(i));
             }
         }
-        return ok(officeworkerpanel.render(packages, u1.postOffice));
+        return ok(officeworkerpanel.render(packages, u1.postOffice, Package.findPackagesWaitingForApproval(), PostOffice.findOffice.findList()));
     }
 
     /**
@@ -244,5 +248,67 @@ public class PackageController extends Controller {
     public Result changePackageStatus(Long id) {
 
         return ok(packagestatus.render(Package.findPackageById(id)));
+    }
+
+    public Result userSavePackage() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        DynamicForm form = Form.form().bindFromRequest();
+        Package pack = new Package();
+        try {
+            pack.recipientName = form.get("recipientName");
+            pack.recipientAddress = form.get("recipientAddress");
+            pack.senderName = user.firstName + " " + user.lastName;
+            pack.weight = Double.parseDouble(form.get("weight"));
+            pack.price = Double.parseDouble(form.get("price"));
+            String type = form.get("packageType");
+            pack.packageType = null;
+            switch (type) {
+                case "1":
+                    pack.packageType = PackageType.BOX;
+                    break;
+                case "2":
+                    pack.packageType = PackageType.ENVELOPE;
+                    break;
+                case "3":
+                    pack.packageType = PackageType.FLYER;
+                    break;
+                case "4":
+                    pack.packageType = PackageType.TUBE;
+                    break;
+            }
+            pack.save();
+            user.packages.add(pack);
+            user.update();
+        } catch (IllegalStateException | NumberFormatException e) {
+            return badRequest(index.render());
+        }
+        return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+    }
+
+    public Result approveReject(Long id){
+        DynamicForm form = Form.form().bindFromRequest();
+        Package pack = Package.findPackageById(id);
+        String value = form.get("approveReject");
+        PostOffice initial = PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
+        String destination = form.get("destinationPostOffice");
+        if(value.equals("approve") && initial != null && destination != "default") {
+            pack.approved = true;
+            pack.trackingNum = (UUID.randomUUID().toString());
+            pack.destination = destination;
+        } else if (value.equals("reject")) {
+            pack.approved = false;
+            pack.update();
+            return redirect(routes.UserController.officeWorkerPanel());
+        } else {
+            pack.approved = null;
+            return redirect(routes.UserController.officeWorkerPanel());
+        }
+        pack.update();
+        Shipment ship = new Shipment();
+        ship.packageId = pack;
+        ship.postOfficeId = initial;
+        ship.save();
+        return redirect(routes.PostOfficeController.listRoutes(id));
+        //return redirect(routes.UserController.officeWorkerPanel());
     }
 }

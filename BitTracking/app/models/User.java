@@ -48,7 +48,7 @@ public class User extends Model {
     @OneToMany(mappedBy = "profilePhoto", cascade = CascadeType.ALL)
     public ImagePath imagePath;
 
-    @ManyToMany(mappedBy = "deliveryWorkers")
+    @ManyToMany(mappedBy = "users")
     public List<Package> packages = new ArrayList<>();
 
 
