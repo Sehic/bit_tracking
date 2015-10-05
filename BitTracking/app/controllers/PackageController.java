@@ -256,6 +256,7 @@ public class PackageController extends Controller {
             pack.senderName = user.firstName + " " + user.lastName;
             pack.weight = Double.parseDouble(form.get("weight"));
             pack.price = Double.parseDouble(form.get("price"));
+            pack.status = StatusHelper.READY_FOR_SHIPPING;
             String type = form.get("packageType");
             pack.packageType = null;
             switch (type) {
@@ -276,7 +277,8 @@ public class PackageController extends Controller {
             user.packages.add(pack);
             user.update();
         } catch (IllegalStateException | NumberFormatException e) {
-            return badRequest(index.render());
+            List<Package> packages = Package.finder.where().eq("status", StatusHelper.OUT_FOR_DELIVERY).eq("users", user).findList();
+            return badRequest(index.render(packages));
         }
         return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
     }
@@ -295,6 +297,7 @@ public class PackageController extends Controller {
         } else if (value.equals("reject")) {
             pack.approved = false;
             pack.trackingNum = "rejected";
+            pack.status = StatusHelper.OUT_FOR_DELIVERY;
             pack.update();
             return redirect(routes.UserController.officeWorkerPanel());
         } else {

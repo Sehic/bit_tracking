@@ -33,7 +33,9 @@ public class Application extends Controller {
         if (cookie != null) {
             session("email", cookie.value());
         }
-        return ok(index.render());
+        User user = SessionHelper.getCurrentUser(ctx());
+        List<Package> packages = Package.finder.where().eq("status", StatusHelper.OUT_FOR_DELIVERY).eq("users", user).findList();
+        return ok(index.render(packages));
     }
 
     /**
@@ -195,6 +197,13 @@ public class Application extends Controller {
         User user = SessionHelper.getCurrentUser(ctx());
         if (user == null) {
             return redirect(routes.Application.index());
+        }
+        List<Package> packages = Package.findPackagesByUser(user);
+        for (int i = 0; i < packages.size(); i++) {
+            if (packages.get(i).status != null) {
+                packages.get(i).status = null;
+                packages.get(i).update();
+            }
         }
         return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
     }

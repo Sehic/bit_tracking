@@ -1,4 +1,10 @@
 $(document).ready(function() {
+   $('#rejectedPackages').click(function() {
+       $(this).slideUp();
+   })
+});
+
+$(document).ready(function() {
     $('#waitingForApproval').hide();
     $('#hideApproval').hide();
     $('#approvalId').click(function() {
