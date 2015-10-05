@@ -1,5 +1,6 @@
 logs
 target
+/conf/application.conf
 /.idea
 /.idea_modules
 /.classpath

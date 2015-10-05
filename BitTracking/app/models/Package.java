@@ -32,9 +32,6 @@ public class Package extends Model {
     @Constraints.Required
     public String destination;
 
-    @Enumerated(EnumType.STRING)
-    public StatusHelper status;
-
     @ManyToMany
     public List<User> users = new ArrayList<>();
 
@@ -55,6 +52,7 @@ public class Package extends Model {
     public String recipientName;
 
     public Boolean approved = null;
+    public Boolean seen = null;
 
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 

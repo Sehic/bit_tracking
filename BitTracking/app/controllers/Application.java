@@ -1,6 +1,7 @@
 package controllers;
 
 import helpers.Authenticators;
+import helpers.MailHelper;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
@@ -20,6 +21,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import play.libs.F.Function;
+import play.libs.F.Promise;
+import play.libs.Json;
+import play.libs.ws.WS;
+import play.libs.ws.WSResponse;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 public class Application extends Controller {
@@ -33,7 +42,9 @@ public class Application extends Controller {
         if (cookie != null) {
             session("email", cookie.value());
         }
-        return ok(index.render());
+        User user = SessionHelper.getCurrentUser(ctx());
+        List<Package> packages = Package.finder.where().eq("seen", false).eq("users", user).findList();
+        return ok(index.render(packages));
     }
 
     /**
@@ -196,7 +207,96 @@ public class Application extends Controller {
         if (user == null) {
             return redirect(routes.Application.index());
         }
+        List<Package> packages = Package.findPackagesByUser(user);
+        for (int i = 0; i < packages.size(); i++) {
+            if (packages.get(i).seen != null) {
+                packages.get(i).seen = null;
+                packages.get(i).update();
+            }
+        }
         return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+    }
+
+    public Result contact() {
+
+        return ok(contact.render(new Form<Contact>(Contact.class)));
+    }
+
+    public Promise<Result> sendMail() {
+
+        //Getting recaptcha values
+        final DynamicForm temp = DynamicForm.form().bindFromRequest();
+
+        Promise<Result> promiseHolder = WS
+                .url("https://www.google.com/recaptcha/api/siteverify")
+                .setContentType("application/x-www-form-urlencoded")
+                .post(String.format(
+                        "secret=%s&response=%s",
+                        //getting API key from the config file
+                        Play.application().configuration()
+                                .getString("recaptchaKey"),
+                        temp.get("g-recaptcha-response")))
+                .map(new Function<WSResponse, Result>() {
+                    public Result apply(WSResponse response) {
+
+                        JsonNode json = response.asJson();
+                        Form<Contact> contactForm = Form.form(Contact.class)
+                                .bindFromRequest();
+
+                        if (json.findValue("success").asBoolean() == true
+                                && !contactForm.hasErrors()) {
+                            Contact newMessage = contactForm.get();
+                            String name = newMessage.name;
+                            String email = newMessage.email;
+                            String message = newMessage.message;
+
+                            if (message.equals("")) {
+                            flash("messageError", "Please fill this field");
+                                return redirect("/contact");
+                            }
+                            flash("success", "Message was sent successfuly!");
+                            MailHelper.sendContactMessage(name, email, message);
+
+                            return redirect("/contact");
+                        } else {
+                            flash("errorMail", "Please verify that you are not a robot!");
+                            return ok(contact.render(contactForm));
+                        }
+                    }
+                });
+
+        return promiseHolder;
+    }
+
+    /**
+     * Inner class that is used for sending mail from user to bittracking
+     */
+    public static class Contact {
+
+        public String name;
+        public String email;
+        public String message;
+
+        /**
+         * Default constructor that sets everything to NN;
+         */
+        public Contact() {
+            this.name= "NN";
+            this.email = "NN";
+            this.message = "NN";
+        }
+        /**
+         * Constructor with parameters;
+         * @param name
+         * @param email
+         * @param message
+         */
+        public Contact(String name, String email, String message) {
+            super();
+            this.name = name;
+            this.email = email;
+            this.message = message;
+        }
     }
 
 }

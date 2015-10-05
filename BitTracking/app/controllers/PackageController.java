@@ -14,6 +14,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 import views.html.*;
 
+import javax.persistence.PersistenceException;
 import java.util.*;
 
 /**
@@ -256,6 +257,7 @@ public class PackageController extends Controller {
             pack.senderName = user.firstName + " " + user.lastName;
             pack.weight = Double.parseDouble(form.get("weight"));
             pack.price = Double.parseDouble(form.get("price"));
+            pack.seen = true;
             String type = form.get("packageType");
             pack.packageType = null;
             switch (type) {
@@ -275,8 +277,9 @@ public class PackageController extends Controller {
             pack.save();
             user.packages.add(pack);
             user.update();
-        } catch (IllegalStateException | NumberFormatException e) {
-            return badRequest(index.render());
+        } catch (PersistenceException | IllegalStateException | NumberFormatException e) {
+
+            return badRequest(index.render(null));
         }
         return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
     }
@@ -295,6 +298,7 @@ public class PackageController extends Controller {
         } else if (value.equals("reject")) {
             pack.approved = false;
             pack.trackingNum = "rejected";
+            pack.seen = false;
             pack.update();
             return redirect(routes.UserController.officeWorkerPanel());
         } else {
