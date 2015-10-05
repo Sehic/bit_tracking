@@ -1,0 +1,169 @@
+@import helpers.StatusHelper
+@(packages: List[models.Package])(offices: List[models.PostOffice])
+
+@main("My Tracking Panel") {
+
+
+
+    <menu id="formmenu">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12" style="margin-top : 35px">
+                    <a href="#myPackages" class="btn btn-default myLinks">My Packages</a>
+                    <a href="#createPackage" class="btn btn-default myLinks">Create New Package</a>
+                </div>
+            </div>
+
+            <div id="myPackages" class="usertables">
+                <div class="row">
+                    <div class="col-md-12" style="margin-top : 35px">
+                        <h2>My Packages</h2>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="example" class="table table-striped table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Tracking number</th>
+                                <th>Recipient Name</th>
+                                <th>Recipient Address</th>
+                                <th>Weight (kg)</th>
+                                <th>Price (KM)</th>
+                                <th>Approved/Rejected</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(pack <- packages) {
+                            <tr>
+                                @if(pack.trackingNum == null) {
+                                    <td id="number">In process...</td>
+                                } else {
+                                    @if(pack.trackingNum == "rejected") {
+                                        <td id="number" style="color: red">REJECTED</td>
+                                    } else {
+                                        <td id="number">@pack.trackingNum</td>
+                                    }
+                                }
+                            <td id="recName">@pack.recipientName</td>
+                            <td id="recAddress">@pack.recipientAddress</td>
+                            <td id="weight">@pack.weight</td>
+                            <td id="price">@pack.price</td>
+                                @if(pack.approved == null) {
+                                    <td id="approved">In process...</td>
+                                }
+                                @if(pack.approved == true) {
+                                    <td id="approved" style="color: green">APPROVED</td>
+                                }
+                                @if(pack.approved == false) {
+                                    <td id="approved" style="color: red">REJECTED</td>
+                                }
+                                @if(pack.shipmentPackages == null || pack.shipmentPackages.size() < 1 && pack.approved != false) {
+                                    <td id="status">In process...</td>
+                                    <td id="time">-</td>
+                                } else {
+                                    @if(pack.shipmentPackages.size() > 1 && pack.shipmentPackages.get(pack.shipmentPackages.size() - 1).status == StatusHelper.DELIVERED) {
+                                        <td id="status">DELIVERED</td>
+                                        <td id="time">@pack.shipmentPackages.get(0).dateCreated</td>
+                                    } else {
+                                        @if(pack.approved == false) {
+                                            <td id="status">-</td>
+                                            <td id="time">-</td>
+                                        } else {
+                                            <td id="status">OUT FOR DELIVERY</td>
+                                            <td id="time">@pack.shipmentPackages.get(0).dateCreated</td>
+                                        }
+                                    }
+                                }
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="createPackage" class="usertables">
+                <form action="@routes.PackageController.userSavePackage()" method="post">
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top : 35px">
+                            <h2>Create New Package</h2>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group col-md-12">
+                                <label for="recipientName" class="col-sm-2" style="font-size: 12px">
+                                    Recipient's Name:
+                                </label>
+                                <div class="col-sm-10">
+                                    <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="recipientAddress" class="col-sm-2" style="font-size: 12px">
+                                    Recipient's Address:
+                                </label>
+                                <div class="col-sm-10">
+                                    <input name="recipientAddress" type="text" class="form-control" id="recipientAddress" required="required" value="">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="weight" class="col-sm-2" style="font-size: 12px">
+                                    Package Weight:
+                                </label>
+                                <div class="col-sm-10">
+                                    <input placeholder="Weight in kg" name="weight" value="" type="text" class="form-control" id="weight" required="required">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="price" class="col-sm-2" style="font-size: 12px">
+                                    Package Price:
+                                </label>
+                                <div class="col-sm-10">
+                                    <input placeholder="Price in KM" name="price" value="" type="text" class="form-control" id="price" required="required">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+                                <label for="packageType" class="col-sm-2" style="font-size: 12px">
+                                    Type of Package:
+                                </label>
+                                <div class="col-sm-5">
+                                    <select class="form-control" name="packageType">
+                                        <option class="default">--Select one--</option>
+                                        <option value="1">BOX</option>
+                                        <option value="2">ENVELOPE</option>
+                                        <option value="3">FLYER</option>
+                                        <option value="4">TUBE</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="packageType" class="col-sm-2" style="font-size: 12px">
+                                    Send Via:
+                                </label>
+                                <div class="col-sm-5">
+                                    <select class="form-control" name="initialPostOffice">
+                                        <option class="default">--Select one--</option>
+                                        @for(office <- offices) {
+                                            <option value="@office.name">@office.name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-12" style="margin-bottom : 3%; padding-left: 9.8%" >
+                            <input type="submit" class="btn btn-primary" value="Send Package">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </menu>
+}

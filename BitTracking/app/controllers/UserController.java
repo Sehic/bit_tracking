@@ -418,7 +418,10 @@ public class UserController extends Controller {
             packages.add(shipments.get(i).packageId);
         }
 
-        return ok(officeworkerpanel.render(packages, u1.postOffice));
+        List<Package> packagesWaiting = Package.findPackagesWaitingForApproval();
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+
+        return ok(officeworkerpanel.render(packages, u1.postOffice, packagesWaiting, offices));
     }
 
     public Result findEmail() {

@@ -2,10 +2,12 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import helpers.Authenticators;
+import helpers.PackageType;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.Package;
 import models.*;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -61,7 +63,7 @@ public class PackageController extends Controller {
 
         String officeName = boundForm.field("officePost").value();
         PostOffice office = PostOffice.findPostOfficeByName(officeName);
-        if(office == null){
+        if (office == null) {
             flash("wrongInitialOffice", "Please choose one office!");
             return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm, u1));
         }
@@ -73,13 +75,13 @@ public class PackageController extends Controller {
             pack = boundForm.get();
 
             PostOffice officeByName = PostOffice.findPostOfficeByName(pack.destination);
-            if(officeByName== null){
+            if (officeByName == null) {
                 flash("wrongFinalOffice", "Please choose one office!");
                 return badRequest(packageadd.render(PostOffice.findOffice.findList(), boundForm, u1));
             }
 
             pack.trackingNum = (UUID.randomUUID().toString());
-
+            pack.approved = true;
             pack.save();
 
         } catch (IllegalStateException | NumberFormatException e) {
@@ -145,9 +147,10 @@ public class PackageController extends Controller {
     /**
      * This method is used for changing status as delivery worker. When package is ready for shipping, delivery worker takes package
      * and replaces it to another office, where package gets status recieved until office worker checks it.
-     * @param u1 - current logged in delivery worker
+     *
+     * @param u1   - current logged in delivery worker
      * @param pack - package which status will be updated
-     * @param c - Calendar
+     * @param c    - Calendar
      * @param date - Date which is used for timestamp
      * @return - delivery worker panel
      */
@@ -180,9 +183,10 @@ public class PackageController extends Controller {
     /**
      * Method that is called when office worker has packages with status recieved. After he clicks it, package will change status to
      * ready for shipping, or delivered if office workers office is package final destination.
-     * @param u1 - current logged in office worker
+     *
+     * @param u1   - current logged in office worker
      * @param pack - package on which worker changes status
-     * @param c - Calendar
+     * @param c    - Calendar
      * @param date - Date
      * @return - office worker panel
      */
@@ -212,11 +216,12 @@ public class PackageController extends Controller {
                 Ebean.update(shipmentsByPostOffice.get(i));
             }
         }
-        return ok(officeworkerpanel.render(packages, u1.postOffice));
+        return ok(officeworkerpanel.render(packages, u1.postOffice, Package.findPackagesWaitingForApproval(), PostOffice.findOffice.findList()));
     }
 
     /**
      * Method that is used for calling methods for changing package status
+     *
      * @param id - package id
      * @return - delivery or office worker panel
      */
@@ -240,9 +245,67 @@ public class PackageController extends Controller {
         return redirect(routes.Application.index());
     }
 
-    @Security.Authenticated(Authenticators.AdminDeliveryWorkerFilter.class)
-    public Result changePackageStatus(Long id) {
+    @Security.Authenticated(Authenticators.RegisteredUserFilter.class)
+    public Result userSavePackage() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        DynamicForm form = Form.form().bindFromRequest();
+        Package pack = new Package();
+        try {
+            pack.recipientName = form.get("recipientName");
+            pack.recipientAddress = form.get("recipientAddress");
+            pack.senderName = user.firstName + " " + user.lastName;
+            pack.weight = Double.parseDouble(form.get("weight"));
+            pack.price = Double.parseDouble(form.get("price"));
+            String type = form.get("packageType");
+            pack.packageType = null;
+            switch (type) {
+                case "1":
+                    pack.packageType = PackageType.BOX;
+                    break;
+                case "2":
+                    pack.packageType = PackageType.ENVELOPE;
+                    break;
+                case "3":
+                    pack.packageType = PackageType.FLYER;
+                    break;
+                case "4":
+                    pack.packageType = PackageType.TUBE;
+                    break;
+            }
+            pack.save();
+            user.packages.add(pack);
+            user.update();
+        } catch (IllegalStateException | NumberFormatException e) {
+            return badRequest(index.render());
+        }
+        return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+    }
 
-        return ok(packagestatus.render(Package.findPackageById(id)));
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
+    public Result approveReject(Long id) {
+        DynamicForm form = Form.form().bindFromRequest();
+        Package pack = Package.findPackageById(id);
+        String value = form.get("approveReject");
+        PostOffice initial = PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
+        String destination = form.get("destinationPostOffice");
+        if (value.equals("approve") && initial != null && destination != "default") {
+            pack.approved = true;
+            pack.trackingNum = (UUID.randomUUID().toString());
+            pack.destination = destination;
+        } else if (value.equals("reject")) {
+            pack.approved = false;
+            pack.trackingNum = "rejected";
+            pack.update();
+            return redirect(routes.UserController.officeWorkerPanel());
+        } else {
+            pack.approved = null;
+            return redirect(routes.UserController.officeWorkerPanel());
+        }
+        pack.update();
+        Shipment ship = new Shipment();
+        ship.packageId = pack;
+        ship.postOfficeId = initial;
+        ship.save();
+        return redirect(routes.PostOfficeController.listRoutes(id));
     }
 }

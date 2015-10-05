@@ -1,3 +1,33 @@
+$(document).ready(function() {
+    $('#waitingForApproval').hide();
+    $('#hideApproval').hide();
+    $('#approvalId').click(function() {
+        $('#waitingForApproval').show();
+        $('#hideApproval').show();
+        $('#approvalId').hide();
+    });
+});
+
+$(document).ready(function() {
+    $('#hideApproval').click(function() {
+        $('#waitingForApproval').hide();
+        $('#hideApproval').hide();
+        $('#approvalId').show();
+    });
+});
+
+$(document).ready(function() {
+    $('#createPackage').hide();
+
+    $('.myLinks').click(function() {
+        var tablesToShow = $(this).attr('href');
+        $(tablesToShow).show();
+        $(tablesToShow).siblings('.usertables').hide();
+        return false;
+    });
+});
+
+
 $(document).ready(function(){
     sortDropDownListByText();
 });
@@ -167,13 +197,19 @@ $(document).ready(function () {
 $(document).ready(function () {
     $("#inputEmail3").blur(function () {
         var email = $("#inputEmail3").val();
+        var filter = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
         $.ajax({
             url: "register/check",
             type: "post",
             data: "email=" + email
         }).success(function (response) {
-            $('#buttonsubmit').prop('disabled', false);
-            $("#mailError").remove();
+            if (!filter.test(email)) {
+                $('#buttonsubmit').prop('disabled', true);
+                $("#mailError").text("Invalid E-mail.");
+            } else {
+                $('#buttonsubmit').prop('disabled', false);
+                $("#mailError").text("");
+            }
         }).error(function (response) {
             $("#mailError").text("Email already exists");
             $('#buttonsubmit').prop('disabled', true);
@@ -230,16 +266,6 @@ function deleteCookies() {
 }
 
 //Registration validation
-function checkEmail() {
-    var email = document.getElementById("inputEmail3").value;
-    var filter = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-    if (!filter.test(email)) {
-        document.getElementById("mailError").innerHTML = "Invalid E-mail.";
-    } else {
-        document.getElementById("mailError").innerHTML = "";
-    }
-}
-
 function checkFirstName() {
     var firstName = document.getElementById("inputName").value;
     var filter = /^[a-zA-Z]+$/;
