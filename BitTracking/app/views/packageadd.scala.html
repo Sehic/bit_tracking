@@ -55,11 +55,24 @@
                                 }
                             </select>
                         } else {
-                            <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="officePost" type="text" readonly/>
-                        }
+                            <div class="form-group">
+                                <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="officePost" type="text" readonly/>
+                            </div>
+
                         </div>
-                        <span id="wrongInitialOffice" class="alert-danger" data-error-for="" >@flash.get("wrongInitialOffice")</span>
+
                     </div>
+
+                    <div class="form-group col-md-12">
+                        <label for="initialOffice" class="col-sm-2" style="font-size: 12px">
+                            Address:
+                        </label>
+                        <div class="col-md-5">
+                            <input class="form-control" value="@currentUser.postOffice.address" id="initialOffice" name="initialOffice" type="text" readonly/>
+                        </div>
+                    </div>
+                    }
+                    <span id="wrongInitialOffice" class="alert-danger" data-error-for="" >@flash.get("wrongInitialOffice")</span>
                 </fieldset>
 
             </div>
