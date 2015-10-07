@@ -56,7 +56,7 @@
                     <td>@pack.senderName</td>
                     <td>@pack.recipientName</td>
 
-                    @if(pack.shipmentPackages.size() < 2) {
+                    @if(pack.shipmentPackages.size() < 2 & pack.approved==true) {
                         <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
                     } else {
                         <td>

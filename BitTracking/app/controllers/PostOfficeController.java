@@ -167,6 +167,7 @@ public class PostOfficeController extends Controller {
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
         PostOffice office = PostOffice.findOffice.byId(id);
         List<PostOffice> mainOfficeRelationList = office.postOfficesA;
+        List<Location> locations = Location.findLocation.findList();
 
         for (int i = 0; i < mainOfficeRelationList.size(); i++) {
             for (int j = 0; j < postOffices.size(); j++) {
@@ -175,7 +176,7 @@ public class PostOfficeController extends Controller {
                 }
             }
         }
-        return ok(adminlinkoffices.render(postOffices, mainOfficeRelationList, office));
+        return ok(adminlinkoffices.render(postOffices, mainOfficeRelationList, office, locations));
     }
 
     /**
@@ -234,8 +235,9 @@ public class PostOfficeController extends Controller {
 
         Package officePackage = Package.findPackageById(id);
         PostOffice office = officePackage.shipmentPackages.get(0).postOfficeId;
+        List<Location> locations = Location.findLocation.findList();
 
-        return ok(owmakeroute.render(office.postOfficesA, officePackage));
+        return ok(owmakeroute.render(office.postOfficesA, officePackage, locations));
     }
 
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)

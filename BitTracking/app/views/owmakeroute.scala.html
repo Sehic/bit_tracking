@@ -1,4 +1,4 @@
-@(postOffices: List[PostOffice], officePackage: models.Package)
+@(postOffices: List[PostOffice], officePackage: models.Package, places: List[Location])
     @adminmain("Make a route") {
 
         <ol class="breadcrumb">
@@ -42,7 +42,7 @@
             </div>
 
             <div class="col-md-0">
-                <button id="addToRoute" type="button" style="margin-right: 1%" class="btn btn-default pull-left">
+                <button id="addToRoute" type="button" style="margin-right : 1 %" class="btn btn-default pull-left">
                     Add
                 </button>
             </div>
@@ -66,7 +66,7 @@
                     Destination Post Office
                 </label>
                 <div class="col-sm-9">
-                    <input id="getDestinationOffice" name="destinationOffice" value="@officePackage.shipmentPackages.get(0).packageId.destination" type="text" class="form-control" style="font-size:13px; font-style: italic " readonly>
+                    <input id="getDestinationOffice" name="destinationOffice" value="@officePackage.shipmentPackages.get(0).packageId.destination" type="text" class="form-control" style="font-size : 13 px ; font-style : italic " readonly>
                 </div>
             </div>
 
@@ -78,7 +78,6 @@
         <div class="row">
 
 
-
             <div class="col-sm-9 col-sm-offset-3">
                 <button type="submit" class="btn btn-primary">
                     Finalize
@@ -86,5 +85,43 @@
             </div>
 
         </div>
+        <br/>
     }
+
+        <input id="longitude" name="longitude" type="hidden">
+        <input id="latitude" name="latitude" type="hidden">
+
+        <div class="templatemo-maps">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 margin-bottom-30">
+                    <div id="map" style="position : relative ; height : 700px ; width : auto"></div>
+
+                    <script type="text/javascript">
+function initialize(){
+     var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 5,
+        center: new google.maps.LatLng(43.8331, 18.3039),
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    // Construct a new InfoWindow.
+    var i, marker;
+
+    @for(place <- places) {
+
+     marker = new google.maps.Marker({
+        position: new google.maps.LatLng(@place.y, @place.x),
+        map: map
+        });
+     }
+}
+    google.maps.event.addDomListener(window, 'load', initialize);
+    google.maps.event.addDomListener(window, 'resize', function() {
+    map.setCenter(marker.getPosition());
+    });
+  </script>
+                </div>
+            </div>
+        </div>
     }
+
+

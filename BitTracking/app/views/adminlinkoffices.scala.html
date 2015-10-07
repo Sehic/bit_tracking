@@ -1,6 +1,6 @@
 @import helpers._
 
-@(postOffices: List[PostOffice], mainOfficeRelationList: List[PostOffice], office: PostOffice)
+@(postOffices: List[PostOffice], mainOfficeRelationList: List[PostOffice], office: PostOffice, places: List[Location])
     @adminmain("Link Offices") {
 
         <ol class="breadcrumb">
@@ -35,7 +35,7 @@
                         <td>
                         @for(linkedToThisOffice <- office.postOfficesA) {
                             @linkedToThisOffice.name <br>
-                        }
+                            }
                         </td>
                         <td>
                             @for(mainRelationOffice <- mainOfficeRelationList) {
@@ -66,6 +66,37 @@
                 <li><a href="#">&raquo;</a></li>
             </ul>
 
+        </div>
+
+        <div class="templatemo-maps">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 margin-bottom-30">
+                    <div id="map" style="position: relative; height: 700px; width: auto"></div>
+                    <script type="text/javascript">
+function initialize(){
+     var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 5,
+        center: new google.maps.LatLng(43.8331, 18.3039),
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    // Construct a new InfoWindow.
+    var i, marker;
+
+    @for(place <- places) {
+
+     marker = new google.maps.Marker({
+        position: new google.maps.LatLng(@place.y, @place.x),
+        map: map
+        });
+     }
+}
+    google.maps.event.addDomListener(window, 'load', initialize);
+    google.maps.event.addDomListener(window, 'resize', function() {
+    map.setCenter(marker.getPosition());
+    });
+  </script>
+                </div>
+            </div>
         </div>
 
     }
