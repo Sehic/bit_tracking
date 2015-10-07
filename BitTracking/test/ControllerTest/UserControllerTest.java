@@ -19,7 +19,6 @@ import play.twirl.api.Content;
  */
 public class UserControllerTest {
 
-
     /**
      * Test editProfile() redirect route
      */
@@ -43,7 +42,6 @@ public class UserControllerTest {
             assertThat(result.redirectLocation()).isEqualTo("/login");
         });
     }
-
 
     /**
      * Test RegistrationCheck redirect route

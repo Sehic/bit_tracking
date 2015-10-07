@@ -38,7 +38,7 @@ public class PackageController extends Controller {
      * @return
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
-    public Result addPackage() {
+    public static Result addPackage() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
         List<PostOffice> offices = PostOffice.findOffice.findList();
