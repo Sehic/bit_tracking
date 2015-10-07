@@ -192,7 +192,7 @@
                 <input type="submit" class="btn btn-primary" value="Add Package">
             </div>
             <div class="col-sm-6" style="margin-bottom : 3%; padding-left: 9.8%" >
-                <input type="button" class="btn btn-primary" value="Suggest Route" onclick="showMap()"/>
+                <input id="clickMe" type="button" class="btn btn-primary" value="Suggest Route"/>
             </div>
         </div>
 
@@ -204,14 +204,21 @@
 
         <div class="templatemo-maps">
             <div class="row">
-                <div class="col-md-12 col-sm-12 margin-bottom-30">
+                <div class="col-md-12 margin-bottom-30">
                     <div id="map" style="position: relative; height: 700px; width: auto"></div>
 
 
 
                     <script type="text/javascript">
 
-     var map = new google.maps.Map(document.getElementById('map'), {
+     var map;
+     var i, marker;
+     var polys = new Array();
+     var jot=0;
+     var myPolygons=new Array();
+
+function initialize(){
+        map = new google.maps.Map(document.getElementById('map'), {
         zoom: 7,
         center: new google.maps.LatLng(43.8331, 18.3039),
         mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -219,13 +226,10 @@
 // Construct a new InfoWindow.
      var list = document.getElementById("loc").value;
 
-     var i, marker;
-     var polys = new Array();
-     var jot=0;
-     var myPolygons=new Array();
+
      @for(place <- places) {
 
-         var placey1 = @place.y+0.0924;
+         var placey1 = @place.y+0.1724;
          var placey2 = @place.y+0.131;
          var placey3 = @place.y-0.129;
          var placey4 = @place.y-0.082;
@@ -258,6 +262,7 @@
      }
 
     sendPolygonForDrawing();
+}
 
 
 function showMap(){
@@ -371,7 +376,11 @@ directionsService.route(request, function (response, status) {
         });
     }
 });
+        calculateDistance(originAddress, destinationAddress);
 
+}
+
+function calculateDistance(originAddress, destinationAddress){
 var service = new google.maps.DistanceMatrixService;
   service.getDistanceMatrix({
     origins: [originAddress],
@@ -411,7 +420,6 @@ function fncRouteZoneIntersection(response) {
 }
 
 function sendPolygonForDrawing() {
-    console.log('sendPolygonForDrawing...');
 
     for(var i = 0; i < myPolygons.length; i++){
         poly = new Array();
@@ -428,22 +436,22 @@ function sendPolygonForDrawing() {
 };
 
 function drawPolygon(poly, polyLabel) {
-    console.log('drawPolygon...');
+
 
     var options = {
         paths: poly,
         strokeColor: '#AA2143',
-        strokeOpacity: 1,
+        strokeOpacity: 0,
         strokeWeight: 2,
         fillColor: "#FDFDFD",
-        fillOpacity: 0.4,
+        fillOpacity: 0,
         polyTitle: polyLabel
     };
 
     newPoly = new google.maps.Polygon(options);
     newPoly.setMap(map);
     polys.push(newPoly);
-    console.log('polys length: ' + polys.length);
+
 };
 
 // Polygon getBounds extension - google-maps-extensions
@@ -530,15 +538,21 @@ google.maps.Polygon.prototype.containsLatLng = function(latLng) {
 
   return inPoly;
 };
-
-
+$("#clickMe").click( function(){
+polys =[];
+myPolygons=[];
+initialize();
+showMap();
+});
+google.maps.event.addDomListener(window, 'load', initialize);
   </script>
                 </div>
+
             </div>
         </div>
 
-
     </div>
+
 
 
 }
