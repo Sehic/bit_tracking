@@ -92,7 +92,10 @@ public class PackageStatusController extends Controller {
                 Ebean.update(shipmentsByPostOffice.get(i));
             }
         }
-        return ok(officeworkerpanel.render(packages, u1.postOffice, Package.findPackagesWaitingForApproval(), PostOffice.findOffice.findList()));
+        List<Package> packagesWaiting = Package.findPackagesWaitingForApproval();
+        List<Package> packagesForOfficeWorker= packagesForOfficeWorkerWaitingForApproval(u1.postOffice, packagesWaiting);
+
+        return ok(officeworkerpanel.render(packages, u1.postOffice, packagesForOfficeWorker, PostOffice.findOffice.findList()));
     }
 
     /**
@@ -119,6 +122,20 @@ public class PackageStatusController extends Controller {
         }
 
         return redirect(routes.Application.index());
+    }
+
+    public static List<Package> packagesForOfficeWorkerWaitingForApproval(PostOffice userOffice, List<Package> packagesWaiting){
+        List<Package> packagesForOfficeWorker= new ArrayList<>();
+
+        for (int i=0;i<packagesWaiting.size();i++){
+
+            PostOffice officeFromShipment = packagesWaiting.get(i).shipmentPackages.get(0).postOfficeId;
+
+            if(officeFromShipment.id==userOffice.id){
+                packagesForOfficeWorker.add(packagesWaiting.get(i));
+            }
+        }
+        return packagesForOfficeWorker;
     }
 
 }

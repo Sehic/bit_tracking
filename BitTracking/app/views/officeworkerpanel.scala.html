@@ -32,32 +32,29 @@
                 <tbody>
                 @for(pack <- allPacks) {
                     @if(pack.approved == null) {
-                        <form action="@routes.PackageController.approveReject(pack.id)" method="post">
-                            <tr>
-                                <td>@pack.recipientName</td>
-                                <td>@pack.recipientAddress</td>
-                                <td>@pack.weight</td>
-                                <td>@pack.price</td>
-                                <td><select name="approveReject" id="approveReject">
-                                    <option value="default">Choose</option>
-                                    <option value="approve">Approve</option>
-                                    <option value="reject">Reject</option>
-                                </select></td>
-                                <td><select name="initialPostOffice" id="initialPostOffice">
-                                    <option value="default">Choose</option>
-                                    @for(office <- offices) {
-                                        <option value="@office.name">@office.name</option>
-                                    }
-                                </select></td>
-                                <td><select name="destinationPostOffice" id="destinationPostOffice">
-                                    <option value="default">Choose</option>
-                                    @for(office <- offices) {
-                                        <option value="@office.name">@office.name</option>
-                                    }
-                                </select></td>
-                                <td><input type="submit" value="Save and Create Route"></td>
-                            </tr>
-                        </form>
+                        @if(pack.shipmentPackages.get(0).postOfficeId.id==workerOffice.id){
+                            <form action="@routes.PackageController.approveReject(pack.id)" method="post">
+                                <tr>
+                                    <td>@pack.recipientName</td>
+                                    <td>@pack.recipientAddress</td>
+                                    <td>@pack.weight</td>
+                                    <td>@pack.price</td>
+                                    <td><select name="approveReject" id="approveReject">
+                                        <option value="default">Choose</option>
+                                        <option value="approve">Approve</option>
+                                        <option value="reject">Reject</option>
+                                    </select></td>
+                                    <td><input name="initialPostOffice" value="@workerOffice.name" type="text" style="background-color : transparent ; border : 0px" readonly/></td>
+                                    <td><select name="destinationPostOffice" id="destinationPostOffice">
+                                        <option value="default">Choose</option>
+                                        @for(office <- offices) {
+                                            <option value="@office.name">@office.name</option>
+                                        }
+                                    </select></td>
+                                    <td><input type="submit" value="Save and Create Route"></td>
+                                </tr>
+                            </form>
+                        }
                     }
                 }
 
@@ -84,6 +81,7 @@
             </thead>
             <tbody>
             @for(pack <- packs) {
+                @if(pack.approved==true){
                 <tr class="succes">
                     <td>@pack.id</td>
                     <td>@pack.trackingNum</td>
@@ -127,6 +125,7 @@
 
                     }
                 </tr>
+                }
             }
 
             </tbody>
