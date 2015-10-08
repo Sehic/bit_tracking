@@ -59,12 +59,12 @@
 
                     <script type="text/javascript">
   var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 11,
-    center: new google.maps.LatLng(43.8331, 18.3039),
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+  zoom: 11,
+  center: new google.maps.LatLng(43.8331, 18.3039),
+  mapTypeId: google.maps.MapTypeId.ROADMAP
   });
   var geocoder = new google.maps.Geocoder();
-   var marker = geocoder.marker;
+  var marker = geocoder.marker;
   document.getElementById('address').addEventListener('blur', function() {
     geocodeAddress(geocoder, map);
   });

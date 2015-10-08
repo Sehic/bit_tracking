@@ -1,6 +1,5 @@
 @import helpers.StatusHelper
 @(packages: List[models.Package])(offices: List[PostOffice])
-
 @main("My Tracking Panel") {
 
 
@@ -95,6 +94,7 @@
                                     Recipient's Name:
                                 </label>
                                 <div class="col-sm-10">
+
                                     <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="">
                                 </div>
                             </div>
@@ -104,6 +104,7 @@
                                     Recipient's Address:
                                 </label>
                                 <div class="col-sm-10">
+
                                     <input name="recipientAddress" type="text" class="form-control" id="recipientAddress" required="required" value="">
                                 </div>
                             </div>
@@ -113,6 +114,7 @@
                                 </label>
                                 <div class="col-sm-10">
                                     <input placeholder="Weight in kg" name="weight" value="" type="text" class="form-control" id="weight" required="required">
+                                    <span id="weightSpan"></span>
                                 </div>
                             </div>
 
@@ -121,7 +123,8 @@
                                     Package Price:
                                 </label>
                                 <div class="col-sm-10">
-                                    <input placeholder="Price in KM" name="price" value="" type="text" class="form-control" id="price" required="required">
+                                    <input id="priceId" placeholder="Price in KM" name="price" value="" type="text" class="form-control" required="required">
+                                    <span id="priceSpan">4231421</span>
                                 </div>
                             </div>
 

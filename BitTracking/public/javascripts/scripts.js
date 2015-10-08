@@ -1,3 +1,19 @@
+$(document).ready(function(){
+    var filter = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+    var regex = /[\d\.]/;
+    var price = $('#priceId').val();
+    var weight = $('#weight').val();
+
+    $('#priceId').blur(function() {
+        alert(regex.test(price));
+        if(regex.test(price) === true) {
+            alert(regex.test(price));
+        } else {
+            alert(regex.test(price));
+        }
+    });
+});
+
 $(document).ready(function() {
     $('#rejectedPackages').click(function() {
         $(this).slideUp();

@@ -138,6 +138,9 @@ public class PackageController extends Controller {
             pack.senderName = user.firstName + " " + user.lastName;
             pack.weight = Double.parseDouble(form.get("weight"));
             pack.price = Double.parseDouble(form.get("price"));
+            if(pack.weight <= 0 || pack.price <= 0){
+                return badRequest(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+            }
             pack.seen = true;
             String type = form.get("packageType");
             pack.packageType = null;

@@ -106,10 +106,11 @@ public class Application extends Controller {
     public Result adminMaps() {
 
         if (Location.findLocation.findList().size() > 0)
-            return ok(adminmaps.render(Location.findLocation.findList()));
+            return ok(adminmaps.render(Location.findLocation.findList(),PostOffice.findOffice.findList()));
         return redirect(routes.Application.adminPanel());
 
     }
+
 
     /**
      * Method that opens up tables of users, post offices and packages

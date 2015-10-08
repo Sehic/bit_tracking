@@ -1,4 +1,4 @@
-@(places: java.util.List[models.Location])
+@(places: java.util.List[models.Location])(offices: List[PostOffice])
 @adminmain("Post Offices") {
 
     <ol class="breadcrumb">
@@ -16,23 +16,38 @@
                 <div id="map" style="position: relative; height: 700px; width: auto"></div>
                 <script type="text/javascript">
 
-     var map = new google.maps.Map(document.getElementById('map'), {
+    var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 5,
     center: new google.maps.LatLng(43.8331, 18.3039),
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-  });
-// Construct a new InfoWindow.
-   var list = document.getElementById("loc").value;
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
 
-    var i, marker;
+    var geocoder = new google.maps.Geocoder();
+    var marker = geocoder.marker;
+    document.getElementById('loc').addEventListener('blur', function() {
+    geocodeAddress(geocoder, map);
+    });
 
-    @for(place <- places) {
-
-     marker = new google.maps.Marker({
-        position: new google.maps.LatLng(@place.y
-                    , @place.x),
-        map: map
-        });
+<!-- Create info window for each Post Office address (getting address from postofficeadd.scala.html) -->
+    var infowindow = new google.maps.InfoWindow();
+        @for(place <- places) {
+            @for(office <- offices) {
+                if(@place.id == @office.id){
+                     marker = new google.maps.Marker({
+                     position: new google.maps.LatLng(@place.y, @place.x ),
+                     map: map,
+                     clicable:true
+                     });
+                }
+                google.maps.event.addListener(marker,'click',(function(marker){
+                return function(){
+                <!--set office name to markers infowindow-->
+                    var content = "@office.name";
+                    infowindow.setContent(content);
+                    infowindow.open(map,marker);
+                    }
+                })(marker));
+            }
         }
 
     google.maps.event.addDomListener(window, 'load', initialize);
