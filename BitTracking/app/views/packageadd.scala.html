@@ -38,7 +38,9 @@
                             Sender's Name:
                         </label>
                         <div class="col-sm-10">
-                            <input placeholder="" name="senderName" type="text" class="form-control" id="senderName" required="required" value="@text("senderName").value">
+                            <input placeholder="" name="senderName" type="text" class="form-control" id="senderName" required="required" value="@text("senderName").value" onkeyup="checkSendersName()" >
+                            <span id="senderNameError" class="alert-danger" data-error-for="" ></span>
+
                         </div>
                     </div>
 
@@ -85,7 +87,8 @@
                             Recipient's Name:
                         </label>
                         <div class="col-sm-10">
-                            <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="@text("recipientName").value">
+                            <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="@text("recipientName").value" onkeyup="checkRecipientName()">
+                            <span id="recipientNameError" class="alert-danger" data-error-for="" ></span>
                         </div>
                     </div>
 
@@ -133,7 +136,7 @@
                             Package Weight:
                         </label>
                         <div class="col-sm-10">
-                            <input placeholder="Weight in kg" name="weight" value="@text("weight").value" type="text" class="form-control" id="weight" required="required">
+                            <input placeholder="Weight in kg" name="weight" value="@text("weight").value" type="number" class="form-control" id="weight" required="required" step="0.01" min="0.01" max="20000">
                         </div>
                     </div>
 
@@ -142,7 +145,7 @@
                             Package Price:
                         </label>
                         <div class="col-sm-10">
-                            <input placeholder="Price in KM" name="price" value="@text("price").value" type="text" class="form-control" id="price" required="required">
+                            <input placeholder="Price in KM" name="price" value="@text("price").value" type="number" class="form-control" id="price" required="required" step="0.01" min="0.01" max="1000000">
                         </div>
                     </div>
 

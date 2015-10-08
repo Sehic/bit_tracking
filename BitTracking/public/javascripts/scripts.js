@@ -1,18 +1,32 @@
-$(document).ready(function(){
-    var filter = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-    var regex = /[\d\.]/;
-    var price = $('#priceId').val();
-    var weight = $('#weight').val();
-
-    $('#priceId').blur(function() {
-        alert(regex.test(price));
-        if(regex.test(price) === true) {
-            alert(regex.test(price));
+<!--Validation for sender name packageadd.scala.html-->
+function checkSendersName() {
+    var firstName = document.getElementById("senderName").value;
+    var filter = /^[a-zA-Z]+$/;
+    if (firstName.length == 0) {
+        document.getElementById("senderNameError").innerHTML = "<em>This field is required.</em>";
+    } else {
+        if (!filter.test(firstName)) {
+            document.getElementById("senderNameError").innerHTML = "<em>Only letters allowed.</em>";
         } else {
-            alert(regex.test(price));
+            document.getElementById("senderNameError").innerHTML = "";
         }
-    });
-});
+    }
+}
+
+<!--Validation for recipient name packageadd.scala.html-->
+function checkRecipientName() {
+    var firstName = document.getElementById("recipientName").value;
+    var filter = /^[a-zA-Z]+$/;
+    if (firstName.length == 0) {
+        document.getElementById("recipientNameError").innerHTML = "<em>This field is required.</em>";
+    } else {
+        if (!filter.test(firstName)) {
+            document.getElementById("recipientNameError").innerHTML = "<em>Only letters allowed.</em>";
+        } else {
+            document.getElementById("recipientNameError").innerHTML = "";
+        }
+    }
+}
 
 $(document).ready(function() {
     $('#rejectedPackages').click(function() {
