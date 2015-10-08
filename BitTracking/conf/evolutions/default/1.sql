@@ -48,7 +48,7 @@ create table shipment (
   package_id_id             bigint,
   status                    integer,
   date_created              datetime(6),
-  constraint ck_shipment_status check (status in ('5','1','2','4','3')),
+  constraint ck_shipment_status check (status in ('5','1','2','4','3','6')),
   constraint pk_shipment primary key (id))
 ;
 

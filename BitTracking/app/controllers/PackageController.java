@@ -7,6 +7,7 @@ import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.Package;
 import models.*;
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -155,11 +156,19 @@ public class PackageController extends Controller {
                     pack.packageType = PackageType.TUBE;
                     break;
             }
+            String officeName = form.get("initialPostOffice");
+            Logger.info(officeName);
+            PostOffice office = PostOffice.findPostOfficeByName(officeName);
             pack.save();
+            Shipment ship = new Shipment();
+            ship.packageId = pack;
+            ship.postOfficeId = office;
+            ship.save();
+            pack.shipmentPackages.add(ship);
+            pack.update();
             user.packages.add(pack);
             user.update();
         } catch (PersistenceException | IllegalStateException | NumberFormatException e) {
-
             return badRequest(index.render(packages));
         }
         return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
@@ -169,10 +178,10 @@ public class PackageController extends Controller {
     public Result approveReject(Long id) {
         DynamicForm form = Form.form().bindFromRequest();
         Package pack = Package.findPackageById(id);
+        Shipment ship = Shipment.shipmentFinder.where().eq("packageId", pack).findUnique();
         String value = form.get("approveReject");
-        PostOffice initial = PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
         String destination = form.get("destinationPostOffice");
-        if (value.equals("approve") && initial != null && destination != "default") {
+        if (value.equals("approve") && destination != "default") {
             pack.approved = true;
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.destination = destination;
@@ -181,16 +190,17 @@ public class PackageController extends Controller {
             pack.trackingNum = "rejected";
             pack.seen = false;
             pack.update();
+            ship.status = StatusHelper.REJECTED;
+            Calendar c = Calendar.getInstance();
+            Date date = c.getTime();
+            ship.dateCreated = date;
+            ship.update();
             return redirect(routes.UserController.officeWorkerPanel());
         } else {
             pack.approved = null;
             return redirect(routes.UserController.officeWorkerPanel());
         }
         pack.update();
-        Shipment ship = new Shipment();
-        ship.packageId = pack;
-        ship.postOfficeId = initial;
-        ship.save();
         return redirect(routes.PostOfficeController.listRoutes(id));
     }
 }

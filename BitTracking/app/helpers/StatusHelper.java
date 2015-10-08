@@ -15,5 +15,7 @@ public enum StatusHelper {
     @EnumValue("4")
     DELIVERED,
     @EnumValue("5")
-    RECEIVED
+    RECEIVED,
+    @EnumValue("6")
+    REJECTED
 }

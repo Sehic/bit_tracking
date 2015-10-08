@@ -1,4 +1,11 @@
 $(document).ready(function() {
+    $('#mapUserLocation').hide();
+    $('#recipientName').focusout(function() {
+        $('#mapUserLocation').fadeIn();
+    });
+});
+
+$(document).ready(function() {
     $('#rejectedPackages').click(function() {
         $(this).slideUp();
     })

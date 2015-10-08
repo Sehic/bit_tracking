@@ -36,7 +36,11 @@
                         </thead>
                         <tbody>
                         @for(pack <- packages) {
-                            <tr>
+                            @if(pack.seen == false) {
+                                <tr style="background-color: #ffffcc">
+                            } else {
+                                <tr>
+                            }
                                 @if(pack.trackingNum == null) {
                                     <td id="number">In process...</td>
                                 } else {
@@ -59,17 +63,17 @@
                                 @if(pack.approved == false) {
                                     <td id="approved" style="color: red">REJECTED</td>
                                 }
-                                @if(pack.shipmentPackages == null || pack.shipmentPackages.size() < 1 && pack.approved != false) {
+                                @if(pack.approved == null) {
                                     <td id="status">In process...</td>
                                     <td id="time">-</td>
                                 } else {
-                                    @if(pack.shipmentPackages.size() > 1 && pack.shipmentPackages.get(pack.shipmentPackages.size() - 1).status == StatusHelper.DELIVERED) {
+                                    @if(pack.shipmentPackages.get(pack.shipmentPackages.size() - 1).status == StatusHelper.DELIVERED) {
                                         <td id="status">DELIVERED</td>
                                         <td id="time">@pack.shipmentPackages.get(0).dateCreated</td>
                                     } else {
                                         @if(pack.approved == false) {
-                                            <td id="status">-</td>
-                                            <td id="time">-</td>
+                                            <td id="status">REJECTED</td>
+                                            <td id="time">@pack.shipmentPackages.get(0).dateCreated</td>
                                         } else {
                                             <td id="status">OUT FOR DELIVERY</td>
                                             <td id="time">@pack.shipmentPackages.get(0).dateCreated</td>
@@ -131,8 +135,8 @@
                                     Type of Package:
                                 </label>
                                 <div class="col-sm-5">
-                                    <select class="form-control" name="packageType">
-                                        <option class="default">--Select one--</option>
+                                    <select class="form-control" name="packageType" required>
+                                        <option class="default" value="">--Select one--</option>
                                         <option value="1">BOX</option>
                                         <option value="2">ENVELOPE</option>
                                         <option value="3">FLYER</option>
@@ -146,8 +150,8 @@
                                     Send Via:
                                 </label>
                                 <div class="col-sm-5">
-                                    <select class="form-control" name="initialPostOffice">
-                                        <option class="default">--Select one--</option>
+                                    <select class="form-control" name="initialPostOffice" required>
+                                        <option value="" class="default">--Select one--</option>
                                         @for(office <- offices) {
                                             <option value="@office.name">@office.name</option>
                                         }
@@ -155,7 +159,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div id="mapUserLocation" class="col-md-6">
 
                             <input id="longitude" name="longitude" type="hidden">
                             <input id="latitude" name="latitude" type="hidden">
@@ -205,8 +209,6 @@ function geocodeAddress(geocoder, resultsMap) {
       });
       document.getElementById("longitude").value = results[0].geometry.location.lng();
       document.getElementById("latitude").value = results[0].geometry.location.lat();
-    } else {
-      alert('Geocode was not successful for the following reason: ' + status);
     }
   });
 }

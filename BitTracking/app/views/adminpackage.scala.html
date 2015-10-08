@@ -52,7 +52,13 @@
             @for(pack <- packs) {
                 <tr class="succes">
                     <td>@pack.id</td>
-                    <td>@pack.trackingNum</td>
+                    <td>
+                        @if(pack.trackingNum == null) {
+                            <i>Waiting For Approval</i>
+                        } else {
+                            @pack.trackingNum
+                        }
+                    </td>
                     <td>@pack.senderName</td>
                     <td>@pack.recipientName</td>
 
@@ -60,7 +66,6 @@
                         <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
                     } else {
                         <td>
-
                         @for(shipments: Shipment <- pack.shipmentPackages) {
                             @shipments.postOfficeId.name|
                         }

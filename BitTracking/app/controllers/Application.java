@@ -207,6 +207,7 @@ public class Application extends Controller {
         if (user == null) {
             return redirect(routes.Application.index());
         }
+        List<Package> packagesUnseen = Package.findPackagesByUser(user);
         List<Package> packages = Package.findPackagesByUser(user);
         for (int i = 0; i < packages.size(); i++) {
             if (packages.get(i).seen != null) {
@@ -214,7 +215,7 @@ public class Application extends Controller {
                 packages.get(i).update();
             }
         }
-        return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+        return ok(userpanel.render(packagesUnseen, PostOffice.findOffice.findList()));
     }
 
     public Result contact() {
