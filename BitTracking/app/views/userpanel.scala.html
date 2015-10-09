@@ -128,8 +128,8 @@
                                     Type of Package:
                                 </label>
                                 <div class="col-sm-5">
-                                    <select class="form-control" name="packageType">
-                                        <option class="default">--Select one--</option>
+                                    <select class="form-control" name="packageType" required>
+                                        <option class="default" value="">--Select one--</option>
                                         <option value="1">BOX</option>
                                         <option value="2">ENVELOPE</option>
                                         <option value="3">FLYER</option>
@@ -143,8 +143,8 @@
                                     Send Via:
                                 </label>
                                 <div class="col-sm-5">
-                                    <select class="form-control" name="initialPostOffice">
-                                        <option class="default">--Select one--</option>
+                                    <select class="form-control" name="initialPostOffice" required>
+                                        <option class="default" value="">--Select one--</option>
                                         @for(office <- offices) {
                                             <option value="@office.name">@office.name</option>
                                         }
