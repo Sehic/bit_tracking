@@ -113,12 +113,12 @@ public class PackageStatusController extends Controller {
 
         if (u1 != null && (u1.typeOfUser == UserType.ADMIN || u1.typeOfUser == UserType.DELIVERY_WORKER)) {
             updateStatusAsDeliveryWorker(u1, pack, c, date);
-            return redirect(routes.Application.deliveryWorkerPanel());
+            return redirect(routes.WorkerController.deliveryWorkerPanel());
         }
 
         if (u1 != null && u1.typeOfUser == UserType.OFFICE_WORKER) {
             updateStatusAsOfficeWorker(u1, pack, c, date);
-            return redirect(routes.UserController.officeWorkerPanel());
+            return redirect(routes.WorkerController.officeWorkerPanel());
         }
 
         return redirect(routes.Application.index());

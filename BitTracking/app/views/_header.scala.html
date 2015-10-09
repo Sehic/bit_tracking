@@ -95,7 +95,7 @@
                             Support<strong class="caret"></strong></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="@routes.Application.contact()">Contact Us</a>
+                                <a href="@routes.MailController.contact()">Contact Us</a>
                             </li>
                             <li>
                                 <a href="#">Action 2</a>
@@ -123,13 +123,13 @@
                     }
                     @if(currentUser != null && currentUser.typeOfUser == UserType.OFFICE_WORKER) {
                         <li>
-                            <a href="@routes.UserController.officeWorkerPanel()">Office Worker Panel</a>
+                            <a href="@routes.WorkerController.officeWorkerPanel()">Office Worker Panel</a>
                         </li> <!--Admin panel tab in navigation bar-->
                     }
 
                     @if(currentUser != null && currentUser.typeOfUser == UserType.DELIVERY_WORKER) {
                         <li>
-                            <a href="@routes.Application.deliveryWorkerPanel()">Delivery Worker Panel</a>
+                            <a href="@routes.WorkerController.deliveryWorkerPanel()">Delivery Worker Panel</a>
                         </li> <!--Admin panel tab in navigation bar-->
                     }
 

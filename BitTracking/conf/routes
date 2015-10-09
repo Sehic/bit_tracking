@@ -36,7 +36,7 @@ POST          /adminpanel/postoffice/details/:id                @controllers.Pos
 
 GET           /adminpanel/officeworkers                         @controllers.Application.officeWorkersList()
 GET           /adminpanel/officeworkers/add                     @controllers.Application.registerWorker()
-POST          /adminpanel/officeworkers/add                     @controllers.UserController.addWorker()
+POST          /adminpanel/officeworkers/add                     @controllers.WorkerController.addWorker()
 
 GET           /adminpanel/package/                              @controllers.PackageController.adminPackage()
 GET           /adminpanel/package/addpackage                    @controllers.PackageController.addPackage()
@@ -51,18 +51,18 @@ GET           /adminpanel/makeroute/:id                         @controllers.Pos
 POST          /adminpanel/makeroute/create                      @controllers.PostOfficeController.createRoute()
 POST          /adminpanel/makeroute/save/id                     @controllers.PostOfficeController.saveRoute(id: Long)
 
-GET           /officeworkerpanel                                @controllers.UserController.officeWorkerPanel()
+GET           /officeworkerpanel                                @controllers.WorkerController.officeWorkerPanel()
 
 GET           /adminpanel/deliveryworkers                       @controllers.Application.deliveryWorkersList()
-GET           /adminpanel/deliveryworkers/panel                 @controllers.Application.deliveryWorkerPanel()
+GET           /adminpanel/deliveryworkers/panel                 @controllers.WorkerController.deliveryWorkerPanel()
 POST          /adminpanel/deliveryworkers/status/:id            @controllers.PackageStatusController.updateStatus(id: Long)
 
 GET           /user                                             @controllers.Application.userPanel()
 POST          /user                                             @controllers.PackageController.userSavePackage()
 POST          /user/:id                                         @controllers.PackageController.approveReject(id: Long)
 
-POST          /contact                                          @controllers.Application.sendMail()
-GET           /contact                                          @controllers.Application.contact()
+POST          /contact                                          @controllers.MailController.sendMail()
+GET           /contact                                          @controllers.MailController.contact()
 
 
 

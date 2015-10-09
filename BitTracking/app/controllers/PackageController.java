@@ -120,7 +120,14 @@ public class PackageController extends Controller {
         for (int i = 0; i < p.shipmentPackages.size(); i++) {
             p.shipmentPackages.get(i).delete();
         }
-
+        User u = p.users.get(0);
+        for (int i=0; i<u.packages.size();i++){
+            if(u.packages.get(i).id==id){
+                u.packages.remove(i);
+            }
+        }
+        u.update();
+        p.users.clear();
         p.delete();
         return redirect(routes.PackageController.adminPackage());
 
@@ -193,7 +200,7 @@ public class PackageController extends Controller {
         if (value.equals("approve") && initial != null && destination != "default") {
 
             if(destination.equals("default")){
-                return redirect(routes.UserController.officeWorkerPanel());
+                return redirect(routes.WorkerController.officeWorkerPanel());
             }
 
             pack.approved = true;
@@ -206,10 +213,10 @@ public class PackageController extends Controller {
             pack.seen = false;
             pack.update();
             ship.delete();
-            return redirect(routes.UserController.officeWorkerPanel());
+            return redirect(routes.WorkerController.officeWorkerPanel());
         } else {
             pack.approved = null;
-            return redirect(routes.UserController.officeWorkerPanel());
+            return redirect(routes.WorkerController.officeWorkerPanel());
         }
         pack.update();
         ship.packageId = pack;

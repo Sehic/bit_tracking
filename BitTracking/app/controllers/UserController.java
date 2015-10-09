@@ -3,6 +3,7 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import helpers.Authenticators;
 import helpers.CurrentUser;
+import helpers.HashHelper;
 import helpers.SessionHelper;
 import models.*;
 import models.Package;
@@ -42,7 +43,7 @@ public class UserController extends Controller {
         //Getting values from form in (login.scala.html)
         String password = newUser.bindFromRequest().field("password").value();
         String email = newUser.bindFromRequest().field("email").value();
-        String newPassword = getEncriptedPasswordMD5(password);
+        String newPassword = HashHelper.getEncriptedPasswordMD5(password);
 
         User u = User.findEmailAndPassword(email, newPassword);
 
@@ -102,7 +103,7 @@ public class UserController extends Controller {
             return badRequest(register.render(boundForm));
         }
 
-        String newPassword = getEncriptedPasswordMD5(u.password);
+        String newPassword = HashHelper.getEncriptedPasswordMD5(u.password);
 
         u.firstName = u.firstName.substring(0, 1).toUpperCase() + u.firstName.substring(1);
         u.lastName = u.lastName.substring(0, 1).toUpperCase() + u.lastName.substring(1);
@@ -117,25 +118,6 @@ public class UserController extends Controller {
         }
 
         return redirect(routes.Application.login());
-    }
-
-    /**
-     * This method is used for password encryption.
-     *
-     * @param password - that would be inserted into database
-     * @return - encrypted password
-     */
-    public static String getEncriptedPasswordMD5(String password) {
-        try {
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            md5.update(password.getBytes(), 0, password.length());
-            String result = new BigInteger(1, md5.digest()).toString(16);
-            md5.reset();
-            return result;
-        } catch (NoSuchAlgorithmException e) {
-            // TODO add to logger
-        }
-        return "INVALID PASSWORD";
     }
 
     /**
@@ -239,7 +221,7 @@ public class UserController extends Controller {
 
             return badRequest(editprofile.render(user, path));
         }
-            user.password = getEncriptedPasswordMD5(user.password);
+            user.password = HashHelper.getEncriptedPasswordMD5(user.password);
             user.update();
 
         return redirect(routes.UserController.userProfile(user.id));
@@ -345,87 +327,6 @@ public class UserController extends Controller {
         return redirect(routes.Application.adminPanel());
     }
 
-    @Security.Authenticated(Authenticators.AdminFilter.class)
-    public Result addWorker() {
-
-        Form<User> boundForm = newUser.bindFromRequest();
-        String firstName = boundForm.field("firstName").value();
-        String lastName = boundForm.field("lastName").value();
-        String password = boundForm.field("password").value();
-        String repassword = boundForm.field("repassword").value();
-        String email = boundForm.field("email").value();
-        //Getting post office name
-        String postOffice = boundForm.bindFromRequest().field("postOffice").value();
-        String userType = boundForm.bindFromRequest().field("userType").value();
-        //Proceeding value and creating post office with it
-        PostOffice wantedPostOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
-
-        User u = User.checkEmail(email);
-        List<PostOffice> postOffices = PostOffice.findOffice.findList();
-        if (u != null) {
-            flash("errorEmail", "E-mail address already exists!");
-            return ok(adminworkeradd.render(postOffices, boundForm));
-        }
-        u = new User(firstName, lastName, password, email, wantedPostOffice);
-
-
-        if (!u.checkName(u.firstName)) {
-            flash("errorName", "Your name should have only letters.");
-            return badRequest(adminworkeradd.render(postOffices, boundForm));
-        }
-
-        if (!u.checkName(u.lastName)) {
-            flash("errorLastName", "Your last name should have only letters.");
-            return badRequest(adminworkeradd.render(postOffices, boundForm));
-        }
-
-        if (!u.checkPassword(u.password)) {
-            flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters and one number");
-            return badRequest(adminworkeradd.render(postOffices, boundForm));
-        }
-
-        if (!u.password.equals(repassword)) {
-            flash("errorTwoPasswords", "You entered different passwords");
-            return badRequest(adminworkeradd.render(postOffices, boundForm));
-        }
-
-        String newPassword = getEncriptedPasswordMD5(password);
-
-        firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
-        lastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
-
-        u = new User(firstName, lastName, newPassword, email, wantedPostOffice);
-        if (userType.equals("1")) {
-            u.typeOfUser = UserType.OFFICE_WORKER;
-        } else {
-            u.typeOfUser = UserType.DELIVERY_WORKER;
-        }
-        u.save();
-
-        return redirect(routes.Application.adminTables());
-
-    }
-
-    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
-    public Result officeWorkerPanel() {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-
-        PostOffice userOffice = u1.postOffice;
-        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("postOfficeId", userOffice).findList();
-        List<Package> packages = new ArrayList<>();
-        for (int i = 0; i < shipments.size(); i++) {
-            packages.add(shipments.get(i).packageId);
-        }
-
-        List<Package> packagesWaiting = Package.findPackagesWaitingForApproval();
-        List<Package> packagesForOfficeWorker= PackageStatusController.packagesForOfficeWorkerWaitingForApproval(userOffice, packagesWaiting);
-
-        List<PostOffice> offices = PostOffice.findOffice.findList();
-
-        return ok(officeworkerpanel.render(packages, u1.postOffice, packagesForOfficeWorker, offices));
-    }
-
     public Result findEmail() {
         DynamicForm form = Form.form().bindFromRequest();
         String email = form.data().get("email");
@@ -435,6 +336,5 @@ public class UserController extends Controller {
         }
         return ok();
     }
-
 
 }

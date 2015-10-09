@@ -186,22 +186,6 @@ public class Application extends Controller {
         return ok(deliveryworkerslist.render(User.find.where().eq("typeOfUser", UserType.DELIVERY_WORKER).findList()));
     }
 
-    public Result deliveryWorkerPanel() {
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
-            return redirect(routes.Application.index());
-        }
-
-        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", u1.postOffice).findList();
-        List<Package> packages = new ArrayList<>();
-        for (int i = 0; i < shipments.size(); i++) {
-
-            packages.add(shipments.get(i).packageId);
-        }
-
-        return ok(deliveryworkerpanel.render(packages));
-    }
-
     public Result userPanel() {
         User user = SessionHelper.getCurrentUser(ctx());
         if (user == null) {
@@ -215,88 +199,6 @@ public class Application extends Controller {
             }
         }
         return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
-    }
-
-    public Result contact() {
-
-        return ok(contact.render(new Form<Contact>(Contact.class)));
-    }
-
-    public Promise<Result> sendMail() {
-
-        //Getting recaptcha values
-        final DynamicForm temp = DynamicForm.form().bindFromRequest();
-
-        Promise<Result> promiseHolder = WS
-                .url("https://www.google.com/recaptcha/api/siteverify")
-                .setContentType("application/x-www-form-urlencoded")
-                .post(String.format(
-                        "secret=%s&response=%s",
-                        //getting API key from the config file
-                        Play.application().configuration()
-                                .getString("recaptchaKey"),
-                        temp.get("g-recaptcha-response")))
-                .map(new Function<WSResponse, Result>() {
-                    public Result apply(WSResponse response) {
-
-                        JsonNode json = response.asJson();
-                        Form<Contact> contactForm = Form.form(Contact.class)
-                                .bindFromRequest();
-
-                        if (json.findValue("success").asBoolean() == true
-                                && !contactForm.hasErrors()) {
-                            Contact newMessage = contactForm.get();
-                            String name = newMessage.name;
-                            String email = newMessage.email;
-                            String message = newMessage.message;
-
-                            if (message.equals("")) {
-                            flash("messageError", "Please fill this field");
-                                return redirect("/contact");
-                            }
-                            flash("success", "Message was sent successfuly!");
-                            MailHelper.sendContactMessage(name, email, message);
-
-                            return redirect("/contact");
-                        } else {
-                            flash("errorMail", "Please verify that you are not a robot!");
-                            return ok(contact.render(contactForm));
-                        }
-                    }
-                });
-
-        return promiseHolder;
-    }
-
-    /**
-     * Inner class that is used for sending mail from user to bittracking
-     */
-    public static class Contact {
-
-        public String name;
-        public String email;
-        public String message;
-
-        /**
-         * Default constructor that sets everything to NN;
-         */
-        public Contact() {
-            this.name= "NN";
-            this.email = "NN";
-            this.message = "NN";
-        }
-        /**
-         * Constructor with parameters;
-         * @param name
-         * @param email
-         * @param message
-         */
-        public Contact(String name, String email, String message) {
-            super();
-            this.name = name;
-            this.email = email;
-            this.message = message;
-        }
     }
 
 }

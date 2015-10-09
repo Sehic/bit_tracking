@@ -297,7 +297,7 @@ public class PostOfficeController extends Controller {
         if (u1.typeOfUser == UserType.ADMIN)
             return redirect(routes.PackageController.adminPackage());
         else
-            return redirect(routes.UserController.officeWorkerPanel());
+            return redirect(routes.WorkerController.officeWorkerPanel());
     }
 
     public Result checkOfficeName() {

@@ -1,23 +1,30 @@
-@(contactForm: Form[Application.Contact])
+@(contactForm: Form[MailController.Contact])
 
 @import helper._
 @main("Contact Us") {
 
     <h1><strong>Contact Us</strong></h1> <br> <br>
 
-    @helper.form(routes.Application.sendMail(), 'class -> "form-horizontal", 'id -> "contactForm") {
+    @helper.form(routes.MailController.sendMail(), 'class -> "form-horizontal", 'id -> "contactForm") {
         <div class="row">
             <div class="col-md-12">
             @if(flash.containsKey("errorMail")) {
                 <div class="alert alert-danger col-md-12">
-                    <b style="font-size : 18 px ; color : red"><center>@flash.get("errorMail")</center></b>
+                    <b style="font-size: 18px; color: red"><center>@flash.get("errorMail")</center></b>
                 </div>
             }
             </div>
             <div class="col-md-12">
             @if(flash.containsKey("success")) {
                 <div class="alert alert-success col-md-12">
-                    <b style="font-size : 18 px ; color : red"><center>@flash.get("success")</center></b>
+                    <b style="font-size: 18px; color: darkgrey"><center>@flash.get("success")</center></b>
+                </div>
+            }
+            </div>
+            <div class="col-md-12">
+            @if(flash.containsKey("messageError")) {
+                <div class="alert alert-danger col-md-12">
+                    <b style="font-size: 18px; color: red"><center>@flash.get("messageError")</center></b>
                 </div>
             }
             </div>
@@ -52,7 +59,7 @@
                     Message <abbr class="req" title="required" style="color : red"> * </abbr>
                 </label>
                 <div class="col-sm-10">
-                    <textarea style="resize : vertical" maxlength="250" name="message" value="@contactForm("message").value" type="text" class="form-control" id="message" required="required">@contactForm("message").value </textarea>
+                    <textarea style="resize : vertical" maxlength="250" name="message" value="@contactForm("message").value" type="text" class="form-control" id="message" required="required"></textarea>
 
                 </div>
             </div>
