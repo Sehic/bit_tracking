@@ -1,12 +1,9 @@
 import org.junit.Before;
 import org.junit.Test;
-
-import play.api.test.TestServer;
-import play.libs.F.*;
+import play.libs.F.Callback;
 import play.test.TestBrowser;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertTrue;
 import static play.test.Helpers.*;
 
 
@@ -19,9 +16,9 @@ public class IntegrationTest {
 
     @Test
     public void test(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))),HTMLUNIT, new Callback<TestBrowser>(){
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
 
-            public void invoke(TestBrowser browser){
+            public void invoke(TestBrowser browser) {
                 browser.goTo("http://localhost:3333");
 
                 boolean b = browser.pageSource().contains("Our Organization");
@@ -29,12 +26,12 @@ public class IntegrationTest {
                 assertTrue(b);
 
             }
-        };
+        });
     }
 
     @Test
     public void testLogin(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))), HTMLUNIT, new Callback<TestBrowser>(){
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>(){
 
 
             public void invoke(TestBrowser browser){
@@ -47,24 +44,24 @@ public class IntegrationTest {
 
                 assertTrue(b);
             }
-        };
+        });
     }
 
     @Test
     public void testRegisterRoute(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))), HTMLUNIT,new Callback<TestBrowser>(){
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT,new Callback<TestBrowser>(){
             public void invoke(TestBrowser browser){
                 browser.goTo("http://localhost:9000/register");
                 assertTrue(browser.pageSource().contains("Register for a BIT"));
 
             }
-        };
+        });
     }
 
     @Test
     public void testRegistration(){
 
-        running(testServer(3333,fakeApplication(inMemoryDatabase()))), HTMLUNIT,new Callback<TestBrowser>(){
+        running(testServer(3333,fakeApplication(inMemoryDatabase())), HTMLUNIT,new Callback<TestBrowser>(){
 
             public void invoke(TestBrowser browser) throws Throwable {
                 browser.goTo("http://localhost:9000/register");
@@ -77,35 +74,35 @@ public class IntegrationTest {
 
                 assertTrue(browser.pageSource().contains("Log into an Existing Account"));
             }
-        };
+        });
     }
 
     @Test
     public void testLogOut(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))), HTMLUNIT, new Callback<TestBrowser>() {
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             @Override
             public void invoke(TestBrowser browser) throws Throwable {
                 browser.goTo("http://localhost:3333");
                 browser.click("#singout");
                 assertTrue(browser.pageSource().contains("Log In"));
             }
-        };
+        });
     }
 
     @Test
     public void testAdminPanelRoute(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))), HTMLUNIT, new Callback<TestBrowser>() {
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             @Override
             public void invoke(TestBrowser browser) throws Throwable {
                 browser.goTo("http://localhost:9000/adminpanel");
                 assertTrue(browser.pageSource().contains("Dashboard"));
             }
-        };
+        });
     }
 
     @Test
     public void testAddingPostOffice(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))), HTMLUNIT, new Callback<TestBrowser>() {
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             @Override
             public void invoke(TestBrowser browser) throws Throwable {
                 browser.goTo("http://localhost:9000/adminpanel/tables/addpostoffice");
@@ -115,34 +112,34 @@ public class IntegrationTest {
 
                 assertTrue(browser.pageSource().contains("post offices"));
             }
-        };
+        });
     }
 
     @Test
     public void testShowOfficeWorkers(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))), HTMLUNIT, new Callback<TestBrowser>(){
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>(){
             public void invoke(TestBrowser browser){
                 browser.goTo("http://localhost:9000/adminpanel/tables");
                 browser.click("#showWorkers");
                 assertTrue(browser.pageSource().contains("OFFICE_WORKER"));
             }
-        };
+        });
     }
 
     @Test
     public void testShowDeliveryWorkers(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))), HTMLUNIT, new Callback<TestBrowser>(){
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>(){
             public void invoke(TestBrowser browser){
                 browser.goTo("http://localhost:9000/adminpanel/tables");
                 browser.click("#showDelivery");
                 assertTrue(browser.pageSource().contains("DELIVERY_WORKER"));
             }
-        };
+        });
     }
 
     @Test
     public void testAddWorkers(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))), HTMLUNIT, new Callback<TestBrowser>() {
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             @Override
             public void invoke(TestBrowser browser) throws Throwable {
                 browser.goTo("http://localhost:9000/adminpanel/officeworkers");
@@ -155,12 +152,12 @@ public class IntegrationTest {
                 browser.click("#registerWorker");
                 assertTrue(browser.pageSource().contains("Officeworker1"));
             }
-        };
+        });
     }
 
     @Test
     public void testAddingPackage(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))), HTMLUNIT, new Callback<TestBrowser>() {
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             @Override
             public void invoke(TestBrowser browser) throws Throwable {
                 browser.goTo("http://localhost:9000/adminpanel/package/");
@@ -171,12 +168,12 @@ public class IntegrationTest {
                 browser.click("#finalAdd");
                 assertTrue(browser.pageSource().contains("10"));
             }
-        };
+        });
     }
 
     @Test
     public void testTrackPackage(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))),HTMLUNIT, new Callback<TestBrowser>() {
+        running(testServer(3333, fakeApplication(inMemoryDatabase())),HTMLUNIT, new Callback<TestBrowser>() {
             @Override
             public void invoke(TestBrowser browser) throws Throwable {
                 browser.goTo("http://localhost:9000/trackpackage/");
@@ -184,24 +181,24 @@ public class IntegrationTest {
                 browser.click("#trackSubmit");
                 assertTrue(browser.pageSource().contains("112396fe-4e12-43c9-9c50-37004d9d15da"));
             }
-        };
+        });
     }
 
     @Test
     public void testEditProfileRoute(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))), HTMLUNIT, new Callback<TestBrowser>() {
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             @Override
             public void invoke(TestBrowser browser) throws Throwable {
                 browser.goTo("http://localhost:9000/");
                 browser.click("#editProfile");
                 assertTrue(browser.pageSource().contains("First Name"));
             }
-        };
+        });
     }
 
     @Test
     public void testEditProfile(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))), HTMLUNIT, new Callback<TestBrowser>() {
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             @Override
             public void invoke(TestBrowser browser) throws Throwable {
                 browser.goTo("http://localhost:9000/");
@@ -210,18 +207,56 @@ public class IntegrationTest {
                 browser.click("#saveChanges");
                 assertTrue(browser.pageSource().contains("changed"));
             }
-        };
+        });
     }
 
     @Test
     public void testSearch(){
-        running(testServer(3333, fakeApplication(inMemoryDatabase()))), HTMLUNIT, new Callback<TestBrowser>() {
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             @Override
             public void invoke(TestBrowser browser) throws Throwable {
                 browser.goTo("http://localhost:9000/adminpanel");
                 browser.fill("templatemo_search_box").with("aaaa");
                 assertTrue(browser.pageSource().contains("aaaa@mail.com"));
             }
-        };
+        });
+    }
+
+    @Test
+    public void testUserAddPackage(){
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
+            @Override
+            public void invoke(TestBrowser browser) throws Throwable {
+                browser.goTo("http://localhost:9000/user");
+                browser.click("#userCreatePackage");
+                browser.fill("#recipientName").with("Ajdin");
+                browser.fill("#recipientAddress").with("Zenica");
+                browser.fill("#weight").with("2");
+                browser.fill("#price").with("2");
+                browser.click("#packageType");
+                browser.click("#envelope");
+                browser.click("#userSendPackage");
+                assertTrue(browser.pageSource().contains("Zenica"));
+            }
+        });
+    }
+
+    @Test
+    public void testApprovePackage(){
+        running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
+            @Override
+            public void invoke(TestBrowser browser) throws Throwable {
+                browser.goTo("http://localhost:9000/officeworkerpanel");
+                browser.click("#approvalId");
+                browser.click("#approveReject");
+                browser.click("#approvePack");
+                browser.click("#initialPostOffice");
+                browser.click("#Zenica");
+                browser.click("#destinationPostOffice");
+                browser.click("#Sarajevo");
+                browser.click("#saveAndCreate");
+                assertTrue(browser.pageSource().contains("Finalize"));
+            }
+        });
     }
 }

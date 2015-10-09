@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-md-12" style="margin-top : 35px">
                     <a href="#myPackages" class="btn btn-default myLinks">My Packages</a>
-                    <a href="#createPackage" class="btn btn-default myLinks">Create New Package</a>
+                    <a href="#createPackage" id="userCreatePackage" class="btn btn-default myLinks">Create New Package</a>
                 </div>
             </div>
 
@@ -131,10 +131,10 @@
                                     Type of Package:
                                 </label>
                                 <div class="col-sm-5">
-                                    <select class="form-control" name="packageType">
+                                    <select class="form-control" id="packageType" name="packageType">
                                         <option class="default">--Select one--</option>
                                         <option value="1">BOX</option>
-                                        <option value="2">ENVELOPE</option>
+                                        <option value="2" id="envelope">ENVELOPE</option>
                                         <option value="3">FLYER</option>
                                         <option value="4">TUBE</option>
                                     </select>
@@ -220,7 +220,7 @@ function geocodeAddress(geocoder, resultsMap) {
 
                     <div class="form-group">
                         <div class="col-sm-12" style="margin-bottom : 3%; padding-left: 9.8%" >
-                            <input type="submit" class="btn btn-primary" value="Send Package">
+                            <input type="submit" class="btn btn-primary" id="userSendPackage" value="Send Package">
                         </div>
                     </div>
                 </form>

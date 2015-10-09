@@ -40,22 +40,22 @@
                                 <td>@pack.price</td>
                                 <td><select name="approveReject" id="approveReject">
                                     <option value="default">Choose</option>
-                                    <option value="approve">Approve</option>
+                                    <option value="approve" id="approvePack">Approve</option>
                                     <option value="reject">Reject</option>
                                 </select></td>
                                 <td><select name="initialPostOffice" id="initialPostOffice">
                                     <option value="default">Choose</option>
                                     @for(office <- offices) {
-                                        <option value="@office.name">@office.name</option>
+                                        <option value="@office.name" id="@office.name">@office.name</option>
                                     }
                                 </select></td>
                                 <td><select name="destinationPostOffice" id="destinationPostOffice">
                                     <option value="default">Choose</option>
                                     @for(office <- offices) {
-                                        <option value="@office.name">@office.name</option>
+                                        <option value="@office.name" id="@office.name">@office.name</option>
                                     }
                                 </select></td>
-                                <td><input type="submit" value="Save and Create Route"></td>
+                                <td><input type="submit" id="saveAndCreate" value="Save and Create Route"></td>
                             </tr>
                         </form>
                     }
