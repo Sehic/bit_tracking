@@ -134,6 +134,12 @@ public class PackageController extends Controller {
         Package pack = new Package();
         try {
             pack.recipientName = form.get("recipientName");
+
+            if (!User.checkName(pack.recipientName)) {
+                flash("recipientNameError", "Your name should contains only letters.");
+                return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+            }
+
             pack.recipientAddress = form.get("recipientAddress");
             pack.senderName = user.firstName + " " + user.lastName;
             pack.weight = Double.parseDouble(form.get("weight"));
@@ -183,12 +189,13 @@ public class PackageController extends Controller {
         PostOffice initial = PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
         String destination = form.get("destinationPostOffice");
 
-        if(destination.equals("default")){
-            return redirect(routes.UserController.officeWorkerPanel());
-        }
-
         Shipment ship = Shipment.shipmentFinder.where().eq("packageId", pack).findUnique();
         if (value.equals("approve") && initial != null && destination != "default") {
+
+            if(destination.equals("default")){
+                return redirect(routes.UserController.officeWorkerPanel());
+            }
+
             pack.approved = true;
             pack.price = Double.parseDouble(form.get("price"));
             pack.trackingNum = (UUID.randomUUID().toString());
