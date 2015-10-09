@@ -215,7 +215,7 @@ public class Application extends Controller {
                 packages.get(i).update();
             }
         }
-        return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+        return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList(),Form.form()));
     }
 
     public Result contact() {

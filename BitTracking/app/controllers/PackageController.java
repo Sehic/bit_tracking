@@ -134,13 +134,18 @@ public class PackageController extends Controller {
         Package pack = new Package();
         try {
             pack.recipientName = form.get("recipientName");
+            if (user.checkName(pack.recipientName)) {
+                flash("errorName", "Your name should contains only letters.");
+                return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList(),form));
+            }
             pack.recipientAddress = form.get("recipientAddress");
             pack.senderName = user.firstName + " " + user.lastName;
+            if (user.checkName(pack.senderName)) {
+                flash("errorName", "Your name should contains only letters.");
+                return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList(),form));
+            }
             pack.weight = Double.parseDouble(form.get("weight"));
             pack.price = Double.parseDouble(form.get("price"));
-            if(pack.weight <= 0 || pack.price <= 0){
-                return badRequest(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
-            }
             pack.seen = true;
             String type = form.get("packageType");
             pack.packageType = null;
@@ -165,8 +170,9 @@ public class PackageController extends Controller {
 
             return badRequest(index.render(packages));
         }
-        return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+        return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList(), form));
     }
+
 
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result approveReject(Long id) {

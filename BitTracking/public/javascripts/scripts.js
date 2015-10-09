@@ -1,3 +1,4 @@
+
 <!--Validation for sender name packageadd.scala.html-->
 function checkSendersName() {
     var firstName = document.getElementById("senderName").value;
