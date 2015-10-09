@@ -137,7 +137,6 @@ public class PackageController extends Controller {
             pack.recipientAddress = form.get("recipientAddress");
             pack.senderName = user.firstName + " " + user.lastName;
             pack.weight = Double.parseDouble(form.get("weight"));
-            pack.price = Double.parseDouble(form.get("price"));
             pack.seen = true;
             String type = form.get("packageType");
             pack.packageType = null;
@@ -191,6 +190,7 @@ public class PackageController extends Controller {
         Shipment ship = Shipment.shipmentFinder.where().eq("packageId", pack).findUnique();
         if (value.equals("approve") && initial != null && destination != "default") {
             pack.approved = true;
+            pack.price = Double.parseDouble(form.get("price"));
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.destination = destination;
         } else if (value.equals("reject")) {
