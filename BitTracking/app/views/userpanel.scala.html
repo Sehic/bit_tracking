@@ -36,7 +36,11 @@
                         </thead>
                         <tbody>
                         @for(pack <- packages) {
-                            <tr>
+                                @if(pack.seen == false) {
+                                    <tr style="background-color: #ffffcc">
+                                } else {
+                                    <tr>
+                                }
                                 @if(pack.trackingNum == null) {
                                     <td id="number">In process...</td>
                                 } else {

@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $('#mapUserLocation').hide();
     $('#recipientName').focusout(function() {
-        $('#mapUserLocation').show();
+        $('#mapUserLocation').fadeIn();
     });
 });
 
