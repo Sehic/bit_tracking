@@ -1,7 +1,7 @@
 @(implicit packages: List[models.Package])
 @main("Home Page") {
 
-    @if(packages.size > 0) {
+    @if(packages.size != 0) {
         <div id="rejectedPackages" class="alert alert-danger" style="cursor : pointer">
             <p>You have <strong>@packages.size</strong> rejected package(s).</p>
         </div>

@@ -155,13 +155,17 @@ public class PackageController extends Controller {
                     pack.packageType = PackageType.TUBE;
                     break;
             }
-            pack.save();
-            user.packages.add(pack);
-            user.update();
 
+            user.packages.add(pack);
             Shipment ship = new Shipment();
             ship.packageId = pack;
             ship.postOfficeId= PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
+            if(ship.postOfficeId == null){
+                flash("noOffice", "Please select one office!");
+                return badRequest(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+            }
+            pack.save();
+            user.update();
             ship.save();
 
         } catch (PersistenceException | IllegalStateException | NumberFormatException e) {
@@ -176,8 +180,14 @@ public class PackageController extends Controller {
         DynamicForm form = Form.form().bindFromRequest();
         Package pack = Package.findPackageById(id);
         String value = form.get("approveReject");
+
         PostOffice initial = PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
         String destination = form.get("destinationPostOffice");
+
+        if(destination.equals("default")){
+            return redirect(routes.UserController.officeWorkerPanel());
+        }
+
         Shipment ship = Shipment.shipmentFinder.where().eq("packageId", pack).findUnique();
         if (value.equals("approve") && initial != null && destination != "default") {
             pack.approved = true;
