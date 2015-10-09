@@ -197,18 +197,17 @@ public class PackageController extends Controller {
         PostOffice initial = PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
         String destination = form.get("destinationPostOffice");
         String price = form.get("price");
-        Logger.info(price);
 
         Shipment ship = Shipment.shipmentFinder.where().eq("packageId", pack).findUnique();
-        if (value.equals("approve") && initial != null && destination != "default") {
+        if (value.equals("approve") && destination != "default") {
             if(destination.equals("default")){
                 return redirect(routes.WorkerController.officeWorkerPanel());
             }
-            if (price == ""){
+            if ("".equals(price)){
                 return redirect(routes.WorkerController.officeWorkerPanel());
-            } else {
-                pack.price = Double.parseDouble(price);
             }
+
+            pack.price = Double.parseDouble(price);
             pack.approved = true;
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.destination = destination;
