@@ -182,6 +182,14 @@
                             <input id="tripDurationBetweenOffices" placeholder="Travel duration between Post Offices" name="tripDurationBetweenOffices" value="" type="text" class="form-control" disabled>
                         </div>
                     </div>
+                    <div class="form-group col-md-12">
+                        <label for="routeOffices" class="col-sm-2" style="font-size: 12px">
+                            Route:
+                        </label>
+                        <div class="col-sm-10">
+                            <input id="routeOffices" name="routeOffices" value="" type="text" class="form-control" readonly>
+                        </div>
+                    </div>
                 </fieldset>
 
             </div>
@@ -303,6 +311,8 @@ function showMap(){
 
         //get the route from the directions service
         var middleOfficeAddress=[];
+        var middleOffices=[];
+        var middleOfficesNames=[];
 directionsService.route(request, function (response, status) {
     if(status == google.maps.DirectionsStatus.OK) {
 
@@ -326,7 +336,9 @@ directionsService.route(request, function (response, status) {
                         var isWithinPolygon = polys[i].containsLatLng(coorX, coorY);
                         if(isWithinPolygon){
                              var officeAddress = "@office.address";
+                             var officeName = "@office.name";
                              middleOfficeAddress.push(officeAddress);
+                             middleOfficesNames.push(officeName);
                         }
                     }
                  exist.push(polys[i].polyTitle);
@@ -350,6 +362,9 @@ directionsService.route(request, function (response, status) {
                     location: address,
                     stopover: true
                 });
+                middleOffices.push(middleOfficesNames[i]);
+
+
             }
         }
 
@@ -375,8 +390,18 @@ directionsService.route(request, function (response, status) {
             }
         });
     }
+
+        var txt = $("#initialOffice option:selected").text();
+        var routeString = txt+"|";
+        for(var i=0;i<middleOffices.length;i++){
+        routeString+=middleOffices[i]+"|";
+        }
+        routeString+=final+"|";
+        $("#routeOffices").val(routeString);
 });
+
         calculateDistance(originAddress, destinationAddress);
+
 
 }
 

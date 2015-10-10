@@ -66,6 +66,7 @@ public class PackageController extends Controller {
         Form<models.Package> boundForm = newPackage.bindFromRequest();
 
         String officeAddress = boundForm.field("officePost").value();
+        String routeForShipment = boundForm.field("routeOffices").value();
         PostOffice office = PostOffice.findPostOfficeByAddress(officeAddress);
         List<Location> locations = Location.findLocation.findList();
         if (office == null) {
@@ -95,16 +96,41 @@ public class PackageController extends Controller {
 
             return badRequest(packageadd.render(PostOffice.findOffice.findList(), locations, boundForm, u1));
         }
+        System.out.println("proslijedjeni officei: "+routeForShipment);
+        List<PostOffice> officesFromRoute = officesFromAutoRoute(routeForShipment);
+        System.out.println("proslijedjeni officei: "+officesFromRoute.size());
+        for (int i=0;i<officesFromRoute.size();i++){
+            Shipment ship = new Shipment();
+            ship.packageId = pack;
+            ship.postOfficeId = officesFromRoute.get(i);
+            if(i==0){
+                ship.status=StatusHelper.READY_FOR_SHIPPING;
+            }else{
+                ship.status=StatusHelper.ON_ROUTE;
+            }
+            ship.save();
+        }
 
-        Shipment ship = new Shipment();
-        ship.packageId = pack;
-        ship.postOfficeId = office;
-        ship.save();
         User user = SessionHelper.getCurrentUser(ctx());
         if (user.typeOfUser == UserType.ADMIN)
             return redirect(routes.PackageController.adminPackage());
         else
             return redirect(routes.PostOfficeController.listRoutes(pack.id));
+    }
+
+    /**
+     * Method that is used for splitting offices string and returning them for creating shipment.
+     * @param route - string route offices
+     * @return - list of post offices
+     */
+    public static List<PostOffice> officesFromAutoRoute(String route){
+        String[] offices = route.split("\\|");
+        List<PostOffice> routeOffices = new ArrayList<>();
+        for (int i=0;i<offices.length;i++){
+            PostOffice officeFromRoute = PostOffice.findPostOfficeByName(offices[i]);
+            routeOffices.add(officeFromRoute);
+        }
+        return routeOffices;
     }
 
     /**
