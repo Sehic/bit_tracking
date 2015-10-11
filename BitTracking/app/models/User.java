@@ -51,6 +51,14 @@ public class User extends Model {
     @ManyToMany(mappedBy = "users")
     public List<Package> packages = new ArrayList<>();
 
+    @Column(unique = true)
+    public String token;
+
+    @Column
+    public Boolean validated = false;
+
+
+
 
     public User() {
     }
@@ -184,6 +192,10 @@ public class User extends Model {
 
     public static List<User> findOfficeWorkers() {
         return find.where().eq("typeOfUser", UserType.OFFICE_WORKER).findList();
+    }
+
+    public static User findByToken(String token) {
+        return find.where().eq("token", token).findUnique();
     }
 
 

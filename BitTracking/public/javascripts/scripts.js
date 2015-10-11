@@ -6,7 +6,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $('#rejectedPackages').click(function() {
+    $('#rejectedPackages, #approvedPackages').click(function() {
         $(this).slideUp();
     })
 });

@@ -36,10 +36,14 @@
                         </thead>
                         <tbody>
                         @for(pack <- packages) {
-                                @if(pack.seen == false) {
-                                    <tr style="background-color: #ffffcc">
+                                @if(pack.seen == false && pack.approved == false) {
+                                    <tr style="background-color: #ffe6e6">
                                 } else {
-                                    <tr>
+                                    @if(pack.seen == false && pack.approved == true) {
+                                        <tr style="background-color: #e6fae6">
+                                    } else {
+                                        <tr>
+                                    }
                                 }
                                 @if(pack.trackingNum == null) {
                                     <td id="number">In process...</td>
@@ -207,8 +211,6 @@ function geocodeAddress(geocoder, resultsMap) {
       });
       document.getElementById("longitude").value = results[0].geometry.location.lng();
       document.getElementById("latitude").value = results[0].geometry.location.lat();
-    } else {
-      alert('Geocode was not successful for the following reason: ' + status);
     }
   });
 }

@@ -41,4 +41,32 @@ public class MailHelper {
         }
     }
 
+    public static void sendConfirmation(String subject, String message, String email) {
+
+        try {
+            HtmlEmail mail = new HtmlEmail();
+            mail.setSubject(subject);
+            mail.setFrom("bittracking2015@gmail.com");
+            mail.addTo("bittracking2015@gmail.com");
+            mail.addTo(email);
+            mail.setMsg(message);
+            mail.setHtmlMsg(String
+                    .format("<html><body><strong> %s </strong> <p> %s </p> </body></html>",
+                            subject, message));
+            mail.setHostName("smtp.gmail.com");
+            mail.setStartTLSEnabled(true);
+            mail.setSSLOnConnect(true);
+            mail.setAuthenticator(new DefaultAuthenticator(
+                    Play.application().configuration().getString("mailFromUsername"),
+                    Play.application().configuration().getString("mailFromPassword")
+            ));
+            mail.send();
+        } catch (EmailException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
 }

@@ -1,6 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import helpers.MailHelper;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
@@ -78,6 +79,12 @@ public class PackageStatusController extends Controller {
                     List<Shipment> shipmentByPackage = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
                     for (int j = 0; j < shipmentByPackage.size(); j++) {
                         shipmentByPackage.get(j).status = StatusHelper.DELIVERED;
+                        String subject = "BitTracking Notification!";
+                        String message = "Mr. " + pack.users.get(0).lastName + ",<br>" +
+                                "Package with tracking number <strong>" + pack.trackingNum + "</strong> has been successifuly delivered.<br>" +
+                                "Thank you for choosing BitTracking!<br><br>" +
+                                "<i>BitTracking Team!</i>";
+                        MailHelper.sendConfirmation(subject, message, pack.users.get(0).email);
                         Ebean.update(shipmentByPackage.get(j));
                     }
                     int last = shipmentByPackage.size() - 1;
@@ -93,7 +100,7 @@ public class PackageStatusController extends Controller {
             }
         }
         List<Package> packagesWaiting = Package.findPackagesWaitingForApproval();
-        List<Package> packagesForOfficeWorker= packagesForOfficeWorkerWaitingForApproval(u1.postOffice, packagesWaiting);
+        List<Package> packagesForOfficeWorker = packagesForOfficeWorkerWaitingForApproval(u1.postOffice, packagesWaiting);
 
         return ok(officeworkerpanel.render(packages, u1.postOffice, packagesForOfficeWorker, PostOffice.findOffice.findList()));
     }
@@ -124,14 +131,14 @@ public class PackageStatusController extends Controller {
         return redirect(routes.Application.index());
     }
 
-    public static List<Package> packagesForOfficeWorkerWaitingForApproval(PostOffice userOffice, List<Package> packagesWaiting){
-        List<Package> packagesForOfficeWorker= new ArrayList<>();
+    public static List<Package> packagesForOfficeWorkerWaitingForApproval(PostOffice userOffice, List<Package> packagesWaiting) {
+        List<Package> packagesForOfficeWorker = new ArrayList<>();
 
-        for (int i=0;i<packagesWaiting.size();i++){
+        for (int i = 0; i < packagesWaiting.size(); i++) {
 
             PostOffice officeFromShipment = packagesWaiting.get(i).shipmentPackages.get(0).postOfficeId;
 
-            if(officeFromShipment.id==userOffice.id){
+            if (officeFromShipment.id == userOffice.id) {
                 packagesForOfficeWorker.add(packagesWaiting.get(i));
             }
         }

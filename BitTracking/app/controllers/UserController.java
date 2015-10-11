@@ -1,10 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
-import helpers.Authenticators;
-import helpers.CurrentUser;
-import helpers.HashHelper;
-import helpers.SessionHelper;
+import helpers.*;
 import models.*;
 import models.Package;
 import play.Logger;
@@ -24,6 +21,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by mladen.teofilovic on 04/09/15.
@@ -47,12 +45,16 @@ public class UserController extends Controller {
 
         User u = User.findEmailAndPassword(email, newPassword);
 
-        if (u != null) {
-            session("email", email);
-            return redirect(routes.Application.index());
+        if (u == null) {
+            return badRequest(login.render("Wrong email or password!", newUser.bindFromRequest()));
         }
-        return badRequest(login.render("Wrong email or password!", newUser.bindFromRequest()));
 
+        if (u.validated == false) {
+            return badRequest(login.render("Please check your email and validate this account!", newUser.bindFromRequest()));
+        }
+
+        session("email", email);
+        return redirect(routes.Application.index());
     }
 
     /**
@@ -68,7 +70,7 @@ public class UserController extends Controller {
         User userFromForm = new User();
         try {
             userFromForm = boundForm.get();
-        }catch(Exception e){
+        } catch (Exception e) {
             return badRequest(register.render(boundForm));
         }
         //Getting password confirmation field on this way because it is not attribute
@@ -109,11 +111,22 @@ public class UserController extends Controller {
         u.lastName = u.lastName.substring(0, 1).toUpperCase() + u.lastName.substring(1);
 
         u = new User(u.firstName, u.lastName, newPassword, u.email);
+        u.token = UUID.randomUUID().toString();
+
+        String subject = "Email Validation - BitTracking";
+        String message = "Mr. " + u.lastName + ",<br>" +
+                "Thank you for joining BitTracking community.<br>" +
+                "To complete your registration, please follow the link bellow: <br>" +
+                "<u>http://localhost:9000/validate/" + u.token + "</u><br><br>" +
+                "<i>BitTracking Team</i>";
+        MailHelper.sendConfirmation(subject, message, u.email);
 
         u.save();
 
         if (u.id == 1) {
             u.typeOfUser = UserType.ADMIN;
+            u.validated = true;
+            u.token = null;
             u.update();
         }
 
@@ -221,8 +234,8 @@ public class UserController extends Controller {
 
             return badRequest(editprofile.render(user, path));
         }
-            user.password = HashHelper.getEncriptedPasswordMD5(user.password);
-            user.update();
+        user.password = HashHelper.getEncriptedPasswordMD5(user.password);
+        user.update();
 
         return redirect(routes.UserController.userProfile(user.id));
     }
@@ -318,7 +331,7 @@ public class UserController extends Controller {
             user.typeOfUser = UserType.DELIVERY_WORKER;
             user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
 
-        } else if(userType.equals("Registered User")) {
+        } else if (userType.equals("Registered User")) {
             user.typeOfUser = UserType.REGISTERED_USER;
             user.postOffice = null;
         }
@@ -335,6 +348,17 @@ public class UserController extends Controller {
             return badRequest();
         }
         return ok();
+    }
+
+    public Result emailValidation(String token) {
+        User user = User.findByToken(token);
+        if (user == null || token == null) {
+            return redirect("/");
+        }
+        user.token = null;
+        user.validated = true;
+        user.update();
+        return redirect("/login");
     }
 
 }

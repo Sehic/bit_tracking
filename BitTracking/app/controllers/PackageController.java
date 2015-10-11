@@ -1,10 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
-import helpers.Authenticators;
-import helpers.PackageType;
-import helpers.SessionHelper;
-import helpers.StatusHelper;
+import helpers.*;
 import models.Package;
 import models.*;
 import play.Logger;
@@ -122,8 +119,8 @@ public class PackageController extends Controller {
             p.shipmentPackages.get(i).delete();
         }
         User u = p.users.get(0);
-        for (int i=0; i<u.packages.size();i++){
-            if(u.packages.get(i).id==id){
+        for (int i = 0; i < u.packages.size(); i++) {
+            if (u.packages.get(i).id == id) {
                 u.packages.remove(i);
             }
         }
@@ -172,18 +169,25 @@ public class PackageController extends Controller {
             user.packages.add(pack);
             Shipment ship = new Shipment();
             ship.packageId = pack;
-            ship.postOfficeId= PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
-            if(ship.postOfficeId == null){
+            ship.postOfficeId = PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
+            if (ship.postOfficeId == null) {
                 flash("noOffice", "Please select one office!");
                 return badRequest(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
             }
             pack.save();
             user.update();
             ship.save();
+            String subject = "Thank You For Choosing BitTracking For Your Delivery Services";
+            String message = "Mr. " + user.lastName + ",<br>" +
+                    "Your request for delivery services has been received.<br>" +
+                    "It will be processed as soon as possible,<br>" +
+                    "and you will be notified.<br><br>" +
+                    "<i>BitTracking Team</i>";
+            MailHelper.sendConfirmation(subject, message, user.email);
 
         } catch (PersistenceException | IllegalStateException | NumberFormatException e) {
 
-            return badRequest(index.render(packages));
+            return badRequest(index.render(0,0));
         }
         return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
     }
@@ -197,26 +201,39 @@ public class PackageController extends Controller {
         PostOffice initial = PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
         String destination = form.get("destinationPostOffice");
         String price = form.get("price");
+        String subject = "BitTracking Notification!";
+        String message = "";
 
         Shipment ship = Shipment.shipmentFinder.where().eq("packageId", pack).findUnique();
         if (value.equals("approve") && destination != "default") {
-            if(destination.equals("default")){
+            if (destination.equals("default")) {
                 return redirect(routes.WorkerController.officeWorkerPanel());
             }
-            if ("".equals(price)){
+            if ("".equals(price)) {
                 return redirect(routes.WorkerController.officeWorkerPanel());
             }
-
             pack.price = Double.parseDouble(price);
             pack.approved = true;
+            pack.seen = false;
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.destination = destination;
+            message = "Mr. " + pack.users.get(0).lastName + ",<br>" +
+                    "Your Latest Request For Delivery Service Has Been <strong>Approved</strong>.<br>" +
+                    "You can get status information of delivery by any time using this tracking number:<br><br> " + pack.trackingNum + "<br><br>" +
+                    "As soon as the package is delivered, you will be notified.<br><br>" +
+                    "<i>BitTracking Team!</i>";
+            MailHelper.sendConfirmation(subject, message, pack.users.get(0).email);
         } else if (value.equals("reject")) {
             pack.approved = false;
             pack.trackingNum = "rejected";
             pack.seen = false;
             pack.update();
             ship.delete();
+            message = "Mr. " + pack.users.get(0).lastName + ",<br>" +
+                    "Your Latest Request For Delivery Service Has Been <strong>Rejected</strong>.<br>" +
+                    "For more information, contact us.<br><br>" +
+                    "<i>BitTracking Team!</i>";
+            MailHelper.sendConfirmation(subject, message, pack.users.get(0).email);
             return redirect(routes.WorkerController.officeWorkerPanel());
         } else {
             pack.approved = null;
