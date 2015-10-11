@@ -358,22 +358,44 @@ directionsService.route(request, function (response, status) {
         for (var i = 0; i < middleOfficeAddress.length; i++) {
             var address = middleOfficeAddress[i];
             if(address !== "" && address!==destinationAddress && address!==originAddress) {
-                waypoints.push({
-                    location: address,
-                    stopover: true
-                });
+                waypoints.push(address);
                 middleOffices.push(middleOfficesNames[i]);
 
 
             }
         }
 
+        var semifinalWaypoints = [];
+
+         @for(office <- offices){
+            @for(linkedOffice <- office.postOfficesA){
+                var linkedPostOffice = "@linkedOffice.address";
+                for(var i=0;i<waypoints.length;i++){
+                    if(linkedPostOffice === waypoints[i]){
+                    console.log("USO"+waypoints[i]);
+                        semifinalWaypoints.push(waypoints[i]);
+                    }
+                }
+            }
+         }
+
+         var finalWaypoints = findDuplicates(semifinalWaypoints);
+
+         var waypointsFromRoute = [];
+         for(var i=0;i<finalWaypoints.length;i++){
+            console.log(finalWaypoints[i])
+            waypointsFromRoute.push({
+                    location: finalWaypoints[i],
+                    stopover: true
+            });
+         }
+
         //build directions request
         var request = {
             origin: originAddress,
             destination: destinationAddress,
             provideRouteAlternatives: true,
-            waypoints: waypoints, //an array of waypoints
+            waypoints: waypointsFromRoute, //an array of waypoints
             optimizeWaypoints: true, //set to true if you want google to determine the shortest route or false to use the order specified.
             travelMode: google.maps.DirectionsTravelMode.DRIVING
         };
@@ -403,6 +425,24 @@ directionsService.route(request, function (response, status) {
         calculateDistance(originAddress, destinationAddress);
 
 
+}
+
+function findDuplicates(arr) {
+  var len=arr.length,
+      out=[],
+      counts={};
+
+  for (var i=0;i<len;i++) {
+    var item = arr[i];
+    counts[item] = counts[item] >= 1 ? counts[item] + 1 : 1;
+  }
+
+  for (var item in counts) {
+    if(counts[item] > 1)
+      out.push(item);
+  }
+
+  return out;
 }
 
 function calculateDistance(originAddress, destinationAddress){

@@ -148,13 +148,15 @@ public class PackageController extends Controller {
             p.shipmentPackages.get(i).delete();
         }
         User u = p.users.get(0);
-        for (int i=0; i<u.packages.size();i++){
-            if(u.packages.get(i).id==id){
-                u.packages.remove(i);
+        if(u!=null) {
+            for (int i = 0; i < u.packages.size(); i++) {
+                if (u.packages.get(i).id == id) {
+                    u.packages.remove(i);
+                }
             }
+            u.update();
+            p.users.clear();
         }
-        u.update();
-        p.users.clear();
         p.delete();
         return redirect(routes.PackageController.adminPackage());
 
