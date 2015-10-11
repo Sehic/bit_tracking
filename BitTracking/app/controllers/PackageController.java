@@ -1,10 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
-import helpers.Authenticators;
-import helpers.PackageType;
-import helpers.SessionHelper;
-import helpers.StatusHelper;
+import helpers.*;
 import models.Package;
 import models.*;
 import play.Logger;
@@ -96,19 +93,25 @@ public class PackageController extends Controller {
 
             return badRequest(packageadd.render(PostOffice.findOffice.findList(), locations, boundForm, u1));
         }
-        System.out.println("proslijedjeni officei: "+routeForShipment);
-        List<PostOffice> officesFromRoute = officesFromAutoRoute(routeForShipment);
-        System.out.println("proslijedjeni officei: "+officesFromRoute.size());
-        for (int i=0;i<officesFromRoute.size();i++){
+        if(routeForShipment==null){
             Shipment ship = new Shipment();
             ship.packageId = pack;
-            ship.postOfficeId = officesFromRoute.get(i);
-            if(i==0){
-                ship.status=StatusHelper.READY_FOR_SHIPPING;
-            }else{
-                ship.status=StatusHelper.ON_ROUTE;
-            }
+            ship.postOfficeId = office;
             ship.save();
+        }else {
+            List<PostOffice> officesFromRoute = officesFromAutoRoute(routeForShipment);
+
+            for (int i = 0; i < officesFromRoute.size(); i++) {
+                Shipment ship = new Shipment();
+                ship.packageId = pack;
+                ship.postOfficeId = officesFromRoute.get(i);
+                if (i == 0) {
+                    ship.status = StatusHelper.READY_FOR_SHIPPING;
+                } else {
+                    ship.status = StatusHelper.ON_ROUTE;
+                }
+                ship.save();
+            }
         }
 
         User user = SessionHelper.getCurrentUser(ctx());
@@ -120,13 +123,18 @@ public class PackageController extends Controller {
 
     /**
      * Method that is used for splitting offices string and returning them for creating shipment.
+     *
      * @param route - string route offices
      * @return - list of post offices
      */
-    public static List<PostOffice> officesFromAutoRoute(String route){
-        String[] offices = route.split("\\|");
+    public static List<PostOffice> officesFromAutoRoute(String route) {
         List<PostOffice> routeOffices = new ArrayList<>();
-        for (int i=0;i<offices.length;i++){
+        if (route == null) {
+            return routeOffices;
+        }
+        String[] offices = route.split("\\|");
+
+        for (int i = 0; i < offices.length; i++) {
             PostOffice officeFromRoute = PostOffice.findPostOfficeByName(offices[i]);
             routeOffices.add(officeFromRoute);
         }
@@ -148,7 +156,7 @@ public class PackageController extends Controller {
             p.shipmentPackages.get(i).delete();
         }
         User u = p.users.get(0);
-        if(u!=null) {
+        if (u != null) {
             for (int i = 0; i < u.packages.size(); i++) {
                 if (u.packages.get(i).id == id) {
                     u.packages.remove(i);
@@ -200,18 +208,18 @@ public class PackageController extends Controller {
             user.packages.add(pack);
             Shipment ship = new Shipment();
             ship.packageId = pack;
-            ship.postOfficeId= PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
-            if(ship.postOfficeId == null){
+            ship.postOfficeId = PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
+            if (ship.postOfficeId == null) {
                 flash("noOffice", "Please select one office!");
                 return badRequest(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
             }
             pack.save();
             user.update();
             ship.save();
-
+            MailHelper.requestReceivedNotification(user.lastName, user.email);
         } catch (PersistenceException | IllegalStateException | NumberFormatException e) {
 
-            return badRequest(index.render(packages));
+            return badRequest(index.render(0,0));
         }
         return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
     }
@@ -225,26 +233,31 @@ public class PackageController extends Controller {
         PostOffice initial = PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
         String destination = form.get("destinationPostOffice");
         String price = form.get("price");
+        String subject = "BitTracking Notification!";
+        String message = "";
 
         Shipment ship = Shipment.shipmentFinder.where().eq("packageId", pack).findUnique();
         if (value.equals("approve") && destination != "default") {
-            if(destination.equals("default")){
+            if (destination.equals("default")) {
                 return redirect(routes.WorkerController.officeWorkerPanel());
             }
-            if ("".equals(price)){
+            if ("".equals(price)) {
                 return redirect(routes.WorkerController.officeWorkerPanel());
             }
 
             pack.price = Double.parseDouble(price);
             pack.approved = true;
+            pack.seen = false;
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.destination = destination;
+            MailHelper.approvedRequestNotification(pack.users.get(0).lastName, pack.trackingNum, pack.users.get(0).email);
         } else if (value.equals("reject")) {
             pack.approved = false;
             pack.trackingNum = "rejected";
             pack.seen = false;
             pack.update();
             ship.delete();
+            MailHelper.rejectedRequestNotification(pack.users.get(0).lastName, pack.users.get(0).email);
             return redirect(routes.WorkerController.officeWorkerPanel());
         } else {
             pack.approved = null;

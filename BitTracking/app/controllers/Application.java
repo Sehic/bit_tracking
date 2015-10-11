@@ -44,7 +44,16 @@ public class Application extends Controller {
         }
         User user = SessionHelper.getCurrentUser(ctx());
         List<Package> packages = Package.finder.where().eq("seen", false).eq("users", user).findList();
-        return ok(index.render(packages));
+        Integer approved = 0;
+        Integer rejected = 0;
+        for (int i = 0; i < packages.size(); i++) {
+            if(packages.get(i).approved) {
+                approved++;
+            } else if (!packages.get(i).approved) {
+                rejected++;
+            }
+        }
+        return ok(index.render(approved, rejected));
     }
 
     /**
