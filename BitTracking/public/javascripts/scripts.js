@@ -1,3 +1,17 @@
+$(document).ready(function(){
+   $("#disableRouteButton").click( function(){
+       $("#clickMe").prop('disabled', true);
+       $('#addPackageButton').prop('disabled', false);
+       $('#routeOffices').prop('disabled', true);
+   })
+    $("#enableRouteButton").click( function(){
+        $("#clickMe").prop('disabled', false);
+        $('#addPackageButton').prop('disabled', true);
+        $('#routeOffices').prop('disabled', false);
+    })
+
+});
+
 $(document).ready(function() {
     $('#mapUserLocation').hide();
     $('#recipientName').focusout(function() {
@@ -6,9 +20,18 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-    $('#rejectedPackages').click(function() {
+    $('#rejectedPackages, #approvedPackages').click(function() {
         $(this).slideUp();
     })
+});
+
+$(document).ready(function() {
+    $('#myPackageList').hide();
+    $('#myPackages').click(function() {
+        $('#waitingForApproval').show();
+        $('#hideApproval').show();
+        $('#approvalId').hide();
+    });
 });
 
 $(document).ready(function() {

@@ -166,6 +166,18 @@
             <div class="col-md-6">
                 <fieldset>
                     <legend><h5 style="color: #419641"><strong>Route Options</strong></h5></legend>
+
+                    <div class="form-group col-md-12">
+                        <div class="col-sm-4">
+                            <input id="clickMe" type="button" class="btn btn-primary" value="Suggest Route"/>
+                        </div>
+                        <div class="col-sm-4">
+                            <input id="enableRouteButton" type="button" class="btn btn-success" value="Enable Route"/>
+                        </div>
+                        <div class="col-sm-4">
+                            <input id="disableRouteButton" type="button" class="btn btn-warning" value="Disable Route"/>
+                        </div>
+                    </div>
                     <div class="form-group col-md-12">
                         <label for="distanceBetweenOffices" class="col-sm-2" style="font-size: 12px">
                             Distance:
@@ -182,6 +194,14 @@
                             <input id="tripDurationBetweenOffices" placeholder="Travel duration between Post Offices" name="tripDurationBetweenOffices" value="" type="text" class="form-control" disabled>
                         </div>
                     </div>
+                    <div class="form-group col-md-12">
+                        <label for="routeOffices" class="col-sm-2" style="font-size: 12px">
+                            Route:
+                        </label>
+                        <div class="col-sm-10">
+                            <input id="routeOffices" name="routeOffices" value="" type="text" class="form-control" readonly>
+                        </div>
+                    </div>
                 </fieldset>
 
             </div>
@@ -189,10 +209,7 @@
 
         <div class="form-group">
             <div class="col-sm-5" style="margin-bottom : 3%;">
-                <input type="submit" class="btn btn-primary" value="Add Package">
-            </div>
-            <div class="col-sm-6" style="margin-bottom : 3%; padding-left: 9.8%" >
-                <input id="clickMe" type="button" class="btn btn-primary" value="Suggest Route"/>
+                <input id="addPackageButton" type="submit" class="btn btn-primary" value="Add Package">
             </div>
         </div>
 
@@ -210,7 +227,7 @@
 
 
                     <script type="text/javascript">
-
+    $('#addPackageButton').prop('disabled', true);
      var map;
      var i, marker;
      var polys = new Array();
@@ -303,6 +320,8 @@ function showMap(){
 
         //get the route from the directions service
         var middleOfficeAddress=[];
+        var middleOffices=[];
+        var middleOfficesNames=[];
 directionsService.route(request, function (response, status) {
     if(status == google.maps.DirectionsStatus.OK) {
 
@@ -326,7 +345,9 @@ directionsService.route(request, function (response, status) {
                         var isWithinPolygon = polys[i].containsLatLng(coorX, coorY);
                         if(isWithinPolygon){
                              var officeAddress = "@office.address";
+                             var officeName = "@office.name";
                              middleOfficeAddress.push(officeAddress);
+                             middleOfficesNames.push(officeName);
                         }
                     }
                  exist.push(polys[i].polyTitle);
@@ -346,19 +367,44 @@ directionsService.route(request, function (response, status) {
         for (var i = 0; i < middleOfficeAddress.length; i++) {
             var address = middleOfficeAddress[i];
             if(address !== "" && address!==destinationAddress && address!==originAddress) {
-                waypoints.push({
-                    location: address,
-                    stopover: true
-                });
+                waypoints.push(address);
+                middleOffices.push(middleOfficesNames[i]);
+
+
             }
         }
+
+        var semifinalWaypoints = [];
+
+         @for(office <- offices){
+            @for(linkedOffice <- office.postOfficesA){
+                var linkedPostOffice = "@linkedOffice.address";
+                for(var i=0;i<waypoints.length;i++){
+                    if(linkedPostOffice === waypoints[i]){
+                    console.log("USO"+waypoints[i]);
+                        semifinalWaypoints.push(waypoints[i]);
+                    }
+                }
+            }
+         }
+
+         var finalWaypoints = findDuplicates(semifinalWaypoints);
+
+         var waypointsFromRoute = [];
+         for(var i=0;i<finalWaypoints.length;i++){
+            console.log(finalWaypoints[i])
+            waypointsFromRoute.push({
+                    location: finalWaypoints[i],
+                    stopover: true
+            });
+         }
 
         //build directions request
         var request = {
             origin: originAddress,
             destination: destinationAddress,
             provideRouteAlternatives: true,
-            waypoints: waypoints, //an array of waypoints
+            waypoints: waypointsFromRoute, //an array of waypoints
             optimizeWaypoints: true, //set to true if you want google to determine the shortest route or false to use the order specified.
             travelMode: google.maps.DirectionsTravelMode.DRIVING
         };
@@ -375,9 +421,37 @@ directionsService.route(request, function (response, status) {
             }
         });
     }
+
+        var txt = $("#initialOffice option:selected").text();
+        var routeString = txt+"|";
+        for(var i=0;i<middleOffices.length;i++){
+        routeString+=middleOffices[i]+"|";
+        }
+        routeString+=final+"|";
+        $("#routeOffices").val(routeString);
 });
+
         calculateDistance(originAddress, destinationAddress);
 
+
+}
+
+function findDuplicates(arr) {
+  var len=arr.length,
+      out=[],
+      counts={};
+
+  for (var i=0;i<len;i++) {
+    var item = arr[i];
+    counts[item] = counts[item] >= 1 ? counts[item] + 1 : 1;
+  }
+
+  for (var item in counts) {
+    if(counts[item] > 1)
+      out.push(item);
+  }
+
+  return out;
 }
 
 function calculateDistance(originAddress, destinationAddress){
@@ -539,10 +613,11 @@ google.maps.Polygon.prototype.containsLatLng = function(latLng) {
   return inPoly;
 };
 $("#clickMe").click( function(){
-polys =[];
-myPolygons=[];
-initialize();
-showMap();
+    polys =[];
+    myPolygons=[];
+    initialize();
+    showMap();
+    $('#addPackageButton').prop('disabled', false);
 });
 google.maps.event.addDomListener(window, 'load', initialize);
   </script>

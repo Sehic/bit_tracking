@@ -2,11 +2,11 @@
 @import helper._
 @adminmain("Post Office") {
 
-  <ol class="breadcrumb">
-    <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
-    <li class="active">Post office</li>
-  </ol>
-  <h1>Post offices</h1>
+    <ol class="breadcrumb">
+        <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
+        <li class="active">Post office</li>
+    </ol>
+    <h1>Post offices</h1>
 
     <div class="row margin-bottom-30">
         <div class="col-md-12">
@@ -21,7 +21,8 @@
     </div>
 
     <hr/>
-            <a href="@routes.Application.addPostOffice()"><button type="button" class="btn btn-primary btn-group-sm" data-toggle="modal" >Add post office</button></a>
+    <a href="@routes.Application.addPostOffice()"><button type="button" class="btn btn-primary btn-group-sm" data-toggle="modal" >
+        Add post office</button></a>
     <hr/>
 
 
@@ -35,37 +36,39 @@
             </div>
         </div>
     </div>
-    <table id="example" class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
-        <thead>
-      <tr>
-        <th>#</th>
-        <th>Name</th>
-        <th>Adress</th>
-          <th>Link</th>
-          <th>Linked To</th>
-          <th>Edit</th>
-        <th>Delete</th>
-      </tr>
-    </thead>
-    <tbody>
-    @for(postOffice <- postOffices) {
-      <tr class="succes">
-        <td>@postOffice.id</td>
-        <td>@postOffice.name</td>
-          <td>@postOffice.address</td>
-          <td><a href="@routes.PostOfficeController.linkPostOffices(postOffice.id)">Link</a></td>
-          <td>
-          @for(linkedOffice <- postOffice.postOfficesA) {
-             @linkedOffice.name|
-          }
-          </td>
-          <td><a href="@routes.PostOfficeController.postOfficeDetails(postOffice.id)"><input type="submit" value="Edit"></a></td>
-          <td><a data-role="delete" data-delete-parent="tr" href="@routes.PostOfficeController.deleteOffice(postOffice.id)" role="button"><input type="button" value="Delete"></a></td>
+    <div class="table-responsive">
+        <table id="example" class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Adress</th>
+                    <th>Link</th>
+                    <th>Linked To</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(postOffice <- postOffices) {
+                <tr class="succes">
+                    <td>@postOffice.id</td>
+                    <td>@postOffice.name</td>
+                    <td>@postOffice.address</td>
+                    <td><a href="@routes.PostOfficeController.linkPostOffices(postOffice.id)">Link</a></td>
+                    <td>
+                    @for(linkedOffice <- postOffice.postOfficesA) {
+                        @linkedOffice.name|
+                    }
+                    </td>
+                    <td><a href="@routes.PostOfficeController.postOfficeDetails(postOffice.id)"><input type="submit" value="Edit"></a></td>
+                    <td><a data-role="delete" data-delete-parent="tr" href="@routes.PostOfficeController.deleteOffice(postOffice.id)" role="button"><input type="button" value="Delete"></a></td>
 
-      </tr>
-    }
+                </tr>
+            }
 
-    </tbody>
-  </table>
+            </tbody>
+        </table>
+    </div>
 
 }

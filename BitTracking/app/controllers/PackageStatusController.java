@@ -1,6 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import helpers.MailHelper;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
@@ -80,6 +81,7 @@ public class PackageStatusController extends Controller {
                         shipmentByPackage.get(j).status = StatusHelper.DELIVERED;
                         Ebean.update(shipmentByPackage.get(j));
                     }
+                    MailHelper.packageDeliveredNotification(pack.users.get(0).lastName, pack.trackingNum, pack.users.get(0).email);
                     int last = shipmentByPackage.size() - 1;
                     c = Calendar.getInstance();
                     date = c.getTime();
@@ -93,7 +95,7 @@ public class PackageStatusController extends Controller {
             }
         }
         List<Package> packagesWaiting = Package.findPackagesWaitingForApproval();
-        List<Package> packagesForOfficeWorker= packagesForOfficeWorkerWaitingForApproval(u1.postOffice, packagesWaiting);
+        List<Package> packagesForOfficeWorker = packagesForOfficeWorkerWaitingForApproval(u1.postOffice, packagesWaiting);
 
         return ok(officeworkerpanel.render(packages, u1.postOffice, packagesForOfficeWorker, PostOffice.findOffice.findList()));
     }
@@ -124,14 +126,14 @@ public class PackageStatusController extends Controller {
         return redirect(routes.Application.index());
     }
 
-    public static List<Package> packagesForOfficeWorkerWaitingForApproval(PostOffice userOffice, List<Package> packagesWaiting){
-        List<Package> packagesForOfficeWorker= new ArrayList<>();
+    public static List<Package> packagesForOfficeWorkerWaitingForApproval(PostOffice userOffice, List<Package> packagesWaiting) {
+        List<Package> packagesForOfficeWorker = new ArrayList<>();
 
-        for (int i=0;i<packagesWaiting.size();i++){
+        for (int i = 0; i < packagesWaiting.size(); i++) {
 
             PostOffice officeFromShipment = packagesWaiting.get(i).shipmentPackages.get(0).postOfficeId;
 
-            if(officeFromShipment.id==userOffice.id){
+            if (officeFromShipment.id == userOffice.id) {
                 packagesForOfficeWorker.add(packagesWaiting.get(i));
             }
         }

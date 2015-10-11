@@ -5,6 +5,7 @@
 # Home page
 GET           /                                                 @controllers.Application.index()
 GET           /login                                            @controllers.Application.login()
+GET           /validate/:token                                  @controllers.UserController.emailValidation(token: String)
 GET           /register                                         @controllers.Application.register()
 GET           /mybt/editprofile/:id                             @controllers.UserController.editProfile(id: Long)
 POST          /check                                            @controllers.UserController.loginCheck()

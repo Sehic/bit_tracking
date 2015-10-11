@@ -79,6 +79,7 @@ public class WorkerController extends Controller {
         } else {
             u.typeOfUser = UserType.DELIVERY_WORKER;
         }
+        u.validated = true;
         u.save();
 
         return redirect(routes.Application.adminTables());
