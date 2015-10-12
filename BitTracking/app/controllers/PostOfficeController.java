@@ -6,7 +6,6 @@ import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
 import models.Package;
-import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -46,6 +45,8 @@ public class PostOfficeController extends Controller {
             users.get(i).update();
         }
 
+       // StatisticModel statisticModel = StatisticModel.createStatistic(office);
+       // office.statisticModel = statisticModel;
         Ebean.delete(place);
 
         return redirect(routes.Application.adminPostOffice());
@@ -86,9 +87,15 @@ public class PostOfficeController extends Controller {
         }
         Location place = new Location(x, y);
         Ebean.save(place);
-        PostOffice p = new PostOffice(name, address, place);
+        PostOffice postOffice = new PostOffice(name, address, place);
 
-        Ebean.save(p);
+        //create PostOffice statistics for each post office added
+       // StatisticModel statisticModel = StatisticModel.createStatistic(postOffice);
+       // postOffice.statisticModel = statisticModel;
+
+        Ebean.save(postOffice);
+
+
         return redirect(routes.Application.adminPostOffice());
     }
 
@@ -150,6 +157,7 @@ public class PostOfficeController extends Controller {
 
         office.name = newOfficeForm.field("name").value();
         office.address = newOfficeForm.field("address").value();
+       // office.statisticModel.opened();
         Ebean.update(office);
 
         return redirect(routes.Application.adminPostOffice());

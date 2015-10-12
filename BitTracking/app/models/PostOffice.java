@@ -1,7 +1,6 @@
 package models;
 
 import com.avaje.ebean.Model;
-import helpers.StatusHelper;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -37,6 +36,7 @@ public class PostOffice extends Model {
     @OneToOne
     public Location place;
 
+    public Statistic postOfficeStatistic;
 
     public PostOffice(){
 
@@ -72,6 +72,23 @@ public class PostOffice extends Model {
 
     public static PostOffice findPostOfficeByAddress(String address){
         return findOffice.where().eq("address", address).findUnique();
+    }
+
+
+    /**
+     * Method used to get Statistics model of this Post Office
+     * @return
+     */
+    public Statistic getStatisticPostOffice(){
+        return postOfficeStatistic;
+    }
+
+    /**
+     * Mehod used to set Statistic of this Post Office
+     * @param statisticPostOffice
+     */
+    public void setStatisticPostOffice(Statistic statisticPostOffice){
+        this.postOfficeStatistic = statisticPostOffice;
     }
 
 }

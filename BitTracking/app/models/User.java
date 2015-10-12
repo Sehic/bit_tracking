@@ -51,6 +51,9 @@ public class User extends Model {
     @ManyToMany(mappedBy = "users")
     public List<Package> packages = new ArrayList<>();
 
+    public Statistic userStatistic;
+
+
 
     public User() {
     }

@@ -30,5 +30,5 @@ public class Shipment extends Model {
 
     }
 
-    public static Finder<Long, Shipment> shipmentFinder = new Finder<Long, Shipment>(Shipment.class);
+public static Finder<Long, Shipment> shipmentFinder = new Finder<Long, Shipment>(Shipment.class);
 }

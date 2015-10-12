@@ -64,6 +64,8 @@ POST          /user/:id                                         @controllers.Pac
 POST          /contact                                          @controllers.Application.sendMail()
 GET           /contact                                          @controllers.Application.contact()
 
+GET           /statistic                                        @controllers.StatisticController.showPostOfficeStatistic()
+
 
 
 

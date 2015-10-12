@@ -52,6 +52,19 @@ create table shipment (
   constraint pk_shipment primary key (id))
 ;
 
+create table statistic (
+  id                        bigint auto_increment not null,
+  num_of_post_offices       integer,
+  num_of_admins             integer,
+  num_of_office_workers     integer,
+  num_of_delivery_workers   integer,
+  num_on_route_packages     integer,
+  num_ready_for_shipping_packages integer,
+  num_out_for_delivery_packages integer,
+  num_delivered_packages    integer,
+  constraint pk_statistic primary key (id))
+;
+
 create table user (
   id                        bigint auto_increment not null,
   first_name                varchar(50),
@@ -114,6 +127,8 @@ drop table post_office;
 drop table linked_offices;
 
 drop table shipment;
+
+drop table statistic;
 
 drop table user;
 
