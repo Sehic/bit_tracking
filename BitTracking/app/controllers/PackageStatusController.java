@@ -56,7 +56,7 @@ public class PackageStatusController extends Controller {
         }
         List<Package> userPackages = u1.packages;
 
-        return ok(deliveryworkerpanel.render(packages, userPackages));
+        return redirect(routes.WorkerController.deliveryWorkerPanel());
     }
 
     /**

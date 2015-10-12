@@ -99,7 +99,7 @@ public class WorkerController extends Controller {
         }
 
         List<Package> packagesWaiting = Package.findPackagesWaitingForApproval();
-        List<Package> packagesForOfficeWorker= PackageStatusController.packagesForOfficeWorkerWaitingForApproval(userOffice, packagesWaiting);
+        List<Package> packagesForOfficeWorker = PackageStatusController.packagesForOfficeWorkerWaitingForApproval(userOffice, packagesWaiting);
 
         List<PostOffice> offices = PostOffice.findOffice.findList();
 
@@ -119,31 +119,38 @@ public class WorkerController extends Controller {
             packages.add(shipments.get(i).packageId);
         }
 
-        for (int i =0; i<packages.size();i++){
-            for (int j=0;j<u1.packages.size();j++){
-                if(packages.get(i).id == u1.packages.get(j).id){
+        List<Package> packagesForUser = new ArrayList<>(packages);
+
+        for (int i = 0; i < packages.size(); i++) {
+            for (int j = 0; j < u1.packages.size(); j++) {
+                if (packages.get(i).id == u1.packages.get(j).id) {
                     packages.remove(i);
                 }
             }
         }
-        List<Package> newPackages = new ArrayList<>();
-        for(int i=0;i<packages.size();i++){
+
+        for (int i = 0; i < packages.size(); i++) {
             List<User> users = packages.get(i).users;
-            System.out.println("ISPIS");
-            for(int j=0;j<users.size();j++){
-            User userr = users.get(j);
-                if(userr.typeOfUser == UserType.DELIVERY_WORKER){
-                   if(userr.postOffice.id == u1.postOffice.id){
-                      packages.remove(i);
-                       i--;
-                   }
+            for (int j = 0; j < users.size(); j++) {
+                User userr = users.get(j);
+                if (userr.typeOfUser == UserType.DELIVERY_WORKER) {
+                    if (userr.postOffice.id == u1.postOffice.id) {
+                        packages.remove(i);
+                        i--;
+                    }
                 }
             }
         }
-
         List<Package> userPackages = u1.packages;
-
-        return ok(deliveryworkerpanel.render(packages, userPackages));
+        List<Package> finalUserPackages = new ArrayList<>();
+        for (int i = 0; i < packagesForUser.size(); i++) {
+            for (int j = 0; j < userPackages.size(); j++) {
+                if (packagesForUser.get(i).id == userPackages.get(j).id) {
+                    finalUserPackages.add(userPackages.get(j));
+                }
+            }
+        }
+        return ok(deliveryworkerpanel.render(packages, finalUserPackages));
     }
 
 }
