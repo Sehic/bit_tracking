@@ -9,14 +9,20 @@
             <li class="active">Packages</li>
         </ol>
         <hr/>
-        <h1>Delivery Worker Panel</h1>
+        <h1>Delivery Worker Panel (@SessionHelper.getCurrentUser(ctx()).postOffice.name)</h1>
         <hr/>
+
         @helper.form(routes.PackageController.takePackages(), 'id -> "forms", 'class -> "form-horizontal", 'role -> "form") {
         <div class="row">
             <div class="col-md-12">
 
                 <div class="table-responsive">
-                    <h4 class="margin-bottom-15 breadcrumb">Delivery Worker Packages</h4>
+                    <a id="takePackagesId" class="btn btn-info btn-group-sm" data-toggle="modal">
+                        Show Packages Ready For Shipping (@packages.size)</a>
+                    <a id="hideTakePackagesId" class="btn btn-info btn-group-sm" data-toggle="modal">
+                        Hide Packages Ready For Shipping</a>
+                    <hr/>
+                    <div id="packagesToTake">
                     <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
                         <thead>
                             <tr>
@@ -71,15 +77,17 @@
 
                         </tbody>
                     </table>
+                    <input type="submit" value="Take Packages" class="btn btn-primary"/>
+                        <hr/>
                 </div>
 
             </div>
         </div>
 
-        <input type="submit" value="Take Packages" class="btn btn-primary"/>
+
 
     }
-
+        </div>
         <div class="row">
             <div class="col-md-12">
 

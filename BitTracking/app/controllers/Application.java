@@ -43,14 +43,16 @@ public class Application extends Controller {
             session("email", cookie.value());
         }
         User user = SessionHelper.getCurrentUser(ctx());
-        List<Package> packages = Package.finder.where().eq("seen", false).eq("users", user).findList();
         Integer approved = 0;
         Integer rejected = 0;
-        for (int i = 0; i < packages.size(); i++) {
-            if(packages.get(i).approved) {
-                approved++;
-            } else if (!packages.get(i).approved) {
-                rejected++;
+        if(user.typeOfUser == UserType.REGISTERED_USER) {
+            List<Package> packages = Package.finder.where().eq("seen", false).eq("users", user).findList();
+            for (int i = 0; i < packages.size(); i++) {
+                if (packages.get(i).approved) {
+                    approved++;
+                } else if (!packages.get(i).approved) {
+                    rejected++;
+                }
             }
         }
         return ok(index.render(approved, rejected));
