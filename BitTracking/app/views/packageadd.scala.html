@@ -233,6 +233,8 @@
      var polys = new Array();
      var jot=0;
      var myPolygons=new Array();
+     var officeNames=[];
+     var officeAddresses=[];
 
 function initialize(){
         map = new google.maps.Map(document.getElementById('map'), {
@@ -381,7 +383,6 @@ directionsService.route(request, function (response, status) {
                 var linkedPostOffice = "@linkedOffice.address";
                 for(var i=0;i<waypoints.length;i++){
                     if(linkedPostOffice === waypoints[i]){
-                    console.log("USO"+waypoints[i]);
                         semifinalWaypoints.push(waypoints[i]);
                     }
                 }
@@ -424,8 +425,12 @@ directionsService.route(request, function (response, status) {
 
         var txt = $("#initialOffice option:selected").text();
         var routeString = txt+"|";
-        for(var i=0;i<middleOffices.length;i++){
-        routeString+=middleOffices[i]+"|";
+        for(var i=0;i<finalWaypoints.length;i++){
+            for(var j=0;j<middleOfficeAddress.length;j++){
+                if(middleOfficeAddress[j] === finalWaypoints[i]){
+                    routeString+=middleOfficesNames[j]+"|";
+                }
+            }
         }
         routeString+=final+"|";
         $("#routeOffices").val(routeString);

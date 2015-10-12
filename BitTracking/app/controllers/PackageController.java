@@ -93,12 +93,12 @@ public class PackageController extends Controller {
 
             return badRequest(packageadd.render(PostOffice.findOffice.findList(), locations, boundForm, u1));
         }
-        if(routeForShipment==null){
+        if (routeForShipment == null) {
             Shipment ship = new Shipment();
             ship.packageId = pack;
             ship.postOfficeId = office;
             ship.save();
-        }else {
+        } else {
             List<PostOffice> officesFromRoute = officesFromAutoRoute(routeForShipment);
 
             for (int i = 0; i < officesFromRoute.size(); i++) {
@@ -219,7 +219,7 @@ public class PackageController extends Controller {
             MailHelper.requestReceivedNotification(user.lastName, user.email);
         } catch (PersistenceException | IllegalStateException | NumberFormatException e) {
 
-            return badRequest(index.render(0,0));
+            return badRequest(index.render(0, 0));
         }
         return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
     }
@@ -269,6 +269,7 @@ public class PackageController extends Controller {
         ship.update();
         return redirect(routes.PostOfficeController.listRoutes(id));
     }
+
     @Security.Authenticated(Authenticators.AdminDeliveryWorkerFilter.class)
     public Result takePackages() {
         User user = SessionHelper.getCurrentUser(ctx());
@@ -278,15 +279,14 @@ public class PackageController extends Controller {
         List<Package> packagesForDeliveryWorker = new ArrayList<>();
         Package newPack = new Package();
         for (int i = 0; i < packages.size(); i++) {
-            String pack = form.field(""+packages.get(i).id).value();
-            if(pack!=null){
+            String pack = form.field("" + packages.get(i).id).value();
+            if (pack != null) {
                 newPack = Package.findPackageById(Long.parseLong(pack));
                 user.packages.add(newPack);
                 newPack.users.add(user);
                 newPack.update();
             }
         }
-
         user.update();
 
         return redirect(routes.WorkerController.deliveryWorkerPanel());
