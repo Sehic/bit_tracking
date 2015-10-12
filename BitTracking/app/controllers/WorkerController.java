@@ -120,7 +120,16 @@ public class WorkerController extends Controller {
         }
 
         List<Package> packagesForUser = new ArrayList<>(packages);
+        List<Package> userPackages = u1.packages;
 
+        List<Package> readyPackages = getReadyToBeTakenPackages(packages, u1);
+        List<Package> finalUserPackages = getUserPackages(packagesForUser, userPackages);
+
+
+        return ok(deliveryworkerpanel.render(readyPackages, finalUserPackages));
+    }
+
+    public static List<Package> getReadyToBeTakenPackages(List<Package> packages, User u1){
         for (int i = 0; i < packages.size(); i++) {
             for (int j = 0; j < u1.packages.size(); j++) {
                 if (packages.get(i).id == u1.packages.get(j).id) {
@@ -128,7 +137,6 @@ public class WorkerController extends Controller {
                 }
             }
         }
-
         for (int i = 0; i < packages.size(); i++) {
             List<User> users = packages.get(i).users;
             for (int j = 0; j < users.size(); j++) {
@@ -141,7 +149,10 @@ public class WorkerController extends Controller {
                 }
             }
         }
-        List<Package> userPackages = u1.packages;
+        return packages;
+    }
+
+    public static List<Package> getUserPackages(List<Package> packagesForUser, List<Package> userPackages){
         List<Package> finalUserPackages = new ArrayList<>();
         for (int i = 0; i < packagesForUser.size(); i++) {
             for (int j = 0; j < userPackages.size(); j++) {
@@ -150,7 +161,7 @@ public class WorkerController extends Controller {
                 }
             }
         }
-        return ok(deliveryworkerpanel.render(packages, finalUserPackages));
+        return finalUserPackages;
     }
 
 }
