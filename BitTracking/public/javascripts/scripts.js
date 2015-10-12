@@ -94,7 +94,7 @@ $(document).ready(function () {
 
 //Calling table sort and search
 $(document).ready(function () {
-    $('#example').DataTable();
+    $('.searchSortClass').DataTable();
 });
 //Method that append values to input field, and saving it to database
 $(document).ready(function () {

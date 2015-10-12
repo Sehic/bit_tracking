@@ -269,4 +269,26 @@ public class PackageController extends Controller {
         ship.update();
         return redirect(routes.PostOfficeController.listRoutes(id));
     }
+    @Security.Authenticated(Authenticators.AdminDeliveryWorkerFilter.class)
+    public Result takePackages() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        DynamicForm form = Form.form().bindFromRequest();
+        List<Package> packages = Package.finder.findList();
+        //Getting values from checkboxes
+        List<Package> packagesForDeliveryWorker = new ArrayList<>();
+        Package newPack = new Package();
+        for (int i = 0; i < packages.size(); i++) {
+            String pack = form.field(""+packages.get(i).id).value();
+            if(pack!=null){
+                newPack = Package.findPackageById(Long.parseLong(pack));
+                user.packages.add(newPack);
+                newPack.users.add(user);
+                newPack.update();
+            }
+        }
+
+        user.update();
+
+        return redirect(routes.WorkerController.deliveryWorkerPanel());
+    }
 }

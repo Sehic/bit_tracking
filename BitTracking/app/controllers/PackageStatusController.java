@@ -54,7 +54,9 @@ public class PackageStatusController extends Controller {
 
             packages.add(shipmentByOfficeAndStatus.get(i).packageId);
         }
-        return ok(deliveryworkerpanel.render(packages));
+        List<Package> userPackages = u1.packages;
+
+        return ok(deliveryworkerpanel.render(packages, userPackages));
     }
 
     /**

@@ -1,5 +1,6 @@
 @import helpers.StatusHelper
-@(packages: List[models.Package])
+@import helpers.SessionHelper
+@(packages: List[models.Package])(userPackages: List[models.Package])
     @adminmain("Delivery Worker Packages") {
 
         <ol class="breadcrumb">
@@ -10,13 +11,13 @@
         <hr/>
         <h1>Delivery Worker Panel</h1>
         <hr/>
-
+        @helper.form(routes.PackageController.takePackages(), 'id -> "forms", 'class -> "form-horizontal", 'role -> "form") {
         <div class="row">
             <div class="col-md-12">
 
                 <div class="table-responsive">
                     <h4 class="margin-bottom-15 breadcrumb">Delivery Worker Packages</h4>
-                    <table id="example" class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
+                    <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -32,7 +33,75 @@
                             </tr>
                         </thead>
                         <tbody>
+
                         @for(pack <- packages) {
+                            <tr>
+                                <td>@pack.id</td>
+                                <td>@pack.trackingNum</td>
+                                <td>@pack.senderName</td>
+                                <td>@pack.recipientName</td>
+                                <td>@pack.recipientAddress</td>
+                                @if(pack.shipmentPackages.size() != 0) {
+                                    @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
+                                        @if(shipmentFromThisPackage.status == StatusHelper.READY_FOR_SHIPPING) {
+                                            <td>@shipmentFromThisPackage.status</td>
+                                            <td>@shipmentFromThisPackage.postOfficeId.name</td>
+
+                                            @if(i!=pack.shipmentPackages.size()-1) {
+                                                <td>@pack.shipmentPackages.get(i + 1).postOfficeId.name</td>
+                                            }else{
+                                                <td>@pack.shipmentPackages.get(pack.shipmentPackages.size()-1).postOfficeId.name</td>
+                                            }
+                                        }
+
+                                    }
+                                } else {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                                <td>@pack.destination</td>
+
+
+                                    <td><input type="checkbox" name="@pack.id" value="@pack.id">Take</td>
+                                }
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <input type="submit" value="Take Packages" class="btn btn-primary"/>
+
+    }
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="table-responsive">
+                    <h4 class="margin-bottom-15 breadcrumb">Delivery Worker Packages</h4>
+                    <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tracking Number</th>
+                                <th>Sender Name</th>
+                                <th>Recipient Name</th>
+                                <th>Recipient Address</th>
+                                <th>Status</th>
+                                <th>Post Office</th>
+                                <th>Next Destination</th>
+                                <th>Final Destination</th>
+                                <th>Check</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(pack <- userPackages) {
                             <tr>
                                 <td>@pack.id</td>
                                 <td>@pack.trackingNum</td>
