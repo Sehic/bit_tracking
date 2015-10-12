@@ -1,147 +1,151 @@
 @import helpers.StatusHelper
 @import helpers.SessionHelper
 @(packages: List[models.Package])(userPackages: List[models.Package])
-    @adminmain("Delivery Worker Packages") {
+@adminmain("Delivery Worker Packages") {
 
-        <ol class="breadcrumb">
-            <li><a href="@routes.Application.adminPanel()">Delivery Worker Panel</a></li>
-            <li><a href="#">Manage Packages</a></li>
-            <li class="active">Packages</li>
-        </ol>
-        <hr/>
-        <h1>Delivery Worker Panel</h1>
-        <hr/>
-        @helper.form(routes.PackageController.takePackages(), 'id -> "forms", 'class -> "form-horizontal", 'role -> "form") {
+    <ol class="breadcrumb">
+        <li><a href="@routes.Application.adminPanel()">Delivery Worker Panel</a></li>
+        <li><a href="#">Manage Packages</a></li>
+        <li class="active">Packages</li>
+    </ol>
+    <hr/>
+    <h1>Delivery Worker Panel (@SessionHelper.getCurrentUser(ctx()).postOffice.name)</h1>
+    <hr/>
+    @helper.form(routes.PackageController.takePackages(), 'id -> "forms", 'class -> "form-horizontal", 'role -> "form") {
         <div class="row">
             <div class="col-md-12">
 
                 <div class="table-responsive">
-                    <h4 class="margin-bottom-15 breadcrumb">Delivery Worker Packages</h4>
-                    <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Tracking Number</th>
-                                <th>Sender Name</th>
-                                <th>Recipient Name</th>
-                                <th>Recipient Address</th>
-                                <th>Status</th>
-                                <th>Post Office</th>
-                                <th>Next Destination</th>
-                                <th>Final Destination</th>
-                                <th>Check</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <a id="takePackagesId" class="btn btn-info btn-group-sm" data-toggle="modal">
+                        Show Packages Ready For Shipping (@packages.size)</a>
+                    <a id="hideTakePackagesId" class="btn btn-info btn-group-sm" data-toggle="modal">
+                        Hide Packages Ready For Shipping</a>
+                    <hr/>
+                    <div id="packagesToTake">
+                        <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tracking Number</th>
+                                    <th>Sender Name</th>
+                                    <th>Recipient Name</th>
+                                    <th>Recipient Address</th>
+                                    <th>Status</th>
+                                    <th>Post Office</th>
+                                    <th>Next Destination</th>
+                                    <th>Final Destination</th>
+                                    <th>Check</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                        @for(pack <- packages) {
-                            <tr>
-                                <td>@pack.id</td>
-                                <td>@pack.trackingNum</td>
-                                <td>@pack.senderName</td>
-                                <td>@pack.recipientName</td>
-                                <td>@pack.recipientAddress</td>
-                                @if(pack.shipmentPackages.size() != 0) {
-                                    @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
-                                        @if(shipmentFromThisPackage.status == StatusHelper.READY_FOR_SHIPPING) {
-                                            <td>@shipmentFromThisPackage.status</td>
-                                            <td>@shipmentFromThisPackage.postOfficeId.name</td>
+                                @for(pack <- packages) {
+                                    <tr>
+                                        <td>@pack.id</td>
+                                        <td>@pack.trackingNum</td>
+                                        <td>@pack.senderName</td>
+                                        <td>@pack.recipientName</td>
+                                        <td>@pack.recipientAddress</td>
+                                        @if(pack.shipmentPackages.size() != 0) {
+                                            @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
+                                                @if(shipmentFromThisPackage.status == StatusHelper.READY_FOR_SHIPPING) {
+                                                    <td>@shipmentFromThisPackage.status</td>
+                                                    <td>@shipmentFromThisPackage.postOfficeId.name</td>
 
-                                            @if(i!=pack.shipmentPackages.size()-1) {
-                                                <td>@pack.shipmentPackages.get(i + 1).postOfficeId.name</td>
-                                            }else{
-                                                <td>@pack.shipmentPackages.get(pack.shipmentPackages.size()-1).postOfficeId.name</td>
+                                                    @if(i != pack.shipmentPackages.size() - 1) {
+                                                        <td>@pack.shipmentPackages.get(i + 1).postOfficeId.name</td>
+                                                    } else {
+                                                        <td>@pack.shipmentPackages.get(pack.shipmentPackages.size() - 1).postOfficeId.name</td>
+                                                    }
+                                                }
+
                                             }
+                                        } else {
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                         }
 
-                                    }
-                                } else {
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                        <td>@pack.destination</td>
+
+
+                                        <td><input type="checkbox" name="@pack.id" value="@pack.id">Take</td>
                                 }
+                                     </tr>
 
-                                <td>@pack.destination</td>
-
-
-                                    <td><input type="checkbox" name="@pack.id" value="@pack.id">Take</td>
-                                }
-                            </tr>
-
-
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
             </div>
-        </div>
 
-        <input type="submit" value="Take Packages" class="btn btn-primary"/>
+            <input type="submit" value="Take Packages" class="btn btn-primary"/>
+            <hr/>
 
-    }
+            }
 
-        <div class="row">
-            <div class="col-md-12">
+    <div class="row">
+        <div class="col-md-12">
 
-                <div class="table-responsive">
-                    <h4 class="margin-bottom-15 breadcrumb">Delivery Worker Packages</h4>
-                    <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Tracking Number</th>
-                                <th>Sender Name</th>
-                                <th>Recipient Name</th>
-                                <th>Recipient Address</th>
-                                <th>Status</th>
-                                <th>Post Office</th>
-                                <th>Next Destination</th>
-                                <th>Final Destination</th>
-                                <th>Check</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @for(pack <- userPackages) {
-                            <tr>
-                                <td>@pack.id</td>
-                                <td>@pack.trackingNum</td>
-                                <td>@pack.senderName</td>
-                                <td>@pack.recipientName</td>
-                                <td>@pack.recipientAddress</td>
-                                @if(pack.shipmentPackages.size() != 0) {
-                                    @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
-                                        @if(shipmentFromThisPackage.status == StatusHelper.READY_FOR_SHIPPING) {
-                                            <td>@shipmentFromThisPackage.status</td>
-                                            <td>@shipmentFromThisPackage.postOfficeId.name</td>
+            <div class="table-responsive">
+                <h4 class="margin-bottom-15 breadcrumb">Delivery Worker Packages</h4>
+                <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tracking Number</th>
+                            <th>Sender Name</th>
+                            <th>Recipient Name</th>
+                            <th>Recipient Address</th>
+                            <th>Status</th>
+                            <th>Post Office</th>
+                            <th>Next Destination</th>
+                            <th>Final Destination</th>
+                            <th>Check</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for(pack <- userPackages) {
+                        <tr>
+                            <td>@pack.id</td>
+                            <td>@pack.trackingNum</td>
+                            <td>@pack.senderName</td>
+                            <td>@pack.recipientName</td>
+                            <td>@pack.recipientAddress</td>
+                            @if(pack.shipmentPackages.size() != 0) {
+                                @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
+                                    @if(shipmentFromThisPackage.status == StatusHelper.READY_FOR_SHIPPING) {
+                                        <td>@shipmentFromThisPackage.status</td>
+                                        <td>@shipmentFromThisPackage.postOfficeId.name</td>
 
-                                            @if(i!=pack.shipmentPackages.size()-1) {
-                                                <td>@pack.shipmentPackages.get(i + 1).postOfficeId.name</td>
-                                            }else{
-                                                <td>@pack.shipmentPackages.get(pack.shipmentPackages.size()-1).postOfficeId.name</td>
-                                            }
+                                        @if(i != pack.shipmentPackages.size() - 1) {
+                                            <td>@pack.shipmentPackages.get(i + 1).postOfficeId.name</td>
+                                        } else {
+                                            <td>@pack.shipmentPackages.get(pack.shipmentPackages.size() - 1).postOfficeId.name</td>
                                         }
-
                                     }
-                                } else {
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+
                                 }
+                            } else {
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            }
 
-                                <td>@pack.destination</td>
+                            <td>@pack.destination</td>
 
-                                @helper.form(routes.PackageStatusController.updateStatus(pack.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
-                                    <td><button type="submit" class="btn-default">Done</button></td>
-                                }
-                            </tr>
-                        }
+                            @helper.form(routes.PackageStatusController.updateStatus(pack.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
+                                <td><button type="submit" class="btn-default">Done</button></td>
+                            }
+                        </tr>
+                    }
 
-                        </tbody>
-                    </table>
-                </div>
-
+                    </tbody>
+                </table>
             </div>
+
         </div>
+    </div>
 
 
-    }
+}

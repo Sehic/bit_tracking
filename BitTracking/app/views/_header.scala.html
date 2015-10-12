@@ -24,24 +24,24 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="mybt">
                             My BT<strong class="caret"></strong></a>
                         <ul class="dropdown-menu">
-                            @if(currentUser != null && currentUser.typeOfUser != UserType.ADMIN) {
+                        @if(currentUser != null && currentUser.typeOfUser == UserType.REGISTERED_USER) {
 
-                                <li>
-                                    <a href="@routes.Application.userPanel()">My Tracking Panel</a>
-                                </li>
+                            <li>
+                                <a href="@routes.Application.userPanel()">My Tracking Panel</a>
+                            </li>
 
-                                <li class="divider"></li>
+                            <li class="divider"></li>
 
-                                <li>
-                                    <a href="@routes.UserController.userProfile(currentUser.id)">
-                                        My Profile</a>
-                                </li>
+                            <li>
+                                <a href="@routes.UserController.userProfile(currentUser.id)">
+                                    My Profile</a>
+                            </li>
 
-                                <li>
-                                    <a href="@routes.UserController.editProfile(currentUser.id)">
-                                        Edit Profile</a>
-                                </li>
-                            }
+                            <li>
+                                <a href="@routes.UserController.editProfile(currentUser.id)">
+                                    Edit Profile</a>
+                            </li>
+                        }
 
                         </ul>
                     </li> <!-- End My Bit Tracking dropdown in navigation bar-->

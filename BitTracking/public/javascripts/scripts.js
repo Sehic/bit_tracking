@@ -1,3 +1,25 @@
+$(document).ready(function() {
+    var showPackagesButton = $('#takePackagesId');
+    var hidePackagesButton = $('#hideTakePackagesId');
+    var tablePackages = $('#packagesToTake');
+
+    tablePackages.hide();
+    hidePackagesButton.hide();
+
+    showPackagesButton.click(function() {
+        tablePackages.show();
+        hidePackagesButton.show();
+        showPackagesButton.hide();
+    });
+
+    hidePackagesButton.click(function() {
+        tablePackages.hide();
+        hidePackagesButton.hide();
+        showPackagesButton.show();
+    });
+});
+
+
 $(document).ready(function(){
    $("#disableRouteButton").click( function(){
        $("#clickMe").prop('disabled', true);
