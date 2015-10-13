@@ -291,4 +291,13 @@ public class PackageController extends Controller {
 
         return redirect(routes.WorkerController.deliveryWorkerPanel());
     }
+
+    public Result showAutoRouting(Long id){
+
+        Package officePackage = Package.findPackageById(id);
+        List<Location> locations = Location.findLocation.findList();
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+        return ok(owmakeautoroute.render(offices, locations, officePackage));
+    }
+
 }

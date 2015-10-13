@@ -50,7 +50,9 @@ POST          /checktrack                                       @controllers.App
 
 GET           /adminpanel/makeroute/:id                         @controllers.PostOfficeController.listRoutes(id: Long)
 POST          /adminpanel/makeroute/create                      @controllers.PostOfficeController.createRoute()
-POST          /adminpanel/makeroute/save/id                     @controllers.PostOfficeController.saveRoute(id: Long)
+POST          /adminpanel/makeroute/save/:id                     @controllers.PostOfficeController.saveRoute(id: Long)
+
+GET           /adminpanel/makeautoroute/:id                     @controllers.PackageController.showAutoRouting(id: Long)
 
 GET           /officeworkerpanel                                @controllers.WorkerController.officeWorkerPanel()
 

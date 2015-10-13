@@ -45,7 +45,7 @@ public class Application extends Controller {
         User user = SessionHelper.getCurrentUser(ctx());
         Integer approved = 0;
         Integer rejected = 0;
-        if(user.typeOfUser == UserType.REGISTERED_USER) {
+        if(user != null && user.typeOfUser == UserType.REGISTERED_USER) {
             List<Package> packages = Package.finder.where().eq("seen", false).eq("users", user).findList();
             for (int i = 0; i < packages.size(); i++) {
                 if (packages.get(i).approved) {
