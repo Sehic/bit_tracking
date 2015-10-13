@@ -130,13 +130,7 @@ public class WorkerController extends Controller {
     }
 
     public static List<Package> getReadyToBeTakenPackages(List<Package> packages, User u1){
-        for (int i = 0; i < packages.size(); i++) {
-            for (int j = 0; j < u1.packages.size(); j++) {
-                if (packages.get(i).id == u1.packages.get(j).id) {
-                    packages.remove(i);
-                }
-            }
-        }
+
         for (int i = 0; i < packages.size(); i++) {
             List<User> users = packages.get(i).users;
             for (int j = 0; j < users.size(); j++) {

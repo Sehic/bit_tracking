@@ -65,6 +65,7 @@
                         <input id="distanceBetweenOffices" placeholder="Distance between Post Offices" name="distanceBetweenOffices" value="" type="text" class="form-control" disabled>
                     </div>
                 </div>
+            <hr/>
                 <div class="form-group">
                     <label for="tripDurationBetweenOffices" class="col-sm-3 control-label">
                         Duration:
@@ -87,12 +88,12 @@
                 Finalize
             </button>
             <input id="clickMe" type="button" class="btn btn-primary" value="Suggest Route"/>
+            <a href="@routes.PostOfficeController.listRoutes(officePackage.id)"><button type="button" class="btn btn-primary">Create route manually</button></a>
         </div>
 
     </div>
     <br/>
     }
-
 
 
     <div class="templatemo-maps">

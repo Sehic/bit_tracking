@@ -267,7 +267,10 @@ public class PackageController extends Controller {
         ship.packageId = pack;
         ship.postOfficeId = initial;
         ship.update();
-        return redirect(routes.PackageController.showAutoRouting(id));
+
+        List<Location> locations = Location.findLocation.findList();
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+        return ok(owmakeautoroute.render(offices, locations, pack));
     }
 
     @Security.Authenticated(Authenticators.AdminDeliveryWorkerFilter.class)

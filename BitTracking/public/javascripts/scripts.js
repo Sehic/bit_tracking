@@ -126,9 +126,11 @@ $(document).ready(function () {
     var destinationOffice = $('#getDestinationOffice').val();
     var initialOffice = $('#getInitialOffice').val();
     var counter = 0;
+    $('#finalizeButton').prop('disabled', true);
 
     // for any form on this page do the following
     $('#addToRoute').click(function () {
+
         //getting value from select box
         valueOfSelect = $('.selectOffice :selected').text();
         //saving values into string
@@ -164,6 +166,7 @@ $(document).ready(function () {
             if (counter > 0) {
                 $('.selectOffice').remove();
                 $('#addToRoute').prop('disabled', true);
+                $('#finalizeButton').prop('disabled', false);
                 return;
             }
             //Searching for final destination
@@ -179,6 +182,7 @@ $(document).ready(function () {
             if (splitFirstOffice[0] == destinationOffice) {
                 $('.selectOffice').remove();
                 $('#addToRoute').prop('disabled', true);
+                $('#finalizeButton').prop('disabled', false);
                 return;
             }
 
