@@ -267,7 +267,7 @@ public class PackageController extends Controller {
         ship.packageId = pack;
         ship.postOfficeId = initial;
         ship.update();
-        return redirect(routes.PostOfficeController.listRoutes(id));
+        return redirect(routes.PackageController.showAutoRouting(id));
     }
 
     @Security.Authenticated(Authenticators.AdminDeliveryWorkerFilter.class)
@@ -298,6 +298,37 @@ public class PackageController extends Controller {
         List<Location> locations = Location.findLocation.findList();
         List<PostOffice> offices = PostOffice.findOffice.findList();
         return ok(owmakeautoroute.render(offices, locations, officePackage));
+    }
+
+    public Result saveAutoRoute(Long id){
+
+        Package routePackage = Package.findPackageById(id);
+        if(routePackage == null){
+            return redirect(routes.Application.index());
+        }
+
+        DynamicForm form = Form.form().bindFromRequest();
+        String route = form.get("route");
+
+        Shipment initialOfficeShip = new Shipment();
+        try {
+            initialOfficeShip = Shipment.shipmentFinder.where().eq("packageId", routePackage).findUnique();
+        }catch(PersistenceException e){
+            return redirect(routes.PackageController.showAutoRouting(id));
+        }
+        initialOfficeShip.status = StatusHelper.READY_FOR_SHIPPING;
+        initialOfficeShip.update();
+
+        List<PostOffice> officesFromRoute = officesFromAutoRoute(route);
+
+        for (int i = 1; i < officesFromRoute.size(); i++) {
+            Shipment ship = new Shipment();
+            ship.packageId = routePackage;
+            ship.postOfficeId = officesFromRoute.get(i);
+            ship.status = StatusHelper.ON_ROUTE;
+            ship.save();
+        }
+        return redirect(routes.WorkerController.officeWorkerPanel());
     }
 
 }
