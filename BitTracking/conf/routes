@@ -66,6 +66,8 @@ POST          /user/:id                                         @controllers.Pac
 POST          /contact                                          @controllers.MailController.sendMail()
 GET           /contact                                          @controllers.MailController.contact()
 
+GET             /ajax                                            @controllers.Application.ajax()
+GET             /ajax/json                                            @controllers.Application.getJson()
 
 
 
