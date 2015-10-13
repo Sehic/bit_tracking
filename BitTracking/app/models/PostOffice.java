@@ -36,8 +36,6 @@ public class PostOffice extends Model {
     @OneToOne
     public Location place;
 
-    public Statistic postOfficeStatistic;
-
     public PostOffice(){
 
     }
@@ -74,21 +72,5 @@ public class PostOffice extends Model {
         return findOffice.where().eq("address", address).findUnique();
     }
 
-
-    /**
-     * Method used to get Statistics model of this Post Office
-     * @return
-     */
-    public Statistic getStatisticPostOffice(){
-        return postOfficeStatistic;
-    }
-
-    /**
-     * Mehod used to set Statistic of this Post Office
-     * @param statisticPostOffice
-     */
-    public void setStatisticPostOffice(Statistic statisticPostOffice){
-        this.postOfficeStatistic = statisticPostOffice;
-    }
 
 }

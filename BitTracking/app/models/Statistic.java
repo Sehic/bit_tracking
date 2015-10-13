@@ -6,28 +6,14 @@ import helpers.StatusHelper;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by USER on 10.10.2015.
  */
-@Entity
 public class Statistic  extends Model{
-
-    @Id
-    public Long id;
-
-    public int numOfPostOffices;
-    public int numOfAdmins;
-    public int numOfOfficeWorkers;
-    public int numOfDeliveryWorkers;
-    public int numOnRoutePackages;
-    public int numReadyForShippingPackages;
-    public int numOutForDeliveryPackages;
-    public int numDeliveredPackages;
-
-
-    public PostOffice postOfficeStatistics;
 
     public List<PostOffice> postOfficeList = new ArrayList<>();
     public List<User> userList = new ArrayList<>();
@@ -35,24 +21,12 @@ public class Statistic  extends Model{
 
 
     public static Finder<Long, Statistic> statisticFinder = new Finder<>(Statistic.class);
-    public static List<Statistic> statisticList = new ArrayList<>();
 
     /**
      * An empty Statistic constructor
      */
     public Statistic(){
 
-    }
-
-    public Statistic(int numOfPostOffices) {
-        super();
-        this.numOfPostOffices = 0;
-    }
-
-    public Statistic(PostOffice postOfficeStatistics) {
-        super();
-        this.numOfPostOffices = 0;
-        this.postOfficeStatistics = postOfficeStatistics;
     }
 
     /**
@@ -78,267 +52,144 @@ public class Statistic  extends Model{
         return statistic;
     }
 
-    /*
-    * This method will reset Statistic for a single PostOffice
-    * @param postOfficeStatistic
-    */
-    public static Statistic createPostOfficeStatistic(PostOffice postOffice){
-
-        Statistic statistic = new Statistic(postOffice);
-        statistic.save();
-        return statistic;
-    }
-
-    public static List<Statistic> createUserStatistic(){
-        List<Statistic> statisticAllUsers = new ArrayList<>();
+    public static List<User> createUserStatistic(){
         List<User> userList = User.find.findList();
-        for(int i = 0; i < userList.size(); i++){
-            statisticAllUsers.add(userList.get(i).userStatistic);
-        }
-        return statisticAllUsers;
+        return userList;
     }
     /**
      * This method is used to ge statistic list of office workers
      * @return office worker list
      */
-    public static List<Statistic> createOfficeWorkerStatistic(){
-        List<Statistic> statisticOfficeWorker = new ArrayList<>();
+    public static List<User> createOfficeWorkerStatistic(){
         List<User> userList = User.find.where().eq("typeOfUser", UserType.OFFICE_WORKER).findList();
-        for(int i = 0; i < userList.size();i++){
-            statisticOfficeWorker.add(userList.get(i).userStatistic);
-        }
-        return statisticOfficeWorker;
+        return userList;
     }
 
     /**
      * This method is used to ge statistic list of delivery workers
      * @return delivery worker list
      */
-    public static List<Statistic> createDeliveryWorkerStatistic(){
-        List<Statistic> statisticDeliveryWorker = new ArrayList<>();
+    public static List<User> createDeliveryWorkerStatistic(){
         List<User> userList = User.find.where().eq("typeOfUser", UserType.DELIVERY_WORKER).findList();
-        for(int i = 0; i < userList.size();i++){
-            statisticDeliveryWorker.add(userList.get(i).userStatistic);
-        }
-        return statisticDeliveryWorker;
+        return userList;
     }
 
     /**
      * This method is used to ge statistic list of users
      * @return office statistics users list
      */
-    public static List<Statistic> createAdminStatistic(){
-        List<Statistic> statisticAdmin = new ArrayList<>();
+    public static List<User> createAdminStatistic(){
         List<User> userList = User.find.where().eq("typeOfUser", UserType.ADMIN).findList();
-        for(int i = 0; i < userList.size();i++){
-            statisticAdmin.add(userList.get(i).userStatistic);
-        }
-        return statisticAdmin;
+        return userList;
     }
 
     /**
      * This method is used to ge statistic list of registered users
      * @return registered users list
      */
-    public static List<Statistic> createRegistersUsersStatistic(){
-        List<Statistic> statisticUser = new ArrayList<>();
+    public static List<User> createRegistersUsersStatistic(){
         List<User> userList = User.find.where().eq("typeOfUser", UserType.REGISTERED_USER).findList();
-        for(int i = 0; i < userList.size();i++){
-            statisticUser.add(userList.get(i).userStatistic);
-        }
-        return statisticUser;
+        return userList;
     }
 
     /**
      * This method is used to get statistic list for all post offices
      * @return list of all post offices
      */
-    public static List<Statistic> createPostOfficeStatistic(){
-        List<Statistic> statisticPostOffice = new ArrayList<>();
+    public static List<PostOffice> createPostOfficeStatistic(){
         List<PostOffice> postOfficeList = PostOffice.findOffice.findList();
-        for(int i = 0; i < postOfficeList.size();i++){
-            statisticPostOffice.add(postOfficeList.get(i).postOfficeStatistic);
-        }
-        return statisticPostOffice;
+        return postOfficeList;
     }
 
     /**
      *This method is used to get statistic list for all Packages
      * @return list of all packages
      */
-    public static List<Statistic> createPackageStatistic(){
-        List<Statistic> statisticsPackage = new ArrayList<>();
+    public static List<Package> createPackageStatistic(){
         List<Package> packageList = Package.finder.findList();
-        for(int i = 0; i < packageList.size(); i++){
-            statisticsPackage.add(packageList.get(i).packageStatistics);
-        }
-        return statisticsPackage;
+        return packageList;
     }
 
     /**
      *This method is used to get statistic list for boxes
      * @return list of box type packages
      */
-    public static List<Statistic> createPackageBoxStatistic(){
-        List<Statistic> statisticsBox = new ArrayList<>();
+    public static List<Package> createPackageBoxStatistic(){
         List<Package> packageList = Package.finder.where().eq("packageType", PackageType.BOX).findList();
-        for(int i = 0; i < packageList.size(); i++){
-            statisticsBox.add(packageList.get(i).packageStatistics);
-        }
-        return statisticsBox;
+        return packageList;
     }
 
     /**
      *This method is used to get statistic list for envelopes
      * @return list of envelope type packages
      */
-    public static List<Statistic> createPackageEnvelopeStatistic(){
-        List<Statistic> statisticsEnvelope = new ArrayList<>();
+    public static List<Package> createPackageEnvelopeStatistic(){
         List<Package> packageList = Package.finder.where().eq("packageType", PackageType.ENVELOPE).findList();
-        for(int i = 0; i < packageList.size(); i++){
-            statisticsEnvelope.add(packageList.get(i).packageStatistics);
-        }
-        return statisticsEnvelope;
+        return packageList;
     }
 
     /**
      *This method is used to get statistic list for flyers
      * @return list of flyer type of packages
      */
-    public static List<Statistic> createPackageFlyerStatistic(){
-        List<Statistic> statisticsFlyer = new ArrayList<>();
+    public static List<Package> createPackageFlyerStatistic(){
         List<Package> packageList = Package.finder.where().eq("packageType", PackageType.FLYER).findList();
-        for(int i = 0; i < packageList.size(); i++){
-            statisticsFlyer.add(packageList.get(i).packageStatistics);
-        }
-        return statisticsFlyer;
+        return packageList;
     }
 
     /**
      *This method is used to get statistic list for tubes
-     * @return list of tube type of packages
+     * @return list of tubes
      */
-    public static List<Statistic> createPackageTubeStatistic(){
-        List<Statistic> statisticsTube = new ArrayList<>();
+    public static List<Package> createPackageTubeStatistic(){
         List<Package> packageList = Package.finder.where().eq("packageType", PackageType.TUBE).findList();
-        for(int i = 0; i < packageList.size(); i++){
-            statisticsTube.add(packageList.get(i).packageStatistics);
-        }
-        return statisticsTube;
+        return packageList;
     }
 
-    public static List<Statistic> createPackageDeliveredStatistics(){
-        List<Statistic> statisticsDelivered = new ArrayList<>();
-        List<Package> packageList = Package.finder.where().eq("packageStatus", StatusHelper.DELIVERED).findList();
-        for(int i = 0; i < packageList.size(); i++){
-            statisticsDelivered.add(packageList.get(i).packageStatistics);
-        }
-        return statisticsDelivered;
+    /**
+     *This method is used to get statistic list for packages with status "delivered"
+     * @return list of delivered packages
+     */
+    public static List<Shipment> createPackageDeliveredStatistics(){
+        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.DELIVERED).findList();
+        return shipments;
     }
 
-    public static List<Statistic> createPackageOnRouteStatistics(){
-        List<Statistic> statisticsOnRoute = new ArrayList<>();
-        List<Package> packageList = Package.finder.where().eq("packageStatus", StatusHelper.ON_ROUTE).findList();
-        for(int i = 0; i < packageList.size(); i++){
-            statisticsOnRoute.add(packageList.get(i).packageStatistics);
-        }
-        return statisticsOnRoute;
+    /**
+     *This method is used to get statistic list for packages with status "On Route"
+     * @return list of "on route" packages
+     */
+    public static List<Shipment> createPackageOnRouteStatistics(){
+        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.ON_ROUTE).findList();
+        return shipments;
     }
 
-    public static List<Statistic> createPackageOutForDeliveryStatistics(){
-        List<Statistic> statisticsOutForDelivery = new ArrayList<>();
-        List<Package> packageList = Package.finder.where().eq("packageStatus", StatusHelper.OUT_FOR_DELIVERY).findList();
-        for(int i = 0; i < packageList.size(); i++){
-            statisticsOutForDelivery.add(packageList.get(i).packageStatistics);
-        }
-        return statisticsOutForDelivery;
+    /**
+     *This method is used to get statistic list for packages with status "Out For Delivery"
+     * @return list of "Out For Delivery" packages
+     */
+    public static List<Shipment> createPackageOutForDeliveryStatistics(){
+        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.OUT_FOR_DELIVERY).findList();
+        return shipments;
     }
 
-    public static List<Statistic> createPackageReadyForShippStatistics(){
-        List<Statistic> statisticsReadyForShipp = new ArrayList<>();
-        List<Package> packageList = Package.finder.where().eq("packageStatus", StatusHelper.READY_FOR_SHIPPING).findList();
-        for(int i = 0; i < packageList.size(); i++){
-            statisticsReadyForShipp.add(packageList.get(i).packageStatistics);
-        }
-        return statisticsReadyForShipp;
+    /**
+     *This method is used to get statistic list for packages with status "Ready For Shipping"
+     * @return list of "Ready For Shipping" packages
+     */
+    public static List<Shipment> createPackageReadyForShippStatistics(){
+        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).findList();
+        return shipments;
     }
 
-    public static List<Statistic> createPackageReceivedStatistics(){
-        List<Statistic> statisticsReceived = new ArrayList<>();
-        List<Package> packageList = Package.finder.where().eq("packageStatus", StatusHelper.RECEIVED).findList();
-        for(int i = 0; i < packageList.size(); i++){
-            statisticsReceived.add(packageList.get(i).packageStatistics);
-        }
-        return statisticsReceived;
+    /**
+     *This method is used to get statistic list for packages with status "received"
+     * @return list of received packages
+     */
+    public static List<Shipment> createPackageReceivedStatistics(){
+        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.RECEIVED).findList();
+        return shipments;
     }
 
-
-
-
-    //***********Getters $ setters***************
-
-    public int getNumOfPostOffices() {
-        return numOfPostOffices;
-    }
-
-    public void setNumOfPostOffices(int numOfPostOffices) {
-        this.numOfPostOffices = numOfPostOffices;
-    }
-
-    public int getNumOfAdmins() {
-        return numOfAdmins;
-    }
-
-    public void setNumOfAdmins(int numOfAdmins) {
-        this.numOfAdmins = numOfAdmins;
-    }
-
-    public int getNumOfOfficeWorkers() {
-        return numOfOfficeWorkers;
-    }
-
-    public void setNumOfOfficeWorkers(int numOfOfficeWorkers) {
-        this.numOfOfficeWorkers = numOfOfficeWorkers;
-    }
-
-    public int getNumOfDeliveryWorkers() {
-        return numOfDeliveryWorkers;
-    }
-
-    public void setNumOfDeliveryWorkers(int numOfDeliveryWorkers) {
-        this.numOfDeliveryWorkers = numOfDeliveryWorkers;
-    }
-
-    public int getNumOnRoutePackages() {
-        return numOnRoutePackages;
-    }
-
-    public void setNumOnRoutePackages(int numOnRoutePackages) {
-        this.numOnRoutePackages = numOnRoutePackages;
-    }
-
-    public int getNumReadyForShippingPackages() {
-        return numReadyForShippingPackages;
-    }
-
-    public void setNumReadyForShippingPackages(int numReadyForShippingPackages) {
-        this.numReadyForShippingPackages = numReadyForShippingPackages;
-    }
-
-    public int getNumOutForDeliveryPackages() {
-        return numOutForDeliveryPackages;
-    }
-
-    public void setNumOutForDeliveryPackages(int numOutForDeliveryPackages) {
-        this.numOutForDeliveryPackages = numOutForDeliveryPackages;
-    }
-
-    public int getNumDeliveredPackages() {
-        return numDeliveredPackages;
-    }
-
-    public void setNumDeliveredPackages(int numDeliveredPackages) {
-        this.numDeliveredPackages = numDeliveredPackages;
-    }
 
 }

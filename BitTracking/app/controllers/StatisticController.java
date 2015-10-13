@@ -29,7 +29,7 @@ public class StatisticController extends Controller {
      * @return all post offices and number of linked post offices
      */
     public Result showPostOfficeStatistic(){
-        return ok(statistic.render(PostOffice.findOffice.findList(), User.find.findList(), Package.finder.findList(), Statistic.statisticFinder.findList()));
+        return ok(statistic.render(PostOffice.findOffice.findList(), User.find.findList(), Package.finder.findList()));
     }
 /*
     public Result showUserStatistic(){

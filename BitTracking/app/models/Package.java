@@ -54,9 +54,6 @@ public class Package extends Model {
     public Boolean approved = null;
     public Boolean seen = null;
 
-    public Statistic packageStatistics;
-    public StatusHelper packageStatus;
-
 
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 
