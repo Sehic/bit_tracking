@@ -6,9 +6,14 @@ $(document).ready(function() {
     var showPackagesButton = $('#takePackagesId');
     var hidePackagesButton = $('#hideTakePackagesId');
     var tablePackages = $('#packagesToTake');
+    var myPackages = $('#myPackages');
+    var myPackagesDiv= $('#myPackagesDiv');
+    var myPackages1 = $('#myPackages1');
 
     tablePackages.hide();
     hidePackagesButton.hide();
+    myPackagesDiv.hide();
+    myPackages1.hide();
 
     showPackagesButton.click(function() {
         tablePackages.show();
@@ -20,6 +25,17 @@ $(document).ready(function() {
         tablePackages.hide();
         hidePackagesButton.hide();
         showPackagesButton.show();
+    });
+    myPackages.click(function() {
+       myPackagesDiv.show();
+        myPackages.hide();
+        myPackages1.show();
+    });
+
+    myPackages1.click(function() {
+        myPackagesDiv.hide();
+        myPackages.show();
+        myPackages1.hide();
     });
 });
 
