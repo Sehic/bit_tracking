@@ -50,8 +50,8 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td style="background-color: #DFDFDF"><strong>BIT Tracking statistic by Package Type</strong></td>
-                                            <td style="background-color: #DFDFDF"><strong>Data</strong></td>
+                                            <td style="background-color: #DFDFDF"><strong>Statistic by Package Type</strong></td>
+                                            <td style="background-color: #DFDFDF"><strong></strong></td>
                                         </tr>
 
                                         <tr>
@@ -76,7 +76,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td style="background-color: #DFDFDF"><strong>BIT Tracking statistic by Package Status</strong></td>
+                                            <td style="background-color: #DFDFDF"><strong>Statistic by Package Status</strong></td>
                                             <td style="background-color: #DFDFDF"></td>
                                         </tr>
 
@@ -112,7 +112,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td>Number of routes for package delivering</td>
+                                            <td>Number of BIT Tracking routes</td>
                                             <td ></td>
                                         </tr>
 
@@ -240,7 +240,7 @@ function drawBasic() {
 
                                             <tr>
                                             <td><strong>Number of BIT Tracking employees</strong></td>
-                                            <td></td>
+                                            <td>@Statistic.createEmployeesStatistic().size()</td>
                                             </tr>
 
 
@@ -273,7 +273,8 @@ function drawBasic() {
           ['Admins',@Statistic.createAdminStatistic().size()],
           ['Delivery workers', @Statistic.createDeliveryWorkerStatistic().size()],
           ['Office workers', @Statistic.createOfficeWorkerStatistic().size()],
-          ['Registered user', @Statistic.createRegistersUsersStatistic().size()]
+          ['Registered user', @Statistic.createRegistersUsersStatistic().size()],
+          ['Employees', @Statistic.createEmployeesStatistic().size()]
         ]);
         console.log("nesto");
 
@@ -302,15 +303,40 @@ function drawBasic() {
                         </div> <!--end of user statistic-->
 
 
-
                         <!--======================POST OFFICE STATISTICS======================-->
                         <div class="tab-pane" id="panel-postoffice">
-                            <div style="padding-top : 6 %">
-                                <b><h4>Statistic by BIT Tracking</h4></b><br>
-                                <p>POST OFFICEEE on BIT Tracking</p>
-                                <p>TEST</p>
-                            </div><br><br>
-                        </div> <!--end of post office statistic-->
+                            @if(!postOffices.isEmpty) {
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="background-color:#DFDFDF"><strong>@Messages("Post Office Name")</strong></th>
+                                            <th style="background-color:#DFDFDF"><strong>@Messages("Number of Linked Offices")</strong></th>
+                                            <th style="background-color:#DFDFDF"><strong>@Messages("Total number of Packages")</strong></th>
+                                            <th style="background-color:#DFDFDF"><strong>@Messages("Total number of Active Routes")</strong></th>
+                                            <th style="background-color:#DFDFDF"><strong>@Messages("Total number of Office Workers")</strong></th>
+                                            <th style="background-color:#DFDFDF"><strong>@Messages("Total number of Delivery Workers")</strong></th>
+
+                                        </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                        @for(postOffice <- postOffices) {
+                                            <tr>
+                                                <td>@postOffice.name</td>
+                                                <td>@postOffice.postOfficesA.size()</td>
+                                                <td>@Statistic.packageByPostOffice(postOffice)</td>
+                                                <td>@Statistic.getNumOfRoutes(postOffice)</td>
+                                                <td>@Statistic.officeWorkerByPostOffice(postOffice)</td>
+                                                <td>@Statistic.deliveryWorkerByPostOffice(postOffice)</td>
+                                            </tr>
+                                        }
+                                    } else {
+                                <div class="alert-info"><h4> @Messages("There are no post offices in database. ")</h4></div>
+                            }
+                        </tbody>
+                        </table>
+                        </div> <!--end of package statistic--><!--end of post office statistic-->
 
 
 
