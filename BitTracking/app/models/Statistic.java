@@ -26,14 +26,13 @@ public class Statistic  extends Model{
      * An empty Statistic constructor
      */
     public Statistic(){
-
     }
 
     /**
      * Statistic constructor
-     * @param postOfficeList - List of all Post Offices
-     * @param userList - List of all Users
-     * @param packageList - List of all Packages
+     * @param postOfficeList - List of Post Offices
+     * @param userList - List of  Users
+     * @param packageList - List of Packages
      */
     public Statistic(List<PostOffice> postOfficeList, List<User> userList, List<Package> packageList) {
         this.postOfficeList = postOfficeList;
@@ -42,6 +41,10 @@ public class Statistic  extends Model{
     }
 
 
+    /**
+     * Method is used to get list of all users.
+     * @return list of users
+     */
     public static List<User> createUserStatistic(){
         List<User> userList = User.find.findList();
         return userList;
@@ -56,7 +59,7 @@ public class Statistic  extends Model{
     }
 
     /**
-     * This method is used to ge statistic list of delivery workers
+     * This method is used to get statistic list of delivery workers
      * @return delivery worker list
      */
     public static List<User> createDeliveryWorkerStatistic(){
@@ -65,7 +68,7 @@ public class Statistic  extends Model{
     }
 
     /**
-     * This method is used to ge statistic list of users
+     * This method is used to get statistic list of users
      * @return office statistics users list
      */
     public static List<User> createAdminStatistic(){
@@ -74,7 +77,7 @@ public class Statistic  extends Model{
     }
 
     /**
-     * This method is used to ge statistic list of registered users
+     * This method is used to get statistic list of registered users
      * @return registered users list
      */
     public static List<User> createRegistersUsersStatistic(){
@@ -83,7 +86,7 @@ public class Statistic  extends Model{
     }
 
     /**
-     * Thos method is used to get total number of delivery workers, admins and office workers
+     * This method is used to get total number of delivery workers, admins and office workers
      * @return list of delivery workers, admins and office workers
      */
     public static List<User> createEmployeesStatistic(){
@@ -123,7 +126,7 @@ public class Statistic  extends Model{
     }
 
     /**
-     * Thos method is used to get total number of office workers
+     * This method is used to get total number of office workers
      * @return list office workers
      */
     public static int officeWorkerByPostOffice(PostOffice office){
@@ -131,7 +134,7 @@ public class Statistic  extends Model{
     }
 
     /**
-     * Thos method is used to get total number of delivery workers
+     * This method is used to get total number of delivery workers
      * @return list of delivery workers
      */
     public static int deliveryWorkerByPostOffice(PostOffice office){
@@ -139,6 +142,11 @@ public class Statistic  extends Model{
         return officeWorkerList.size();
     }
 
+    /**
+     * This method is used to get number of routes
+     * @param office
+     * @return number of routes
+     */
     public static int getNumOfRoutes(PostOffice office) {
         List<Shipment> shipmentList = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", office).findList();
         return shipmentList.size();
