@@ -1,3 +1,7 @@
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
 $(document).ready(function() {
     var showPackagesButton = $('#takePackagesId');
     var hidePackagesButton = $('#hideTakePackagesId');

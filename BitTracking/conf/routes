@@ -69,6 +69,8 @@ POST          /user/:id                                          @controllers.Pa
 POST          /contact                                           @controllers.MailController.sendMail()
 GET           /contact                                           @controllers.MailController.contact()
 
+GET           /statistic                                        @controllers.StatisticController.showPostOfficeStatistic()
+
 
 
 
