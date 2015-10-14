@@ -96,7 +96,6 @@ public class Statistic  extends Model{
         }
         return employeesList;
     }
-
     /**
      * This method is used to get statistic list for all post offices
      * @return list of all post offices
@@ -128,8 +127,7 @@ public class Statistic  extends Model{
      * @return list office workers
      */
     public static int officeWorkerByPostOffice(PostOffice office){
-        List<User> officeWorkerList = User.find.where().eq("typeOfUser", UserType.OFFICE_WORKER).eq("postOffice", office).findList();
-        return officeWorkerList.size();
+        return User.find.where().eq("typeOfUser", UserType.OFFICE_WORKER).eq("postOffice", office).findRowCount();
     }
 
     /**
