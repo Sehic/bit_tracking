@@ -163,8 +163,8 @@ public class Application extends Controller {
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result addPostOffice() {
-
-        return ok(adminpostofficeadd.render());
+        List<Country> countries = Country.findCountry.findList();
+        return ok(adminpostofficeadd.render(countries));
     }
 
     /**

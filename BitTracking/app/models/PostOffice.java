@@ -36,6 +36,8 @@ public class PostOffice extends Model {
 
     @OneToOne
     public Location place;
+    @ManyToOne
+    public Country country;
 
 
     public PostOffice(){
@@ -49,10 +51,11 @@ public class PostOffice extends Model {
     }
 
 
-    public PostOffice(String name, String address, Location place) {
+    public PostOffice(String name, String address, Location place, Country country) {
         this.name = name;
         this.address = address;
         this.place = place;
+        this.country=country;
     }
 
     public static Finder<Long, PostOffice> findOffice = new Finder<Long, PostOffice>(Long.class, PostOffice.class);

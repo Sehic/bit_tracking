@@ -2,11 +2,13 @@ package models;
 
 import helpers.PackageType;
 import helpers.StatusHelper;
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,6 +55,9 @@ public class Package extends Model {
 
     public Boolean approved = null;
     public Boolean seen = null;
+
+    @Formats.DateTime(pattern="dd/MM/yyyy")
+    public Date packageRejectedTimestamp;
 
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 

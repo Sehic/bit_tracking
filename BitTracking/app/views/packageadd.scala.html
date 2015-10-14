@@ -34,17 +34,17 @@
                     <legend><h5 style="color: #419641"><strong>Origination</strong></h5></legend>
 
                     <div class="form-group col-md-12">
-                        <label for="senderName" class="col-sm-2" style="font-size: 12px">
-                            Sender's Name:
+                        <label for="senderName" class="col-sm-3" style="font-size: 12px">
+                            Sender's Name:<abbr class="req" title="required"> *</abbr>
                         </label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             <input placeholder="" name="senderName" type="text" class="form-control" id="senderName" required="required" value="@text("senderName").value">
                         </div>
                     </div>
 
                     <div class="form-group col-md-12">
-                        <label for="postOffices" class="col-sm-2" style="font-size: 12px">
-                            Initial Post Office:
+                        <label for="postOffices" class="col-sm-3" style="font-size: 12px">
+                            Initial Post Office:<abbr class="req" title="required"> *</abbr>
                         </label>
                         <div class="col-md-5">
                         @if(currentUser.typeOfUser == UserType.ADMIN) {
@@ -64,8 +64,8 @@
                     </div>
 
                     <div class="form-group col-md-12">
-                        <label for="initialOffice" class="col-sm-2" style="font-size: 12px">
-                            Address:
+                        <label for="initialOffice" class="col-sm-3" style="font-size: 12px">
+                            Address:<abbr class="req" title="required"> *</abbr>
                         </label>
                         <div class="col-md-5">
                             <input class="form-control" value="@currentUser.postOffice.address" id="initialOffice" name="initialOffice" type="text" readonly/>
@@ -81,27 +81,27 @@
                 <fieldset>
                     <legend ><h5 style="color: #419641"><strong>Destination</strong></h5></legend>
                     <div class="form-group col-md-12">
-                        <label for="recipientName" class="col-sm-2" style="font-size: 12px">
-                            Recipient's Name:
+                        <label for="recipientName" class="col-sm-3" style="font-size: 12px">
+                            Recipient's Name:<abbr class="req" title="required"> *</abbr>
                         </label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="@text("recipientName").value">
                         </div>
                     </div>
 
                     <div class="form-group col-md-12">
-                        <label for="recipientAddress" class="col-sm-2" style="font-size: 12px">
-                            Recipient's Address:
+                        <label for="recipientAddress" class="col-sm-3" style="font-size: 12px">
+                            Recipient's Address:<abbr class="req" title="required"> *</abbr>
                         </label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             <input name="recipientAddress" type="text" class="form-control" id="recipientAddress" required="required" value="@text("recipientAddress").value">
                         </div>
                     </div>
 
 
                     <div class="form-group col-md-12">
-                        <label for="destination" class="col-sm-2" style="font-size: 12px">
-                            Final Post Office:
+                        <label for="destination" class="col-sm-3" style="font-size: 12px">
+                            Final Post Office:<abbr class="req" title="required"> *</abbr>
                         </label>
                         <div class="col-md-5">
                             <select id="finalOffice" class="form-control sortAlphabetically" name="destination" required="required">
@@ -129,27 +129,27 @@
                 <fieldset>
                     <legend><h5 style="color: #419641"><strong>Service Options</strong></h5></legend>
                     <div class="form-group col-md-12">
-                        <label for="weight" class="col-sm-2" style="font-size: 12px">
-                            Package Weight:
+                        <label for="weight" class="col-sm-3" style="font-size: 12px">
+                            Package Weight:<abbr class="req" title="required"> *</abbr>
                         </label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             <input placeholder="Weight in kg" name="weight" value="@text("weight").value" type="number" class="form-control" id="weight" required="required" step="0.01" min="0.01" max="20000">
                         </div>
                     </div>
 
                     <div class="form-group col-md-12">
-                        <label for="price" class="col-sm-2" style="font-size: 12px">
-                            Package Price:
+                        <label for="price" class="col-sm-3" style="font-size: 12px">
+                            Package Price:<abbr class="req" title="required"> *</abbr>
                         </label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             <input placeholder="Price in KM" name="price" value="@text("price").value" type="number" class="form-control" id="price" required="required" step="0.01" min="0.01" max="1000000">
                         </div>
                     </div>
 
 
                     <div class="form-group col-md-12">
-                        <label for="packageType" class="col-sm-2" style="font-size: 12px">
-                            Type of Package:
+                        <label for="packageType" class="col-sm-3" style="font-size: 12px">
+                            Type of Package:<abbr class="req" title="required"> *</abbr>
                         </label>
                         <div class="col-sm-5">
                             <select class="form-control" name="packageType">
@@ -179,26 +179,26 @@
                         </div>
                     </div>
                     <div class="form-group col-md-12">
-                        <label for="distanceBetweenOffices" class="col-sm-2" style="font-size: 12px">
+                        <label for="distanceBetweenOffices" class="col-sm-3" style="font-size: 12px">
                             Distance:
                         </label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             <input id="distanceBetweenOffices" placeholder="Distance between Post Offices" name="distanceBetweenOffices" value="" type="text" class="form-control" disabled>
                         </div>
                     </div>
                     <div class="form-group col-md-12">
-                        <label for="tripDurationBetweenOffices" class="col-sm-2" style="font-size: 12px">
+                        <label for="tripDurationBetweenOffices" class="col-sm-3" style="font-size: 12px">
                             Duration:
                         </label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             <input id="tripDurationBetweenOffices" placeholder="Travel duration between Post Offices" name="tripDurationBetweenOffices" value="" type="text" class="form-control" disabled>
                         </div>
                     </div>
                     <div class="form-group col-md-12">
-                        <label for="routeOffices" class="col-sm-2" style="font-size: 12px">
+                        <label for="routeOffices" class="col-sm-3" style="font-size: 12px">
                             Route:
                         </label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             <input id="routeOffices" name="routeOffices" value="" type="text" class="form-control" readonly>
                         </div>
                     </div>

@@ -59,10 +59,11 @@ public class PostOfficeController extends Controller {
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result addNewOffice() {
 
-        Form<PostOffice> boundForm = officeForm.bindFromRequest();
+        DynamicForm form = Form.form().bindFromRequest();
 
-        String name = boundForm.get().name;
-        String address = boundForm.get().address;
+        String name = form.get("name");
+        String address = form.get("address");
+        String countryCode = form.get("country");
 
         PostOffice officeByName = PostOffice.findPostOfficeByName(name);
         PostOffice officeByAddress = PostOffice.findPostOfficeByAddress(address);
@@ -71,8 +72,8 @@ public class PostOfficeController extends Controller {
             return redirect(routes.Application.addPostOffice());
         }
 
-        String lon = boundForm.field("longitude").value();
-        String lat = boundForm.field("latitude").value();
+        String lon = form.get("longitude");
+        String lat = form.get("latitude");
 
         Double x = null;
         Double y = null;
@@ -86,7 +87,8 @@ public class PostOfficeController extends Controller {
         }
         Location place = new Location(x, y);
         Ebean.save(place);
-        PostOffice p = new PostOffice(name, address, place);
+        Country officeCountry = Country.findCountryByCode(countryCode);
+        PostOffice p = new PostOffice(name, address, place, officeCountry);
 
         Ebean.save(p);
         return redirect(routes.Application.adminPostOffice());

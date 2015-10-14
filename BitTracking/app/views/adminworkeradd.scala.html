@@ -31,7 +31,7 @@
                     <div class="form-group">
 
                         <label for="inputName" class="col-sm-3 control-box">
-                            First Name*:
+                            First Name:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
                         <div class="col-sm-9">
                             <input name="firstName" value="@text("firstName").value" placeholder="First Name should contain only letters" onblur="checkFirstName()" type="text" class="form-control" id="inputName" required="required">
@@ -43,7 +43,7 @@
                     <div class="form-group">
 
                         <label for="inputLastName" class="col-sm-3 control-box">
-                            Last Name*:
+                            Last Name:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
                         <div class="col-sm-9">
                             <input name="lastName" value="@text("lastName").value" placeholder="Last Name should contain only letters" onblur="checkLastName()" type="text" class="form-control" id="inputLastName" required="required">
@@ -56,7 +56,7 @@
                     <div class="form-group">
 
                         <label for="inputEmail3" class="col-sm-3 control-box">
-                            Email*:
+                            Email:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
                         <div class="col-sm-9">
                             <input name="email" value="@text("email").value" placeholder="Insert Email" onblur="checkEmail()" type="email" class="form-control" id="inputEmail3" required="required">
@@ -68,7 +68,7 @@
                     <div class="form-group">
 
                         <label for="inputPassword3" class="col-sm-3 control-box">
-                            Password*:
+                            Password:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
                         <div class="col-sm-9">
                             <input name="password" onblur="checkPassword()" placeholder="Password should contain any sequence of alpha & one number. Minimum alowed length is 6. " type="password" class="form-control" id="inputPassword3" required="required">
@@ -79,7 +79,7 @@
                     <div class="form-group">
 
                         <label for="inputPassword4" class="col-sm-3 control-box">
-                            Confirm Password*:
+                            Confirm Password:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
                         <div class="col-sm-9">
                             <input name="repassword" onblur="checkPasswords()" placeholder="Confirm Password" type="password" class="form-control" id="inputPassword4" required="required">

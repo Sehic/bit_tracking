@@ -77,7 +77,7 @@
                                     } else {
                                         @if(pack.approved == false) {
                                             <td id="status">-</td>
-                                            <td id="time">-</td>
+                                            <td id="time">@pack.packageRejectedTimestamp</td>
                                         }
                                         @if(pack.approved==true){
                                             <td id="status">OUT FOR DELIVERY</td>
@@ -103,37 +103,37 @@
                         <div class="col-md-12" style="margin-top : 35px">
                             <h2>Create New Package</h2>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-7">
                             <div class="form-group col-md-12">
-                                <label for="recipientName" class="col-sm-2" style="font-size: 12px">
-                                    Recipient's Name:
+                                <label for="recipientName" class="col-sm-3" style="font-size: 12px">
+                                    Recipient's Name:<abbr class="req" title="required"> *</abbr>
                                 </label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-9">
                                     <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="">
                                 </div>
                                 <span id="recipientNameError" class="alert-danger" data-error-for="" ></span>
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="recipientAddress" class="col-sm-2" style="font-size: 12px">
-                                    Recipient's Address:
+                                <label for="recipientAddress" class="col-sm-3" style="font-size: 12px">
+                                    Recipient's Address:<abbr class="req" title="required"> *</abbr>
                                 </label>
-                                <div class="col-sm-10">
-                                    <input name="recipientAddress" type="text" class="form-control" id="recipientAddress" required="required" value="">
+                                <div class="col-sm-9">
+                                    <input placeholder="Street Name & Number, City" name="recipientAddress" type="text" class="form-control" id="recipientAddress" required="required" value="">
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
-                                <label for="weight" class="col-sm-2" style="font-size: 12px">
-                                    Package Weight:
+                                <label for="weight" class="col-sm-3" style="font-size: 12px">
+                                    Package Weight:<abbr class="req" title="required"> *</abbr>
                                 </label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-9">
                                     <input placeholder="Weight in kg" name="weight" value="" type="number" class="form-control" id="weight" required="required" step="0.01" min="0.01" max="20000">
                                 </div>
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="packageType" class="col-sm-2" style="font-size: 12px">
-                                    Type of Package:
+                                <label for="packageType" class="col-sm-3" style="font-size: 12px">
+                                    Type of Package:<abbr class="req" title="required"> *</abbr>
                                 </label>
                                 <div class="col-sm-5">
                                     <select class="form-control" name="packageType" required>
@@ -147,8 +147,8 @@
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="packageType" class="col-sm-2" style="font-size: 12px">
-                                    Send Via:
+                                <label for="packageType" class="col-sm-3" style="font-size: 12px">
+                                    Send Via:<abbr class="req" title="required"> *</abbr>
                                 </label>
                                 <div class="col-sm-5">
                                     <select class="form-control" name="initialPostOffice" required>
@@ -160,8 +160,13 @@
                                 </div>
                                 <span class="alert-danger" data-error-for="" >@flash.get("noOffice")</span>
                             </div>
+                            <div class="form-group">
+                                <div class="col-sm-3 pull-right">
+                                    <input type="submit" class="btn btn-primary" value="Send Package">
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-5">
 
                             <input id="longitude" name="longitude" type="hidden">
                             <input id="latitude" name="latitude" type="hidden">
@@ -223,12 +228,6 @@ function geocodeAddress(geocoder, resultsMap) {
                                 </div>
                             </div>
                         </div>
-
-                    <div class="form-group">
-                        <div class="col-sm-12" style="margin-bottom : 3%; padding-left: 9.8%" >
-                            <input type="submit" class="btn btn-primary" value="Send Package">
-                        </div>
-                    </div>
                 </form>
             </div>
         </div>

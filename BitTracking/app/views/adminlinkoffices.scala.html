@@ -20,6 +20,7 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
+                        <th>Country</th>
                         <th>Adress</th>
                         <th>Linked To</th>
                         <th>Link To</th>
@@ -31,6 +32,7 @@
                     <tr>
                         <td>@office.id</td>
                         <td><input name="mainOfficeName" value="@office.name" type="text" style="background-color : transparent ; border : 0px" readonly/></td>
+                        <td>@office.country.countryName</td>
                         <td>@office.address</td>
                         <td>
                         @for(linkedToThisOffice <- office.postOfficesA) {

@@ -43,8 +43,9 @@ public class PackageController extends Controller {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
         List<PostOffice> offices = PostOffice.findOffice.findList();
+        List<Country> countries = Country.findCountry.findList();
         if (offices == null || offices.size() == 0) {
-            return ok(adminpostofficeadd.render());
+            return ok(adminpostofficeadd.render(countries));
         }
 
         List<Location> locations = Location.findLocation.findList();
@@ -255,6 +256,9 @@ public class PackageController extends Controller {
             pack.approved = false;
             pack.trackingNum = "rejected";
             pack.seen = false;
+            Calendar c = Calendar.getInstance();;
+            Date date = c.getTime();
+            pack.packageRejectedTimestamp= date;
             pack.update();
             ship.delete();
             MailHelper.rejectedRequestNotification(pack.users.get(0).lastName, pack.users.get(0).email);

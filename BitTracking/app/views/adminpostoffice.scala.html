@@ -42,7 +42,8 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>Adress</th>
+                    <th>Country</th>
+                    <th>Address/City</th>
                     <th>Link</th>
                     <th>Linked To</th>
                     <th>Edit</th>
@@ -54,6 +55,7 @@
                 <tr class="succes">
                     <td>@postOffice.id</td>
                     <td>@postOffice.name</td>
+                    <td>@postOffice.country.countryName</td>
                     <td>@postOffice.address</td>
                     <td><a href="@routes.PostOfficeController.linkPostOffices(postOffice.id)">Link</a></td>
                     <td>
