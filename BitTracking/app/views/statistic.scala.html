@@ -22,7 +22,7 @@
                         </li>
 
                         <li>
-                            <a href="#panel" data-toggle="tab">Post Offices</a>
+                            <a href="#panel-postoffice" data-toggle="tab">Post Offices</a>
                         </li>
 
                         <li>
@@ -44,58 +44,76 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th data-sortable="true">Package</th>
-                                            <th data-sortable="true">Statistics</th>
+                                            <th>BIT Tracking Package Statistic </th>
+                                            <th>Data</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="succes">
-                                            <td>Package Type</td>
-                                            <td>BOX</td>
+                                        <tr>
+                                            <td style="background-color: #DFDFDF"><strong>BIT Tracking statistic by Package Type</strong></td>
+                                            <td style="background-color: #DFDFDF"><strong>Data</strong></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Current number of boxes</td>
                                             <td>@Statistic.createPackageBoxStatistic().size()</td>
                                         </tr>
 
-                                        <tr class="succes">
-                                            <td>ENVELOPE</td>
+                                        <tr>
+                                            <td>Current number of envelopes</td>
                                             <td>@Statistic.createPackageEnvelopeStatistic().size()</td>
                                         </tr>
 
 
-                                        <tr class="succes">
-                                            <td>FLYER</td>
+                                        <tr>
+                                            <td>Current number of flyers</td>
                                             <td>@Statistic.createPackageFlyerStatistic().size()</td>
                                         </tr>
 
-                                        <tr class="succes">
-                                            <td>TUBE</td>
+                                        <tr>
+                                            <td>Current number of tubes</td>
                                             <td>@Statistic.createPackageTubeStatistic().size()</td>
                                         </tr>
 
-                                        <tr class="succes">
-                                            <td>Package Status</td>
-                                            <td>DELIVERED</td>
+                                        <tr>
+                                            <td style="background-color: #DFDFDF"><strong>BIT Tracking statistic by Package Status</strong></td>
+                                            <td style="background-color: #DFDFDF"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Number of delivered packages</td>
                                             <td>@Statistic.createPackageDeliveredStatistics().size()</td>
                                         </tr>
 
-                                        <tr class="succes">
-                                            <td>ON ROUTE</td>
+                                        <tr>
+                                            <td>Number of packaces with status "On Route"</td>
                                             <td>@Statistic.createPackageOnRouteStatistics().size()</td>
                                         </tr>
 
 
-                                        <tr class="succes">
-                                            <td>OUT FOR DELIVERY</td>
+                                        <tr>
+                                            <td>Number of packages with status "Out For Delivery"</td>
                                             <td>@Statistic.createPackageOutForDeliveryStatistics().size()</td>
                                         </tr>
 
-                                        <tr class="succes">
-                                            <td>READY FOR SHIPPING</td>
+                                        <tr>
+                                            <td>Number of packages with status "Ready For Shipping"</td>
                                             <td>@Statistic.createPackageReadyForShippStatistics().size()</td>
                                         </tr>
 
-                                        <tr class="succes">
-                                            <td>RECEIVED</td>
+                                        <tr>
+                                            <td>Number of received packages</td>
                                             <td >@Statistic.createPackageReceivedStatistics().size()</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Total number of packages</td>
+                                            <td >@Statistic.createPackageStatistic().size()</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Number of routes for package delivering</td>
+                                            <td ></td>
                                         </tr>
 
                                         } else {
@@ -104,6 +122,81 @@
                                     </tbody>
                                 </table>
                         </div> <!--end of package statistic-->
+
+
+                        <script type="text/javascript">
+
+                            google.load('visualization', '1', {packages: ['corechart', 'bar']});
+google.setOnLoadCallback(drawBasic);
+
+function drawBasic() {
+
+      var data = google.visualization.arrayToDataTable([
+        ['BIT Tracking Package Statistic ', 'Data'],
+        ['Box', @Statistic.createPackageBoxStatistic().size()],
+        ['Envelope', @Statistic.createPackageEnvelopeStatistic().size()],
+        ['Flyer', @Statistic.createPackageFlyerStatistic().size()],
+        ['Tube', @Statistic.createPackageTubeStatistic().size()],
+      ]);
+
+      var options = {
+        title: 'BIT Tracking Statistic By Package Type',
+        chartArea: {width: '50%'},
+        hAxis: {
+          title: 'Total Number Of Packages',
+          minValue: 0
+        },
+        vAxis: {
+          title: 'Type Of Package'
+        }
+      };
+
+      var chart = new google.visualization.BarChart(document.getElementById('chart_packagetype'));
+
+      chart.draw(data, options);
+    }
+
+                        </script>
+
+                        <br>
+                        <div id="chart_packagetype"></div>
+                        <br><br><br>
+<!--==========================JS Google API Chart for Statistic By Package status=========================-->
+                        <script type="text/javascript">
+
+                            google.load('visualization', '1', {packages: ['corechart', 'bar']});
+google.setOnLoadCallback(drawBasic);
+
+function drawBasic() {
+
+      var data = google.visualization.arrayToDataTable([
+        ['BIT Tracking Package Statistic ', 'Data',{ role: 'style' }],
+        ['On Route', @Statistic.createPackageOnRouteStatistics().size(),'color: gray'],
+        ['Out For Delivery', @Statistic.createPackageOutForDeliveryStatistics().size(),'color: #76A7FA'],
+        ['Ready For Shipping', @Statistic.createPackageReadyForShippStatistics().size(),'opacity: 0.2'],
+        ['Received', @Statistic.createPackageReceivedStatistics().size(),'stroke-color: #703593; stroke-width: 4; fill-color: #C5A5CF'],
+        ['Delivered', @Statistic.createPackageDeliveredStatistics().size(),'stroke-color: #871B47; stroke-opacity: 0.6; stroke-width: 8; fill-color: #BC5679; fill-opacity: 0.2']
+      ]);
+
+      var options = {
+        title: 'BIT Tracking Statistic By Package Status',
+        chartArea: {width: '50%'},
+        hAxis: {
+          title: 'Total Number Of Packages',
+          minValue: 0
+        },
+        vAxis: {
+          title: 'Package Status'
+        }
+      };
+
+      var chart = new google.visualization.BarChart(document.getElementById('chart_packagestatus'));
+
+      chart.draw(data, options);
+    }
+
+                        </script>
+                        <div id="chart_packagestatus"></div>
 
                             <!--======================USER STATISTICS======================-->
 
@@ -121,8 +214,8 @@
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th style="background-color : steelblue ; color : snow"><strong>@Messages("User")</strong></th>
-                                                <th style="background-color : steelblue ; color : snow"><strong>@Messages("BT Statistic")</strong></th>
+                                                <th style="background-color:#DFDFDF"><strong>@Messages("User")</strong></th>
+                                                <th style="background-color:#DFDFDF"><strong>@Messages("BT Statistic")</strong></th>
                                             </tr>
                                         </thead>
 
@@ -144,10 +237,17 @@
                                                 <td><strong>Registerd Users</strong></td>
                                                 <td>@Statistic.createRegistersUsersStatistic().size()</td>
                                             </tr>
+
                                             <tr>
-                                                <td style="background-color : #E8B03F ; margin-left : 1.7 %"><strong>
+                                            <td><strong>Number of BIT Tracking employees</strong></td>
+                                            <td></td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td style="background-color:#DFDFDF; color: #b92c28; margin-left : 1.7 %"><strong>
                                                     Total number of users</strong></td>
-                                                <td style="background-color : #E8B03F ; margin-left : 1.7 %"><strong>@Statistic.createUserStatistic().size()</strong></td>
+                                                <td style="background-color:#DFDFDF; color: #b92c28; margin-left : 1.7 %"><strong>@Statistic.createUserStatistic().size()</strong></td>
                                             </tr>
 
                                         </tbody>
@@ -190,12 +290,12 @@
                                     };
 
         // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        var chart = new google.visualization.PieChart(document.getElementById('userchart'));
         chart.draw(data, options);
       }
     </script>
-                                <div class="col-sm-offset-1 col-sm-6 pull-right" style="padding-top : 1 %">
-                                    <div id="piechart"></div>
+                                <div class="col-sm-offset-1 col-sm-6 pull-right" style="padding-top : 1%">
+                                    <div id="userchart"></div>
                                 </div>
 
                             </div>
@@ -204,7 +304,7 @@
 
 
                         <!--======================POST OFFICE STATISTICS======================-->
-                        <div class="tab-pane" id="#panel">
+                        <div class="tab-pane" id="panel-postoffice">
                             <div style="padding-top : 6 %">
                                 <b><h4>Statistic by BIT Tracking</h4></b><br>
                                 <p>POST OFFICEEE on BIT Tracking</p>
@@ -216,7 +316,7 @@
 
                         <!--======================CHART STATISTICS======================-->
 
-                        <div class="tab-pane" id="chart">
+                        <div class="tab-pane" id="panel-chart">
 
                             <h2>CHARTTTTT</h2>
                         </div>

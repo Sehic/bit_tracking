@@ -41,16 +41,6 @@ public class Statistic  extends Model{
         this.packageList = packageList;
     }
 
-    /**
-     * This method will create a new Statistic for PostOffice, User and Package lists
-     * @param  list of postOffices, users and packages
-     * @return new statistic
-     */
-    public static Statistic createStatistic(List<PostOffice> postOfficeList, List<User> userList, List<Package> packageList){
-        Statistic statistic = new Statistic(postOfficeList, userList, packageList);
-        statistic.save();
-        return statistic;
-    }
 
     public static List<User> createUserStatistic(){
         List<User> userList = User.find.findList();
@@ -91,6 +81,11 @@ public class Statistic  extends Model{
         List<User> userList = User.find.where().eq("typeOfUser", UserType.REGISTERED_USER).findList();
         return userList;
     }
+
+   /* public static List<User> createEmployeesStatistic(){
+
+        List<User> employeesList = User.find.findList();
+    }*/
 
     /**
      * This method is used to get statistic list for all post offices
