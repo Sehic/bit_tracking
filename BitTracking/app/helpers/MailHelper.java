@@ -68,7 +68,7 @@ public class MailHelper {
 
     public static void sendVerificationMail(String token, String userLastName, String userEmail) {
         String subject = "Email Validation - BitTracking";
-        String message = "Mr./Mrs. " + userLastName + ",<br>" +
+        String message = "Mr./Mrs. " + userLastName + ",<br><br>" +
                 "Thank you for joining BitTracking community.<br>" +
                 "To complete your registration, please follow the link bellow: <br>" +
                 "<u>http://localhost:9000/validate/" + token + "</u><br><br>" +
@@ -78,7 +78,7 @@ public class MailHelper {
 
     public static void packageDeliveredNotification(String userLastName, String trackingNum, String userEmail) {
         String subject = "BitTracking Notification!";
-        String message = "Mr./Mrs. " + userLastName + ",<br>" +
+        String message = "Mr./Mrs. " + userLastName + ",<br><br>" +
                 "Package with tracking number <strong>" + trackingNum + "</strong> has been successifuly delivered.<br>" +
                 "Thank you for choosing BitTracking!<br><br>" +
                 "<i>BitTracking Team!</i>";
@@ -87,7 +87,7 @@ public class MailHelper {
 
     public static void requestReceivedNotification(String userLastName, String userEmail) {
         String subject = "Thank You For Choosing BitTracking For Your Delivery Services";
-        String message = "Mr./Mrs. " + userLastName + ",<br>" +
+        String message = "Mr./Mrs. " + userLastName + ",<br><br>" +
                 "Your request for delivery services has been received.<br>" +
                 "It will be processed as soon as possible,<br>" +
                 "and you will be notified.<br><br>" +
@@ -97,7 +97,7 @@ public class MailHelper {
 
     public static void approvedRequestNotification(String userLastName, String trackingNum, String userEmail) {
         String subject = "BitTracking Notification!";
-        String message = "Mr./Mrs. " + userLastName + ",<br>" +
+        String message = "Mr./Mrs. " + userLastName + ",<br><br>" +
                 "Your Latest Request For Delivery Service Has Been <strong>Approved</strong>.<br>" +
                 "You can get status information of delivery by any time using this tracking number:<br><br> " + trackingNum + "<br><br>" +
                 "As soon as the package is delivered, you will be notified.<br><br>" +
@@ -107,7 +107,7 @@ public class MailHelper {
 
     public static void rejectedRequestNotification(String userLastName, String userEmail) {
         String subject = "BitTracking Notification!";
-        String message = "Mr./Mrs. " + userLastName + ",<br>" +
+        String message = "Mr./Mrs. " + userLastName + ",<br><br>" +
                 "Your Latest Request For Delivery Service Has Been <strong>Rejected</strong>.<br>" +
                 "For more information, contact us.<br><br>" +
                 "<i>BitTracking Team!</i>";
