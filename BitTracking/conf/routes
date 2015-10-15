@@ -5,6 +5,7 @@
 # Home page
 GET           /                                                  @controllers.Application.index()
 GET           /login                                             @controllers.Application.login()
+GET           /indexajax                                         @controllers.Application.indexAjax()
 GET           /validate/:token                                   @controllers.UserController.emailValidation(token: String)
 GET           /register                                          @controllers.Application.register()
 GET           /mybt/editprofile/:id                              @controllers.UserController.editProfile(id: Long)
@@ -69,7 +70,7 @@ POST          /user/:id                                          @controllers.Pa
 POST          /contact                                           @controllers.MailController.sendMail()
 GET           /contact                                           @controllers.MailController.contact()
 
-GET           /statistic                                        @controllers.StatisticController.showPostOfficeStatistic()
+GET           /statistic                                         @controllers.StatisticController.showPostOfficeStatistic()
 
 
 

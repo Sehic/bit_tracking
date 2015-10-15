@@ -220,7 +220,7 @@ public class PackageController extends Controller {
             MailHelper.requestReceivedNotification(user.lastName, user.email);
         } catch (PersistenceException | IllegalStateException | NumberFormatException e) {
 
-            return badRequest(index.render(0, 0));
+            return badRequest(index.render());
         }
         return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
     }

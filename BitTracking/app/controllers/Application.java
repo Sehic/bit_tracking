@@ -42,6 +42,15 @@ public class Application extends Controller {
         if (cookie != null) {
             session("email", cookie.value());
         }
+        return ok(index.render());
+    }
+
+    /**
+     * This method send notification to Registered user, if that user
+     * has some newly approved or rejected packages.
+     * @return
+     */
+    public Result indexAjax() {
         User user = SessionHelper.getCurrentUser(ctx());
         Integer approved = 0;
         Integer rejected = 0;
@@ -55,7 +64,14 @@ public class Application extends Controller {
                 }
             }
         }
-        return ok(index.render(approved, rejected));
+        Integer result = approved + rejected;
+        String notification = Integer.toString(result);
+
+        if(result != 0){
+            return ok(notification);
+        }
+
+        return ok();
     }
 
     /**

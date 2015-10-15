@@ -1,17 +1,6 @@
-@(approved: Integer)(rejected: Integer)
+
     @main("Home Page") {
 
-        @if(approved != 0) {
-            <div id="approvedPackages" class="alert alert-success" style="cursor : pointer">
-                <p>You have <strong>@approved new</strong> approved package(s).</p>
-            </div>
-        }
-
-        @if(rejected != 0) {
-            <div id="rejectedPackages" class="alert alert-danger" style="cursor : pointer">
-                <p>You have <strong>@rejected new</strong> rejected package(s).</p>
-            </div>
-        }
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">

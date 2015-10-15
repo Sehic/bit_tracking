@@ -94,7 +94,7 @@ public class PackageStatusController extends Controller {
                     if(user != null) {
                         MailHelper.packageDeliveredNotification(user.lastName, pack.trackingNum, user.email);
                     }
-                    
+
                     int last = shipmentByPackage.size() - 1;
                     c = Calendar.getInstance();
                     date = c.getTime();
