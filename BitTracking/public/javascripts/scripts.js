@@ -3,6 +3,20 @@ $(document).ready(function(){
 });
 
 $(document).ready(function() {
+    setInterval(function() {
+        var number = '';
+        $.ajax({
+            method: 'get',
+            url: '/indexajax'
+        }).success(function(response) {
+            var mybt = $('#mybt');
+            number = response;
+            mybt.html('My BT <span class=\"label label-warning\">' + number + '</span><strong class="caret"></strong>');
+        })
+    }, 500);
+})
+
+$(document).ready(function() {
     var showPackagesButton = $('#takePackagesId');
     var hidePackagesButton = $('#hideTakePackagesId');
     var tablePackages = $('#packagesToTake');
