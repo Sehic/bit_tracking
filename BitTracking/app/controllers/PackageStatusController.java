@@ -83,7 +83,18 @@ public class PackageStatusController extends Controller {
                         shipmentByPackage.get(j).status = StatusHelper.DELIVERED;
                         Ebean.update(shipmentByPackage.get(j));
                     }
-                    MailHelper.packageDeliveredNotification(pack.users.get(0).lastName, pack.trackingNum, pack.users.get(0).email);
+
+                    User user = null;
+                    for (int j = 0; j < pack.users.size(); j++) {
+                        if (pack.users.get(j).typeOfUser == UserType.REGISTERED_USER) {
+                            user = pack.users.get(j);
+                            break;
+                        }
+                    }
+                    if(user != null) {
+                        MailHelper.packageDeliveredNotification(user.lastName, pack.trackingNum, user.email);
+                    }
+                    
                     int last = shipmentByPackage.size() - 1;
                     c = Calendar.getInstance();
                     date = c.getTime();
