@@ -86,7 +86,7 @@ public class WorkerController extends Controller {
 
     }
 
-    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
+    @Security.Authenticated(Authenticators.OfficeWorkerFilter.class)
     public Result officeWorkerPanel() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
