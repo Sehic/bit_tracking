@@ -9,10 +9,10 @@
 
     <h2>Make a route automatically</h2>
     <hr/>
-    @helper.form(routes.PackageController.saveAutoRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
+    @helper.form(routes.RouteController.saveAutoRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
         <div class="row">
             <div class="col-sm-9 col-sm-offset-3">
-                <a href="@routes.PostOfficeController.listRoutes(officePackage.id)"><button type="button" class="btn btn-default">
+                <a href="@routes.RouteController.listRoutes(officePackage.id)"><button type="button" class="btn btn-default">
                     Create Route Manually</button></a>
                 <a href="@routes.WorkerController.officeWorkerPanel()"><button type="button" class="btn btn-default">
                     Office Worker Panel</button></a>

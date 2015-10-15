@@ -49,12 +49,12 @@ DELETE        /adminpanel/package/delete/:id                     @controllers.Pa
 GET           /trackpackage/                                     @controllers.Application.trackPackage()
 POST          /checktrack                                        @controllers.Application.checkTrackingNumber()
 
-GET           /adminpanel/makeroute/:id                          @controllers.PostOfficeController.listRoutes(id: Long)
-POST          /adminpanel/makeroute/create                       @controllers.PostOfficeController.createRoute()
-POST          /adminpanel/makeroute/save/:id                     @controllers.PostOfficeController.saveRoute(id: Long)
+GET           /adminpanel/makeroute/:id                          @controllers.RouteController.listRoutes(id: Long)
+POST          /adminpanel/makeroute/create                       @controllers.RouteController.createRoute()
+POST          /adminpanel/makeroute/save/:id                     @controllers.RouteController.saveRoute(id: Long)
 
-GET           /adminpanel/makeautoroute/:id                      @controllers.PackageController.showAutoRouting(id: Long)
-POST          /adminpanel/makeautoroute/saveautoroute/:id        @controllers.PackageController.saveAutoRoute(id: Long)
+GET           /adminpanel/makeautoroute/:id                      @controllers.RouteController.showAutoRouting(id: Long)
+POST          /adminpanel/makeautoroute/saveautoroute/:id        @controllers.RouteController.saveAutoRoute(id: Long)
 
 GET           /officeworkerpanel                                 @controllers.WorkerController.officeWorkerPanel()
 

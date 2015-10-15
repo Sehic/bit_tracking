@@ -100,7 +100,7 @@ public class PackageController extends Controller {
             ship.postOfficeId = office;
             ship.save();
         } else {
-            List<PostOffice> officesFromRoute = officesFromAutoRoute(routeForShipment);
+            List<PostOffice> officesFromRoute = RouteController.officesFromAutoRoute(routeForShipment);
 
             for (int i = 0; i < officesFromRoute.size(); i++) {
                 Shipment ship = new Shipment();
@@ -119,27 +119,7 @@ public class PackageController extends Controller {
         if (user.typeOfUser == UserType.ADMIN)
             return redirect(routes.PackageController.adminPackage());
         else
-            return redirect(routes.PostOfficeController.listRoutes(pack.id));
-    }
-
-    /**
-     * Method that is used for splitting offices string and returning them for creating shipment.
-     *
-     * @param route - string route offices
-     * @return - list of post offices
-     */
-    public static List<PostOffice> officesFromAutoRoute(String route) {
-        List<PostOffice> routeOffices = new ArrayList<>();
-        if (route == null) {
-            return routeOffices;
-        }
-        String[] offices = route.split("\\|");
-
-        for (int i = 0; i < offices.length; i++) {
-            PostOffice officeFromRoute = PostOffice.findPostOfficeByName(offices[i]);
-            routeOffices.add(officeFromRoute);
-        }
-        return routeOffices;
+            return redirect(routes.RouteController.listRoutes(pack.id));
     }
 
     /**
@@ -298,44 +278,4 @@ public class PackageController extends Controller {
 
         return redirect(routes.WorkerController.deliveryWorkerPanel());
     }
-
-    public Result showAutoRouting(Long id){
-
-        Package officePackage = Package.findPackageById(id);
-        List<Location> locations = Location.findLocation.findList();
-        List<PostOffice> offices = PostOffice.findOffice.findList();
-        return ok(owmakeautoroute.render(offices, locations, officePackage));
-    }
-
-    public Result saveAutoRoute(Long id){
-
-        Package routePackage = Package.findPackageById(id);
-        if(routePackage == null){
-            return redirect(routes.Application.index());
-        }
-
-        DynamicForm form = Form.form().bindFromRequest();
-        String route = form.get("route");
-
-        Shipment initialOfficeShip = new Shipment();
-        try {
-            initialOfficeShip = Shipment.shipmentFinder.where().eq("packageId", routePackage).findUnique();
-        }catch(PersistenceException e){
-            return redirect(routes.PackageController.showAutoRouting(id));
-        }
-        initialOfficeShip.status = StatusHelper.READY_FOR_SHIPPING;
-        initialOfficeShip.update();
-
-        List<PostOffice> officesFromRoute = officesFromAutoRoute(route);
-
-        for (int i = 1; i < officesFromRoute.size(); i++) {
-            Shipment ship = new Shipment();
-            ship.packageId = routePackage;
-            ship.postOfficeId = officesFromRoute.get(i);
-            ship.status = StatusHelper.ON_ROUTE;
-            ship.save();
-        }
-        return redirect(routes.WorkerController.officeWorkerPanel());
-    }
-
 }

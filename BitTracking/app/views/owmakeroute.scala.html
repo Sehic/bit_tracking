@@ -11,7 +11,7 @@
     <hr/>
     <div class="row">
         <div class="col-sm-9 col-sm-offset-3">
-            <a href="@routes.PackageController.showAutoRouting(officePackage.id)"><button type="button" class="btn btn-default">Create route automatically</button></a>
+            <a href="@routes.RouteController.showAutoRouting(officePackage.id)"><button type="button" class="btn btn-default">Create route automatically</button></a>
             <a href="@routes.WorkerController.officeWorkerPanel()"><button type="button" class="btn btn-default">
                 Office Worker Panel</button></a>
         </div>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="row">
-        @helper.form(routes.PostOfficeController.saveRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
+        @helper.form(routes.RouteController.saveRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
 
             <div class="col-md-2">
                 <select name="postOffices" class="selectOffice form-control sortAlphabetically">

@@ -92,7 +92,7 @@
                     <td>"@pack.senderName"</td>
                     <td>"@pack.recipientName"</td>
                     @if(pack.shipmentPackages.size() < 2) {
-                        <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
+                        <td><a href="@routes.RouteController.listRoutes(pack.id)">Add Route</a></td>
                     } else {
                         <td>
                         @for(shipments: Shipment <- pack.shipmentPackages) {
