@@ -127,7 +127,7 @@ public class User extends Model {
      * This method checks if the entered email exists in the database
      *
      * @param email email from user input
-     * @return null if email doesnt exist in database, otherwise 1
+     * @return null if email doesn't exist in database, otherwise 1
      */
     public static User checkEmail(String email) {
         List<User> listEmail = find.where().eq("email", email).findList();
