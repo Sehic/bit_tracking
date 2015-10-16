@@ -222,6 +222,8 @@ public class PackageController extends Controller {
         String message = "";
 
         Shipment ship = Shipment.shipmentFinder.where().eq("packageId", pack).findUnique();
+        Calendar c = Calendar.getInstance();;
+        Date date = c.getTime();
         if (value.equals("approve") && destination != "default") {
             if (destination.equals("default")) {
                 return redirect(routes.WorkerController.officeWorkerPanel());
@@ -231,6 +233,7 @@ public class PackageController extends Controller {
             }
 
             pack.price = Double.parseDouble(price);
+            pack.packageRejectedTimestamp= date;
             pack.approved = true;
             pack.seen = false;
             pack.trackingNum = (UUID.randomUUID().toString());
@@ -240,8 +243,6 @@ public class PackageController extends Controller {
             pack.approved = false;
             pack.trackingNum = "rejected";
             pack.seen = false;
-            Calendar c = Calendar.getInstance();;
-            Date date = c.getTime();
             pack.packageRejectedTimestamp= date;
             pack.update();
             ship.delete();

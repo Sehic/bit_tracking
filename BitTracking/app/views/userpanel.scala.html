@@ -81,7 +81,11 @@
                                         }
                                         @if(pack.approved==true){
                                             <td id="status">OUT FOR DELIVERY</td>
-                                            <td id="time">@pack.shipmentPackages.get(0).dateCreated</td>
+                                            @if(pack.shipmentPackages.get(0).status !=StatusHelper.DELIVERED){
+                                                <td id="time">@pack.packageRejectedTimestamp</td>
+                                            }else {
+                                                <td id="time">@pack.shipmentPackages.get(0).dateCreated</td>
+                                            }
                                         }
                                         @if(pack.approved==null){
                                             <td id="status">-</td>
