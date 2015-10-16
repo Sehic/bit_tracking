@@ -29,8 +29,9 @@ public class RouteController extends Controller {
         models.Package officePackage = Package.findPackageById(id);
         PostOffice office = officePackage.shipmentPackages.get(0).postOfficeId;
         List<Location> locations = Location.findLocation.findList();
+        List<PostOffice> allOffices = PostOffice.findOffice.findList();
 
-        return ok(owmakeroute.render(office.postOfficesA, officePackage, locations));
+        return ok(owmakeroute.render(office.postOfficesA, officePackage, locations, allOffices));
     }
 
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
