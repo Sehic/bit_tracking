@@ -7,6 +7,9 @@
     color:red;
 }
 #logo{
-    height: 1.5em;
-    width: 6em;
+    height: 60px;
+    width: 120px;
+}
+.navbar-brand{
+    padding: 5px 5px;
 }
