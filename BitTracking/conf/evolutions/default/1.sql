@@ -5,8 +5,14 @@
 
 create table country (
   id                        bigint auto_increment not null,
-  country_code              varchar(255),
+  iso2                      varchar(10),
   country_name              varchar(255),
+  short_name                varchar(255),
+  iso3                      varchar(10),
+  numcode                   varchar(15),
+  unmember                  varchar(20),
+  calling_code              varchar(20),
+  cct_id                    varchar(10),
   constraint pk_country primary key (id))
 ;
 

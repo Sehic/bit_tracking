@@ -15,8 +15,20 @@ public class Country extends Model {
 
     @Id
     public Long id;
-    public String countryCode;
+    @Column(length = 10)
+    public String iso2;
     public String countryName;
+    public String shortName;
+    @Column(length = 10)
+    public String iso3;
+    @Column(length = 15)
+    public String numcode;
+    @Column(length = 20)
+    public String unmember;
+    @Column(length = 20)
+    public String callingCode;
+    @Column(length = 10)
+    public String cctId;
     @OneToMany(mappedBy = "country")
     public List<PostOffice> countryPostOffices = new ArrayList<>();
 

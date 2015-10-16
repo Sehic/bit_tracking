@@ -51,7 +51,7 @@
                         <select id="country" class="form-control sortAlphabetically" name="country" required="required">
                             <option value="">--Select one--</option>
                             @for(country <- countries) {
-                                <option value="@country.countryCode">@country.countryName</option>
+                                <option value="@country.cctId">@country.countryName</option>
                             }
                         </select>
                     </div>
