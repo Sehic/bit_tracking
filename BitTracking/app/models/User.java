@@ -144,7 +144,7 @@ public class User extends Model {
      */
     public static boolean checkName(String name) {
         for (int i = 0; i < name.length(); i++) {
-            if ((name.charAt(i) < 65) || (name.charAt(i) > 90 &&
+            if (name.charAt(i) < 31 || (name.charAt(i) > 32 && name.charAt(i) < 65) || (name.charAt(i) > 90 &&
                     name.charAt(i) < 97) || (name.charAt(i) > 122 && name.charAt(i) < 262) ||
                     (name.charAt(i) > 263 && name.charAt(i) < 268) ||
                     (name.charAt(i) > 269 && name.charAt(i) < 272) ||

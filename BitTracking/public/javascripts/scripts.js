@@ -30,24 +30,24 @@ $(document).ready(function() {
     myPackages1.hide();
 
     showPackagesButton.click(function() {
-        tablePackages.show();
+        tablePackages.slideDown();
         hidePackagesButton.show();
         showPackagesButton.hide();
     });
 
     hidePackagesButton.click(function() {
-        tablePackages.hide();
+        tablePackages.slideUp();
         hidePackagesButton.hide();
         showPackagesButton.show();
     });
     myPackages.click(function() {
-       myPackagesDiv.show();
+       myPackagesDiv.slideDown();
         myPackages.hide();
         myPackages1.show();
     });
 
     myPackages1.click(function() {
-        myPackagesDiv.hide();
+        myPackagesDiv.slideUp();
         myPackages.show();
         myPackages1.hide();
     });
@@ -55,15 +55,20 @@ $(document).ready(function() {
 
 
 $(document).ready(function(){
-   $("#disableRouteButton").click( function(){
+   $("#enableRouteButton").prop('disabled', true);
+    $("#disableRouteButton").click( function(){
        $("#clickMe").prop('disabled', true);
        $('#addPackageButton').prop('disabled', false);
        $('#routeOffices').prop('disabled', true);
+        $("#enableRouteButton").prop('disabled', false);
+        $("#disableRouteButton").prop('disabled', true);
    })
     $("#enableRouteButton").click( function(){
         $("#clickMe").prop('disabled', false);
         $('#addPackageButton').prop('disabled', true);
         $('#routeOffices').prop('disabled', false);
+        $("#disableRouteButton").prop('disabled', false);
+        $("#enableRouteButton").prop('disabled', true);
     })
 
 });
