@@ -3,6 +3,7 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import helpers.MailHelper;
 import helpers.SessionHelper;
+import helpers.SmsHelper;
 import helpers.StatusHelper;
 import models.*;
 import models.Package;
@@ -92,7 +93,10 @@ public class PackageStatusController extends Controller {
                         }
                     }
                     if(user != null) {
+                        String smsBody = "Package with tracking number \"" + pack.trackingNum + "\" has been successifully delivered. BitTracking Team!";
+                        String smsTo = "+38761263829";
                         MailHelper.packageDeliveredNotification(user.lastName, pack.trackingNum, user.email);
+                        SmsHelper.sendSms(smsBody, smsTo);
                     }
 
                     int last = shipmentByPackage.size() - 1;

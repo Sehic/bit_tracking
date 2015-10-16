@@ -1,9 +1,6 @@
 package controllers;
 
-import helpers.Authenticators;
-import helpers.MailHelper;
-import helpers.SessionHelper;
-import helpers.StatusHelper;
+import helpers.*;
 import models.*;
 import models.Package;
 import play.*;
@@ -42,6 +39,7 @@ public class Application extends Controller {
         if (cookie != null) {
             session("email", cookie.value());
         }
+        SmsHelper.sendSms("Test", "+38761263829");
         return ok(index.render());
     }
 
