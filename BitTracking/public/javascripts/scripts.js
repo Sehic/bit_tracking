@@ -30,24 +30,24 @@ $(document).ready(function() {
     myPackages1.hide();
 
     showPackagesButton.click(function() {
-        tablePackages.show();
+        tablePackages.slideDown();
         hidePackagesButton.show();
         showPackagesButton.hide();
     });
 
     hidePackagesButton.click(function() {
-        tablePackages.hide();
+        tablePackages.slideUp();
         hidePackagesButton.hide();
         showPackagesButton.show();
     });
     myPackages.click(function() {
-       myPackagesDiv.show();
+       myPackagesDiv.slideDown();
         myPackages.hide();
         myPackages1.show();
     });
 
     myPackages1.click(function() {
-        myPackagesDiv.hide();
+        myPackagesDiv.slideUp();
         myPackages.show();
         myPackages1.hide();
     });
