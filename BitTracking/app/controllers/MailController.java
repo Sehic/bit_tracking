@@ -54,7 +54,7 @@ public class MailController extends Controller {
                                 flash("messageError", "Please fill message field!");
                                 return redirect("/contact");
                             }
-                            flash("success", "Message was sent successfuly!");
+                            flash("success", "Message was sent successfully!");
                             MailHelper.sendContactMessage(name, email, message);
 
                             return redirect("/contact");

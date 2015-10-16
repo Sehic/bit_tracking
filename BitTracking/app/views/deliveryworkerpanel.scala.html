@@ -35,7 +35,6 @@
                                     <th>Recipient Name</th>
                                     <th>Recipient Address</th>
                                     <th>Status</th>
-                                    <th>Post Office</th>
                                     <th>Next Destination</th>
                                     <th>Final Destination</th>
                                     <th>Check</th>
@@ -54,7 +53,6 @@
                                             @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
                                                 @if(shipmentFromThisPackage.status == StatusHelper.READY_FOR_SHIPPING) {
                                                     <td>@shipmentFromThisPackage.status</td>
-                                                    <td>@shipmentFromThisPackage.postOfficeId.name</td>
 
                                                     @if(i != pack.shipmentPackages.size() - 1) {
                                                         <td>@pack.shipmentPackages.get(i + 1).postOfficeId.name</td>
@@ -99,7 +97,6 @@
                             <th>Recipient Name</th>
                             <th>Recipient Address</th>
                             <th>Status</th>
-                            <th>Post Office</th>
                             <th>Next Destination</th>
                             <th>Final Destination</th>
                             <th>Check</th>
@@ -117,7 +114,6 @@
                                 @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
                                     @if(shipmentFromThisPackage.status == StatusHelper.READY_FOR_SHIPPING) {
                                         <td>@shipmentFromThisPackage.status</td>
-                                        <td>@shipmentFromThisPackage.postOfficeId.name</td>
 
                                         @if(i != pack.shipmentPackages.size() - 1) {
                                             <td>@pack.shipmentPackages.get(i + 1).postOfficeId.name</td>

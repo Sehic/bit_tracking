@@ -151,7 +151,7 @@
                                     Send Via:<abbr class="req" title="required"> *</abbr>
                                 </label>
                                 <div class="col-sm-5">
-                                    <select class="form-control" name="initialPostOffice" required>
+                                    <select class="sortAlphabetically form-control" name="initialPostOffice" required>
                                         <option class="default" value="">--Select one--</option>
                                         @for(office <- offices) {
                                             <option value="@office.name">@office.name</option>
@@ -162,7 +162,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-3 pull-right">
-                                    <input type="submit" class="btn btn-primary" value="Send Package">
+                                    <input type="submit" class="btn btn-primary" value="Create Request">
                                 </div>
                             </div>
                         </div>
