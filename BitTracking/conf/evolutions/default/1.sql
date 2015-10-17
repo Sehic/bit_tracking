@@ -71,6 +71,10 @@ create table user (
   id                        bigint auto_increment not null,
   first_name                varchar(50),
   last_name                 varchar(50),
+  country_id                bigint,
+  phone_number              varchar(50),
+  number_validated          tinyint(1) default 0,
+  validation_code           varchar(255),
   password                  varchar(50),
   email                     varchar(50),
   type_of_user              integer,
@@ -105,8 +109,10 @@ alter table shipment add constraint fk_shipment_postOfficeId_4 foreign key (post
 create index ix_shipment_postOfficeId_4 on shipment (post_office_id_id);
 alter table shipment add constraint fk_shipment_packageId_5 foreign key (package_id_id) references package (id) on delete restrict on update restrict;
 create index ix_shipment_packageId_5 on shipment (package_id_id);
-alter table user add constraint fk_user_postOffice_6 foreign key (post_office_id) references post_office (id) on delete restrict on update restrict;
-create index ix_user_postOffice_6 on user (post_office_id);
+alter table user add constraint fk_user_country_6 foreign key (country_id) references country (id) on delete restrict on update restrict;
+create index ix_user_country_6 on user (country_id);
+alter table user add constraint fk_user_postOffice_7 foreign key (post_office_id) references post_office (id) on delete restrict on update restrict;
+create index ix_user_postOffice_7 on user (post_office_id);
 
 
 

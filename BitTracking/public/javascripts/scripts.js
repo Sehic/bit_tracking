@@ -1,3 +1,59 @@
+$(document).ready(function() {
+    var submit = $('#validateSubmit');
+
+    submit.click(function() {
+        var enteredCode = $('#validatePhoneNumber').val();
+        var span = $('#validationError');
+        $.ajax({
+            url: '/validate',
+            data: "enteredCode=" + enteredCode,
+            type: 'post'
+        }).success(function(response) {
+            var valDiv = $('#completeValidation');
+            span.html("Successfully validated phone number " + response).attr("style", "font-size: 20px; color: green");
+            $('#hideAfterValidation').hide();
+        }).error(function() {
+            span.html("Error! No such validation code found!").attr("style", "font-size: 20px; color: red");
+        })
+    });
+});
+
+$(document).ready(function() {
+    var tryAgain = $('#tryAgainDiv').hide();
+    $('#tryAgainId').click(function() {
+        tryAgain.show();
+    })
+
+    var newCodeButton = $('#newCodeSubmit');
+    var newSpan = $('#newSpan');
+    newCodeButton.click(function() {
+        var newNumber = $('#validatePhoneNumberAgain').val();
+        var res = encodeURIComponent(newNumber);
+        $.ajax({
+            url: '/validate/newCode',
+            data: 'newNumber=' + res,
+            type: 'post'
+        }).success(function(response) {
+            newSpan.html("New validation code sent to " + newNumber);
+        }).error(function() {
+            newSpan.html("Ne valja broj!!")
+        })
+    })
+});
+
+
+$(document).ready(function() {
+    var phoneField = $('#phoneNumberFields').hide();
+    var number = $('#inputCallingCode');
+    var country = $('#countryId');
+
+    country.change(function() {
+        phoneField.slideDown();
+        var value = $('#countryId option:selected').val();
+        number.attr("value", "+" + value);
+    })
+});
+
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
 });
@@ -367,6 +423,18 @@ function deleteCookies() {
 }
 
 //Registration validation
+
+function checkNumber() {
+    var firstName = document.getElementById("inputPhoneNumber").value;
+    var filter = /^[0-9]+$/;
+    var phoneSpan = $('#phoneInfo');
+    if (!filter.test(firstName) && firstName.length > 0) {
+        phoneSpan.html("Only numbers allowed. No spaces between!").addClass("alert-danger").attr("style", "font-size: 14px");
+    } else {
+        phoneSpan.html("This field is not required. If you want to receive an SMS notifications about delivery status of your packages, please submit valid mobile number. If you do, you will get validation code to specified number.").removeClass("alert-danger").attr("style", "font-size: 10px");
+    }
+}
+
 function checkFirstName() {
     var firstName = document.getElementById("inputName").value;
     var filter = /^[a-zA-Z]+$/;
