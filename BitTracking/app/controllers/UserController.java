@@ -346,6 +346,7 @@ public class UserController extends Controller {
         //Getting values from combo boxes
         String userType = boundForm.bindFromRequest().field("userType").value();
         String postOffice = boundForm.bindFromRequest().field("postOffice").value();
+        String drivingPostOffice = boundForm.field("drivingPostOffice").value();
 
         if (userType.equals("Admin")) {
 
@@ -360,6 +361,7 @@ public class UserController extends Controller {
 
             user.typeOfUser = UserType.DELIVERY_WORKER;
             user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
+            user.drivingOffice = drivingPostOffice;
 
         } else if(userType.equals("Registered User")) {
             user.typeOfUser = UserType.REGISTERED_USER;
