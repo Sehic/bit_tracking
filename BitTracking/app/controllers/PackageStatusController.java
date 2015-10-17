@@ -93,6 +93,16 @@ public class PackageStatusController extends Controller {
                     }
                     if(user != null) {
                         MailHelper.packageDeliveredNotification(user.lastName, pack.trackingNum, user.email);
+                        if (user.numberValidated) {
+                            String smsBody = "Package with tracking number \"" + pack.trackingNum + "\" has been successifully delivered. BitTracking Team!";
+                            String smsTo = user.phoneNumber;
+                            /*SmsHelper.sendSms(smsBody, smsTo);*/
+                            /**
+                             * Due to limitations caused by trial version of Twilio, we can send only 5 SMS messages per day.
+                             * That's why we use MailHelper in this testing period.
+                             */
+                            MailHelper.sendPhoneValidationCode(smsBody + " sent to this phone number: " + smsTo, user.email);
+                        }
                     }
 
                     int last = shipmentByPackage.size() - 1;
@@ -128,6 +138,10 @@ public class PackageStatusController extends Controller {
 
         if (u1 != null && (u1.typeOfUser == UserType.ADMIN || u1.typeOfUser == UserType.DELIVERY_WORKER)) {
             updateStatusAsDeliveryWorker(u1, pack, c, date);
+            PostOffice userOffice = PostOffice.findPostOfficeByName(u1.drivingOffice);
+            u1.drivingOffice = u1.postOffice.name;
+            u1.postOffice = userOffice;
+            u1.update();
             return redirect(routes.WorkerController.deliveryWorkerPanel());
         }
 

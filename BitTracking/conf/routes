@@ -50,10 +50,12 @@ GET           /trackpackage/                                     @controllers.Ap
 POST          /checktrack                                        @controllers.Application.checkTrackingNumber()
 
 GET           /adminpanel/makeroute/:id                          @controllers.RouteController.listRoutes(id: Long)
+GET           /adminpanel/makemultiroute                         @controllers.RouteController.listMultiRoute()
 POST          /adminpanel/makeroute/create                       @controllers.RouteController.createRoute()
 POST          /adminpanel/makeroute/save/:id                     @controllers.RouteController.saveRoute(id: Long)
 
 GET           /adminpanel/makeautoroute/:id                      @controllers.RouteController.showAutoRouting(id: Long)
+GET           /adminpanel/makemultiautoroute                     @controllers.RouteController.showMultiAutoRouting()
 POST          /adminpanel/makeautoroute/saveautoroute/:id        @controllers.RouteController.saveAutoRoute(id: Long)
 
 GET           /officeworkerpanel                                 @controllers.WorkerController.officeWorkerPanel()
@@ -71,6 +73,12 @@ POST          /contact                                           @controllers.Ma
 GET           /contact                                           @controllers.MailController.contact()
 
 GET           /statistic                                         @controllers.StatisticController.showPostOfficeStatistic()
+
+POST          /asigntodelivery/:id                               @controllers.PackageController.asignToDelivery(id: Long)
+
+GET           /validate                                          @controllers.UserController.validatePhone()
+POST          /validate                                          @controllers.UserController.validatePhoneNumber()
+POST          /validate/newCode                                  @controllers.UserController.newCode()
 
 
 

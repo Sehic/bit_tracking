@@ -1,0 +1,44 @@
+@import helpers.SessionHelper
+
+@main("Validate Phone Number") {
+
+    <div id="completeValidation" class="container-fluid">
+        <div class="row">
+            <div class="col-md-12" style="margin-top : 35px">
+                <h2>Phone number validation</h2>
+            </div>
+        </div>
+
+        <div class="input-group col-lg-6" style="margin-top: 45px">
+            <input name="validatePhoneNumber" id="validatePhoneNumber" type="text" class="form-control" placeholder="Please enter validation code sent to your phone number...">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" id="validateSubmit">Validate</button>
+            </span>
+        </div>
+
+        <div class="col-md-12" style="margin-top : 35px">
+            <span id="validationError" style="font-size: 20px; color: #008000"></span>
+        </div>
+
+        <div id="hideAfterValidation">
+            <div>
+                <a id="tryAgainId" href="#" style="text-decoration: none">Didn't receive verification code? Try again!</a>
+            </div>
+
+            <div id="tryAgainDiv" class="input-group col-lg-6" style="margin-top: 10px">
+                <input name="validatePhoneNumberAgain" id="validatePhoneNumberAgain" type="text" class="form-control" placeholder="Enter your phone number (ex. +38761263829">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="newCodeSubmit">Send me new code</button>
+                </span>
+            </div>
+            <div>
+                <span id="newSpan" class="alert-success"></span>
+            </div>
+
+            <div style="margin-top: 30px">
+                <a href="/" style="text-decoration: none">Proceed without verifying phone number.</a>
+            </div>
+        </div>
+    </div>
+
+}

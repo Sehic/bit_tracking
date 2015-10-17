@@ -109,7 +109,8 @@ public class Application extends Controller {
             return redirect(routes.Application.index());
         }
         Form<User> newUser = new Form<User>(User.class);
-        return ok(register.render(newUser));
+        List<Country> countryList = Country.findCountry.findList();
+        return ok(register.render(newUser, countryList));
     }
 
     /**

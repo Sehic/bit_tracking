@@ -56,7 +56,7 @@
                             </select>
                         } else {
                             <div class="form-group">
-                                <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="officePost" type="text" readonly/>
+                                <input class="form-control" value="@currentUser.postOffice.name" id="postOffices" name="initialOffice" type="text" readonly/>
                             </div>
 
                         </div>
@@ -68,7 +68,7 @@
                             Address:<abbr class="req" title="required"> *</abbr>
                         </label>
                         <div class="col-md-5">
-                            <input class="form-control" value="@currentUser.postOffice.address" id="initialOffice" name="initialOffice" type="text" readonly/>
+                            <input class="form-control" value="@currentUser.postOffice.address" id="initialOffice" name="officePost" type="text" readonly/>
                         </div>
                     </div>
                     }
@@ -222,6 +222,7 @@
 
                     <script type="text/javascript">
     $('#addPackageButton').prop('disabled', true);
+
      var map;
      var i, marker;
      var polys = new Array();
@@ -387,7 +388,6 @@ directionsService.route(request, function (response, status) {
 
          var waypointsFromRoute = [];
          for(var i=0;i<finalWaypoints.length;i++){
-            console.log(finalWaypoints[i])
             waypointsFromRoute.push({
                     location: finalWaypoints[i],
                     stopover: true
@@ -413,11 +413,16 @@ directionsService.route(request, function (response, status) {
                     routeIndex: i
                 });
                }
+               console.log(response)
             }
         });
     }
-
-        var txt = $("#initialOffice option:selected").text();
+    var txt = "";
+        @if(currentUser.typeOfUser==UserType.ADMIN) {
+            txt = $("#initialOffice option:selected").text();
+        }else{
+            txt = $("#postOffices").val();
+        }
         var routeString = txt+"|";
         for(var i=0;i<finalWaypoints.length;i++){
             for(var j=0;j<middleOfficeAddress.length;j++){

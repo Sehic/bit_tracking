@@ -123,10 +123,20 @@ public class WorkerController extends Controller {
         List<Package> userPackages = u1.packages;
 
         List<Package> readyPackages = getReadyToBeTakenPackages(packages, u1);
+        List<Package> finalPackages = new ArrayList<>();
+        for (int i=0;i<readyPackages.size();i++){
+            List<Shipment> shipmenti = readyPackages.get(i).shipmentPackages;
+            for (int j=0;j<shipmenti.size();j++){
+                if(shipmenti.get(j).postOfficeId.name.equals(u1.drivingOffice)){
+                    finalPackages.add(shipmenti.get(j).packageId);
+                }
+            }
+        }
+
         List<Package> finalUserPackages = getUserPackages(packagesForUser, userPackages);
 
 
-        return ok(deliveryworkerpanel.render(readyPackages, finalUserPackages, userPackages));
+        return ok(deliveryworkerpanel.render(finalPackages, finalUserPackages, userPackages));
     }
 
     public static List<Package> getReadyToBeTakenPackages(List<Package> packages, User u1){
