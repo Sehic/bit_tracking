@@ -72,6 +72,12 @@ GET           /contact                                           @controllers.Ma
 
 GET           /statistic                                         @controllers.StatisticController.showPostOfficeStatistic()
 
+GET           /validate                                          @controllers.UserController.validatePhone()
+POST          /validate                                          @controllers.UserController.validatePhoneNumber()
+POST          /validate/newCode                                  @controllers.UserController.newCode()
+
+
+
 
 
 

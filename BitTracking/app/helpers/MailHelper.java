@@ -66,12 +66,18 @@ public class MailHelper {
         }
     }
 
+    public static void sendPhoneValidationCode (String code, String userEmail) {
+        String subject = "Phone Validation Code";
+        MailHelper.sendConfirmation(subject, code, userEmail);
+    }
+
     public static void sendVerificationMail(String token, String userLastName, String userEmail) {
         String subject = "Email Validation - BitTracking";
+        String address = "http://localhost:9000/validate/" + token;
         String message = "Mr/Mrs. " + userLastName + ",<br><br>" +
                 "Thank you for joining BitTracking community.<br>" +
                 "To complete your registration, please follow the link bellow: <br>" +
-                "<u>http://localhost:9000/validate/" + token + "</u><br><br>" +
+                "<u><a href=\"" + address + "\">" + address + "</a></u><br><br>" +
                 "<i>BitTracking Team</i>";
         MailHelper.sendConfirmation(subject, message, userEmail);
     }

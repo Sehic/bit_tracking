@@ -31,6 +31,8 @@ public class Country extends Model {
     public String cctId;
     @OneToMany(mappedBy = "country")
     public List<PostOffice> countryPostOffices = new ArrayList<>();
+    @OneToMany(mappedBy = "country")
+    public List<User> countryUsers = new ArrayList<>();
 
     public Country(){
 
@@ -43,6 +45,6 @@ public class Country extends Model {
     }
 
     public static Country findCountryByCode(String code){
-        return findCountry.where().eq("countryCode", code).findUnique();
+        return findCountry.where().eq("callingCode", code).findUnique();
     }
 }

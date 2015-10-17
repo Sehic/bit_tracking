@@ -38,6 +38,12 @@
                                 <a href="@routes.UserController.editProfile(currentUser.id)">
                                     Edit Profile</a>
                             </li>
+                            @if(currentUser.phoneNumber != null && currentUser.numberValidated == false) {
+                                <li>
+                                    <a href="@routes.UserController.validatePhone()">
+                                        Validate Phone Number</a>
+                                </li>
+                            }
                         }
 
                         </ul>

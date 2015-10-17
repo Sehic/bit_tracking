@@ -12,6 +12,7 @@ import play.data.Form;
 import play.mvc.*;
 
 import views.html.*;
+import views.html.validatephone;
 
 import com.avaje.ebean.Ebean;
 import play.Logger;
@@ -109,7 +110,8 @@ public class Application extends Controller {
             return redirect(routes.Application.index());
         }
         Form<User> newUser = new Form<User>(User.class);
-        return ok(register.render(newUser));
+        List<Country> countryList = Country.findCountry.findList();
+        return ok(register.render(newUser, countryList));
     }
 
     /**

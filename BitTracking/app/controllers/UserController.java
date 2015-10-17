@@ -21,6 +21,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -54,6 +55,11 @@ public class UserController extends Controller {
         }
 
         session("email", email);
+
+        if (u.phoneNumber != null && !u.numberValidated){
+            return ok(validatephone.render());
+        }
+
         return redirect(routes.Application.index());
     }
 
@@ -68,10 +74,11 @@ public class UserController extends Controller {
         Form<User> boundForm = newUser.bindFromRequest();
         //Creating user using form values (register.scala.html)
         User userFromForm = new User();
+        List<Country> countryList = Country.findCountry.findList();
         try {
             userFromForm = boundForm.get();
         }catch(Exception e){
-            return badRequest(register.render(boundForm));
+            return badRequest(register.render(boundForm, countryList));
         }
         //Getting password confirmation field on this way because it is not attribute
         String repassword = boundForm.bindFromRequest().field("repassword").value();
@@ -80,29 +87,44 @@ public class UserController extends Controller {
         //If user is not found, that means we can proceed creating new user
         if (u != null) {
             flash("errorEmail", "E-mail address already exists!");
-            return badRequest(register.render(boundForm));
+            return badRequest(register.render(boundForm, countryList));
         }
+
+        Country country = Country.findCountryByCode(boundForm.bindFromRequest().field("userCountry").value());
+        String phoneNumber = boundForm.bindFromRequest().field("phoneNumber").value();
+        Random rand = new Random();
+        String validationCode = rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9);
 
         u = new User(userFromForm.firstName, userFromForm.lastName, userFromForm.password, userFromForm.email);
 
         if (!u.checkName(u.firstName)) {
             flash("errorName", "Your name should have only letters.");
-            return badRequest(register.render(boundForm));
+            return badRequest(register.render(boundForm, countryList));
         }
 
         if (!u.checkName(u.lastName)) {
             flash("errorLastName", "Your last name should have only letters.");
-            return badRequest(register.render(boundForm));
+            return badRequest(register.render(boundForm, countryList));
+        }
+
+        if (country == null) {
+            flash("errorCountry", "Please select your country!");
+            return badRequest(register.render(boundForm, countryList));
+        }
+
+        if (phoneNumber != null && !User.checkPhoneNumber(phoneNumber)) {
+            flash("errorPhoneNumber", "Your phone number should have only numbers, and minimum length is 8 digits.");
+            return badRequest(register.render(boundForm, countryList));
         }
 
         if (!u.checkPassword(u.password)) {
             flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters and one number");
-            return badRequest(register.render(boundForm));
+            return badRequest(register.render(boundForm, countryList));
         }
 
         if (!u.password.equals(repassword)) {
             flash("errorTwoPasswords", "You entered different passwords");
-            return badRequest(register.render(boundForm));
+            return badRequest(register.render(boundForm, countryList));
         }
 
         String newPassword = HashHelper.getEncriptedPasswordMD5(u.password);
@@ -112,6 +134,23 @@ public class UserController extends Controller {
 
         u = new User(u.firstName, u.lastName, newPassword, u.email);
         u.token = UUID.randomUUID().toString();
+
+        u.country = country;
+        if (phoneNumber != null) {
+            if (phoneNumber.charAt(0) == '0') {
+                phoneNumber = phoneNumber.substring(1, phoneNumber.length());
+            }
+            u.phoneNumber = "+" + u.country.callingCode + phoneNumber;
+            u.validationCode = validationCode;
+            String smsBody = "Validation code: " + u.validationCode;
+            //SmsHelper.sendSms(smsBody, u.phoneNumber);
+            /**
+             * Due to limitations caused by trial version of Twilio, we can send only 5 SMS messages per day.
+             * That's why we use MailHelper in this testing period.
+             */
+            MailHelper.sendPhoneValidationCode(u.validationCode, u.email);
+        }
+
         u.save();
 
         if (u.id == 1) {
@@ -121,7 +160,54 @@ public class UserController extends Controller {
             u.update();
         }
         MailHelper.sendVerificationMail(u.token, u.lastName, u.email);
+
         return redirect(routes.Application.login());
+    }
+
+    public Result validatePhone() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        if (user == null || user.numberValidated) {
+            return redirect("/");
+        }
+        return ok(validatephone.render());
+    }
+
+    public Result validatePhoneNumber() {
+        DynamicForm form = Form.form().bindFromRequest();
+        String code = form.data().get("enteredCode");
+        User user = User.findByValidationCode(code);
+        if (user == null) {
+            return badRequest();
+        }
+        user.numberValidated = true;
+        user.validationCode = null;
+        user.update();
+        return ok(user.phoneNumber);
+    }
+
+    public Result newCode() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        DynamicForm form = Form.form().bindFromRequest();
+        String number = form.data().get("newNumber");
+        if(number.charAt(0) == '+') {
+            number = number.substring(1, number.length());
+        }
+        if(!User.checkPhoneNumber(number)) {
+            return badRequest();
+        }
+        String fixNumber = "+" + number;
+        Random rand = new Random();
+        String validationCode = rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9);
+        user.phoneNumber = fixNumber;
+        user.validationCode = validationCode;
+        user.update();
+        //SmsHelper.sendSms("Validation code: ", fixNumber);
+        /**
+         * Due to limitations caused by trial version of Twilio, we can send only 5 SMS messages per day.
+         * That's why we use MailHelper in this testing period.
+         */
+        MailHelper.sendPhoneValidationCode(user.validationCode, user.email);
+        return ok();
     }
 
     /**
