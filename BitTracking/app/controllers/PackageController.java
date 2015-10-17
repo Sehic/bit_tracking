@@ -119,7 +119,7 @@ public class PackageController extends Controller {
         if (user.typeOfUser == UserType.ADMIN)
             return redirect(routes.PackageController.adminPackage());
         else
-            return redirect(routes.RouteController.listRoutes(pack.id));
+            return redirect(routes.WorkerController.officeWorkerPanel());
     }
 
     /**
