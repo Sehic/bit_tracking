@@ -128,6 +128,10 @@ public class PackageStatusController extends Controller {
 
         if (u1 != null && (u1.typeOfUser == UserType.ADMIN || u1.typeOfUser == UserType.DELIVERY_WORKER)) {
             updateStatusAsDeliveryWorker(u1, pack, c, date);
+            PostOffice userOffice = PostOffice.findPostOfficeByName(u1.drivingOffice);
+            u1.drivingOffice = u1.postOffice.name;
+            u1.postOffice = userOffice;
+            u1.update();
             return redirect(routes.WorkerController.deliveryWorkerPanel());
         }
 

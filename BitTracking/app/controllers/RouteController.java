@@ -211,7 +211,7 @@ public class RouteController extends Controller {
                 }
             }
             for (int i =0;i<packagesToTake.size()-1;i++){
-                System.out.println(packagesToTake.get(i).id);
+
                 if(!newPack.destination.equals(packagesToTake.get(i).destination)){
                     flash("differentDestinationOffices", "You must select Packages which have same Destination Post Office!");
                     return redirect(routes.WorkerController.officeWorkerPanel());
@@ -236,7 +236,6 @@ public class RouteController extends Controller {
         DynamicForm form = Form.form().bindFromRequest();
         String packagesId= form.get("packagesForRoute");
         List<Package> packages = packagesForRoute(packagesId);
-        System.out.println(packagesId);
         Package officePackage = Package.findPackageById(packages.get(0).id);
         List<Location> locations = Location.findLocation.findList();
         List<PostOffice> offices = PostOffice.findOffice.findList();

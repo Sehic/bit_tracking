@@ -77,6 +77,7 @@ create table user (
   post_office_id            bigint,
   token                     varchar(255),
   validated                 tinyint(1) default 0,
+  driving_office            varchar(255),
   constraint ck_user_type_of_user check (type_of_user in ('3','2','1','4')),
   constraint uq_user_token unique (token),
   constraint pk_user primary key (id))

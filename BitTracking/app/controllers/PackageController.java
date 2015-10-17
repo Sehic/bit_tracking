@@ -283,4 +283,8 @@ public class PackageController extends Controller {
 
         return redirect(routes.WorkerController.deliveryWorkerPanel());
     }
+
+    public Result asignToDelivery(Long id){
+        return TODO;
+    }
 }

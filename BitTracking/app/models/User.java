@@ -57,6 +57,9 @@ public class User extends Model {
     @Column
     public Boolean validated = false;
 
+    @Column
+    public String drivingOffice;
+
 
 
 

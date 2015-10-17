@@ -82,76 +82,77 @@
             }
             </div>
         </div>
-        <h4 class="margin-bottom-15">List of packages</h4>
-        <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Tracking Number</th>
-                    <th>Sender Name</th>
-                    <th>Recipient Name</th>
-                    <th>Route</th>
-                    <th>Select</th>
-                    <th>Destination</th>
-                    <th>Status</th>
-                    <th>Timestamp</th>
-                    <th>Change status</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-            @for(pack <- packs) {
-                @if(pack.approved==true){
-                <tr class="succes">
-                    <td>@pack.id</td>
-                    <td>@pack.trackingNum</td>
-                    <td>@pack.senderName</td>
-                    <td>@pack.recipientName</td>
-                    @if(pack.shipmentPackages.size() < 2) {
-                        <td><a href="@routes.RouteController.listRoutes(pack.id)">Add Route</a></td>
-                        <td><input type="checkbox" name="@pack.id" value="@pack.id">Create route</td>
-                    } else {
-                        <td>
-                        @for(shipments: Shipment <- pack.shipmentPackages) {
-                            @shipments.postOfficeId.name|
+        <div class="table-responsive">
+            <h4 class="margin-bottom-15">List of packages</h4>
+            <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tracking Number</th>
+                        <th>Sender Name</th>
+                        <th>Recipient Name</th>
+                        <th>Route</th>
+                        <th>Select</th>
+                        <th>Destination</th>
+                        <th>Status</th>
+                        <th>Timestamp</th>
+                        <th>Change status</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @for(pack <- packs) {
+                    @if(pack.approved==true){
+                    <tr class="succes">
+                        <td>@pack.id</td>
+                        <td>@pack.trackingNum</td>
+                        <td>@pack.senderName</td>
+                        <td>@pack.recipientName</td>
+                        @if(pack.shipmentPackages.size() < 2) {
+                            <td><a href="@routes.RouteController.listRoutes(pack.id)">Add Route</a></td>
+                            <td><input type="checkbox" name="@pack.id" value="@pack.id">Create route</td>
+                        } else {
+                            <td>
+                            @for(shipments: Shipment <- pack.shipmentPackages) {
+                                @shipments.postOfficeId.name|
+                            }
+                            </td>
+                            <td>-</td>
                         }
-                        </td>
-                        <td>-</td>
-                    }
-                        <td>@pack.destination</td>
-                    @if(pack.shipmentPackages.size() != 0) {
-                        @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
-                            @if(shipmentFromThisPackage.postOfficeId.id == workerOffice.id) {
-                                <td>@shipmentFromThisPackage.status</td>
-                                @if(shipmentFromThisPackage.dateCreated != null) {
-                                    <td>@shipmentFromThisPackage.dateCreated</td>
-                                } else {
-                                    <td></td>
-                                }
-                                @if(shipmentFromThisPackage.status == helpers.StatusHelper.RECEIVED) {
-                                    @helper.form(routes.PackageStatusController.updateStatus(pack.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
-                                        <td><button type="submit" class="btn-default">Done</button></td>
+                            <td>@pack.destination</td>
+                        @if(pack.shipmentPackages.size() != 0) {
+                            @for((shipmentFromThisPackage, i) <- pack.shipmentPackages.view.zipWithIndex) {
+                                @if(shipmentFromThisPackage.postOfficeId.id == workerOffice.id) {
+                                    <td>@shipmentFromThisPackage.status</td>
+                                    @if(shipmentFromThisPackage.dateCreated != null) {
+                                        <td>@shipmentFromThisPackage.dateCreated</td>
+                                    } else {
+                                        <td></td>
                                     }
+                                    @if(shipmentFromThisPackage.status == helpers.StatusHelper.RECEIVED) {
 
-                                } else {
-                                    <td></td>
-                                }
-                                @if(shipmentFromThisPackage.status == helpers.StatusHelper.DELIVERED) {
-                                    <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input class="btn-link" type="button" value="Delete"></a></td>
-                                } else {
-                                    <td></td>
+                                            <td><button type="submit" class="btn-default" onclick="form.action='@routes.PackageStatusController.updateStatus(pack.id)';form.method='POST'">Done</button></td>
+
+
+                                    } else {
+                                        <td></td>
+                                    }
+                                    @if(shipmentFromThisPackage.status == helpers.StatusHelper.DELIVERED) {
+                                        <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input class="btn-link" type="button" value="Delete"></a></td>
+                                    } else {
+                                        <td></td>
+                                    }
                                 }
                             }
                         }
-
+                    </tr>
                     }
-                </tr>
                 }
-            }
 
-            </tbody>
-        </table>
-
+                </tbody>
+            </table>
+        </div>
+        <hr/>
     <input type="submit" value="Create a route for selected Packages" class="btn btn-primary"/>
         <hr/>
     </form>

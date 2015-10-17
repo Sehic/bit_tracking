@@ -74,6 +74,8 @@ GET           /contact                                           @controllers.Ma
 
 GET           /statistic                                         @controllers.StatisticController.showPostOfficeStatistic()
 
+POST           /asigntodelivery/:id                               @controllers.PackageController.asignToDelivery(id: Long)
+
 
 
 

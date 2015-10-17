@@ -388,7 +388,6 @@ directionsService.route(request, function (response, status) {
 
          var waypointsFromRoute = [];
          for(var i=0;i<finalWaypoints.length;i++){
-            console.log(finalWaypoints[i])
             waypointsFromRoute.push({
                     location: finalWaypoints[i],
                     stopover: true
