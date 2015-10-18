@@ -137,17 +137,21 @@ function initialize(){
         var waypoints = [];
         var originAddress = "";
         var destinationAddress = "";
-        for(var i=0;i<routeOffices.length;i++){
+        for(var i=0;i<routeOffices.length-1;i++){
+
             @for(office <- allOffices) {
                   var officeName = "@office.name";
                   var officeAddress= "@office.address";
                   if(officeName === initialOffice){
+
                   originAddress=officeAddress;
                   }
                   if(officeName === destinationOffice){
-                  destinationAddress=destinationOffice;
+                  destinationAddress=officeAddress;
+
                   }
                   if(officeName === routeOffices[i] && officeName!==destinationOffice){
+
                     waypoints.push({
                         location: officeAddress,
                         stopover: true
