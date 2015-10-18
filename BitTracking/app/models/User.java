@@ -134,6 +134,10 @@ public class User extends Model {
         return (User) (list.get(0));
     }
 
+    public static User findUserByEmail(String email){
+        return find.where().eq("email", email).findUnique();
+    }
+
 
     /**
      * This method checks if the entered email exists in the database
@@ -155,6 +159,9 @@ public class User extends Model {
      * @return
      */
     public static boolean checkName(String name) {
+        if (name.length() < 1) {
+            return false;
+        }
         for (int i = 0; i < name.length(); i++) {
             if (name.charAt(i) < 31 || (name.charAt(i) > 32 && name.charAt(i) < 65) || (name.charAt(i) > 90 &&
                     name.charAt(i) < 97) || (name.charAt(i) > 122 && name.charAt(i) < 262) ||

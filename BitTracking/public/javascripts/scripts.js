@@ -1,4 +1,25 @@
 $(document).ready(function() {
+    var button = $('#sendPassword');
+    var span = $('#sendingError');
+    button.click(function() {
+        var email = $('#forgotPasswordEmail').val();
+        $.ajax({
+            beforeSend: function() {
+                span.html("Checking...");
+            },
+            url: '/forgotpassword',
+            data: 'email=' + email,
+            type: 'post'
+        }).success(function(response) {
+            span.html("Instructions sent to: \"" + email + "\" !");
+        }).error(function(response) {
+            span.html("Email " + email + " does not exists in out database!");
+        })
+    })
+})
+
+
+$(document).ready(function() {
     var submit = $('#validateSubmit');
 
     submit.click(function() {
@@ -30,13 +51,16 @@ $(document).ready(function() {
         var newNumber = $('#validatePhoneNumberAgain').val();
         var res = encodeURIComponent(newNumber);
         $.ajax({
+            beforeSend: function() {
+              newSpan.html("Please wait...");
+            },
             url: '/validate/newCode',
             data: 'newNumber=' + res,
             type: 'post'
         }).success(function(response) {
             newSpan.html("New validation code sent to " + newNumber);
         }).error(function() {
-            newSpan.html("Ne valja broj!!")
+            newSpan.html("Please enter correct phone number")
         })
     })
 });
