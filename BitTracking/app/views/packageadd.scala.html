@@ -319,6 +319,7 @@ function showMap(){
         var middleOfficeAddress=[];
         var middleOffices=[];
         var middleOfficesNames=[];
+        var idsAndNames = [];
 directionsService.route(request, function (response, status) {
     if(status == google.maps.DirectionsStatus.OK) {
 
@@ -387,7 +388,13 @@ directionsService.route(request, function (response, status) {
          var finalWaypoints = findDuplicates(semifinalWaypoints);
 
          var waypointsFromRoute = [];
+         var optimizedArray = [];
          for(var i=0;i<finalWaypoints.length;i++){
+            idsAndNames.push({
+                id: i,
+                address: finalWaypoints[i]
+            });
+
             waypointsFromRoute.push({
                     location: finalWaypoints[i],
                     stopover: true
@@ -413,26 +420,34 @@ directionsService.route(request, function (response, status) {
                     routeIndex: i
                 });
                }
-               console.log(response)
+               var orders = response.routes[0].waypoint_order;
+
+               for(var i=0;i<orders.length;i++){
+                    for(var j=0;j<idsAndNames.length;j++){
+                        if(orders[i]===idsAndNames[j].id){
+                            optimizedArray.push(idsAndNames[j].address)
+                        }
+                    }
+               }
             }
-        });
-    }
-    var txt = "";
+            var txt = "";
         @if(currentUser.typeOfUser==UserType.ADMIN) {
             txt = $("#initialOffice option:selected").text();
         }else{
             txt = $("#postOffices").val();
         }
         var routeString = txt+"|";
-        for(var i=0;i<finalWaypoints.length;i++){
+        for(var i=0;i<optimizedArray.length;i++){
             for(var j=0;j<middleOfficeAddress.length;j++){
-                if(middleOfficeAddress[j] === finalWaypoints[i]){
+                if(middleOfficeAddress[j] === optimizedArray[i]){
                     routeString+=middleOfficesNames[j]+"|";
                 }
             }
         }
         routeString+=final+"|";
         $("#routeOffices").val(routeString);
+        });
+    }
 });
 
         calculateDistance(originAddress, destinationAddress);
