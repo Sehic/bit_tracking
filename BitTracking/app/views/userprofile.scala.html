@@ -188,9 +188,13 @@
                                                 }
                                                 <option value=""></option>
                                                 @for(office <- offices) {
+                                                    @if(user.postOffice != null) {
                                                         @if(user.postOffice.id != office.id) {
                                                             <option value="@office.name">@office.name</option>
                                                         }
+                                                    } else {
+                                                        <option value="@office.name">@office.name</option>
+                                                    }
                                                 }
 
                                             </select>
