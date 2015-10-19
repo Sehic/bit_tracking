@@ -10,6 +10,13 @@ create table country (
   constraint pk_country primary key (id))
 ;
 
+create table faq (
+  id                        bigint auto_increment not null,
+  question                  varchar(255),
+  answer                    Text,
+  constraint pk_faq primary key (id))
+;
+
 create table image_path (
   id                        bigint auto_increment not null,
   image_url                 varchar(255),
@@ -116,6 +123,8 @@ alter table linked_offices add constraint fk_linked_offices_post_office_02 forei
 SET FOREIGN_KEY_CHECKS=0;
 
 drop table country;
+
+drop table faq;
 
 drop table image_path;
 
