@@ -71,6 +71,38 @@
                     </div>
                     <br/>
                     <br/>
+                    @if(user.country != null) {
+                        <div class="form-group">
+
+                            <label for="userCountry" class="col-sm-2 control-label" style="text-align : right">
+                                Country:
+                            </label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></span>
+                                    <input type="text" name="userCountry" disabled class="form-control" id="userCountry" value="@user.country.countryName" required="required">
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <br/>
+                        <div class="form-group">
+
+                            <label for="phoneNumber" class="col-sm-2 control-label" style="text-align : right">
+                                Phone Number:
+                            </label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></span>
+                                    <input type="text" name="phoneNumber" disabled class="form-control" id="lastName" value="@user.phoneNumber" required="required">
+                                </div>
+                                @if(user.phoneNumber != null && user.numberValidated == false) {
+                                    <span style="font-size: 9px; color: red; ">This phone number is not validated!
+                                        <a href="@routes.UserController.validatePhone()" style="text-decoration: none">VALIDATE NOW!</a></span>
+                                }
+                            </div>
+                        </div>
+                    }
 
                     @helper.form(action = routes.UserController.updateUserType(user.id), 'class -> "form-horizontal", 'role -> "form") {
 

@@ -93,7 +93,7 @@ public class PackageStatusController extends Controller {
                     }
                     if(user != null) {
                         MailHelper.packageDeliveredNotification(user.lastName, pack.trackingNum, user.email);
-                        if (user.numberValidated) {
+                        if (user.phoneNumber != null && user.numberValidated) {
                             String smsBody = "Package with tracking number \"" + pack.trackingNum + "\" has been successifully delivered. BitTracking Team!";
                             String smsTo = user.phoneNumber;
                             /*SmsHelper.sendSms(smsBody, smsTo);*/

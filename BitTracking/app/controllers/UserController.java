@@ -56,6 +56,11 @@ public class UserController extends Controller {
 
         session("email", email);
 
+        if(u.token != null) {
+            u.token = null;
+            u.update();
+        }
+
         if (u.phoneNumber != null && !u.numberValidated){
             return ok(validatephone.render());
         }
@@ -112,7 +117,7 @@ public class UserController extends Controller {
             return badRequest(register.render(boundForm, countryList));
         }
 
-        if (phoneNumber != null && !User.checkPhoneNumber(phoneNumber)) {
+        if (!"".equals(phoneNumber) && !User.checkPhoneNumber(phoneNumber)) {
             flash("errorPhoneNumber", "Your phone number should have only numbers, and minimum length is 8 digits.");
             return badRequest(register.render(boundForm, countryList));
         }
@@ -136,7 +141,7 @@ public class UserController extends Controller {
         u.token = UUID.randomUUID().toString();
 
         u.country = country;
-        if (phoneNumber != null) {
+        if (!"".equals(phoneNumber)) {
             if (phoneNumber.charAt(0) == '0') {
                 phoneNumber = phoneNumber.substring(1, phoneNumber.length());
             }
@@ -179,7 +184,7 @@ public class UserController extends Controller {
         if (u1 == null || user == null || u1.id != user.id) {
             return redirect(routes.Application.index());
         }
-        return ok(editprofile.render(user, path));
+        return ok(editprofile.render(user, path, Country.findCountry.findList()));
     }
 
     /**
@@ -234,38 +239,74 @@ public class UserController extends Controller {
      * @return
      */
     public Result updateUser(Long id) {
-
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
-
         if (u1 == null || user == null || u1.id != user.id) {
             return redirect(routes.Application.index());
         }
 
-        Form<User> filledForm = newUser.bindFromRequest();
+        DynamicForm form = Form.form().bindFromRequest();
+        String firstName = form.get("firstName");
+        String lastName = form.get("lastName");
+        String countryCode = form.get("userCountry");
+        String phoneNumber = form.get("phoneNumber");
 
-        user.firstName = filledForm.field("firstName").value();
-        user.lastName = filledForm.field("lastName").value();
-        user.password = filledForm.field("password").value();
-
-        String repassword = filledForm.field("repassword").value();
         ImagePath path = ImagePath.findByUser(user);
-        if (!User.checkName(user.firstName)) {
+        List<Country> countryList = Country.findCountry.findList();
+
+        if (!User.checkName(firstName)) {
             flash("errorName", "Your name should have only letters.");
-            return badRequest(editprofile.render(user, path));
+            return badRequest(editprofile.render(user, path, countryList));
         }
 
-        if (!User.checkName(user.lastName)) {
+        if (!User.checkName(lastName)) {
             flash("errorLastName", "Your last name should have only letters.");
-            return badRequest(editprofile.render(user, path));
+            return badRequest(editprofile.render(user, path, countryList));
         }
 
-        if (!user.password.equals(repassword)) {
+        if (countryCode != null && phoneNumber != null) {
+            Country country = null;
+            if (!"".equals(countryCode)) {
+                country = Country.findCountryByCallingCode(countryCode);
+            }
 
-            return badRequest(editprofile.render(user, path));
+            if (!"".equals(phoneNumber) && !User.checkPhoneNumber(phoneNumber)) {
+                flash("errorPhoneNumber", "Your phone number should have only numbers, and minimum length is 8 digits.");
+                return badRequest(editprofile.render(user, path, countryList));
+            }
+
+            String editedPhoneNumber = "";
+
+            if (!"".equals(phoneNumber)) {
+                if (phoneNumber.charAt(0) == '0') {
+                    phoneNumber = phoneNumber.substring(1, phoneNumber.length());
+                }
+                editedPhoneNumber = "+" + countryCode + phoneNumber;
+            }
+
+            if ((user.phoneNumber == null || !phoneNumber.equals(user.phoneNumber)) && User.checkPhoneNumber(phoneNumber)) {
+                Random rand = new Random();
+                String validationCode = rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9);
+                user.phoneNumber = editedPhoneNumber;
+                user.numberValidated = false;
+                user.validationCode = validationCode;
+                String smsBody = "Validation code: " + user.validationCode;
+                //SmsHelper.sendSms(smsBody, u.phoneNumber);
+                /**
+                 * Due to limitations caused by trial version of Twilio, we can send only 5 SMS messages per day.
+                 * That's why we use MailHelper in this testing period.
+                 */
+                MailHelper.sendPhoneValidationCode(user.validationCode, user.email);
+            }
+
+            if (country != null) {
+                user.country = country;
+            }
         }
-            user.password = HashHelper.getEncriptedPasswordMD5(user.password);
-            user.update();
+
+        user.firstName = firstName;
+        user.lastName = lastName;
+        user.update();
 
         return redirect(routes.UserController.userProfile(user.id));
     }
@@ -437,6 +478,92 @@ public class UserController extends Controller {
          */
         MailHelper.sendPhoneValidationCode(user.validationCode, user.email);
         return ok();
+    }
+
+    public Result forgotPassword() {
+        return ok(forgotpassword.render());
+    }
+
+    public Result sendPassword() {
+        DynamicForm form = Form.form().bindFromRequest();
+        String email = form.data().get("email");
+        User user = User.findUserByEmail(email);
+        if (user == null) {
+            return badRequest();
+        }
+        String uuid = UUID.randomUUID().toString();
+        user.token = uuid;
+        user.update();
+        String address = "http://localhost:9000/changepassword/" + uuid;
+        String subject = "Change password";
+        String message = "To change your password, please follow the link bellow <br> <a href=\"" + address + "\">" + address + "</a>";
+        MailHelper.sendConfirmation(subject, message, email);
+        return ok();
+    }
+
+    public Result userChangePassword() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        if (user == null) {
+            return badRequest(index.render());
+        }
+        return ok(changepassword.render(user));
+    }
+
+    public Result changePassword(String token) {
+        User activeUser = SessionHelper.getCurrentUser(ctx());
+        if (activeUser != null) {
+            activeUser.token = null;
+            activeUser.update();
+            return badRequest(index.render());
+        }
+        User user = User.findByToken(token);
+        if(user == null) {
+            return badRequest(index.render());
+        }
+        return ok(changepassword.render(user));
+    }
+
+    public Result makePasswordChange() {
+        DynamicForm form = Form.form().bindFromRequest();
+        String userId = form.data().get("userId");
+        String oldPassword = form.data().get("oldPass");
+        String newPassword = form.data().get("newPass");
+        String reNewPassword = form.data().get("reNewPass");
+
+        User activeUser = SessionHelper.getCurrentUser(ctx());
+        if (activeUser != null) {
+            if (oldPassword == "") {
+                return badRequest("wrongoldpassword");
+            }
+            String hashedOldPassword = HashHelper.getEncriptedPasswordMD5(oldPassword);
+            if (!activeUser.password.equals(hashedOldPassword)) {
+                return badRequest("wrongoldpassword2");
+            }
+            if (!newPassword.equals(reNewPassword)) {
+                return badRequest("passwordsdontmatch");
+            }
+            if(!User.checkPassword(newPassword)) {
+                return badRequest("errorpassword");
+            }
+            activeUser.password = HashHelper.getEncriptedPasswordMD5(newPassword);
+            activeUser.update();
+            return ok();
+        }
+
+        User user = User.findById(Long.parseLong(userId));
+        if (user != null && user.token != null) {
+            if (!User.checkPassword(newPassword)) {
+                return badRequest("errorpassword");
+            }
+            if(!newPassword.equals(reNewPassword)) {
+                return badRequest("passwordsdontmatch");
+            }
+            user.password = HashHelper.getEncriptedPasswordMD5(newPassword);
+            user.token = null;
+            user.update();
+            return ok();
+        }
+        return badRequest();
     }
 
 
