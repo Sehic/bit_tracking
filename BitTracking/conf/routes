@@ -79,7 +79,6 @@ POST          /asigntodelivery/:id                               @controllers.Pa
 GET           /validate                                          @controllers.UserController.validatePhone()
 POST          /validate                                          @controllers.UserController.validatePhoneNumber()
 POST          /validate/newCode                                  @controllers.UserController.newCode()
-GET           /forgotpassword                                    @controllers.UserController.forgotPassword()
 POST          /forgotpassword                                    @controllers.UserController.sendPassword()
 GET           /changepassword/:token                             @controllers.UserController.changePassword(token: String)
 GET           /changepassword                                    @controllers.UserController.userChangePassword()

@@ -80,9 +80,7 @@
                             <div class="row">
                                 <div class="col-md-12" style="margin-left: 16.5%">
 
-                                    <a href="@routes.UserController.forgotPassword()"><button type="button" class="btn btn-link">
-                                        Forgot your password?
-                                    </button></a>
+                                    <a href="#" class="btn btn-link" data-target="#pwdModal" data-toggle="modal">Forgot my password</a>
                                 </div>
                             </div>
                         </div>  <!--Ends LOG IN grid col 7-->
@@ -117,6 +115,7 @@
                             </div>
                         </div>
                     </div> <!--Ends Log In row-->
+                    @forgotpassword()
                 </div>
             </div>
         </div>
