@@ -1,11 +1,14 @@
 $(document).ready(function() {
     var button = $('#sendPassword');
     var span = $('#sendingError');
+    var loader = $('#loaderId');
+    loader.hide();
     button.click(function() {
         var email = $('#forgotPasswordEmail').val();
         $.ajax({
             beforeSend: function() {
-                span.html("Checking...");
+                loader.show();
+                //span.html("Checking...");
             },
             url: '/forgotpassword',
             data: 'email=' + email,
@@ -13,7 +16,7 @@ $(document).ready(function() {
         }).success(function(response) {
             span.html("Instructions sent to: \"" + email + "\" !").removeClass("alert-danger").addClass(alert-success);
         }).error(function(response) {
-            span.html("Email " + email + " does not exists in out database!").removeClass("alert-success").addClass("alert-danger");
+            span.html("Email \"" + email + "\" does not exist in our database!").removeClass("alert-success").addClass("alert-danger");
         })
     })
 })
