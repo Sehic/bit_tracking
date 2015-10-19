@@ -174,33 +174,34 @@
                                     </div>
                                 </div>
                                 <br>
+                                @if(user.typeOfUser == UserType.DELIVERY_WORKER) {
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-sm-2" style="text-align : right"><strong>
+                                                Driving Office:</strong></div>
+                                            <div class="col-sm-10">
 
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="col-sm-2" style="text-align : right"><strong>
-                                            Driving Office:</strong></div>
-                                        <div class="col-sm-10">
+                                                <select class="form-control sortAlphabetically" name="drivingPostOffice">
 
-                                            <select class="form-control sortAlphabetically" name="drivingPostOffice">
-
-                                                @if(user.drivingOffice != null) {
-                                                    <option value="@user.drivingOffice"><strong>@user.drivingOffice</strong></option>
-                                                }
-                                                <option value=""></option>
-                                                @for(office <- offices) {
-                                                    @if(user.postOffice != null) {
-                                                        @if(user.postOffice.id != office.id) {
+                                                    @if(user.drivingOffice != null) {
+                                                        <option value="@user.drivingOffice"><strong>@user.drivingOffice</strong></option>
+                                                    }
+                                                    <option value=""></option>
+                                                    @for(office <- offices) {
+                                                        @if(user.postOffice != null) {
+                                                            @if(user.postOffice.id != office.id) {
+                                                                <option value="@office.name">@office.name</option>
+                                                            }
+                                                        } else {
                                                             <option value="@office.name">@office.name</option>
                                                         }
-                                                    } else {
-                                                        <option value="@office.name">@office.name</option>
                                                     }
-                                                }
 
-                                            </select>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
                                 <br>
 
                                 <div class="container-fluid">
@@ -208,7 +209,7 @@
                                         <div class="col-sm-offset-2 col-sm-10">
                                             <input type="submit" class="btn btn-primary btn-sm" value="Save Changes">
                                             <span></span>
-                                            <input type="reset" class="btn btn-default btn-sm" value="Cancel">
+                                            <a href="@routes.Application.adminTables()"><input type="button" class="btn btn-default btn-sm" value="Cancel"></a>
                                         </div>
                                     </div>
                                 </div>
