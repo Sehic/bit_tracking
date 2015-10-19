@@ -480,10 +480,6 @@ public class UserController extends Controller {
         return ok();
     }
 
-    public Result forgotPassword() {
-        return ok(forgotpassword.render());
-    }
-
     public Result sendPassword() {
         DynamicForm form = Form.form().bindFromRequest();
         String email = form.data().get("email");
