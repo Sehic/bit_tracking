@@ -1,65 +1,89 @@
 @()
 
-<!-- Modal -->
-<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">
-                    Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Are you sure you want to sign out?</h4>
+<html>
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="keywords" content="footer, address, phone, icons" />
+
+        <title>Footer With Address And Phones</title>
+
+        <link href="http://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css">
+
+    </head>
+
+    <body>
+
+            <!-- The content of your page would go here. -->
+
+        <footer class="footer-distributed">
+
+            <div class="footer-left">
+
+                <h3>Bit<span>tracking</span></h3>
+
+                <p class="footer-links">
+                    <a href="#">Home</a>
+                    ·
+                    <a href="#">Blog</a>
+                    ·
+                    <a href="#">Pricing</a>
+                    ·
+                    <a href="#">About</a>
+                    ·
+                    <a href="#">Faq</a>
+                    ·
+                    <a href="#">Contact</a>
+                </p>
+
+                <p class="footer-company-name">Company Name &copy; 2015</p>
             </div>
-            <div class="modal-footer">
-                <a href="@routes.Application.logout()" class="btn btn-primary" onclick="deleteCookies()">Yes</a>
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- ==============FOOTER=================-->
+            <div class="footer-center">
 
-<div class="row">
-    <hr>
-    <div class="col-md-12">
-        <div class="row">
-
-            <div class="col-md-3">
-                <div class="container" style="font-size : x-small">
-                    <address>
-                        <h5 style="font-size : 14px"><strong>BIT Tracking</strong></h5> <br>
-                        Address: Sarajevo, Street: <br>
-                        Bosnia and Herzegovina, 71000<br> <abbr title="Phone">P:</abbr> (387) 000-000
-                    </address>
+                <div>
+                    <i class="fa fa-map-marker"></i>
+                    <p><span>Hrasnicka cesta 15</span> Ilidza, Sarajevo</p>
                 </div>
-            </div>
 
-            <div class="col-md-3">
-                <div class="container">
-                    <h5 style="font-size : 14px">
-                        <strong> Customer Support</strong>
-                    </h5>
-                    <a href="@routes.MailController.contact()"><button type="button" class="btn btn-link">
-                        Contact BIT Tracking
-                    </button></a>
+                <div>
+                    <i class="fa fa-phone"></i>
+                    <p>+38761/555-555</p>
                 </div>
+
+                <div>
+                    <i class="fa fa-envelope"></i>
+                    <p><a href="mailto:support:company.com">bittracking2015@@gmail.com</a></p>
+                </div>
+
             </div>
 
-            <div class="col-md-3">
-                <h5>
-                    <strong>New Customers</strong>
-                </h5>
+            <div class="footer-right">
+
+                <p class="footer-company-about">
+                    <span>About the company</span>
+                    Lorem ipsum dolor sit amet, consectateur adispicing elit. Fusce euismod convallis velit, eu auctor lacus vehicula sit amet.
+                </p>
+
+                <div class="footer-icons">
+
+                    <a href="#"><i class="fa fa-facebook"></i></a>
+                    <a href="#"><i class="fa fa-twitter"></i></a>
+                    <a href="#"><i class="fa fa-linkedin"></i></a>
+                    <a href="#"><i class="fa fa-github"></i></a>
+
+                </div>
+
             </div>
 
-            <div class="col-md-3">
-                <h5 style="font-size : 14px">
-                    <strong>Follow BIT Tracking</strong>
-                </h5>
-                <link href="">
-            </div>
-        </div>
-    </div>
-</div> <!-- Ends footer-->
+        </footer>
+
+    </body>
+
+</html>
 
 <hr>
 
