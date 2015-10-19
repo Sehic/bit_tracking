@@ -11,9 +11,9 @@ $(document).ready(function() {
             data: 'email=' + email,
             type: 'post'
         }).success(function(response) {
-            span.html("Instructions sent to: \"" + email + "\" !");
+            span.html("Instructions sent to: \"" + email + "\" !").removeClass("alert-danger").addClass(alert-success);
         }).error(function(response) {
-            span.html("Email " + email + " does not exists in out database!");
+            span.html("Email " + email + " does not exists in out database!").removeClass("alert-success").addClass("alert-danger");
         })
     })
 })
