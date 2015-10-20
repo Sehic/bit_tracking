@@ -84,6 +84,15 @@ GET           /changepassword/:token                             @controllers.Us
 GET           /changepassword                                    @controllers.UserController.userChangePassword()
 POST          /changepassword                                    @controllers.UserController.makePasswordChange()
 
+# FAQ controller
+GET           /adminpanel/adminfaqview                           @controllers.FaqController.adminFaqView()
+GET           /userfaq                                           @controllers.FaqController.userFaqView()
+GET           /adminpanel/getfaq                                 @controllers.FaqController.addNewFaq()
+GET           /adminpanel/editFaq/:id                            @controllers.FaqController.editFaq(id: Long)
+DELETE        /adminpanel/deletefaq/:id                          @controllers.FaqController.deleteFaq(id: Long)
+POST          /adminpanel/savefaq                                @controllers.FaqController.saveFaq()
+POST          /adminpanel/editFaq/:id                            @controllers.FaqController.updateFaq(id: Long)
+
 
 
 

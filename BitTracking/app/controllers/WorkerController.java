@@ -141,7 +141,6 @@ public class WorkerController extends Controller {
 
         List<Package> finalUserPackages = getUserPackages(packagesForUser, userPackages);
 
-
         return ok(deliveryworkerpanel.render(finalPackages, finalUserPackages, userPackages));
     }
 

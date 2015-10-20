@@ -1,0 +1,42 @@
+@import helper._
+@adminmain("New FAQ"){
+    <div class="container-fluid">
+            <!--features_items-->
+        <h2 class="title text-center"> @Messages("Add a new FAQ")</h2>
+            <!--=======Form row============ -->
+        <div class="row">
+            <div class="col-md-12">
+            @helper.form(action = routes.FaqController.saveFaq(), 'class -> "form-horizontal", 'role -> "form", 'method -> "POST") {
+                <div class="form-group">
+                    <label for="question" class="col-sm-1 control-label">
+                        Question:<abbr class="req" title="required">*</abbr>
+                    </label>
+                    <div class="col-sm-11">
+                        <input placeholder="Add a new question" name="question" type="text" class="form-control" id="question" required="required" >
+                            <!--<span id="equalName" class="alert-danger" data-error-for="" ></span>-->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address" class="col-sm-1 control-label">
+                        Answer:<abbr class="req" title="required">*</abbr>
+                    </label>
+                    <div class="col-sm-11">
+                        <textarea placeholder="Add an answer" name="answer" type="text" class="form-control" id="answer" required="required"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="form-inline">
+                    <div class="col-sm-offset-1 col-sm-11">
+                        <div>
+                            <input id="addfaq" type="submit" class="btn btn-primary form-inline" value="Add FAQ">
+                            <input id="return" type="reset" class="btn btn-primary form-inline" value="Reset All">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+}

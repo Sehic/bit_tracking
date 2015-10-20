@@ -1,0 +1,33 @@
+@(faqs: List[Faq])
+@adminmain("Faq"){
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1>BIT Tracking FAQ's</h1>
+                </div>
+            </div>
+        </div>
+        <div><a href="@routes.FaqController.addNewFaq()" class="btn btn-primary">@Messages("Add New FAQ")</a></div> <br><br>
+
+
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+            @for(currentFaq <- faqs){
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse@currentFaq.id">
+                            @currentFaq.question<span class="glyphicon glyphicon-triangle-bottom pull-right" style="color: #5cb85c"></span></a>
+                    </h4>
+                </div>
+                <div id="collapse@currentFaq.id" class="panel-collapse collapse" style="background-color:cornsilk">
+                    <div class="panel-body">@currentFaq.answer</div>
+                    <a href="@routes.FaqController.editFaq(currentFaq.id)" ><button type="submit" style="margin-left: 1.2%"><span class="glyphicon glyphicon-pencil"></span>@Messages("Edit")</button></a>
+                    <a data-role="delete" data-delete-parent="tr" href="@routes.FaqController.deleteFaq(currentFaq.id)" role="button"><button type="submit"><span class="glyphicon glyphicon-trash"></span>@Messages("Delete")</button></a>
+                </div>
+            }
+            </div>
+        </div>
+
+    </div>
+}
