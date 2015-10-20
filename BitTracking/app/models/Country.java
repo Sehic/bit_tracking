@@ -45,7 +45,7 @@ public class Country extends Model {
     }
 
     public static Country findCountryByCode(String code){
-        return findCountry.where().eq("countryCode", code).findUnique();
+        return findCountry.where().eq("cctId", code).findUnique();
     }
 
     public static Country findCountryByCallingCode(String code){

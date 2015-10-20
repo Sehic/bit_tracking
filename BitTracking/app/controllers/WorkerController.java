@@ -38,6 +38,7 @@ public class WorkerController extends Controller {
         String userType = boundForm.bindFromRequest().field("userType").value();
         //Proceeding value and creating post office with it
         PostOffice wantedPostOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
+        String drivingOffice = boundForm.field("drivingOffice").value();
 
         User u = User.checkEmail(email);
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
@@ -80,6 +81,11 @@ public class WorkerController extends Controller {
             u.typeOfUser = UserType.DELIVERY_WORKER;
         }
         u.validated = true;
+        if(!"".equals(drivingOffice)) {
+            if(u.typeOfUser == UserType.DELIVERY_WORKER) {
+                u.drivingOffice = drivingOffice;
+            }
+        }
         u.save();
 
         return redirect(routes.Application.adminTables());

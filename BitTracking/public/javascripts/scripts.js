@@ -1,4 +1,16 @@
 $(document).ready(function() {
+    $("#drivingOfficeDiv").show();
+    $("#userTypeId").change(function() {
+        var userTypeValue = $("#userTypeId option:selected").val();
+        if(userTypeValue === "2"){
+            $("#drivingOfficeDiv").show();
+        }else{
+            $("#drivingOfficeDiv").hide();
+        }
+    });
+});
+
+$(document).ready(function() {
     var button = $('#sendPassword');
     var span = $('#sendingError');
     var loader = $('#loaderId');
