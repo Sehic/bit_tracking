@@ -40,6 +40,11 @@ public class UserController extends Controller {
      */
     public Result loginCheck() {
         //Getting values from form in (login.scala.html)
+
+        if (!request().accepts("text/html")) {
+            return JsonController.login();
+        }
+
         String password = newUser.bindFromRequest().field("password").value();
         String email = newUser.bindFromRequest().field("email").value();
         String newPassword = HashHelper.getEncriptedPasswordMD5(password);
@@ -75,6 +80,12 @@ public class UserController extends Controller {
      * @return redirect user to subpage login if everything is ok, otherwise ?????
      */
     public Result registrationCheck() {
+
+        if (request().accepts("text/html")) {
+
+        } else {
+
+        }
 
         Form<User> boundForm = newUser.bindFromRequest();
         //Creating user using form values (register.scala.html)
