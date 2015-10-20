@@ -1,5 +1,4 @@
-@import play.data.DynamicForm
-@(form:DynamicForm)
+
 @import helper._
   @adminmain("New FAQ"){
   <div class="container-fluid">
@@ -8,13 +7,13 @@
           <!--=======Form row============ -->
       <div class="row">
           <div class="col-md-12">
-          @helper.form(action = routes.FaqController.addNewFaq(), 'class -> "form-horizontal", 'role -> "form") {
+          @helper.form(action = routes.FaqController.saveFaq(), 'class -> "form-horizontal", 'role -> "form", 'method -> "POST") {
               <div class="form-group">
                   <label for="question" class="col-sm-1 control-label">
                       Question:<abbr class="req" title="required">*</abbr>
                   </label>
                   <div class="col-sm-11">
-                      <input placeholder="Add a new question" name="question" type="text" class="form-control" id="question" required="required">
+                      <input placeholder="Add a new question" name="questionnew" type="text" class="form-control" id="question" required="required" >
                           <!--<span id="equalName" class="alert-danger" data-error-for="" ></span>-->
                   </div>
               </div>

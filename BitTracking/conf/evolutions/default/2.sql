@@ -306,3 +306,16 @@ INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, 
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (24, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@minhen.com', '4', 8, NULL, 1);
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (25, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@studgard.com', '4', 9, NULL, 1);
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (26, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@brisel.com', '4', 10, NULL, 1);
+
+-- Adding FAQ
+
+INSERT INTO ups.faq (id, question, answer) VALUES (1, 'How do I get a BIT Tracking Account?', 'Applying for a BIT Tracking account is easy.Open an account online (register).');
+INSERT INTO ups.faq (id, question, answer) VALUES (2, 'Do I need a BIT Tracking account to ship?', 'I order to ship online using BIT Tracking account login is required. Register online,and than log in');
+INSERT INTO ups.faq (id, question, answer) VALUES (3, 'How do I check the status of a package without the BIT Tracking number?', 'If you do not have access to a tracking number, you can not track your shipment. ');
+INSERT INTO ups.faq (id, question, answer) VALUES (4, 'Can I get copy of the delivery signature', 'You will receive confirmation email about package status.');
+INSERT INTO ups.faq (id, question, answer) VALUES (5, 'Can I reroute a BIT Tracking package in transit or make an address correction', 'A reroute is a request to change a delivery address from what eas originally on the shipping label. BIT Tracking can not reroute package.');
+INSERT INTO ups.faq (id, question, answer) VALUES (6, 'What does the status on route means?', 'On Route status stand for package is on a route to the post office.');
+INSERT INTO ups.faq (id, question, answer) VALUES (7, 'What does the status delivered means?', 'Delivered status means the package is in destination post office.');
+INSERT INTO ups.faq (id, question, answer) VALUES (8, 'What shipping documents do I need to ship a BIT Tracking package?','To ship a BIT Tracking package, you will need to complete "Create package form".You can complete it online. You must use your BIT Tracking account and type in the required information.');
+INSERT INTO ups.faq (id, question, answer) VALUES (9, 'What happens when no one is available at my home or office to accept a shipment?', 'If you are not available to accept delivery of your shipment, your courier may leave you a delivery attempt notice with information on when the next delivery attempt will be made. If you need more information about a package, please contact BIT Tracking Service. You can also track the status of you shipment online.');
+INSERT INTO ups.faq (id, question, answer) VALUES (10, 'As a student, what is the best way for me to get information about BIT Tracking?', 'We suggest that you explore the About BIT Tracking section of this web site. About BIT Tracking offers a wealth of information about BIT Tracking, investor relations and more. Please contact Mladen Develop for any additional information:))');

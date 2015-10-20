@@ -19,8 +19,8 @@ public class Faq extends Model {
     @Id
     public Long id;
     @Constraints.MaxLength(255)
-    @Constraints.Required(message = "Please add a question here.")
     @Constraints.MinLength(value = 0, message = "Question field is required!")
+    @Column(columnDefinition = "Text")
     public String question;
     @Constraints.Required(message = "Please add an answer here.")
     @Column(columnDefinition = "Text")
@@ -41,37 +41,6 @@ public class Faq extends Model {
         this.question = question;
         this.answer = answer;
     }
-
-    /** Getters and setters**/
-
-    public String getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    /**
-     * Create method creates a new FAQ with question and answer
-     * @param question
-     * @param answer
-     * @return a new Faq id
-     */
-    public static Long createFaq(String question, String answer){
-        Faq newFaq = new Faq(question, answer);
-        newFaq.save();
-        return newFaq.id;
-    }
-
     /**
      * DeleteFaq method will delete Faq with given Id
      * @param id
@@ -93,20 +62,12 @@ public class Faq extends Model {
     }
 
     /**
-     * This method will check if FAQ exist
-     * @param question
-     * @return true or false
-     */
-    public static boolean checkFaqQuestion(String question){
-        return faqFinder.where().eq("question", question).findUnique()!=null;
-    }
-
-    /**
-     * Method will fiond Faq by id
+     * Method will find Faq by id
      * @param id
      * @return Faq
      */
     public static Faq findById(Long id){
-        return faqFinder.byId(id);
+        Faq faq = Faq.faqFinder.where().eq("id", id).findUnique();
+        return faq;
     }
 }

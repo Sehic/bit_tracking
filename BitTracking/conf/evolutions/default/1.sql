@@ -12,7 +12,7 @@ create table country (
 
 create table faq (
   id                        bigint auto_increment not null,
-  question                  varchar(255),
+  question                  Text,
   answer                    Text,
   constraint pk_faq primary key (id))
 ;

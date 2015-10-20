@@ -24,13 +24,13 @@ import play.Logger;
  */
 public class FaqController extends Controller {
 
-    public static Form faqForm = new Form<Faq>(Faq.class);
+    public static final Form faqForm = Form.form(Faq.class);
 
 
     /**
      * Method renders admin panel where all FAQs are listed
      *
-     * @return
+     * @return faq list page on adminpanel
      */
     public Result adminFaqView() {
         List<Faq> faqList = Faq.faqFinder.findList();
@@ -45,23 +45,7 @@ public class FaqController extends Controller {
 
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result addNewFaq() {
-        try {
-            DynamicForm form = Form.form().bindFromRequest();
-            if (form.hasErrors() || form.hasGlobalErrors()) {
-                flash("error", Messages.get("error"));
-                return redirect(routes.FaqController.addNewFaq());
-            }
-            String question = form.data().get("question");
-            String answer = form.data().get("answer");
-
-            Faq.createFaq(question, answer);
-            flash("success", Messages.get("New FAQ added successfully"));
-            return ok(faqnew.render(form));
-
-        } catch (IllegalStateException e) {
-            flash("error", Messages.get("Please fill out all fields in a form"));
-            return redirect(routes.FaqController.addNewFaq());
-        }
+       return ok(faqnew.render());
     }
 
     /**
@@ -73,13 +57,17 @@ public class FaqController extends Controller {
     public Result saveFaq() {
         DynamicForm saveForm = Form.form().bindFromRequest();
         if (saveForm.hasErrors()) {
-            return badRequest(faqnew.render(saveForm));
+            return badRequest(faqnew.render());
         } else {
-            String question = saveForm.field("question").value();
+            String question = saveForm.field("questionnew").value();
             String answer = saveForm.field("answer").value();
-            Faq.createFaq(question, answer);
+            Faq faq  = new Faq();
+            faq.question = question;
+            faq.answer = answer;
+            faq.save();
         }
-        return redirect(routes.FaqController.adminFaqView());
+        List<Faq> faqList = Faq.faqFinder.findList();
+        return ok(faqview.render(faqList));
     }
 
 
@@ -96,22 +84,27 @@ public class FaqController extends Controller {
     }
 
 
+    /**
+     * Method to update edited FAQ
+     * @param id - FAQ's id that will be edited
+     * @return admin panel view with all FAQ's
+     */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result updateFaq(Long id) {
         DynamicForm updateForm = Form.form().bindFromRequest();
-        if(updateForm.hasErrors()){
-            return badRequest(faqnew.render(updateForm));
-        }else{
-            Faq faq = Faq.findById(id);
+        String answer = updateForm.get("answer");
+        Logger.info(answer);
+        String ques = updateForm.get("questionupdate");
+        Logger.info(ques);
+        Faq faq = Faq.faqFinder.byId(id);
+        Logger.info(faq.question);
+        Logger.info(faq.answer);
+        faq.question = ques;
 
-            faq.question = updateForm.field("question").value();
-            faq.answer = updateForm.field("answer").value();
-            faq.update();
-        }
-        Logger.debug(id + "");
-        Logger.debug("SSSS" + updateForm.field("question").value());
-        Logger.debug("SSSS" + updateForm.field("answer").value());
-        return redirect(routes.FaqController.adminFaqView());
+        faq.answer = answer;
+        faq.update();
+        List<Faq> faqList = Faq.faqFinder.findList();
+        return ok(faqview.render(faqList));
     }
 
     /**
@@ -120,14 +113,22 @@ public class FaqController extends Controller {
      * @return admin panel page with all FAQs
      */
     public Result deleteFaq(Long id) {
-        try {
-            Faq.deleteFaq(id);
-            flash("success", Messages.get("successfully deleted"));
-            return ok(faqview.render(Faq.allFaqs()));
-        } catch (Exception ex) {
-            flash("error", Messages.get("Error"));
-            return redirect(routes.FaqController.adminFaqView());
+        Faq faq = Faq.findById(id);
+        if(faq == null){
+            return badRequest(faqview.render(Faq.allFaqs()));
         }
+        faq.delete();
+            return ok(faqview.render(Faq.allFaqs()));
+
+    }
+
+    /**
+     * Method will get user to userfaq view with list of all FAQs
+     * @return FAQ list page
+     */
+    public Result userFaqView(){
+        List<Faq> faqList = Faq.faqFinder.findList();
+        return ok(faqindex.render(faqList));
     }
 }
 

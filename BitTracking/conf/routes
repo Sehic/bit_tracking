@@ -73,11 +73,15 @@ GET           /contact                                           @controllers.Ma
 GET           /statistic                                         @controllers.StatisticController.showPostOfficeStatistic()
 
 # FAQ controller
-GET           /adminFaqView                                      @controllers.FaqController.adminFaqView()
-GET           /addNewFaq                                         @controllers.FaqController.addNewFaq()
+GET           /adminpanel/adminfaqview                           @controllers.FaqController.adminFaqView()
+GET           /userfaq                                           @controllers.FaqController.userFaqView()
+GET           /adminpanel/getfaq                                 @controllers.FaqController.addNewFaq()
 GET           /editFaq/:id                                       @controllers.FaqController.editFaq(id: Long)
-GET           /deleteFaq/:id                                     @controllers.FaqController.deleteFaq(id: Long)
-POST          /addNewFaq                                         @controllers.FaqController.saveFaq()
+#GET           /adminpanel/deletefaq/:id                          @controllers.FaqController.deleteFaq(id: Long)
+DELETE        /adminpanel/deletefaq/:id                          @controllers.FaqController.deleteFaq(id: Long)
+
+
+POST          /adminpanel/savefaq                                @controllers.FaqController.saveFaq()
 POST          /editFaq/:id                                       @controllers.FaqController.updateFaq(id: Long)
 
 
