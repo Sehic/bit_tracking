@@ -129,36 +129,39 @@ public class WorkerController extends Controller {
         List<Package> userPackages = u1.packages;
 
         List<Package> readyPackages = getReadyToBeTakenPackages(packages, u1);
-        List<Package> finalPackages = new ArrayList<>();
-        for (int i=0;i<readyPackages.size();i++){
-            List<Shipment> shipmenti = readyPackages.get(i).shipmentPackages;
-            for (int j=0;j<shipmenti.size();j++){
-                if(shipmenti.get(j).postOfficeId.name.equals(u1.drivingOffice)){
-                    finalPackages.add(shipmenti.get(j).packageId);
-                }
-            }
-        }
 
         List<Package> finalUserPackages = getUserPackages(packagesForUser, userPackages);
 
-        return ok(deliveryworkerpanel.render(finalPackages, finalUserPackages, userPackages));
+        return ok(deliveryworkerpanel.render(readyPackages, finalUserPackages, userPackages));
     }
 
     public static List<Package> getReadyToBeTakenPackages(List<Package> packages, User u1){
-
+        List<Package> packagesToBeTaken = new ArrayList<>();
         for (int i = 0; i < packages.size(); i++) {
-            List<User> users = packages.get(i).users;
-            for (int j = 0; j < users.size(); j++) {
-                User userr = users.get(j);
-                if (userr.typeOfUser == UserType.DELIVERY_WORKER) {
-                    if (userr.postOffice.id == u1.postOffice.id) {
-                        packages.remove(i);
-                        i--;
+            if(packages.get(i).isTaken == false){
+                packagesToBeTaken.add(packages.get(i));
+            }
+        }
+        List<Package> finalPackages = new ArrayList<>();
+        for(int i=0;i<packagesToBeTaken.size();i++){
+            List<Shipment> shipmentPackages = packagesToBeTaken.get(i).shipmentPackages;
+            for (int j=0;j<shipmentPackages.size();j++){
+                if(j!=shipmentPackages.size()-1){
+
+                    if(shipmentPackages.get(j+1).postOfficeId.name.equals(u1.drivingOffice)){
+                        System.out.println("USO");
+                        finalPackages.add(shipmentPackages.get(j+1).packageId);
+                        break;
+                    }
+                }else{
+                    if(shipmentPackages.get(shipmentPackages.size()-1).postOfficeId.name.equals(u1.drivingOffice)){
+                        System.out.println("USO I OVDJE");
+                        finalPackages.add(shipmentPackages.get(shipmentPackages.size()-1).packageId);
                     }
                 }
             }
         }
-        return packages;
+        return finalPackages;
     }
 
     public static List<Package> getUserPackages(List<Package> packagesForUser, List<Package> userPackages){

@@ -52,9 +52,12 @@ public class Package extends Model {
 
     @Column(length = 255)
     public String recipientName;
-
+    @Column
     public Boolean approved = null;
+    @Column
     public Boolean seen = null;
+    @Column
+    public Boolean isTaken = null;
 
     @Formats.DateTime(pattern="dd/MM/yyyy")
     public Date packageRejectedTimestamp;

@@ -86,6 +86,7 @@ public class PackageController extends Controller {
 
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.approved = true;
+            pack.isTaken = false;
             pack.save();
 
         } catch (IllegalStateException | NumberFormatException e) {
@@ -147,7 +148,6 @@ public class PackageController extends Controller {
                     }
                 }
                 u.update();
-                //p.users.clear();
             }
         }
         p.delete();
@@ -236,6 +236,7 @@ public class PackageController extends Controller {
             pack.packageRejectedTimestamp= date;
             pack.approved = true;
             pack.seen = false;
+            pack.isTaken = false;
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.destination = destination;
             MailHelper.approvedRequestNotification(pack.users.get(0).lastName, pack.trackingNum, pack.users.get(0).email);
@@ -274,6 +275,7 @@ public class PackageController extends Controller {
             String pack = form.field("" + packages.get(i).id).value();
             if (pack != null) {
                 newPack = Package.findPackageById(Long.parseLong(pack));
+                newPack.isTaken = true;
                 user.packages.add(newPack);
                 newPack.users.add(user);
                 newPack.update();

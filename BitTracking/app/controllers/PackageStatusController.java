@@ -142,6 +142,8 @@ public class PackageStatusController extends Controller {
             u1.drivingOffice = u1.postOffice.name;
             u1.postOffice = userOffice;
             u1.update();
+            pack.isTaken = false;
+            pack.update();
             return redirect(routes.WorkerController.deliveryWorkerPanel());
         }
 

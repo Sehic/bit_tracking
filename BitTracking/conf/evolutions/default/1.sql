@@ -49,6 +49,7 @@ create table package (
   recipient_name            varchar(255),
   approved                  tinyint(1) default 0,
   seen                      tinyint(1) default 0,
+  is_taken                  tinyint(1) default 0,
   package_rejected_timestamp datetime(6),
   constraint ck_package_package_type check (package_type in ('4','2','1','3')),
   constraint pk_package primary key (id))
