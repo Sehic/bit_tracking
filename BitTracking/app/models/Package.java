@@ -88,6 +88,10 @@ public class Package extends Model {
         return finder.where().eq("approved", null).findList();
     }
 
+    public static List<Package> findApprovedPackages(){
+        return finder.where().eq("approved", true).findList();
+    }
+
     @Override
     public String toString() {
         if (shipmentPackages.get(shipmentPackages.size() - 1).status == StatusHelper.DELIVERED) {

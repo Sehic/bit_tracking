@@ -49,6 +49,25 @@ public class Authenticators {
         }
     }
 
+    public static class DeliveryOfficeWorkerFilter extends Security.Authenticator {
+
+        @Override
+        public String getUsername(Http.Context ctx) {
+            if (!ctx.session().containsKey("email"))
+                return null;
+            String email = ctx.session().get("email");
+            User u = User.checkEmail(email);
+            if (u != null && u.typeOfUser == UserType.DELIVERY_WORKER || u.typeOfUser == UserType.OFFICE_WORKER)
+                return u.email;
+            return null;
+        }
+
+        @Override
+        public Result onUnauthorized(Http.Context ctx) {
+            return redirect(routes.Application.index());
+        }
+    }
+
     public static class AdminDeliveryWorkerFilter extends Security.Authenticator {
 
         @Override

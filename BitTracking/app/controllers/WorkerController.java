@@ -149,13 +149,11 @@ public class WorkerController extends Controller {
                 if(j!=shipmentPackages.size()-1){
 
                     if(shipmentPackages.get(j+1).postOfficeId.name.equals(u1.drivingOffice)){
-                        System.out.println("USO");
                         finalPackages.add(shipmentPackages.get(j+1).packageId);
                         break;
                     }
                 }else{
                     if(shipmentPackages.get(shipmentPackages.size()-1).postOfficeId.name.equals(u1.drivingOffice)){
-                        System.out.println("USO I OVDJE");
                         finalPackages.add(shipmentPackages.get(shipmentPackages.size()-1).packageId);
                     }
                 }

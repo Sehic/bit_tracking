@@ -1,13 +1,17 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import helpers.Authenticators;
 import helpers.MailHelper;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
 import models.Package;
+import play.data.DynamicForm;
+import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 import views.html.deliveryworkerpanel;
 import views.html.officeworkerpanel;
 
@@ -31,7 +35,7 @@ public class PackageStatusController extends Controller {
      * @param date - Date which is used for timestamp
      * @return - delivery worker panel
      */
-    public Result updateStatusAsDeliveryWorker(User u1, models.Package pack, Calendar c, Date date) {
+    public void updateStatusAsDeliveryWorker(User u1, models.Package pack, Calendar c, Date date) {
 
         List<Shipment> shipments = Shipment.shipmentFinder.where().eq("packageId", pack).findList();
 
@@ -54,9 +58,6 @@ public class PackageStatusController extends Controller {
 
             packages.add(shipmentByOfficeAndStatus.get(i).packageId);
         }
-        List<Package> userPackages = u1.packages;
-
-        return redirect(routes.Application.index());
     }
 
     /**
@@ -69,7 +70,7 @@ public class PackageStatusController extends Controller {
      * @param date - Date
      * @return - office worker panel
      */
-    public Result updateStatusAsOfficeWorker(User u1, Package pack, Calendar c, Date date) {
+    public void updateStatusAsOfficeWorker(User u1, Package pack, Calendar c, Date date) {
 
         List<Shipment> shipmentsByPostOffice = Shipment.shipmentFinder.where().eq("postOfficeId", u1.postOffice).findList();
         List<Package> packages = new ArrayList<>();
@@ -117,42 +118,49 @@ public class PackageStatusController extends Controller {
                 Ebean.update(shipmentsByPostOffice.get(i));
             }
         }
-        List<Package> packagesWaiting = Package.findPackagesWaitingForApproval();
-        List<Package> packagesForOfficeWorker = packagesForOfficeWorkerWaitingForApproval(u1.postOffice, packagesWaiting);
-
-        return ok(officeworkerpanel.render(packages, u1.postOffice, packagesForOfficeWorker, PostOffice.findOffice.findList()));
     }
 
     /**
      * Method that is used for calling methods for changing package status
      *
-     * @param id - package id
      * @return - delivery or office worker panel
      */
-    public Result updateStatus(Long id) {
+    @Security.Authenticated(Authenticators.DeliveryWorkerFilter.class)
+    public Result updateStatusDeliveryWorker() {
 
         User u1 = SessionHelper.getCurrentUser(ctx());
-        Package pack = Package.finder.byId(id);
+        DynamicForm form = Form.form().bindFromRequest();
+        List<Package> packages = Package.findApprovedPackages();
+        Package newPack = new Package();
         Calendar c = null;
         Date date = null;
-
-        if (u1 != null && (u1.typeOfUser == UserType.ADMIN || u1.typeOfUser == UserType.DELIVERY_WORKER)) {
-            updateStatusAsDeliveryWorker(u1, pack, c, date);
+        for (int i = 0; i < packages.size(); i++) {
+            String pack = form.field("" + packages.get(i).id).value();
+            if (pack != null) {
+                newPack = Package.findPackageById(Long.parseLong(pack));
+                if (u1 != null && (u1.typeOfUser == UserType.ADMIN || u1.typeOfUser == UserType.DELIVERY_WORKER)) {
+                    updateStatusAsDeliveryWorker(u1, newPack, c, date);
+                    newPack.isTaken = false;
+                    newPack.update();
+                }
+            }
+        }
             PostOffice userOffice = PostOffice.findPostOfficeByName(u1.drivingOffice);
             u1.drivingOffice = u1.postOffice.name;
             u1.postOffice = userOffice;
             u1.update();
-            pack.isTaken = false;
-            pack.update();
             return redirect(routes.WorkerController.deliveryWorkerPanel());
-        }
-
+    }
+    @Security.Authenticated(Authenticators.OfficeWorkerFilter.class)
+    public Result updateStatusOfficeWorker(Long id){
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        Package pack = Package.finder.byId(id);
+        Calendar c = null;
+        Date date = null;
         if (u1 != null && u1.typeOfUser == UserType.OFFICE_WORKER) {
             updateStatusAsOfficeWorker(u1, pack, c, date);
-            return redirect(routes.WorkerController.officeWorkerPanel());
         }
-
-        return redirect(routes.Application.index());
+        return redirect(routes.WorkerController.officeWorkerPanel());
     }
 
     public static List<Package> packagesForOfficeWorkerWaitingForApproval(PostOffice userOffice, List<Package> packagesWaiting) {
@@ -161,7 +169,6 @@ public class PackageStatusController extends Controller {
         for (int i = 0; i < packagesWaiting.size(); i++) {
 
             PostOffice officeFromShipment = packagesWaiting.get(i).shipmentPackages.get(0).postOfficeId;
-
             if (officeFromShipment.id == userOffice.id) {
                 packagesForOfficeWorker.add(packagesWaiting.get(i));
             }

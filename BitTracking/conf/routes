@@ -62,7 +62,8 @@ GET           /officeworkerpanel                                 @controllers.Wo
 
 GET           /adminpanel/deliveryworkers                        @controllers.Application.deliveryWorkersList()
 GET           /adminpanel/deliveryworkers/panel                  @controllers.WorkerController.deliveryWorkerPanel()
-POST          /adminpanel/deliveryworkers/status/:id             @controllers.PackageStatusController.updateStatus(id: Long)
+POST          /adminpanel/deliveryworkers/status/                @controllers.PackageStatusController.updateStatusDeliveryWorker()
+POST          /adminpanel/officeworkers/status/:id               @controllers.PackageStatusController.updateStatusOfficeWorker(id: Long)
 GET           /adminpanel/deliveryworkers/take                   @controllers.PackageController.takePackages()
 
 GET           /user                                              @controllers.Application.userPanel()

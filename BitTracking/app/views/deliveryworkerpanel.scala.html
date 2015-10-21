@@ -83,6 +83,7 @@
 
             }
         </div>
+    @helper.form(routes.PackageStatusController.updateStatusDeliveryWorker(), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
     <div class="row">
         <div class="col-md-12">
 
@@ -130,10 +131,7 @@
                             }
 
                             <td>@pack.destination</td>
-
-                            @helper.form(routes.PackageStatusController.updateStatus(pack.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
-                                <td><button type="submit" class="btn-default">Done</button></td>
-                            }
+                            <td><input type="checkbox" name="@pack.id" value="@pack.id">Done</td>
                         </tr>
                     }
 
@@ -143,7 +141,8 @@
 
         </div>
     </div>
-
+        <button type="submit" class="btn btn-primary">Mark selected packages as delivered</button>
+}
 
     <div id="myPackagesDiv" class="row">
         <div class="col-md-12">

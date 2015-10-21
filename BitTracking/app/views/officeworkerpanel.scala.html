@@ -131,7 +131,7 @@
                                     }
                                     @if(shipmentFromThisPackage.status == helpers.StatusHelper.RECEIVED) {
 
-                                            <td><button type="submit" class="btn-default" onclick="form.action='@routes.PackageStatusController.updateStatus(pack.id)';form.method='POST'">Done</button></td>
+                                            <td><button type="submit" class="btn-default" onclick="form.action='@routes.PackageStatusController.updateStatusOfficeWorker(pack.id)';form.method='POST'">Done</button></td>
 
 
                                     } else {

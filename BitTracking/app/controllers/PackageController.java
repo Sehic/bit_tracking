@@ -267,9 +267,8 @@ public class PackageController extends Controller {
     public Result takePackages() {
         User user = SessionHelper.getCurrentUser(ctx());
         DynamicForm form = Form.form().bindFromRequest();
-        List<Package> packages = Package.finder.findList();
+        List<Package> packages = Package.findApprovedPackages();
         //Getting values from checkboxes
-        List<Package> packagesForDeliveryWorker = new ArrayList<>();
         Package newPack = new Package();
         for (int i = 0; i < packages.size(); i++) {
             String pack = form.field("" + packages.get(i).id).value();
