@@ -30,6 +30,14 @@ create table image_path (
   constraint pk_image_path primary key (id))
 ;
 
+create table link (
+  id                        bigint auto_increment not null,
+  target                    varchar(255),
+  start_office              varchar(255),
+  distance                  double,
+  constraint pk_link primary key (id))
+;
+
 create table location (
   id                        bigint auto_increment not null,
   x                         double,
@@ -141,6 +149,8 @@ drop table country;
 drop table faq;
 
 drop table image_path;
+
+drop table link;
 
 drop table location;
 

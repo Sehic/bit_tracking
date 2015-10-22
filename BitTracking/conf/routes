@@ -54,6 +54,9 @@ GET           /adminpanel/makemultiroute                         @controllers.Ro
 POST          /adminpanel/makeroute/create                       @controllers.RouteController.createRoute()
 POST          /adminpanel/makeroute/save/:id                     @controllers.RouteController.saveRoute(id: Long)
 
+GET           /adminpanel/makedijkstraroute/:id                  @controllers.RouteController.showDijkstraRouting(id: Long)
+GET           /adminpanel/makemultidijkstraroute                 @controllers.RouteController.showMultiDijkstraRouting()
+
 GET           /adminpanel/makeautoroute/:id                      @controllers.RouteController.showAutoRouting(id: Long)
 GET           /adminpanel/makemultiautoroute                     @controllers.RouteController.showMultiAutoRouting()
 POST          /adminpanel/makeautoroute/saveautoroute/:id        @controllers.RouteController.saveAutoRoute(id: Long)
@@ -90,9 +93,12 @@ GET           /adminpanel/adminfaqview                           @controllers.Fa
 GET           /userfaq                                           @controllers.FaqController.userFaqView()
 GET           /adminpanel/getfaq                                 @controllers.FaqController.addNewFaq()
 GET           /adminpanel/editFaq/:id                            @controllers.FaqController.editFaq(id: Long)
+GET           /adminpanel/deletefaq/:id                          @controllers.FaqController.deleteFaq(id: Long)
 DELETE        /adminpanel/deletefaq/:id                          @controllers.FaqController.deleteFaq(id: Long)
 POST          /adminpanel/savefaq                                @controllers.FaqController.saveFaq()
 POST          /adminpanel/editFaq/:id                            @controllers.FaqController.updateFaq(id: Long)
+
+POST          /adminpanel/getoffices/getdijkstra                 @controllers.RouteController.getDijkstraPath()
 
 
 

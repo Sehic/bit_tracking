@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import helpers.Authenticators;
+import helpers.DijkstraHelper;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
@@ -60,14 +61,14 @@ public class RouteController extends Controller {
         DynamicForm form = Form.form().bindFromRequest();
         String packages = form.get("packagesForRoute");
         List<Package> packagesForRoute = new ArrayList<>();
-        if(packages != null) {
+        if (packages != null) {
             packagesForRoute = packagesForRoute(packages);
-        }else{
+        } else {
             Package onePackage = Package.findPackageById(id);
             packagesForRoute.add(onePackage);
         }
         String route = form.get("route");
-        for(int i=0;i<packagesForRoute.size();i++) {
+        for (int i = 0; i < packagesForRoute.size(); i++) {
             Package packageWithRoute = packagesForRoute.get(i);
             Shipment initialOfficeShip = new Shipment();
             try {
@@ -100,37 +101,39 @@ public class RouteController extends Controller {
         else
             return redirect(routes.WorkerController.officeWorkerPanel());
     }
+
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
-    public Result showAutoRouting(Long id){
+    public Result showAutoRouting(Long id) {
 
         Package officePackage = Package.findPackageById(id);
         List<Location> locations = Location.findLocation.findList();
         List<PostOffice> offices = PostOffice.findOffice.findList();
         return ok(owmakeautoroute.render(offices, locations, officePackage));
     }
+
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
-    public Result saveAutoRoute(Long id){
+    public Result saveAutoRoute(Long id) {
 
         DynamicForm form = Form.form().bindFromRequest();
         String packages = form.get("packagesForRoute");
         List<Package> packagesForRoute = new ArrayList<>();
-        if(packages != null) {
+        if (packages != null) {
             packagesForRoute = packagesForRoute(packages);
-        }else{
+        } else {
             Package onePackage = Package.findPackageById(id);
             packagesForRoute.add(onePackage);
         }
         String route = form.get("route");
-        for(int i =0;i<packagesForRoute.size();i++){
+        for (int i = 0; i < packagesForRoute.size(); i++) {
             Package routePackage = packagesForRoute.get(i);
-            if(routePackage == null){
+            if (routePackage == null) {
                 return redirect(routes.Application.index());
             }
 
             Shipment initialOfficeShip = new Shipment();
             try {
                 initialOfficeShip = Shipment.shipmentFinder.where().eq("packageId", routePackage).findUnique();
-            }catch(PersistenceException e){
+            } catch (PersistenceException e) {
                 return redirect(routes.RouteController.showAutoRouting(id));
             }
             initialOfficeShip.status = StatusHelper.READY_FOR_SHIPPING;
@@ -191,12 +194,12 @@ public class RouteController extends Controller {
         String packagesId = "";
         Package officePackage = new Package();
         PostOffice office = new PostOffice();
-        if(routePackages!=null){
-            packagesId=routePackages;
+        if (routePackages != null) {
+            packagesId = routePackages;
             List<Package> packagesForMultiRoute = packagesForRoute(packagesId);
             officePackage = Package.findPackageById(packagesForMultiRoute.get(0).id);
             office = officePackage.shipmentPackages.get(0).postOfficeId;
-        }else {
+        } else {
             List<Package> packages = Package.finder.findList();
             //Getting values from checkboxes
             List<Package> packagesToTake = new ArrayList<>();
@@ -210,15 +213,15 @@ public class RouteController extends Controller {
                     packagesId += newPack.id + "|";
                 }
             }
-            for (int i =0;i<packagesToTake.size()-1;i++){
+            for (int i = 0; i < packagesToTake.size() - 1; i++) {
 
-                if(!newPack.destination.equals(packagesToTake.get(i).destination)){
+                if (!newPack.destination.equals(packagesToTake.get(i).destination)) {
                     flash("differentDestinationOffices", "You must select Packages which have same Destination Post Office!");
                     return redirect(routes.WorkerController.officeWorkerPanel());
                 }
             }
             officePackage = Package.findPackageById(newPack.id);
-            if(officePackage==null){
+            if (officePackage == null) {
                 flash("noOffices", "You must select at least one Post Office!");
                 return redirect(routes.WorkerController.officeWorkerPanel());
             }
@@ -231,15 +234,68 @@ public class RouteController extends Controller {
     }
 
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
-    public Result showMultiAutoRouting(){
+    public Result showMultiAutoRouting() {
 
         DynamicForm form = Form.form().bindFromRequest();
-        String packagesId= form.get("packagesForRoute");
+        String packagesId = form.get("packagesForRoute");
         List<Package> packages = packagesForRoute(packagesId);
         Package officePackage = Package.findPackageById(packages.get(0).id);
         List<Location> locations = Location.findLocation.findList();
         List<PostOffice> offices = PostOffice.findOffice.findList();
         return ok(owmakemultiautoroute.render(offices, locations, officePackage, packagesId));
+    }
+
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
+    public Result showDijkstraRouting(Long id) {
+
+        Package officePackage = Package.findPackageById(id);
+        String initialOffice = officePackage.shipmentPackages.get(0).postOfficeId.name;
+        String destinationOffice = officePackage.destination;
+        List<Location> locations = Location.findLocation.findList();
+        List<PostOffice> finalOffices = officesInRoute(initialOffice, destinationOffice);
+
+        return ok(owmakedijkstraroute.render(finalOffices, locations, officePackage));
+    }
+
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
+    public Result showMultiDijkstraRouting() {
+
+        DynamicForm form = Form.form().bindFromRequest();
+        String packagesId = form.get("packagesForRoute");
+        List<Package> packages = packagesForRoute(packagesId);
+        Package officePackage = Package.findPackageById(packages.get(0).id);
+        String initialOffice = officePackage.shipmentPackages.get(0).postOfficeId.name;
+        String destinationOffice = officePackage.destination;
+        List<PostOffice> finalOffices = officesInRoute(initialOffice, destinationOffice);
+        List<Location> locations = Location.findLocation.findList();
+
+        return ok(owmakemultidijkstraroute.render(finalOffices, locations, officePackage, packagesId));
+    }
+
+
+    public static List<PostOffice> officesInRoute(String initialOffice, String destinationOffice){
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+        List<String> routeOffices = DijkstraHelper.getStringPath(initialOffice, destinationOffice);
+        List<PostOffice> finalOffices = new ArrayList<>();
+
+        for (String routeOfficeName : routeOffices) {
+            for (PostOffice office : offices) {
+                if (office.name.equals(routeOfficeName)) {
+                    finalOffices.add(office);
+                }
+            }
+        }
+        return finalOffices;
+    }
+
+    public Result getDijkstraPath(){
+        DynamicForm form = Form.form().bindFromRequest();
+
+        String initialOffice = form.data().get("initial");
+        String destinationOffice = form.data().get("destination");
+        List<String> offices = DijkstraHelper.getStringPath(initialOffice, destinationOffice);
+
+        return ok(offices.toString());
     }
 
 }

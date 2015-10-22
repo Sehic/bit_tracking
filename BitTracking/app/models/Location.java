@@ -17,7 +17,7 @@ public class Location {
     public Double x;
     @Column
     public Double y;
-    @OneToOne(mappedBy="place", cascade=CascadeType.ALL)
+    @OneToOne(mappedBy = "place", cascade = CascadeType.ALL)
     public PostOffice postOffice;
 
     public Location(Double x, Double y) {
@@ -34,5 +34,9 @@ public class Location {
             return loc;
         }
         return null;
+    }
+
+    public String toString() {
+        return y + "," + x;
     }
 }
