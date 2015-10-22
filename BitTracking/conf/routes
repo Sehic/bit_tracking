@@ -84,7 +84,7 @@ GET           /changepassword/:token                             @controllers.Us
 GET           /changepassword                                    @controllers.UserController.userChangePassword()
 POST          /changepassword                                    @controllers.UserController.makePasswordChange()
 
-GET           /djikstra                                          @controllers.DijkstraController.getDjikstra()
+GET           /djikstra                                          @controllers.Application.getDijkstra()
 
 
 

@@ -1,24 +1,32 @@
-package controllers;
+package helpers;
 
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import models.Link;
+import models.Location;
 import models.PostOffice;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.io.*;
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.*;
 
 /**
  * Created by USER on 21.10.2015.
  */
-public class DijkstraController extends Controller {
+public class DijkstraHelper {
 
-    public List<Vertex> vertexes = getAllVertexes();
+    public static List<Vertex> vertexes = getAllVertexes();
 
-    class Vertex implements Comparable<Vertex> {
+    public static class Vertex implements Comparable<Vertex> {
         public final String name;
         public List<Edge> adjacencies = new ArrayList<>();
         public double minDistance = Double.POSITIVE_INFINITY;
@@ -37,7 +45,7 @@ public class DijkstraController extends Controller {
         }
     }
 
-    class Edge {
+    public static class Edge {
         public final Vertex target;
         public final double weight;
 
@@ -80,7 +88,7 @@ public class DijkstraController extends Controller {
         return path;
     }
 
-    public List<Vertex> getAllVertexes() {
+    public static List<Vertex> getAllVertexes() {
         List<Vertex> allVertexes = new ArrayList<>();
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
         for (int i = 0; i < postOffices.size(); i++) {
@@ -91,7 +99,7 @@ public class DijkstraController extends Controller {
         return allVertexes;
     }
 
-    public Vertex findVertexByName(String name) {
+    public static Vertex findVertexByName(String name) {
         for (Vertex v : vertexes) {
             if (v.name.equals(name)) {
                 return v;
@@ -100,7 +108,7 @@ public class DijkstraController extends Controller {
         return null;
     }
 
-    public void getAllVertexesWithEdges(){
+    public static void getAllVertexesWithEdges(){
         for (int i = 0; i < vertexes.size(); i++) {
             Vertex v = vertexes.get(i);
             List<Link> startOfficeLinks = Link.findByStartOffice(v.name);
@@ -113,21 +121,62 @@ public class DijkstraController extends Controller {
         }
     }
 
-    public List<Vertex> getPath(Vertex a, Vertex b) {
+    public static List<Vertex> getPath(Vertex a, Vertex b) {
         computePaths(a);
         return getShortestPathTo(b);
     }
 
-    public Result getDjikstra() {
+    public static double getDistance(String address1, String address2) {
+        InputStream is = null;
+        double distance = 0;
+        StringBuilder read = new StringBuilder();
+        String googleApi = "AIzaSyCziHIWI7MbOma8E65aQo9bqPiIPmeefCg";
+        String urlAddress = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + address1 + "&destinations=" + address2 + "&key=" + googleApi;
+        try {
+            URL url = new URL(urlAddress);
+            URLConnection connection = url.openConnection();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+
+            while((line = reader.readLine()) != null) {
+                read.append(line + "\n");
+            }
+
+            reader.close();
+
+            JSONObject json = new JSONObject(read.toString());
+            JSONArray jsonArray = json.getJSONArray("rows");
+            JSONObject jsonObject = jsonArray.getJSONObject(0);
+            JSONArray jsonArray2 = jsonObject.getJSONArray("elements");
+            JSONObject jsonObject2 = jsonArray2.getJSONObject(0);
+            JSONObject jsonObject3 = jsonObject2.getJSONObject("distance");
+
+            distance = ((double)jsonObject3.getInt("value"))/1000;
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //return read.toString();
+        return distance;
+    }
+
+    public static List<String> getStringPath(String initialAddress, String targetAddress) {
 
         getAllVertexesWithEdges();
 
-        Vertex a = findVertexByName("Poslovnica Sarajevo");
-        Vertex b = findVertexByName("Poslovnica Minhen");
+        Vertex a = findVertexByName(initialAddress);
+        Vertex b = findVertexByName(targetAddress);
 
         List<Vertex> path = getPath(a,b);
-        Logger.info(path + "");
+        List<String> pathStrings = new ArrayList<>();
 
-        return ok(path.toString());
+        for (int i = 0; i < path.size(); i++) {
+            String name = path.get(i).name;
+            pathStrings.add(name);
+        }
+
+        return pathStrings;
     }
 }

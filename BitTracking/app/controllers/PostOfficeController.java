@@ -2,11 +2,8 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import helpers.Authenticators;
-import helpers.SessionHelper;
-import helpers.StatusHelper;
+import helpers.DijkstraHelper;
 import models.*;
-import models.Package;
-import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -14,7 +11,6 @@ import play.mvc.Result;
 import play.mvc.Security;
 import views.html.*;
 
-import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -213,6 +209,7 @@ public class PostOfficeController extends Controller {
         List<PostOffice> relationOffices = mainPostOffice.postOfficesA;
 
         String startOffice = mainPostOffice.name;
+        Location loc1 = Location.findLocationById(mainPostOffice.id);
 
         if (relationOffices.size() != 0) {
             for (int i = 0; i < relationOffices.size(); i++) {
@@ -239,8 +236,9 @@ public class PostOfficeController extends Controller {
             PostOffice linkedPostOffice = postOffices.get(i);
 
             String targetOffice = linkedPostOffice.name;
-            // OVO JE PRIVREMENO RJESENJE - IZVLACICEMO POMOCU GOOGLE DISTANCE API-JA TACNE UDALJENOSTI IZMEDJU OFFICA
-            double distance = Math.random()*100;
+            Location loc2 = Location.findLocationById(linkedPostOffice.id);
+            double distance = (double) DijkstraHelper.getDistance(loc1.toString(), loc2.toString());
+
             Link l1 = new Link(startOffice, targetOffice, distance);
             Link l2 = new Link(targetOffice, startOffice, distance);
             l1.save();

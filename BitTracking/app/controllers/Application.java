@@ -1,9 +1,6 @@
 package controllers;
 
-import helpers.Authenticators;
-import helpers.MailHelper;
-import helpers.SessionHelper;
-import helpers.StatusHelper;
+import helpers.*;
 import models.*;
 import models.Package;
 import play.*;
@@ -43,6 +40,13 @@ public class Application extends Controller {
             session("email", cookie.value());
         }
         return ok(index.render());
+    }
+
+    public Result getDijkstra() {
+        PostOffice officeA = PostOffice.findPostOfficeByName("Poslovnica Brcko");
+        PostOffice officeB = PostOffice.findPostOfficeByName("Poslovnica Salzburg");
+
+        return ok(DijkstraHelper.getStringPath(officeA.name, officeB.name).toString());
     }
 
     /**

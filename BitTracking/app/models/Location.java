@@ -35,4 +35,8 @@ public class Location {
         }
         return null;
     }
+
+    public String toString() {
+        return y + "," + x;
+    }
 }
