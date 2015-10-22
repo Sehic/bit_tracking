@@ -19,7 +19,8 @@ libraryDependencies ++= Seq(
   "com.google.code.gson" % "gson" % "2.3.1",
 "org.easytesting" % "fest-assert" % "1.4" % Test,
   "com.typesafe.play" %% "play-mailer" % "2.4.0",
-  "com.twilio.sdk" % "twilio-java-sdk" % "3.4.5"
+  "com.twilio.sdk" % "twilio-java-sdk" % "3.4.5",
+  "org.json" % "json" % "20140107"
 )
 
 // Play provides two styles of routers, one expects its actions to be injected, the

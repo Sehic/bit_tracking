@@ -11,7 +11,8 @@
     <hr/>
     <div class="row">
         <div class="col-sm-9 col-sm-offset-3">
-            <a href="@routes.RouteController.showAutoRouting(officePackage.id)"><button type="button" class="btn btn-default">Create route automatically</button></a>
+            <a href="@routes.RouteController.showAutoRouting(officePackage.id)"><button type="button" class="btn btn-default">Create Route using Shortest Path</button></a>
+            <a href="@routes.RouteController.showDijkstraRouting(officePackage.id)"><button type="button" class="btn btn-default">Create route using Algorithm</button></a>
             <a href="@routes.WorkerController.officeWorkerPanel()"><button type="button" class="btn btn-default">
                 Office Worker Panel</button></a>
         </div>

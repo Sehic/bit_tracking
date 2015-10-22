@@ -85,6 +85,11 @@
 
                 <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
     }
+
+                @helper.form(action = routes.RouteController.showMultiDijkstraRouting(), 'class -> "form-horizontal pull-right", 'role -> "form") {
+                    <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                    <button type="submit" class="btn btn-default">Create route using Algorithm</button>
+                }
                 @helper.form(action = routes.RouteController.listMultiRoute(), 'class -> "form-horizontal pull-right", 'role -> "form") {
                         <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
                         <button type="submit" class="btn btn-default">Create route manually</button>

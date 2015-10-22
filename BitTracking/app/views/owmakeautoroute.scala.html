@@ -12,10 +12,12 @@
     @helper.form(routes.RouteController.saveAutoRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
         <div class="row">
             <div class="col-sm-9 col-sm-offset-3">
-                <a href="@routes.RouteController.listRoutes(officePackage.id)"><button type="button" class="btn btn-default">
-                    Create Route Manually</button></a>
                 <a href="@routes.WorkerController.officeWorkerPanel()"><button type="button" class="btn btn-default">
                     Office Worker Panel</button></a>
+                <a href="@routes.RouteController.listRoutes(officePackage.id)"><button type="button" class="btn btn-default">
+                    Create Route Manually</button></a>
+                <a href="@routes.RouteController.showDijkstraRouting(officePackage.id)"><button type="button" class="btn btn-default">Create route using Algorithm</button></a>
+
             </div>
         </div>
         <div class="row">
