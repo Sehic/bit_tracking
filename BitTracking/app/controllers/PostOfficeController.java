@@ -27,6 +27,10 @@ public class PostOfficeController extends Controller {
     private static final Form<PostOffice> officeForm =
             Form.form(PostOffice.class);
 
+
+    public Result postOfficeList(){
+        return ok(location.render(PostOffice.findOffice.findList()));
+    }
     /**
      * Method that deletes office from database
      *

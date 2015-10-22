@@ -18,13 +18,13 @@ public class Faq extends Model {
 
     @Id
     public Long id;
-    @Constraints.MaxLength(255)
-    @Constraints.MinLength(value = 0, message = "Question field is required!")
+    //@Constraints.MaxLength(255)
+   // @Constraints.MinLength(value = 0, message = "Question field is required!")
     @Column(columnDefinition = "Text")
     public String question;
-    @Constraints.Required(message = "Please add an answer here.")
+   // @Constraints.Required(message = "Please add an answer here.")
     @Column(columnDefinition = "Text")
-    @Constraints.MinLength(4)
+    //@Constraints.MinLength(4)
     public String answer;
 
     public static Finder<Long, Faq> faqFinder = new Finder<>(Faq.class);
