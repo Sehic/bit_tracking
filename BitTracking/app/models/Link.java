@@ -38,4 +38,8 @@ public class Link extends Model {
     public static List<Link> findByTargetOffice(String target) {
         return finder.where().eq("target", target).findList();
     }
+
+    public static Link findByStartAndTargetOffice(String start, String target) {
+        return finder.where().eq("startOffice", start).eq("target", target).findUnique();
+    }
 }

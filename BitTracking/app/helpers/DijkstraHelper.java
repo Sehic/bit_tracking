@@ -170,6 +170,7 @@ public class DijkstraHelper {
         Vertex b = findVertexByName(targetAddress);
 
         List<Vertex> path = getPath(a,b);
+
         List<String> pathStrings = new ArrayList<>();
 
         for (int i = 0; i < path.size(); i++) {
@@ -178,5 +179,25 @@ public class DijkstraHelper {
         }
 
         return pathStrings;
+    }
+
+    public static double getTotalDistance(String initialAddress, String targetAddress) {
+
+        double distance = 0;
+
+        getAllVertexesWithEdges();
+
+        Vertex a = findVertexByName(initialAddress);
+        Vertex b = findVertexByName(targetAddress);
+
+        List<Vertex> path = getPath(a,b);
+
+        for (int i = 0; i < path.size(); i++) {
+            if ((i + 1) < path.size()) {
+                Link link = Link.findByStartAndTargetOffice(path.get(i).name, path.get(i + 1).name);
+                distance += link.distance;
+            }
+        }
+        return distance;
     }
 }
