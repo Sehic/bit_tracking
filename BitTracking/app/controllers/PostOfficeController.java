@@ -212,6 +212,8 @@ public class PostOfficeController extends Controller {
         PostOffice mainPostOffice = PostOffice.findOffice.where().eq("name", officeName).findUnique();
         List<PostOffice> relationOffices = mainPostOffice.postOfficesA;
 
+        String startOffice = mainPostOffice.name;
+
         if (relationOffices.size() != 0) {
             for (int i = 0; i < relationOffices.size(); i++) {
                 relationOffices.get(i).postOfficesA.remove(mainPostOffice);
@@ -219,10 +221,31 @@ public class PostOfficeController extends Controller {
             }
             mainPostOffice.postOfficesA.clear();
             Ebean.update(mainPostOffice);
+
+            // NOVO SA LINKOVIMA
+            List<Link> startOfficeLinks = Link.findByStartOffice(startOffice);
+            for (int i = 0; i < startOfficeLinks.size(); i++) {
+                startOfficeLinks.get(i).delete();
+            }
+            List<Link> targetOfficeLinks = Link.findByTargetOffice(startOffice);
+            for (int i = 0; i < targetOfficeLinks.size(); i++) {
+                targetOfficeLinks.get(i).delete();
+            }
+            // KRAJ NOVOG SA LINKOVIMA
+
         }
         //    Saving offices and their relationship to database
         for (int i = 0; i < postOffices.size(); i++) {
             PostOffice linkedPostOffice = postOffices.get(i);
+
+            String targetOffice = linkedPostOffice.name;
+            // OVO JE PRIVREMENO RJESENJE - IZVLACICEMO POMOCU GOOGLE DISTANCE API-JA TACNE UDALJENOSTI IZMEDJU OFFICA
+            double distance = Math.random()*100;
+            Link l1 = new Link(startOffice, targetOffice, distance);
+            Link l2 = new Link(targetOffice, startOffice, distance);
+            l1.save();
+            l2.save();
+
             mainPostOffice.postOfficesA.add(linkedPostOffice);
             linkedPostOffice.postOfficesA.add(mainPostOffice);
             Ebean.save(mainPostOffice);

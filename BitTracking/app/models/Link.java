@@ -17,25 +17,25 @@ public class Link extends Model {
     @Column
     public String target;
 
-    @ManyToOne
-    public Office startOffice;
+    @Column
+    public String startOffice;
 
     @Column
-    public double weight;
+    public double distance;
 
-    public Link(Office argStart, String argTarget, double argWeight) {
+    public Link(String argStart, String argTarget, double argDistance) {
         startOffice = argStart;
         target = argTarget;
-        weight = argWeight;
+        distance = argDistance;
     }
 
     public static Finder<String, Link> finder = new Finder<String, Link>(Link.class);
 
-    public static Link findById(Long id) {
-        return finder.where().eq("id", id).findUnique();
-    }
-
     public static List<Link> findByStartOffice(String startOffice) {
         return finder.where().eq("startOffice", startOffice).findList();
+    }
+
+    public static List<Link> findByTargetOffice(String target) {
+        return finder.where().eq("target", target).findList();
     }
 }
