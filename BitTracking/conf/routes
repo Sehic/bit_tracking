@@ -90,6 +90,7 @@ GET           /adminpanel/adminfaqview                           @controllers.Fa
 GET           /userfaq                                           @controllers.FaqController.userFaqView()
 GET           /adminpanel/getfaq                                 @controllers.FaqController.addNewFaq()
 GET           /adminpanel/editFaq/:id                            @controllers.FaqController.editFaq(id: Long)
+GET           /adminpanel/deletefaq/:id                          @controllers.FaqController.deleteFaq(id: Long)
 DELETE        /adminpanel/deletefaq/:id                          @controllers.FaqController.deleteFaq(id: Long)
 POST          /adminpanel/savefaq                                @controllers.FaqController.saveFaq()
 POST          /adminpanel/editFaq/:id                            @controllers.FaqController.updateFaq(id: Long)

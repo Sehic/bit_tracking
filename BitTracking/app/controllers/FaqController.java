@@ -108,7 +108,7 @@ public class FaqController extends Controller {
             return badRequest(faqview.render(Faq.allFaqs()));
         }
         faq.delete();
-        return ok(faqview.render(Faq.allFaqs()));
+        return redirect(routes.FaqController.adminFaqView());
 
     }
 
