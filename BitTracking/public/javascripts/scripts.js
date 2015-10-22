@@ -370,8 +370,7 @@ $(document).ready(function () {
                     url: $toDelete.attr("href"),
                     method: "delete"
                 }).success(function (response) {
-                    window.location.reload();
-                    //$toDelete.parents($toDelete.attr("data-delete-parent")).remove();
+                    $toDelete.parents($toDelete.attr("data-delete-parent")).remove();
                 }).error(function(response){
                     bootbox.dialog({
                        message:"Post Office is active. You should remove relations with other offices and packages!",
