@@ -7,13 +7,12 @@
         <div class="row">
             <div class="col-md-12">
             @helper.form(action = routes.FaqController.saveFaq(), 'class -> "form-horizontal", 'role -> "form", 'method -> "POST") {
-                <div class="form-group">
+                <div class="form-group" >
                     <label for="question" class="col-sm-1 control-label">
                         Question:<abbr class="req" title="required">*</abbr>
                     </label>
                     <div class="col-sm-11">
-                        <input placeholder="Add a new question" name="question" type="text" class="form-control" id="question" required="required" >
-                            <!--<span id="equalName" class="alert-danger" data-error-for="" ></span>-->
+                        <input placeholder="Add a new question. This field cannot be empty nor just whitespace(s)." name="question" type="text" class="form-control" id="question" required="required" onkeyup="CheckInputs()">
                     </div>
                 </div>
 
@@ -30,8 +29,11 @@
                 <div class="form-inline">
                     <div class="col-sm-offset-1 col-sm-11">
                         <div>
-                            <input id="addfaq" type="submit" class="btn btn-primary form-inline" value="Add FAQ">
-                            <input id="return" type="reset" class="btn btn-primary form-inline" value="Reset All">
+                            <input id="addfaq" type="submit" class="btn btn-primary form-inline" value="Add FAQ" disabled>
+                            <input id="return" type="reset" class="btn btn-info form-inline" value="Reset All">
+                        </div><br>
+                        <div>
+                            <a href="@routes.FaqController.adminFaqView()"/><span class="glyphicon glyphicon-arrow-left"></span><input id="backbutton" type="button" class="btn-link btn-info" value="Go Back">
                         </div>
                     </div>
                 </div>
