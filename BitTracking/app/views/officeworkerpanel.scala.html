@@ -109,7 +109,7 @@
                         <td>@pack.senderName</td>
                         <td>@pack.recipientName</td>
                         @if(pack.shipmentPackages.size() < 2) {
-                            <td><a href="@routes.RouteController.listRoutes(pack.id)">Add Route</a></td>
+                            <td><a href="@routes.RouteController.showDijkstraRouting(pack.id)">Add Route</a></td>
                             <td><input type="checkbox" name="@pack.id" value="@pack.id">Create route</td>
                         } else {
                             <td>

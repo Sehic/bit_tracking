@@ -260,7 +260,7 @@ public class PackageController extends Controller {
 
         List<Location> locations = Location.findLocation.findList();
         List<PostOffice> offices = PostOffice.findOffice.findList();
-        return ok(owmakeautoroute.render(offices, locations, pack));
+        return redirect(routes.WorkerController.officeWorkerPanel());
     }
 
     @Security.Authenticated(Authenticators.AdminDeliveryWorkerFilter.class)

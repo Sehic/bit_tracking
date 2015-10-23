@@ -1,3 +1,29 @@
+//function will disable submit button if input field is whitespace
+$(document).ready(function () {
+    CheckInputs();
+    $("#question").each(function () {
+        $(this).keyup(function () {
+            $("#addfaq").prop("disabled", CheckInputs());
+        });
+    });
+});
+function CheckInputs() {
+    var valid = false;
+    $("#question").each(function () {
+        if (valid) {
+            return valid;
+        }
+        var input = $.trim($(this).val());
+        valid = !input;
+    });
+    return valid;
+}
+
+//function removes whitespaces from input field
+function removeSpaces(string) {
+    return string.split(' ').join('');
+}
+
 $(document).ready(function() {
     $("#drivingOfficeDiv").show();
     $("#userTypeId").change(function() {
