@@ -148,7 +148,7 @@ public class UserController extends Controller {
             u.phoneNumber = "+" + u.country.callingCode + phoneNumber;
             u.validationCode = validationCode;
             String smsBody = "Validation code: " + u.validationCode;
-            SmsHelper.sendSms(smsBody, u.phoneNumber);
+            //SmsHelper.sendSms(smsBody, u.phoneNumber);
             /**
              * Due to limitations caused by trial version of Twilio, we can send only 5 SMS messages per day.
              * That's why we use MailHelper in this testing period.
