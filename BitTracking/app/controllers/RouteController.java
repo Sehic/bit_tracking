@@ -275,7 +275,8 @@ public class RouteController extends Controller {
 
     public static List<PostOffice> officesInRoute(String initialOffice, String destinationOffice){
         List<PostOffice> offices = PostOffice.findOffice.findList();
-        List<String> routeOffices = DijkstraHelper.getStringPath(initialOffice, destinationOffice);
+        DijkstraHelper dijkstra = new DijkstraHelper();
+        List<String> routeOffices = dijkstra.getStringPath(initialOffice, destinationOffice);
         List<PostOffice> finalOffices = new ArrayList<>();
 
         for (String routeOfficeName : routeOffices) {
@@ -293,7 +294,8 @@ public class RouteController extends Controller {
 
         String initialOffice = form.data().get("initial");
         String destinationOffice = form.data().get("destination");
-        List<String> offices = DijkstraHelper.getStringPath(initialOffice, destinationOffice);
+        DijkstraHelper dijkstra = new DijkstraHelper();
+        List<String> offices = dijkstra.getStringPath(initialOffice, destinationOffice);
         return ok(offices.toString());
     }
 

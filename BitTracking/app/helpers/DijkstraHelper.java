@@ -24,9 +24,9 @@ import java.util.*;
  */
 public class DijkstraHelper {
 
-    public static List<Vertex> vertexes = getAllVertexes();
+    public List<Vertex> vertexes = getAllVertexes();
 
-    private static class Vertex implements Comparable<Vertex> {
+    private class Vertex implements Comparable<Vertex> {
         public final String name;
         public List<Edge> adjacencies = new ArrayList<>();
         public double minDistance = Double.POSITIVE_INFINITY;
@@ -45,7 +45,7 @@ public class DijkstraHelper {
         }
     }
 
-    public static class Edge {
+    public class Edge {
         public final Vertex target;
         public final double weight;
 
@@ -81,14 +81,14 @@ public class DijkstraHelper {
 
     public static List<Vertex> getShortestPathTo(Vertex target) {
         List<Vertex> path = new ArrayList<Vertex>();
-        for (Vertex vertex = target; vertex != null; vertex = vertex.previous){
+        for (Vertex vertex = target; vertex != null; vertex = vertex.previous)
             path.add(vertex);
-        }
+
         Collections.reverse(path);
         return path;
     }
 
-    public static List<Vertex> getAllVertexes() {
+    public List<Vertex> getAllVertexes() {
         List<Vertex> allVertexes = new ArrayList<>();
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
         for (int i = 0; i < postOffices.size(); i++) {
@@ -99,7 +99,7 @@ public class DijkstraHelper {
         return allVertexes;
     }
 
-    public static Vertex findVertexByName(String name) {
+    public Vertex findVertexByName(String name) {
         for (Vertex v : vertexes) {
             if (v.name.equals(name)) {
                 return v;
@@ -108,7 +108,7 @@ public class DijkstraHelper {
         return null;
     }
 
-    public static void getAllVertexesWithEdges(){
+    public void getAllVertexesWithEdges(){
         for (int i = 0; i < vertexes.size(); i++) {
             Vertex v = vertexes.get(i);
             List<Link> startOfficeLinks = Link.findByStartOffice(v.name);
@@ -163,7 +163,7 @@ public class DijkstraHelper {
         return distance;
     }
 
-    public static List<String> getStringPath(String initialAddress, String targetAddress) {
+    public List<String> getStringPath(String initialAddress, String targetAddress) {
 
         getAllVertexesWithEdges();
 
