@@ -172,6 +172,7 @@ public class PackageController extends Controller {
             pack.recipientAddress = form.get("recipientAddress");
             pack.senderName = user.firstName + " " + user.lastName;
             pack.weight = Double.parseDouble(form.get("weight"));
+            Double distance = Double.parseDouble(form.get("distanceBetween"));
             pack.seen = true;
             String type = form.get("packageType");
             pack.packageType = null;
@@ -193,11 +194,12 @@ public class PackageController extends Controller {
             user.packages.add(pack);
             Shipment ship = new Shipment();
             ship.packageId = pack;
-            ship.postOfficeId = PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
+            ship.postOfficeId = PostOffice.findPostOfficeByAddress(form.get("initialPostOffice"));
             if (ship.postOfficeId == null) {
                 flash("noOffice", "Please select one office!");
                 return badRequest(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
             }
+            pack.price = PriceHelper.calculatePrice(pack.weight, distance);
             pack.save();
             user.update();
             ship.save();

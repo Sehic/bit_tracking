@@ -155,10 +155,10 @@
                                     Send Via:<abbr class="req" title="required"> *</abbr>
                                 </label>
                                 <div class="col-sm-5">
-                                    <select class="sortAlphabetically form-control" name="initialPostOffice" required>
+                                    <select id="initialAddress" class="sortAlphabetically form-control" name="initialPostOffice" required>
                                         <option class="default" value="">--Select one--</option>
                                         @for(office <- offices) {
-                                            <option value="@office.name">@office.name</option>
+                                            <option value="@office.address">@office.name</option>
                                         }
                                     </select>
                                 </div>
@@ -166,7 +166,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-3 pull-right">
-                                    <input type="submit" class="btn btn-primary" value="Create Request">
+                                    <input id="createRequestButton" type="submit" class="btn btn-primary" value="Create Request">
                                 </div>
                             </div>
                         </div>
@@ -174,7 +174,7 @@
 
                             <input id="longitude" name="longitude" type="hidden">
                             <input id="latitude" name="latitude" type="hidden">
-
+                            <input id="distanceBetweenOffices" name="distanceBetween" type="hidden"/>
 
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 margin-bottom-30">
@@ -225,6 +225,50 @@ function geocodeAddress(geocoder, resultsMap) {
     }
   });
 }
+
+$('#initialAddress').blur(function(){
+        var directionsService = new google.maps.DirectionsService();
+
+        var renderOptions = { draggable: true };
+        var directionDisplay = new google.maps.DirectionsRenderer(renderOptions);
+
+        //set the directions display service to the map
+        directionDisplay.setMap(map);
+        var finalAddress = document.getElementById('recipientAddress').value;
+        var initialAddress = $('#initialAddress').val();
+        //set the starting address and destination address
+        var originAddress = initialAddress;
+        var destinationAddress = finalAddress;
+        //build directions request
+        var request = {
+            origin: originAddress,
+            destination: destinationAddress,
+            provideRouteAlternatives: true,
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+        //get the route from the directions service
+directionsService.route(request, function (response, status) {
+    if(status == google.maps.DirectionsStatus.OK) {
+
+        for (var i = 0, len = response.routes.length; i < len; i++) {
+                new google.maps.DirectionsRenderer({
+                    map: map,
+                    directions: response,
+                    routeIndex: i
+                });
+           }
+
+        var totalDistance = 0;
+
+        var legs = response.routes[0].legs;
+        for(var i=0; i<legs.length; i++) {
+            totalDistance = totalDistance + legs[i].distance.value;
+        }
+        $("#distanceBetweenOffices").val((totalDistance/1000).toFixed(2));
+    }
+});
+})
+
     google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
