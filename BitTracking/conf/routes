@@ -78,7 +78,8 @@ GET           /contact                                           @controllers.Ma
 
 GET           /statistic                                         @controllers.StatisticController.showPostOfficeStatistic()
 
-POST          /asigntodelivery/:id                               @controllers.PackageController.asignToDelivery(id: Long)
+GET           /adminpanel/packageinfo/:id                        @controllers.PackageController.packageInfo(id: Long)
+POST          /adminpanel/packageinfo/checkcode/:id              @controllers.PackageController.checkPackageCode(id: Long)
 
 GET           /validate                                          @controllers.UserController.validatePhone()
 POST          /validate                                          @controllers.UserController.validatePhoneNumber()
@@ -99,6 +100,9 @@ POST          /adminpanel/savefaq                                @controllers.Fa
 POST          /adminpanel/editFaq/:id                            @controllers.FaqController.updateFaq(id: Long)
 
 POST          /adminpanel/getoffices/getdijkstra                 @controllers.RouteController.getDijkstraPath()
+
+GET           /adminpanel/deliverycourierpanel                   @controllers.WorkerController.deliveryCourierPanel()
+POST          /adminpanel/deliverycourierpanel/deliver           @controllers.PackageStatusController.updateStatusDeliveryCourier()
 
 
 

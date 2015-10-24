@@ -294,7 +294,6 @@ public class RouteController extends Controller {
         String initialOffice = form.data().get("initial");
         String destinationOffice = form.data().get("destination");
         List<String> offices = DijkstraHelper.getStringPath(initialOffice, destinationOffice);
-
         return ok(offices.toString());
     }
 

@@ -61,6 +61,15 @@ public class Package extends Model {
 
     @Formats.DateTime(pattern="dd/MM/yyyy")
     public Date packageRejectedTimestamp;
+    @Column
+    @Enumerated(EnumType.STRING)
+    public StatusHelper statusForCourier;
+
+    @Column
+    public Long packagePinCode;
+
+    @Column
+    public Boolean isVerified = false;
 
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 
@@ -90,6 +99,18 @@ public class Package extends Model {
 
     public static List<Package> findApprovedPackages(){
         return finder.where().eq("approved", true).findList();
+    }
+
+    private static final long LIMIT = 1000000L;
+    private static long last = 0;
+
+    public static long getPinCode() {
+        // 6 digits.
+        long id = (System.currentTimeMillis() / 10) % LIMIT;
+        if ( id <= last ) {
+            id = (last + 1) % LIMIT;
+        }
+        return last = id;
     }
 
     @Override

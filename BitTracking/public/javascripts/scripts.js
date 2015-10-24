@@ -25,13 +25,13 @@ function removeSpaces(string) {
 }
 
 $(document).ready(function() {
-    $("#drivingOfficeDiv").show();
+    $(".drivingOfficeDiv").show();
     $("#userTypeId").change(function() {
         var userTypeValue = $("#userTypeId option:selected").val();
         if(userTypeValue === "2"){
-            $("#drivingOfficeDiv").show();
+            $(".drivingOfficeDiv").show();
         }else{
-            $("#drivingOfficeDiv").hide();
+            $(".drivingOfficeDiv").hide();
         }
     });
 });

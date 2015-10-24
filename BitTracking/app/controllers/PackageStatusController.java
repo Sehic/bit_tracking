@@ -81,7 +81,8 @@ public class PackageStatusController extends Controller {
                         shipmentByPackage.get(j).status = StatusHelper.DELIVERED;
                         Ebean.update(shipmentByPackage.get(j));
                     }
-
+                    pack.statusForCourier = StatusHelper.READY_FOR_SHIPPING;
+                    pack.update();
                     User user = null;
                     for (int j = 0; j < pack.users.size(); j++) {
                         if (pack.users.get(j).typeOfUser == UserType.REGISTERED_USER) {
@@ -159,6 +160,22 @@ public class PackageStatusController extends Controller {
         }
         return redirect(routes.WorkerController.officeWorkerPanel());
     }
+
+    public Result updateStatusDeliveryCourier(){
+        DynamicForm form = Form.form().bindFromRequest();
+        List<Package> packages = Package.findApprovedPackages();
+        Package newPack = new Package();
+        for (int i = 0; i < packages.size(); i++) {
+            String pack = form.field("" + packages.get(i).id).value();
+            if (pack != null) {
+                newPack = Package.findPackageById(Long.parseLong(pack));
+                newPack.statusForCourier = StatusHelper.DELIVERED;
+                newPack.update();
+            }
+        }
+        return redirect(routes.WorkerController.deliveryCourierPanel());
+    }
+
 
     public static List<Package> packagesForOfficeWorkerWaitingForApproval(PostOffice userOffice, List<Package> packagesWaiting) {
         List<Package> packagesForOfficeWorker = new ArrayList<>();

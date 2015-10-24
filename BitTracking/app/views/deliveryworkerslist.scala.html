@@ -36,6 +36,7 @@
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
+                            <th>Delivery Role</th>
                             <th>Initial Post Office</th>
                             <th>Driving Post Office</th>
                             <th>User Profile</th>
@@ -49,8 +50,15 @@
                             <td>@user.firstName</td>
                             <td>@user.lastName</td>
                             <td>@user.email</td>
+                            @if(user.isCourier){
+                                <td>Delivery Courier</td>
+                            }else{
+                                <td>Delivery Worker</td>
+                            }
                             @if(user.postOffice != null) {
                                 <td>@user.postOffice.name</td>
+                            }else{
+                                <td>-</td>
                             }
                             @if(user.drivingOffice != null) {
                                 <td>@user.drivingOffice</td>

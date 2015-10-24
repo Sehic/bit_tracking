@@ -69,8 +69,8 @@ public class User extends Model {
     @Column
     public String drivingOffice;
 
-
-
+    @Column
+    public Boolean isCourier = false;
 
 
     public User() {

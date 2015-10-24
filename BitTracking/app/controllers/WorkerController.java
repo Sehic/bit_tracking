@@ -10,9 +10,7 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
-import views.html.adminworkeradd;
-import views.html.deliveryworkerpanel;
-import views.html.officeworkerpanel;
+import views.html.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +37,7 @@ public class WorkerController extends Controller {
         //Proceeding value and creating post office with it
         PostOffice wantedPostOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
         String drivingOffice = boundForm.field("drivingOffice").value();
-
+        String isCourier = boundForm.field("isCourier").value();
         User u = User.checkEmail(email);
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
         if (u != null) {
@@ -84,6 +82,11 @@ public class WorkerController extends Controller {
         if(!"".equals(drivingOffice)) {
             if(u.typeOfUser == UserType.DELIVERY_WORKER) {
                 u.drivingOffice = drivingOffice;
+            }
+        }
+        if(isCourier!=null){
+            if(u.typeOfUser == UserType.DELIVERY_WORKER) {
+                u.isCourier = true;
             }
         }
         u.save();
@@ -172,6 +175,42 @@ public class WorkerController extends Controller {
             }
         }
         return finalUserPackages;
+    }
+
+    public Result deliveryCourierPanel(){
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
+            return redirect(routes.Application.index());
+        }
+
+        List<Package> packagesForShipment = getPackagesWithoutCourier();
+        List<Package> courierPackages = u1.packages;
+        List<Package> courierPackagesForDelivery = getCourierPackagesForHomeDelivery(courierPackages);
+        return ok(deliverycourierpanel.render(packagesForShipment, courierPackagesForDelivery, courierPackages));
+    }
+
+    public static List<Package> getCourierPackagesForHomeDelivery(List<Package> courierPackages){
+        List<Package> packages = new ArrayList<>();
+        List<Package> packagesForShipment = Package.finder.where().eq("statusForCourier", StatusHelper.READY_FOR_SHIPPING).findList();
+        for(int i=0;i<packagesForShipment.size();i++){
+            for(int j=0; j<courierPackages.size();j++){
+                if(packagesForShipment.get(i).id == courierPackages.get(j).id){
+                    packages.add(packagesForShipment.get(i));
+                }
+            }
+        }
+        return packages;
+    }
+
+    public static List<Package> getPackagesWithoutCourier(){
+        List<Package> packagesForShipment = Package.finder.where().eq("statusForCourier", StatusHelper.READY_FOR_SHIPPING).findList();
+        List<Package> packages = new ArrayList<>();
+        for(int i=0;i<packagesForShipment.size();i++){
+            if(!packagesForShipment.get(i).isTaken){
+                packages.add(packagesForShipment.get(i));
+            }
+        }
+        return packages;
     }
 
 }

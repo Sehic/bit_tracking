@@ -81,9 +81,9 @@ public class DijkstraHelper {
 
     public static List<Vertex> getShortestPathTo(Vertex target) {
         List<Vertex> path = new ArrayList<Vertex>();
-        for (Vertex vertex = target; vertex != null; vertex = vertex.previous)
+        for (Vertex vertex = target; vertex != null; vertex = vertex.previous){
             path.add(vertex);
-
+        }
         Collections.reverse(path);
         return path;
     }
@@ -122,6 +122,7 @@ public class DijkstraHelper {
     }
 
     public static List<Vertex> getPath(Vertex a, Vertex b) {
+
         computePaths(a);
         return getShortestPathTo(b);
     }
@@ -168,7 +169,6 @@ public class DijkstraHelper {
 
         Vertex a = findVertexByName(initialAddress);
         Vertex b = findVertexByName(targetAddress);
-
         List<Vertex> path = getPath(a,b);
         List<String> pathStrings = new ArrayList<>();
 

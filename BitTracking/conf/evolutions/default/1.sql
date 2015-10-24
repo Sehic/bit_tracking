@@ -59,7 +59,11 @@ create table package (
   seen                      tinyint(1) default 0,
   is_taken                  tinyint(1) default 0,
   package_rejected_timestamp datetime(6),
+  status_for_courier        integer,
+  package_pin_code          bigint,
+  is_verified               tinyint(1) default 0,
   constraint ck_package_package_type check (package_type in ('4','2','1','3')),
+  constraint ck_package_status_for_courier check (status_for_courier in ('5','1','2','4','3')),
   constraint pk_package primary key (id))
 ;
 
@@ -98,6 +102,7 @@ create table user (
   token                     varchar(255),
   validated                 tinyint(1) default 0,
   driving_office            varchar(255),
+  is_courier                tinyint(1) default 0,
   constraint ck_user_type_of_user check (type_of_user in ('3','2','1','4')),
   constraint uq_user_token unique (token),
   constraint pk_user primary key (id))

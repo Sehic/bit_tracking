@@ -96,10 +96,11 @@ public class MailHelper {
         MailHelper.sendConfirmation(subject, message, userEmail);
     }
 
-    public static void approvedRequestNotification(String userLastName, String trackingNum, String userEmail) {
+    public static void approvedRequestNotification(String userLastName, String trackingNum, String userEmail, Long pinCode) {
         String subject = "BitTracking Notification!";
         String message = "Mr/Mrs. " + userLastName + ",<br><br>" +
                 "Your Latest Request For Delivery Service Has Been <strong>Approved</strong>.<br>" +
+                "Here is your PIN Code that you need to show to our Office Worker: " + pinCode + "<br>" +
                 "You can get status information of delivery by any time using this tracking number:<br><br> " + trackingNum + "<br><br>" +
                 "As soon as the package is delivered, you will be notified.<br><br>" +
                 "<i>BitTracking Team!</i>";
@@ -115,7 +116,7 @@ public class MailHelper {
         MailHelper.sendConfirmation(subject, message, userEmail);
     }
 
-    public static void sendPhoneValidationCode (String code, String userEmail) {
+    public static void sendPhoneValidationCode(String code, String userEmail) {
         String subject = "Phone Validation Code";
         MailHelper.sendConfirmation(subject, code, userEmail);
     }

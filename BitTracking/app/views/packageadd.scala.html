@@ -256,7 +256,7 @@ function showMap(resp){
         var final = resp[resp.length-1];
         final = final.replace(']','');
         final = final.trim();
-
+        var finalAddress = "";
         var waypointOffices = [];
         for(var i =0;i<resp.length;i++){
             if(i!==0 && i!==resp.length-1){
@@ -276,10 +276,12 @@ function showMap(resp){
             var officeAddress="@office.address";
             if(initial === officeName){
                 initial = officeAddress;
+
             }
 
             if(final === officeName){
-                 var finalAddress = "@office.address";
+                finalAddress  = officeAddress;
+
             }
             if(officeName!==initial && final!==officeName){
 
@@ -306,7 +308,6 @@ function showMap(resp){
         //set the starting address and destination address
         var originAddress = initial;
         var destinationAddress = finalAddress;
-
         //build directions request
         var request = {
             origin: originAddress,

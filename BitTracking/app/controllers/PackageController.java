@@ -222,7 +222,8 @@ public class PackageController extends Controller {
         String message = "";
 
         Shipment ship = Shipment.shipmentFinder.where().eq("packageId", pack).findUnique();
-        Calendar c = Calendar.getInstance();;
+        Calendar c = Calendar.getInstance();
+        ;
         Date date = c.getTime();
         if (value.equals("approve") && destination != "default") {
             if (destination.equals("default")) {
@@ -233,18 +234,19 @@ public class PackageController extends Controller {
             }
 
             pack.price = Double.parseDouble(price);
-            pack.packageRejectedTimestamp= date;
+            pack.packageRejectedTimestamp = date;
             pack.approved = true;
             pack.seen = false;
             pack.isTaken = false;
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.destination = destination;
-            MailHelper.approvedRequestNotification(pack.users.get(0).lastName, pack.trackingNum, pack.users.get(0).email);
+            pack.packagePinCode = Package.getPinCode();
+            MailHelper.approvedRequestNotification(pack.users.get(0).lastName, pack.trackingNum, pack.users.get(0).email, pack.packagePinCode);
         } else if (value.equals("reject")) {
             pack.approved = false;
             pack.trackingNum = "rejected";
             pack.seen = false;
-            pack.packageRejectedTimestamp= date;
+            pack.packageRejectedTimestamp = date;
             pack.update();
             ship.delete();
             MailHelper.rejectedRequestNotification(pack.users.get(0).lastName, pack.users.get(0).email);
@@ -281,11 +283,36 @@ public class PackageController extends Controller {
             }
         }
         user.update();
-
+        if (user.isCourier) {
+            return redirect(routes.WorkerController.deliveryCourierPanel());
+        }
         return redirect(routes.WorkerController.deliveryWorkerPanel());
     }
 
-    public Result asignToDelivery(Long id){
-        return TODO;
+    public Result packageInfo(Long id) {
+        Package pack = Package.findPackageById(id);
+        return ok(packageinfo.render(pack));
+    }
+
+    public Result checkPackageCode(Long id){
+        DynamicForm form = Form.form().bindFromRequest();
+        String code = form.get("packagePinCode");
+        System.out.println(code);
+        Package pack = Package.findPackageById(id);
+        Long pinCode =0L;
+        try{
+             pinCode = Long.parseLong(code);
+
+        }catch(NumberFormatException e) {
+            return badRequest(packageinfo.render(pack));
+        }
+        if(!pinCode.equals(pack.packagePinCode)){
+            System.out.println(pinCode +" "+ pack.packagePinCode);
+            flash("incorrectCode","Incorrect Package Code. Please enter valid code.");
+            return redirect(routes.PackageController.packageInfo(pack.id));
+        }
+        pack.isVerified = true;
+        pack.update();
+        return redirect(routes.WorkerController.officeWorkerPanel());
     }
 }

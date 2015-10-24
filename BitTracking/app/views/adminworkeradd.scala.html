@@ -71,7 +71,7 @@
                             Password:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
                         <div class="col-sm-9">
-                            <input name="password" onblur="checkPassword()" placeholder="Password should contain any sequence of alpha & one number. Minimum alowed length is 6. " type="password" class="form-control" id="inputPassword3" required="required">
+                            <input name="password" onblur="checkPassword()" placeholder="Password should contain any sequence of alpha & one number. Minimum allowed length is 6. " type="password" class="form-control" id="inputPassword3" required="required">
                             <span id="err4" class="alert-danger" data-error-for="" >@flash.get("errorPassword")</span>
 
                         </div>
@@ -96,7 +96,7 @@
                             Post Office:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
                         <div class="col-sm-3">
-                            <select id="postOffice" class="form-control sortAlphabetically" name="postOffice">
+                            <select id="postOffice" class="form-control sortAlphabetically" name="postOffice" required>
                                 <option value="">--Choose Post Office--</option>
                                 @for(office <- offices) {
 
@@ -121,7 +121,8 @@
                         </div>
                     </div>
 
-                    <div id="drivingOfficeDiv" class="form-group">
+                    <div class="form-group drivingOfficeDiv">
+
                         <label for="drivingOffice" class="col-sm-3 control-box">
                             Driving Office:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
@@ -135,7 +136,17 @@
                                 }
 
                             </select>
+
                         </div>
+                    </div>
+
+                    <div class="form-group drivingOfficeDiv">
+                        <label for="checkCourierBox" class="col-sm-3 control-box">
+                            Delivery Worker Role:
+                        </label>
+                        <div class="col-sm-3">
+                        <input id="checkCourierBox" type="checkbox" name="isCourier" value="Yes">Courier
+                            </div>
                     </div>
 
                     <div class="form-group">
