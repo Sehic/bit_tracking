@@ -39,4 +39,5 @@ public class ApiUserController extends Controller {
         }
         return ok(JSONHelper.jsonUser(u));
     }
+
 }

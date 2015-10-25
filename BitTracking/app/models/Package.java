@@ -71,6 +71,10 @@ public class Package extends Model {
     @Column
     public Boolean isVerified = false;
 
+    public Package(){
+
+    }
+
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 
     public static List<Package> findByPostOffice(Long id) {

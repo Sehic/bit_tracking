@@ -157,6 +157,11 @@ public class PackageController extends Controller {
 
     @Security.Authenticated(Authenticators.RegisteredUserFilter.class)
     public Result userSavePackage() {
+
+        if (!request().accepts("text/html")) {
+            return ApiPackageController.packageAdd();
+        }
+
         User user = SessionHelper.getCurrentUser(ctx());
         DynamicForm form = Form.form().bindFromRequest();
         List<Package> packages = Package.finder.where().eq("seen", false).eq("users", user).findList();
