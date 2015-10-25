@@ -267,6 +267,7 @@ function showMap(resp){
 
          var waypointsFromRoute = [];
          var officesFromWaypoints = [];
+         var officesFromWaypointsAddress = [];
         google.maps.event.addDomListener(window, 'resize', function() {
         map.setCenter(marker.getPosition());
         });
@@ -288,15 +289,26 @@ function showMap(resp){
                 for(var i =0;i<waypointOffices.length;i++){
 
                     if(waypointOffices[i] === officeName){
-                        waypointsFromRoute.push({
-                        location: officeAddress,
-                        stopover: true
-                        });
                         officesFromWaypoints.push(officeName);
+                        officesFromWaypointsAddress.push(officeAddress);
                     }
                 }
             }
         }
+        var finalOfficesFromWaypoints = [];
+        for(var i =0;i<waypointOffices.length;i++){
+            for(var j=0;j<officesFromWaypoints.length;j++){
+                if(waypointOffices[i] === officesFromWaypoints[j]){
+                    finalOfficesFromWaypoints.push(officesFromWaypoints[j]);
+                    waypointsFromRoute.push({
+                    location: officesFromWaypointsAddress[j],
+                    stopover: true
+                    });
+                }
+            }
+
+        }
+
         var directionsService = new google.maps.DirectionsService();
 
         var renderOptions = { draggable: true };
@@ -337,8 +349,8 @@ directionsService.route(request, function (response, status) {
             txt = $("#postOffices").val();
         }
         var routeString = txt+"|";
-        for(var i=0;i<officesFromWaypoints.length;i++){
-                routeString+=officesFromWaypoints[i]+"|";
+        for(var i=0;i<finalOfficesFromWaypoints.length;i++){
+                routeString+=finalOfficesFromWaypoints[i]+"|";
             }
         routeString+=final+"|";
         $("#routeOffices").val(routeString);
