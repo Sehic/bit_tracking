@@ -39,6 +39,10 @@ public class UserController extends Controller {
      * @return - positive message if true, else negative message
      */
     public Result loginCheck() {
+
+        if (!request().accepts("text/html")) {
+            return ApiUserController.login();
+        }
         //Getting values from form in (login.scala.html)
         String password = newUser.bindFromRequest().field("password").value();
         String email = newUser.bindFromRequest().field("email").value();
@@ -75,6 +79,10 @@ public class UserController extends Controller {
      * @return redirect user to subpage login if everything is ok, otherwise ?????
      */
     public Result registrationCheck() {
+
+        if (!request().accepts("text/html")) {
+            return ApiUserController.registration();
+        }
 
         Form<User> boundForm = newUser.bindFromRequest();
         //Creating user using form values (register.scala.html)
