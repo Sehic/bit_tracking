@@ -104,6 +104,9 @@ POST          /adminpanel/getoffices/getdijkstra                 @controllers.Ro
 GET           /adminpanel/deliverycourierpanel                   @controllers.WorkerController.deliveryCourierPanel()
 POST          /adminpanel/deliverycourierpanel/deliver           @controllers.PackageStatusController.updateStatusDeliveryCourier()
 
+#Api Controllers
+POST          /user/createrequest                                @controllers.ApiPackageController.packageAdd()
+
 
 
 
