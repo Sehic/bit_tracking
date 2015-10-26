@@ -215,6 +215,9 @@ public class Application extends Controller {
     }
 
     public Result userPanel() {
+        if (!request().accepts("text/html")) {
+            return ApiPackageController.getPackageAdd();
+        }
         User user = SessionHelper.getCurrentUser(ctx());
         if (user == null) {
             return redirect(routes.Application.index());

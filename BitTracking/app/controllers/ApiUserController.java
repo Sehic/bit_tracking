@@ -37,6 +37,8 @@ public class ApiUserController extends Controller {
         if(u==null){
             return badRequest();
         }
-        return ok(JSONHelper.jsonUser(u));
+
+        return ok(JSONHelper.jsonPackagesList(u.packages));
     }
+
 }
