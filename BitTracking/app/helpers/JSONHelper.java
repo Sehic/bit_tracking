@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.*;
+import models.Package;
 import play.libs.Json;
 
 import java.util.List;
@@ -40,6 +41,8 @@ public class JSONHelper {
         jsonPack.put("recipientName", pack.recipientName);
         jsonPack.put("recipientAddress", pack.recipientAddress);
         jsonPack.put("weight", pack.weight);
+        jsonPack.put("packageType", pack.packageType.toString());
+        jsonPack.put("status", pack.shipmentPackages.get(0).status.toString());
         return jsonPack;
     }
 
@@ -50,6 +53,15 @@ public class JSONHelper {
             jsonListPostOffices.add(jsonOffice);
         }
         return jsonListPostOffices;
+    }
+
+    public static ArrayNode jsonPackagesList(List<Package> packages){
+        ArrayNode jsonListPackages = new ArrayNode(JsonNodeFactory.instance);
+        for(Package pack: packages){
+            ObjectNode jsonPackage = jsonPackage(pack);
+            jsonListPackages.add(jsonPackage);
+        }
+        return jsonListPackages;
     }
 
 }

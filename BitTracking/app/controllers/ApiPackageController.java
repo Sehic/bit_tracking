@@ -8,19 +8,20 @@ import models.Package;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import java.util.List;
+
 /**
  * Created by Mladen13 on 25.10.2015.
  */
 public class ApiPackageController extends Controller {
 
-    public static Result packageAdd(){
+    public Result packageAdd(){
         JsonNode json = request().body().asJson();
         String recipientName = json.findPath("recipientName").textValue();
         String recipientAddress = json.findPath("recipientAddress").textValue();
         String weight = json.findPath("weight").textValue();
         String packageType = json.findPath("packageType").textValue();
         String postOfficeName = json.findPath("postOfficeName").textValue();
-        System.out.println(recipientName+" "+recipientAddress+" "+weight+" "+packageType+" "+ postOfficeName);
         Package pack = new Package();
         pack.recipientName = recipientName;
         pack.recipientAddress = recipientAddress;
@@ -52,6 +53,12 @@ public class ApiPackageController extends Controller {
 
     public static Result getPackageAdd(){
         return ok(JSONHelper.jsonPostOfficeList(PostOffice.findOffice.findList()));
+    }
+
+    public Result getPackageList(){
+        List<Package> packs = Package.findApprovedPackages();
+
+        return ok(JSONHelper.jsonPackagesList(packs));
     }
 
 }

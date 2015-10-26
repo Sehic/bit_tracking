@@ -134,7 +134,9 @@ public class WorkerController extends Controller {
         List<Package> readyPackages = getReadyToBeTakenPackages(packages, u1);
 
         List<Package> finalUserPackages = getUserPackages(packagesForUser, userPackages);
-
+        if(u1.isCourier){
+            return redirect(routes.WorkerController.deliveryCourierPanel());
+        }
         return ok(deliveryworkerpanel.render(readyPackages, finalUserPackages, userPackages));
     }
 
