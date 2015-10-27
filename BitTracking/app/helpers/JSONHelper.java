@@ -43,6 +43,7 @@ public class JSONHelper {
         jsonPack.put("weight", pack.weight);
         jsonPack.put("packageType", pack.packageType.toString());
         jsonPack.put("status", pack.shipmentPackages.get(0).status.toString());
+        jsonPack.put("approved",pack.approved);
         return jsonPack;
     }
 

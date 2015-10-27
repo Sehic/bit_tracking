@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import helpers.DijkstraHelper;
 import helpers.JSONHelper;
 import helpers.PackageType;
 import models.*;
@@ -59,6 +60,29 @@ public class ApiPackageController extends Controller {
         List<Package> packs = Package.findApprovedPackages();
 
         return ok(JSONHelper.jsonPackagesList(packs));
+    }
+
+    public Result jsonLocation(String loc) {
+        String[] locs = loc.split("&");
+        Location newLocation = new Location(Double.parseDouble(locs[0]), Double.parseDouble(locs[1]));
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+
+        PostOffice office = offices.get(0);
+        Location location = offices.get(0).place;
+
+        double distance = DijkstraHelper.getDistance(location.toString(), newLocation.toString());
+
+        for (int i = 1; i < offices.size(); i++) {
+            double newDistance = DijkstraHelper.getDistance(offices.get(i).place.toString(), newLocation.toString());
+            if (newDistance < distance) {
+                distance = newDistance;
+                office = offices.get(i);
+                location = offices.get(i).place;
+            }
+        }
+        String androidLoc = location.toString() + "," + office.name;
+
+        return ok(androidLoc);
     }
 
 }
