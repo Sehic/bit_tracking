@@ -222,7 +222,7 @@ public class RouteController extends Controller {
             }
             officePackage = Package.findPackageById(newPack.id);
             if (officePackage == null) {
-                flash("noOffices", "You must select at least one Post Office!");
+                flash("noOffices", "You must select at least one Package!");
                 return redirect(routes.WorkerController.officeWorkerPanel());
             }
             office = officePackage.shipmentPackages.get(0).postOfficeId;

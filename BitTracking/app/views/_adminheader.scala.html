@@ -1,4 +1,5 @@
 @import helpers.SessionHelper
+
 @()(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
 
 <div class="navbar navbar-inverse" role="navigation">
@@ -85,10 +86,17 @@
                 1</span>
                 Maps</a>
             </li>
-            <li><a href="@routes.Application.adminTables()"><i class="fa fa-users"></i> <span class="badge pull-right">
-                NEW</span>
-                Manage</a>
-            </li>
+            @if(currentUser.typeOfUser == UserType.OFFICE_WORKER) {
+                <li><a href="@routes.WorkerController.officeWorkerPanel()"><i class="fa fa-users"></i> <span class="badge pull-right">
+                    NEW</span>
+                    Office Worker Panel</a>
+                </li>
+            }else{
+                <li><a href="@routes.Application.adminTables()"><i class="fa fa-users"></i> <span class="badge pull-right">
+                    NEW</span>
+                    Manage</a>
+                </li>
+            }
             <li><a href="@routes.FaqController.adminFaqView()"><span class="glyphicon glyphicon-question-sign"></span>
                 FAQ</a>
             </li>

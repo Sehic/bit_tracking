@@ -11,8 +11,15 @@
     <hr/>
     <div class="row">
         <div class="col-sm-9 col-sm-offset-3">
-            <a href="@routes.WorkerController.officeWorkerPanel()"><button type="button" class="btn btn-default">
-                Office Worker Panel</button></a>
+            @helper.form(action = routes.RouteController.showMultiDijkstraRouting(), 'class -> "form-horizontal pull-left", 'role -> "form") {
+                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                <button type="submit" class="btn btn-default">Create Route Using Algorithm</button>
+            }
+
+            @helper.form(action = routes.RouteController.showMultiAutoRouting(), 'class -> "form-horizontal pull-left", 'role -> "form") {
+                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                <button type="submit" class="btn btn-default">Create Route Using Shortest Path</button>
+            }
         </div>
     </div>
 
@@ -94,15 +101,7 @@
 
         <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
     }
-            @helper.form(action = routes.RouteController.showMultiDijkstraRouting(), 'class -> "form-horizontal pull-right", 'role -> "form") {
-                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
-                <button type="submit" class="btn btn-default">Create route using Algorithm</button>
-            }
 
-            @helper.form(action = routes.RouteController.showMultiAutoRouting(), 'class -> "form-horizontal pull-right", 'role -> "form") {
-                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
-                <button type="submit" class="btn btn-default">Create route automatically</button>
-            }
         </div>
     </div>
     <br/>

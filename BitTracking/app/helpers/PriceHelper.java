@@ -17,16 +17,16 @@ public class PriceHelper {
 
     private static double getPrice(double weight, double distance){
         if (weight < 2) {
-            return distance * 1.10;
+            return distance * 0.50;
         }
         if(weight>=2 && weight<=5){
-            return distance * 1.20;
+            return distance * 0.60;
         }
         if(weight>5 &&weight<10){
-            return distance*1.30;
+            return distance*0.70;
         }
         if (weight>=10){
-            return distance*1.50;
+            return distance*0.80;
         }
         return -1;
     }

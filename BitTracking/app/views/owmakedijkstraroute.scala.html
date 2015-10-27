@@ -15,9 +15,7 @@
                 <a href="@routes.RouteController.listRoutes(officePackage.id)"><button type="button" class="btn btn-default">
                     Create Route Manually</button></a>
                 <a href="@routes.RouteController.showAutoRouting(officePackage.id)"><button type="button" class="btn btn-default">
-                    Create Route using Shortest Path</button></a>
-                <a href="@routes.WorkerController.officeWorkerPanel()"><button type="button" class="btn btn-default">
-                    Office Worker Panel</button></a>
+                    Create Route Using Shortest Path</button></a>
             </div>
         </div>
         <div class="row">
@@ -85,9 +83,9 @@
 
             <div class="col-sm-9 col-sm-offset-3">
                 <button id="addPackageButton" type="submit" class="btn btn-success">
-                    Finalize
+                    Save Route
                 </button>
-                <input id="clickMe" type="button" class="btn btn-primary" value="Suggest Route"/>
+                <input id="clickMe" type="button" class="btn btn-primary" value="Refresh Map"/>
             </div>
 
         </div>
@@ -102,7 +100,6 @@
 
 
                 <script type="text/javascript">
-    $('#addPackageButton').prop('disabled', true);
      var map;
      var i, marker;
 
@@ -231,9 +228,11 @@ var service = new google.maps.DistanceMatrixService;
 $("#clickMe").click( function(){
     initialize();
     showMap();
-    $('#addPackageButton').prop('disabled', false);
 });
-google.maps.event.addDomListener(window, 'load', initialize);
+$(document).ready(function() {
+initialize();
+    showMap();
+})
   </script>
             </div>
         </div>

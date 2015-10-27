@@ -130,7 +130,7 @@ public class Application extends Controller {
      *
      * @return
      */
-    @Security.Authenticated(Authenticators.AdminFilter.class)
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result adminMaps() {
 
         if (Location.findLocation.findList().size() > 0)

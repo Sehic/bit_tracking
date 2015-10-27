@@ -9,13 +9,19 @@
 
     <h2>Make a route using Algorithm</h2>
     <hr/>
-    @helper.form(routes.RouteController.saveAutoRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
-        <div class="row">
-            <div class="col-sm-9 col-sm-offset-3">
-                <a href="@routes.WorkerController.officeWorkerPanel()"><button type="button" class="btn btn-default">
-                    Office Worker Panel</button></a>
-            </div>
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3">
+            @helper.form(action = routes.RouteController.listMultiRoute(), 'class -> "form-horizontal pull-left", 'role -> "form") {
+                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                <button type="submit" class="btn btn-default">Create Route Manually</button>
+            }
+            @helper.form(action = routes.RouteController.showMultiAutoRouting(), 'class -> "form-horizontal pull-left", 'role -> "form") {
+                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                <button type="submit" class="btn btn-default">Create Route Using Shortest Path</button>
+            }
         </div>
+    </div>
+    @helper.form(routes.RouteController.saveAutoRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
         <div class="row">
             <hr/>
             <div class="form-group">
@@ -79,20 +85,13 @@
         <div class="row">
             <div class="col-sm-9 col-sm-offset-3">
                 <button id="addPackageButton" type="submit" class="btn btn-success">
-                    Finalize
+                    Save Route
                 </button>
-                <input id="clickMe" type="button" class="btn btn-primary" value="Suggest Route"/>
+                <input id="clickMe" type="button" class="btn btn-primary" value="Refresh Map"/>
 
                 <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
                 }
-    @helper.form(action = routes.RouteController.listMultiRoute(), 'class -> "form-horizontal pull-right", 'role -> "form") {
-        <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
-        <button type="submit" class="btn btn-default">Create route manually</button>
-    }
-    @helper.form(action = routes.RouteController.showMultiAutoRouting(), 'class -> "form-horizontal pull-right", 'role -> "form") {
-        <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
-        <button type="submit" class="btn btn-default">Create Route using Shortest Path</button>
-    }
+
 </div>
 
 </div>
@@ -105,7 +104,7 @@
 
 
                 <script type="text/javascript">
-    $('#addPackageButton').prop('disabled', true);
+
      var map;
      var i, marker;
 
@@ -230,9 +229,13 @@ var service = new google.maps.DistanceMatrixService;
 $("#clickMe").click( function(){
     initialize();
     showMap();
-    $('#addPackageButton').prop('disabled', false);
 });
-google.maps.event.addDomListener(window, 'load', initialize);
+
+$(document).ready(function() {
+    initialize();
+    showMap();
+})
+
   </script>
             </div>
         </div>
