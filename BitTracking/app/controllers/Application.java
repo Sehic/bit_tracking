@@ -1,9 +1,6 @@
 package controllers;
 
-import helpers.Authenticators;
-import helpers.MailHelper;
-import helpers.SessionHelper;
-import helpers.StatusHelper;
+import helpers.*;
 import models.*;
 import models.Package;
 import play.*;
@@ -43,6 +40,30 @@ public class Application extends Controller {
             session("email", cookie.value());
         }
         return ok(index.render());
+    }
+
+    public Result json(String loc) {
+        String[] locs = loc.split("&");
+        Location newLocation = new Location(Double.parseDouble(locs[0]), Double.parseDouble(locs[1]));
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+
+        PostOffice office = offices.get(0);
+        Location location = offices.get(0).place;
+
+        double distance = DijkstraHelper.getDistance(location.toString(), newLocation.toString());
+
+        for (int i = 1; i < offices.size(); i++) {
+            double newDistance = DijkstraHelper.getDistance(offices.get(i).place.toString(), newLocation.toString());
+            if (newDistance < distance) {
+                distance = newDistance;
+                office = offices.get(i);
+                location = offices.get(i).place;
+            }
+        }
+        String androidLoc = location.toString() + "," + office.name;
+        Logger.info(androidLoc);
+        //JsonNode json = Json.toJson(location);
+        return ok(androidLoc);
     }
 
     /**

@@ -104,7 +104,7 @@ POST          /adminpanel/getoffices/getdijkstra                 @controllers.Ro
 GET           /adminpanel/deliverycourierpanel                   @controllers.WorkerController.deliveryCourierPanel()
 POST          /adminpanel/deliverycourierpanel/deliver           @controllers.PackageStatusController.updateStatusDeliveryCourier()
 
-
+GET     /json/:location                                            @controllers.Application.json(location: String)
 
 
 
