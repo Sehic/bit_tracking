@@ -64,4 +64,16 @@ public class JSONHelper {
         return jsonListPackages;
     }
 
+    public static ArrayNode jsonLocationList(List<Location> locations){
+        ArrayNode jsonListLocations = new ArrayNode(JsonNodeFactory.instance);
+        for(Location place: locations){
+            ObjectNode jsonLocation = Json.newObject();
+            jsonLocation.put("id",place.id);
+            jsonLocation.put("x", place.x);
+            jsonLocation.put("y", place.y);
+            jsonListLocations.add(jsonLocation);
+        }
+        return jsonListLocations;
+    }
+
 }

@@ -61,4 +61,9 @@ public class ApiPackageController extends Controller {
         return ok(JSONHelper.jsonPackagesList(packs));
     }
 
+    public Result getLocations(){
+        List<Location> locations = Location.findLocation.findList();
+        return ok(JSONHelper.jsonLocationList(locations));
+    }
+
 }
