@@ -284,6 +284,8 @@ INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (8, 
 INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (9, 'Poslovnica Studgard', 'Clawer Str, Studgard', 9, 83);
 
 
+-- Adding API tokens
+INSERT INTO ups.api_token(id, token) VALUES (1, 'a1b2c3d4e5');
 
 
 -- Adding post office workers

@@ -105,8 +105,8 @@ GET           /adminpanel/deliverycourierpanel                   @controllers.Wo
 POST          /adminpanel/deliverycourierpanel/deliver           @controllers.PackageStatusController.updateStatusDeliveryCourier()
 
 #Api Controllers
-POST          /user/createrequest                                @controllers.ApiPackageController.packageAdd()
-GET           /user/getpackagelist                               @controllers.ApiPackageController.getPackageList()
+POST          /user/createrequest/:token                         @controllers.ApiPackageController.packageAdd(token: String)
+GET           /user/getpackagelist/:token                        @controllers.ApiPackageController.getPackageList(token: String)
 GET           /json/:location                                    @controllers.ApiPackageController.jsonLocation(location: String)
 
 
