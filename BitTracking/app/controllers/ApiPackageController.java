@@ -62,7 +62,7 @@ public class ApiPackageController extends ApiController {
 
     public Result getPackageList(String token){
         if (!isAuthorised(token)) {
-            return badRequest(index.render());
+            return badRequest();
         }
         List<Package> packs = Package.findApprovedPackages();
 
