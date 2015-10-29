@@ -1,3 +1,7 @@
+$("#button-back").click(function(){
+    parent.history.back();
+    return false;
+});
 //function will disable submit button if input field is whitespace
 $(document).ready(function () {
     CheckInputs();

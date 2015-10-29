@@ -11,11 +11,16 @@
     <hr/>
     @helper.form(routes.RouteController.saveAutoRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
         <div class="row">
-            <div class="col-sm-9 col-sm-offset-3">
-                <a href="@routes.RouteController.listRoutes(officePackage.id)"><button type="button" class="btn btn-default">
-                    Create Route Manually</button></a>
-                <a href="@routes.RouteController.showAutoRouting(officePackage.id)"><button type="button" class="btn btn-default">
-                    Create Route Using Shortest Path</button></a>
+            <div class="form-group">
+                <label for="route" class="col-sm-3 control-label">
+                    Create Route using:
+                </label>
+                <div class="col-sm-9">
+                    <a href="@routes.RouteController.listRoutes(officePackage.id)"><button type="button" class="btn btn-primary active">
+                        Manual Routing</button></a>
+                    <a href="@routes.RouteController.showAutoRouting(officePackage.id)"><button type="button" class="btn btn-primary active">
+                        Shortest Path</button></a>
+                </div>
             </div>
         </div>
         <div class="row">

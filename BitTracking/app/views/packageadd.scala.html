@@ -29,7 +29,7 @@
         @helper.form(action = routes.PackageController.savePackage(), 'class -> "form-horizontal", 'role -> "form") {
 
                 <!--Starts Origination-->
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <fieldset>
                     <legend><h5 style="color: #419641"><strong>Origination</strong></h5></legend>
 
@@ -76,7 +76,7 @@
                 </fieldset>
 
             </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                     <!--Start origination-->
                 <fieldset>
                     <legend ><h5 style="color: #419641"><strong>Destination</strong></h5></legend>
@@ -125,7 +125,7 @@
 
         <!--Starts Service Options-->
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <fieldset>
                     <legend><h5 style="color: #419641"><strong>Service Options</strong></h5></legend>
                     <div class="form-group col-md-12">
@@ -163,15 +163,18 @@
                     </div>
                 </fieldset>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <fieldset>
                     <legend><h5 style="color: #419641"><strong>Route Options</strong></h5></legend>
 
-                    <div class="form-group col-sm-9 pull-right col-md-offset-3">
-                            <input id="clickMe" type="button" class="btn btn-primary" value="Suggest Route"/>
-                            <input id="enableRouteButton" type="button" class="btn btn-success" value="Enable Route"/>
-                            <input id="disableRouteButton" type="button" class="btn btn-danger" value="Disable Route"/>
+                    <div class="form-group col-md-12">
+                        <div class="col-sm-offset-3 form-inline col-sm-9">
+                            <input id="clickMe" type="button" class="btn btn-primary btn-mini active" value="Suggest Route"/>
+                            <input id="enableRouteButton" type="button" class="btn btn-mini btn-success" value="Enable Route "/>
+                            <input id="disableRouteButton" type="button" class="btn btn-mini btn-danger" value="Disable Route"/>
+                        </div>
                     </div>
+
                     <div class="form-group col-md-12">
                         <label for="distanceBetweenOffices" class="col-sm-3" style="font-size: 12px">
                             Distance:
@@ -180,6 +183,7 @@
                             <input id="distanceBetweenOffices" placeholder="Distance between Post Offices" name="distanceBetweenOffices" value="" type="text" class="form-control" disabled>
                         </div>
                     </div>
+
                     <div class="form-group col-md-12">
                         <label for="tripDurationBetweenOffices" class="col-sm-3" style="font-size: 12px">
                             Duration:
@@ -188,6 +192,7 @@
                             <input id="tripDurationBetweenOffices" placeholder="Travel duration between Post Offices" name="tripDurationBetweenOffices" value="" type="text" class="form-control" disabled>
                         </div>
                     </div>
+
                     <div class="form-group col-md-12">
                         <label for="routeOffices" class="col-sm-3" style="font-size: 12px">
                             Route:
@@ -201,8 +206,8 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-sm-5" style="margin-bottom : 3%;">
+        <div class="form-group col-md-12">
+            <div class="col-sm-9 col-md-offset-3" style="margin-bottom : 3%;">
                 <input id="addPackageButton" type="submit" class="btn btn-primary" value="Add Package">
             </div>
         </div>
