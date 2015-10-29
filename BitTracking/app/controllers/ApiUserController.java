@@ -38,6 +38,16 @@ public class ApiUserController extends Controller {
             return badRequest();
         }
 
+        return ok(JSONHelper.jsonUser(u));
+    }
+
+    public Result getUserPackagesList(){
+        JsonNode json = request().body().asJson();
+        String email = json.findPath("email").textValue();
+        User u = User.findUserByEmail(email);
+        if(u == null){
+           return badRequest();
+        }
         return ok(JSONHelper.jsonPackagesList(u.packages));
     }
 
