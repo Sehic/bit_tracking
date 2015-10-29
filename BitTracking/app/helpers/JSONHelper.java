@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class JSONHelper {
 
-    public static ObjectNode jsonUser(User u){
+    public static ObjectNode jsonUser(User u) {
 
         ObjectNode user = Json.newObject();
         user.put("id", u.id);
@@ -26,7 +26,7 @@ public class JSONHelper {
 
     }
 
-    public static ObjectNode jsonPostOffice(PostOffice office){
+    public static ObjectNode jsonPostOffice(PostOffice office) {
         ObjectNode jsonPostOffice = Json.newObject();
         jsonPostOffice.put("id", office.id);
         jsonPostOffice.put("name", office.name);
@@ -34,7 +34,7 @@ public class JSONHelper {
         return jsonPostOffice;
     }
 
-    public static ObjectNode jsonPackage(models.Package pack){
+    public static ObjectNode jsonPackage(models.Package pack) {
         ObjectNode jsonPack = Json.newObject();
         jsonPack.put("id", pack.id);
         jsonPack.put("trackingNum", pack.trackingNum);
@@ -42,23 +42,27 @@ public class JSONHelper {
         jsonPack.put("recipientAddress", pack.recipientAddress);
         jsonPack.put("weight", pack.weight);
         jsonPack.put("packageType", pack.packageType.toString());
-        jsonPack.put("status", pack.shipmentPackages.get(0).status.toString());
-        jsonPack.put("approved",pack.approved);
+        if (pack.shipmentPackages.size() == 0) {
+            jsonPack.put("status", "REJECTED");
+        } else {
+            jsonPack.put("status", pack.shipmentPackages.get(0).status.toString());
+        }
+        jsonPack.put("approved", pack.approved);
         return jsonPack;
     }
 
-    public static ArrayNode jsonPostOfficeList(List<PostOffice> offices){
+    public static ArrayNode jsonPostOfficeList(List<PostOffice> offices) {
         ArrayNode jsonListPostOffices = new ArrayNode(JsonNodeFactory.instance);
-        for(PostOffice office: offices){
+        for (PostOffice office : offices) {
             ObjectNode jsonOffice = jsonPostOffice(office);
             jsonListPostOffices.add(jsonOffice);
         }
         return jsonListPostOffices;
     }
 
-    public static ArrayNode jsonPackagesList(List<Package> packages){
+    public static ArrayNode jsonPackagesList(List<Package> packages) {
         ArrayNode jsonListPackages = new ArrayNode(JsonNodeFactory.instance);
-        for(Package pack: packages){
+        for (Package pack : packages) {
             ObjectNode jsonPackage = jsonPackage(pack);
             jsonListPackages.add(jsonPackage);
         }

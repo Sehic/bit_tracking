@@ -42,6 +42,7 @@ public class ApiUserController extends Controller {
     }
 
     public Result getUserPackagesList(){
+
         JsonNode json = request().body().asJson();
         String email = json.findPath("email").textValue();
         User u = User.findUserByEmail(email);
