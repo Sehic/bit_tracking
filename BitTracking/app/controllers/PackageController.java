@@ -87,6 +87,7 @@ public class PackageController extends Controller {
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.approved = true;
             pack.isTaken = false;
+            pack.isVerified = true;
             pack.save();
 
         } catch (IllegalStateException | NumberFormatException e) {

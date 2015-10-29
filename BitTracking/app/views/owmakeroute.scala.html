@@ -10,9 +10,14 @@
         <h2>Make a route manually</h2>
     <hr/>
     <div class="row">
-        <div class="col-sm-9 col-sm-offset-3">
-            <a href="@routes.RouteController.showDijkstraRouting(officePackage.id)"><button type="button" class="btn btn-default">Create Route Using Algorithm</button></a>
-            <a href="@routes.RouteController.showAutoRouting(officePackage.id)"><button type="button" class="btn btn-default">Create Route Using Shortest Path</button></a>
+        <div class="form-group">
+            <label for="route" class="col-sm-3 control-label">
+                Create Route using:
+            </label>
+        <div class="col-sm-9">
+            <a href="@routes.RouteController.showDijkstraRouting(officePackage.id)"><button type="button" class="btn btn-primary active">Algorithm Route</button></a>
+            <a href="@routes.RouteController.showAutoRouting(officePackage.id)"><button type="button" class="btn btn-primary active">Shortest Path</button></a>
+        </div>
         </div>
     </div>
 
@@ -39,7 +44,7 @@
         @helper.form(routes.RouteController.saveRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
 
             <div class="col-md-2">
-                <select name="postOffices" class="selectOffice form-control sortAlphabetically">
+                <select name="postOffices" class="selectOffice form-group form-control sortAlphabetically">
                 @for(office <- postOffices) {
                     <option value="@office.name">@office.name</option>
                 }
@@ -47,22 +52,20 @@
                 </select>
             </div>
 
-            <div class="col-md-0">
-                <button id="addToRoute" type="button" style="margin-right : 1 %" class="btn btn-default pull-left">
+            <div class="col-md-1">
+                <button id="addToRoute" type="button" style="margin-right : 1 %" class="btn btn-primary active pull-left">
                     Add
                 </button>
             </div>
-
-            <div class="col-md-0">
-                <button id="clearFromRoute" type="button" class="btn btn-default pull-left">
-                    Clear
-                </button>
-            </div>
-
             <div id="routeForm" class="col-md-9 pull-right">
-                <input id="finalRoute" name="route" class="form-control" readonly required>
+                <input id="finalRoute" name="route" class="form-control" placeholder="Route field" readonly required>
             </div>
         </div>
+    <div class="col-md-12 col-sm-offset-3">
+        <a href="#" id="clearFromRoute" style="color: red">
+            Click to clear route field
+        </a>
+    </div>
 
         <div class="row">
             <hr/>
@@ -85,10 +88,10 @@
 
 
             <div class="col-sm-9 col-sm-offset-3">
-                <button id="finalizeButton" type="submit" class="btn btn-primary">
+                <button id="finalizeButton" type="submit" class="btn btn-primary active">
                     Save Route
                 </button>
-                <button id="seeRouteButton" type="button" class="btn btn-info">
+                <button id="seeRouteButton" type="button" class="btn btn-info active">
                     See Route
                 </button>
             </div>
