@@ -62,7 +62,6 @@ public class PackageController extends Controller {
     public Result savePackage() {
         User u1 = SessionHelper.getCurrentUser(ctx());
         Form<models.Package> boundForm = newPackage.bindFromRequest();
-
         String officeAddress = boundForm.field("officePost").value();
         String routeForShipment = boundForm.field("routeOffices").value();
         PostOffice office = PostOffice.findPostOfficeByAddress(officeAddress);
@@ -79,6 +78,7 @@ public class PackageController extends Controller {
             pack = boundForm.get();
 
             PostOffice officeByName = PostOffice.findPostOfficeByName(pack.destination);
+
             if (officeByName == null) {
                 flash("wrongFinalOffice", "Please choose one office!");
                 return badRequest(packageadd.render(PostOffice.findOffice.findList(), locations, boundForm, u1));
@@ -87,6 +87,9 @@ public class PackageController extends Controller {
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.approved = true;
             pack.isTaken = false;
+            double distance = DijkstraHelper.getDistance(office.place.toString(), officeByName.place.toString());
+            double price = PriceHelper.calculatePrice(pack.weight, distance);
+            pack.price = price;
             pack.save();
 
         } catch (IllegalStateException | NumberFormatException e) {
