@@ -91,10 +91,17 @@
                     NEW</span>
                     Office Worker Panel</a>
                 </li>
-            }else{
+            }
+            @if(currentUser.typeOfUser== UserType.ADMIN) {
                 <li><a href="@routes.Application.adminTables()"><i class="fa fa-users"></i> <span class="badge pull-right">
                     NEW</span>
                     Manage</a>
+                </li>
+            }
+            @if(currentUser.typeOfUser == UserType.DELIVERY_WORKER){
+                <li><a href="@routes.WorkerController.deliveryWorkerPanel()"><i class="fa fa-users"></i> <span class="badge pull-right">
+                    NEW</span>
+                    Delivery Worker Panel</a>
                 </li>
             }
             <li><a href="@routes.FaqController.adminFaqView()"><span class="glyphicon glyphicon-question-sign"></span>

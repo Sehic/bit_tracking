@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import helpers.DijkstraHelper;
 import helpers.JSONHelper;
 import helpers.PackageType;
+import helpers.PriceHelper;
 import models.*;
 import models.Package;
 import play.mvc.Controller;
@@ -17,16 +18,25 @@ import java.util.List;
 public class ApiPackageController extends Controller {
 
     public Result packageAdd(){
+
         JsonNode json = request().body().asJson();
+        String userId = json.findPath("userId").textValue();
         String recipientName = json.findPath("recipientName").textValue();
         String recipientAddress = json.findPath("recipientAddress").textValue();
         String weight = json.findPath("weight").textValue();
         String packageType = json.findPath("packageType").textValue();
         String postOfficeName = json.findPath("postOfficeName").textValue();
+        User u = User.findById(Long.parseLong(userId));
         Package pack = new Package();
         pack.recipientName = recipientName;
         pack.recipientAddress = recipientAddress;
-        pack.weight = Double.parseDouble(weight);
+        try {
+            pack.weight = Double.parseDouble(weight);
+        }catch(NumberFormatException e){
+            return badRequest();
+        }
+        pack.senderName = u.firstName +" "+u.lastName;
+        pack.price = PriceHelper.calculatePrice(pack.weight, 100);
         switch (packageType) {
             case "Box":
                 pack.packageType = PackageType.BOX;
@@ -47,17 +57,20 @@ public class ApiPackageController extends Controller {
         if(ship.postOfficeId == null){
             return badRequest();
         }
+        u.packages.add(pack);
+        pack.users.add(u);
         pack.save();
         ship.save();
         return ok();
     }
+
 
     public static Result getPackageAdd(){
         return ok(JSONHelper.jsonPostOfficeList(PostOffice.findOffice.findList()));
     }
 
     public Result getPackageList(){
-        List<Package> packs = Package.findApprovedPackages();
+        List<Package> packs = Package.finder.findList();
 
         return ok(JSONHelper.jsonPackagesList(packs));
     }

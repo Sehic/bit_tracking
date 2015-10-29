@@ -37,7 +37,11 @@ public class JSONHelper {
     public static ObjectNode jsonPackage(models.Package pack) {
         ObjectNode jsonPack = Json.newObject();
         jsonPack.put("id", pack.id);
-        jsonPack.put("trackingNum", pack.trackingNum);
+        if(pack.trackingNum != null) {
+            jsonPack.put("trackingNum", pack.trackingNum);
+        }else{
+            jsonPack.put("trackingNum", "Waiting For Approval");
+        }
         jsonPack.put("recipientName", pack.recipientName);
         jsonPack.put("recipientAddress", pack.recipientAddress);
         jsonPack.put("weight", pack.weight);
@@ -45,9 +49,27 @@ public class JSONHelper {
         if (pack.shipmentPackages.size() == 0) {
             jsonPack.put("status", "REJECTED");
         } else {
-            jsonPack.put("status", pack.shipmentPackages.get(0).status.toString());
+            if(pack.shipmentPackages.get(0).status!=null) {
+                jsonPack.put("status", pack.shipmentPackages.get(0).status.toString());
+            }else{
+                jsonPack.put("status", "Waiting For Approval");
+            }
         }
-        jsonPack.put("approved", pack.approved);
+        if(pack.approved!=null) {
+            if(pack.approved){
+                jsonPack.put("approved", "Approved");
+            }else{
+                jsonPack.put("approved", "Rejected");
+            }
+        }else{
+            jsonPack.put("approved", "Waiting For Approval");
+        }
+        if(pack.packageRejectedTimestamp!= null) {
+            jsonPack.put("timestamp", pack.packageRejectedTimestamp.toString());
+        }else{
+            jsonPack.put("timestamp", "Waiting For Approval");
+        }
+        jsonPack.put("price", pack.price.toString());
         return jsonPack;
     }
 

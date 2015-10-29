@@ -105,7 +105,7 @@ GET           /adminpanel/deliverycourierpanel                   @controllers.Wo
 POST          /adminpanel/deliverycourierpanel/deliver           @controllers.PackageStatusController.updateStatusDeliveryCourier()
 
 #Api Controllers
-POST          /user/createrequest                                @controllers.ApiPackageController.packageAdd()
+POST          /user/createrequest/nestob                         @controllers.ApiPackageController.packageAdd()
 GET           /user/getpackagelist                               @controllers.ApiPackageController.getPackageList()
 GET           /json/:location                                    @controllers.ApiPackageController.jsonLocation(location: String)
 POST          /user/getuserpackages/nesto                        @controllers.ApiUserController.getUserPackagesList()

@@ -88,6 +88,9 @@ public class PackageController extends Controller {
             pack.approved = true;
             pack.isVerified = true;
             pack.isTaken = false;
+            double distance = DijkstraHelper.getDistance(office.place.toString(), officeByName.place.toString());
+            double price = PriceHelper.calculatePrice(pack.weight, distance);
+            pack.price = price;
             pack.save();
 
         } catch (IllegalStateException | NumberFormatException e) {
