@@ -95,7 +95,7 @@ public class PackageStatusController extends Controller {
                         if (user.phoneNumber != null && user.numberValidated) {
                             String smsBody = "Package with tracking number \"" + pack.trackingNum + "\" has been successifully delivered. BitTracking Team!";
                             String smsTo = user.phoneNumber;
-                            //SmsHelper.sendSms(smsBody, smsTo);
+                            SmsHelper.sendSms(smsBody, smsTo);
                             /**
                              * Due to limitations caused by trial version of Twilio, we can send only 5 SMS messages per day.
                              * That's why we use MailHelper in this testing period.

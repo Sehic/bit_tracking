@@ -248,7 +248,12 @@ public class PackageController extends Controller {
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.destination = destination;
             pack.packagePinCode = Package.getPinCode();
-            MailHelper.approvedRequestNotification(pack.users.get(0).lastName, pack.trackingNum, pack.users.get(0).email, pack.packagePinCode);
+            if (pack.users.size() > 0 && pack.users.get(0).phoneNumber != null && pack.users.get(0).numberValidated) {
+                SmsHelper.sendSms("Package Pin Code:" + pack.packagePinCode, pack.users.get(0).phoneNumber);
+            }
+            if (pack.users.size() > 0) {
+                MailHelper.approvedRequestNotification(pack.users.get(0).lastName, pack.trackingNum, pack.users.get(0).email, pack.packagePinCode);
+            }
         } else if (value.equals("reject")) {
             pack.approved = false;
             pack.trackingNum = "rejected";

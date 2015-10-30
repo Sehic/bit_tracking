@@ -52,7 +52,7 @@ public class JSONHelper {
             if(pack.shipmentPackages.get(0).status!=null) {
                 jsonPack.put("status", pack.shipmentPackages.get(0).status.toString());
             }else{
-                jsonPack.put("status", "Waiting For Approval");
+                jsonPack.put("status", "Waiting...");
             }
         }
         if(pack.approved!=null) {

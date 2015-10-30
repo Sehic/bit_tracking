@@ -7,6 +7,7 @@ import helpers.PackageType;
 import helpers.PriceHelper;
 import models.*;
 import models.Package;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -70,6 +71,7 @@ public class ApiPackageController extends Controller {
     }
 
     public Result getPackageList(){
+        Logger.info("uso");
         List<Package> packs = Package.finder.findList();
 
         return ok(JSONHelper.jsonPackagesList(packs));
