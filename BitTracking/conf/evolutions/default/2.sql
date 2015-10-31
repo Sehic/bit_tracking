@@ -281,7 +281,7 @@ INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (5, 
 INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (6, 'Poslovnica Trento', 'Via Roma, Trento', 6, 109);
 INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (7, 'Poslovnica Salzburg', 'Giselakai, Salzburg', 7, 15);
 INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (8, 'Poslovnica Minhen', 'Bavariaring, Minhen', 8, 83);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (9, 'Poslovnica Studgard', 'Clawer Str, Studgard', 9, 83);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (9, 'Poslovnica Stuttgart', 'Clawer Str, Stuttgart', 9, 83);
 
 
 
@@ -296,7 +296,7 @@ INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, 
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (12, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@trento.com', '2', 6, NULL, 1);
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (13, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@salzburg.com', '2', 7, NULL, 1);
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (14, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@minhen.com', '2', 8, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (15, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@studgard.com', '2', 9, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (15, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@stuttgart.com', '2', 9, NULL, 1);
 
 -- Adding post office delivery
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (17, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@sarajevo.com', '4', 1, NULL, 1);
@@ -307,7 +307,7 @@ INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, 
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (22, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@trento.com', '4', 6, NULL, 1);
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (23, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@salzburg.com', '4', 7, NULL, 1);
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (24, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@minhen.com', '4', 8, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (25, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@studgard.com', '4', 9, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (25, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@stuttgart.com', '4', 9, NULL, 1);
 
 -- Adding FAQ
 
@@ -320,4 +320,4 @@ INSERT INTO ups.faq (id, question, answer) VALUES (6, 'What does the status on r
 INSERT INTO ups.faq (id, question, answer) VALUES (7, 'What does the status delivered means?', 'Delivered status means the package is in destination post office.');
 INSERT INTO ups.faq (id, question, answer) VALUES (8, 'What shipping documents do I need to ship a BIT Tracking package?','To ship a BIT Tracking package, you will need to complete "Create package form".You can complete it online. You must use your BIT Tracking account and type in the required information.');
 INSERT INTO ups.faq (id, question, answer) VALUES (9, 'What happens when no one is available at my home or office to accept a shipment?', 'If you are not available to accept delivery of your shipment, your courier may leave you a delivery attempt notice with information on when the next delivery attempt will be made. If you need more information about a package, please contact BIT Tracking Service. You can also track the status of you shipment online.');
-INSERT INTO ups.faq (id, question, answer) VALUES (10, 'As a student, what is the best way for me to get information about BIT Tracking?', 'We suggest that you explore the About BIT Tracking section of this web site. About BIT Tracking offers a wealth of information about BIT Tracking, investor relations and more. Please contact Mladen Develop for any additional information:))');
+INSERT INTO ups.faq (id, question, answer) VALUES (10, 'As a student, what is the best way for me to get information about BIT Tracking?', 'We suggest that you explore the About BIT Tracking section of this web site. About BIT Tracking offers a wealth of information about BIT Tracking, investor relations and more. Please contact BIT Tracking for any additional information.');

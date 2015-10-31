@@ -9,11 +9,10 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12" style="margin-top : 35px">
-                    <a href="#myUserPackages" class="btn btn-default myLinks">My Packages</a>
-                    <a href="#createPackage" class="btn btn-default myLinks">Create New Package</a>
+                    <a href="#myUserPackages" class="btn btn-info myLinks">My Packages</a>
+                    <a href="#createPackage" class="btn btn-primary active myLinks">Create New Package</a>
                 </div>
             </div>
-
             <div id="myUserPackages" class="usertables">
                 <div class="row">
                     <div class="col-md-12" style="margin-top : 35px">
@@ -101,11 +100,11 @@
                 </div>
             </div>
 
-            <div id="createPackage" class="usertables">
+            <div id="createPackage" class="usertables pull-left">
                 <form action="@routes.PackageController.userSavePackage()" method="post">
                     <div class="row">
-                        <div class="col-md-12" style="margin-top : 35px">
-                            <h2>Create New Package</h2>
+                        <div class="col-md-7" style="margin-top : 35px">
+                            <h2>Create New Package</h2><br><br>
                         </div>
                         <div class="col-md-7">
                             <div class="form-group col-md-12">
@@ -164,9 +163,9 @@
                                 </div>
                                 <span class="alert-danger" data-error-for="" >@flash.get("noOffice")</span>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-3 pull-right">
-                                    <input id="createRequestButton" type="submit" class="btn btn-primary" value="Create Request">
+                            <div class="form-group col-md-12">
+                                <div class="col-sm-9 pull-right">
+                                    <input id="createRequestButton" type="submit" class="btn btn-primary active" value="Submit Request">
                                 </div>
                             </div>
                         </div>

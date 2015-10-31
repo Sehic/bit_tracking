@@ -13,11 +13,11 @@
         <div class="col-sm-9 col-sm-offset-3">
             @helper.form(action = routes.RouteController.listMultiRoute(), 'class -> "form-horizontal pull-left", 'role -> "form") {
                 <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
-                <button type="submit" class="btn btn-default">Create Route Manually</button>
+                <button type="submit" class="btn btn-primary active">Create Route Manually</button>
             }
             @helper.form(action = routes.RouteController.showMultiAutoRouting(), 'class -> "form-horizontal pull-left", 'role -> "form") {
                 <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
-                <button type="submit" class="btn btn-default">Create Route Using Shortest Path</button>
+                <button type="submit" class="btn btn-primary">Create Route Using Shortest Path</button>
             }
         </div>
     </div>

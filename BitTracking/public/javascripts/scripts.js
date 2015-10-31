@@ -75,10 +75,10 @@ $(document).ready(function() {
             type: 'post'
         }).success(function(response) {
             var valDiv = $('#completeValidation');
-            span.html("Successfully validated phone number " + response).attr("style", "font-size: 20px; color: green");
+            span.html("Successfully validated phone number " + response).attr("style", "font-size: 14px; color: green");
             $('#hideAfterValidation').hide();
         }).error(function() {
-            span.html("Error! No such validation code found!").attr("style", "font-size: 20px; color: red");
+            span.html("Error! No such validation code found!").attr("style", "font-size: 14px; color: red; style: italic");
         })
     });
 });
