@@ -75,6 +75,7 @@ public class FaqController extends Controller {
      * @param id
      * @return
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result editFaq(Long id) {
         Faq faq = Faq.findById(id);
         Form<Faq> fillForm = faqForm.fill(faq);
@@ -102,6 +103,7 @@ public class FaqController extends Controller {
      * @param id - FAQ's id that will be deleted
      * @return admin panel page with all FAQs
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result deleteFaq(Long id) {
         Faq faq = Faq.findById(id);
         if(faq == null){
