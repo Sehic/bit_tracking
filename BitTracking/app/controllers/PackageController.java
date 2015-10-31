@@ -68,6 +68,8 @@ public class PackageController extends Controller {
         PostOffice office = PostOffice.findPostOfficeByAddress(officeAddress);
         List<Location> locations = Location.findLocation.findList();
         if (office == null) {
+            ApplicationLog newLog = new ApplicationLog("Error saving package " + u1.email + ". Initial Post Office not chosen.");
+            newLog.save();
             flash("wrongInitialOffice", "Please choose one office!");
             return badRequest(packageadd.render(PostOffice.findOffice.findList(), locations, boundForm, u1));
         }
@@ -80,6 +82,8 @@ public class PackageController extends Controller {
 
             PostOffice officeByName = PostOffice.findPostOfficeByName(pack.destination);
             if (officeByName == null) {
+                ApplicationLog newLog = new ApplicationLog("Error saving package " + u1.email + ". Final Post Office not chosen.");
+                newLog.save();
                 flash("wrongFinalOffice", "Please choose one office!");
                 return badRequest(packageadd.render(PostOffice.findOffice.findList(), locations, boundForm, u1));
             }
@@ -96,7 +100,8 @@ public class PackageController extends Controller {
         } catch (IllegalStateException | NumberFormatException e) {
 
             flash("wrongFormatBoth", "Please fill this form with correct values!");
-
+            ApplicationLog newLog = new ApplicationLog("Error saving package " + u1.email + ". Form not filled with correct values.");
+            newLog.save();
             return badRequest(packageadd.render(PostOffice.findOffice.findList(), locations, boundForm, u1));
         }
         if (routeForShipment == null) {
@@ -322,7 +327,8 @@ public class PackageController extends Controller {
             return badRequest(packageinfo.render(pack));
         }
         if(!pinCode.equals(pack.packagePinCode)){
-            System.out.println(pinCode +" "+ pack.packagePinCode);
+            ApplicationLog newLog = new ApplicationLog("Error checking Package Code: " + pinCode + ". Invalid PinCode.");
+            newLog.save();
             flash("incorrectCode","Incorrect Package Code. Please enter valid code.");
             return redirect(routes.PackageController.packageInfo(pack.id));
         }

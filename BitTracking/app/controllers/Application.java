@@ -21,6 +21,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
 import play.libs.F.Function;
 import play.libs.F.Promise;
 import play.libs.Json;
@@ -48,13 +49,14 @@ public class Application extends Controller {
     /**
      * This method send notification to Registered user, if that user
      * has some newly approved or rejected packages.
+     *
      * @return
      */
     public Result indexAjax() {
         User user = SessionHelper.getCurrentUser(ctx());
         Integer approved = 0;
         Integer rejected = 0;
-        if(user != null && user.typeOfUser == UserType.REGISTERED_USER) {
+        if (user != null && user.typeOfUser == UserType.REGISTERED_USER) {
             List<Package> packages = Package.finder.where().eq("seen", false).eq("users", user).findList();
             for (int i = 0; i < packages.size(); i++) {
                 if (packages.get(i).approved) {
@@ -67,7 +69,7 @@ public class Application extends Controller {
         Integer result = approved + rejected;
         String notification = Integer.toString(result);
 
-        if(result != 0){
+        if (result != 0) {
             return ok(notification);
         }
 
@@ -81,7 +83,7 @@ public class Application extends Controller {
      */
     public Result login() {
         User u = SessionHelper.getCurrentUser(ctx());
-        if(u!=null){
+        if (u != null) {
             return redirect(routes.Application.index());
         }
         Form<User> newUser = new Form<User>(User.class);
@@ -105,7 +107,7 @@ public class Application extends Controller {
      */
     public Result register() {
         User u = SessionHelper.getCurrentUser(ctx());
-        if(u!=null){
+        if (u != null) {
             return redirect(routes.Application.index());
         }
         Form<User> newUser = new Form<User>(User.class);
@@ -208,6 +210,7 @@ public class Application extends Controller {
         Package p = Package.findPackageByTrackingNumber(trackingNumber);
         return ok(p.toString());
     }
+
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result deliveryWorkersList() {
 
@@ -234,4 +237,13 @@ public class Application extends Controller {
         return ok(userpanel.render(packagesForRender, PostOffice.findOffice.findList(), countries));
     }
 
+    @Security.Authenticated(Authenticators.AdminFilter.class)
+    public Result adminLogs() {
+        return ok(adminlogs.render(ApplicationLog.logFinder.findList()));
+    }
+
+    public Result userLocations(){
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+        return ok(userlocations.render(offices));
+    }
 }

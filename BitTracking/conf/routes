@@ -110,6 +110,9 @@ GET           /user/getpackagelist                               @controllers.Ap
 GET           /json/:location                                    @controllers.ApiPackageController.jsonLocation(location: String)
 POST          /user/getuserpackages/nesto                        @controllers.ApiUserController.getUserPackagesList()
 
+GET           /adminpanel/adminlogs                              @controllers.Application.adminLogs()
+GET           /user/postofficelocationlist                       @controllers.Application.userLocations()
+
 
 
 

@@ -189,6 +189,7 @@ public class RouteController extends Controller {
 
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result listMultiRoute() {
+        User u = SessionHelper.getCurrentUser(ctx());
         DynamicForm form = Form.form().bindFromRequest();
         String routePackages = form.get("packagesForRoute");
         String packagesId = "";
@@ -217,11 +218,15 @@ public class RouteController extends Controller {
 
                 if (!newPack.destination.equals(packagesToTake.get(i).destination)) {
                     flash("differentDestinationOffices", "You must select Packages which have same Destination Post Office!");
+                    ApplicationLog newLog = new ApplicationLog(u.email+": Error choosing Multi Route. Packages must have same Destination Post Office.");
+                    newLog.save();
                     return redirect(routes.WorkerController.officeWorkerPanel());
                 }
             }
             officePackage = Package.findPackageById(newPack.id);
             if (officePackage == null) {
+                ApplicationLog newLog = new ApplicationLog(u.email+": Error choosing Multi Route. Select at least one Package.");
+                newLog.save();
                 flash("noOffices", "You must select at least one Package!");
                 return redirect(routes.WorkerController.officeWorkerPanel());
             }

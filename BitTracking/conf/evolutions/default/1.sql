@@ -3,6 +3,13 @@
 
 # --- !Ups
 
+create table application_log (
+  id                        bigint auto_increment not null,
+  date                      datetime(6),
+  comment                   varchar(255),
+  constraint pk_application_log primary key (id))
+;
+
 create table country (
   id                        bigint auto_increment not null,
   iso2                      varchar(10),
@@ -149,6 +156,8 @@ alter table linked_offices add constraint fk_linked_offices_post_office_02 forei
 # --- !Downs
 
 SET FOREIGN_KEY_CHECKS=0;
+
+drop table application_log;
 
 drop table country;
 

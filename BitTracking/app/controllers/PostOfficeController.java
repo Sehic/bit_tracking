@@ -83,6 +83,8 @@ public class PostOfficeController extends Controller {
             x = Double.parseDouble(lon);
             y = Double.parseDouble(lat);
         } catch (NumberFormatException e) {
+            ApplicationLog newLog = new ApplicationLog("Error saving Post Office to address " + address + ". Address does not exists.");
+            newLog.save();
             flash("wrongAddress", "Entered place does not exists!");
             return redirect(routes.Application.addPostOffice());
         }
@@ -92,6 +94,8 @@ public class PostOfficeController extends Controller {
         PostOffice p = new PostOffice(name, address, place, officeCountry);
 
         Ebean.save(p);
+        ApplicationLog newLog = new ApplicationLog("New Post Office added: " + p.name + ". Address: "+ p.address);
+        newLog.save();
         return redirect(routes.Application.adminPostOffice());
     }
 

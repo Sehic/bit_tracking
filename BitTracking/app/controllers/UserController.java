@@ -99,6 +99,8 @@ public class UserController extends Controller {
         User u = User.checkEmail(userFromForm.email);
         //If user is not found, that means we can proceed creating new user
         if (u != null) {
+            ApplicationLog newLog = new ApplicationLog("Registration failed. " + u.email + " already exists.");
+            newLog.save();
             flash("errorEmail", "E-mail address already exists!");
             return badRequest(register.render(boundForm, countryList));
         }
@@ -173,6 +175,8 @@ public class UserController extends Controller {
             u.update();
         }
         MailHelper.sendVerificationMail(u.token, u.lastName, u.email);
+        ApplicationLog newLog = new ApplicationLog("New user registered using: " + u.email + " mail.");
+        newLog.save();
         return redirect(routes.Application.login());
     }
 
