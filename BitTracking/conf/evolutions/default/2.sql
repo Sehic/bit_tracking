@@ -261,27 +261,35 @@ INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unme
 INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unmember, calling_code, cct_id) VALUES (250, 'ZW', 'Zimbabwe', 'Republic of Zimbabwe', 'ZWE', '716', 'yes', '263', '.zw');
 
 -- Adding post office location
-INSERT INTO ups.location(id, x, y) VALUES (1, 18.35399749999999, 43.8495915);
-INSERT INTO ups.location(id, x, y) VALUES (2,18.697584099999972, 44.2302617);
-INSERT INTO ups.location(id, x, y) VALUES (3, 18.70192069999996, 44.53286629999999);
-INSERT INTO ups.location(id, x, y) VALUES (4, 18.811436100000037, 44.8740526);
-INSERT INTO ups.location(id, x, y) VALUES (5, 14.515460699999949, 46.086484);
-INSERT INTO ups.location(id, x, y) VALUES (6, 11.120037000000025, 46.0695767);
-INSERT INTO ups.location(id, x, y) VALUES (7, 13.051009300000032, 47.7997758);
-INSERT INTO ups.location(id, x, y) VALUES (8, 11.553509399999939, 48.1310878);
-INSERT INTO ups.location(id, x, y) VALUES (9, 9.17429560000005, 48.7764029);
+INSERT INTO ups.location(id, x, y) VALUES (1, 18.4167, 43.8667);
+INSERT INTO ups.location(id, x, y) VALUES (2, 15.9833, 45.8167);
+INSERT INTO ups.location(id, x, y) VALUES (3, 20.4667, 44.8167);
+INSERT INTO ups.location(id, x, y) VALUES (4, 14.5083, 46.0556);
+INSERT INTO ups.location(id, x, y) VALUES (5, 13.0333, 47.8000);
+INSERT INTO ups.location(id, x, y) VALUES (6, 11.5770, 48.1366);
+INSERT INTO ups.location(id, x, y) VALUES (7, 2.3508, 48.8567);
+INSERT INTO ups.location(id, x, y) VALUES (8, 12.5000, 41.9000);
+INSERT INTO ups.location(id, x, y) VALUES (9, 21.0167, 52.2333);
+INSERT INTO ups.location(id, x, y) VALUES (10, 3.7167, 40.4000);
+INSERT INTO ups.location(id, x, y) VALUES (11, 7.4500, 46.9500);
+INSERT INTO ups.location(id, x, y) VALUES (12, 50.4500, 30.5233);
+INSERT INTO ups.location(id, x, y) VALUES (13, 18.6735, 44.5375);
 
 
 -- Adding post offices
 INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (1, 'Poslovnica Sarajevo', 'Dzemala Bijedica 20, Sarajevo', 1, 29);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (2, 'Poslovnica Kladanj', 'Kladanjskih brigada, Kladanj', 2, 29);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (3, 'Poslovnica Tuzla', 'Ismeta Mujazinovica, Tuzla', 3, 29);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (4, 'Poslovnica Brcko', 'Klosterska, Brcko', 4, 29);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (5, 'Poslovnica Ljubljana', 'Dunajska cesta, Ljubljana', 5, 202);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (6, 'Poslovnica Trento', 'Via Roma, Trento', 6, 109);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (7, 'Poslovnica Salzburg', 'Giselakai, Salzburg', 7, 15);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (8, 'Poslovnica Minhen', 'Bavariaring, Minhen', 8, 83);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (9, 'Poslovnica Stuttgart', 'Clawer Str, Stuttgart', 9, 83);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (2, 'Poslovnica Zagreb', 'Krapinska ulica, Zagreb', 2, 55);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (3, 'Poslovnica Belgrade', 'Prvomajska, Beograd', 3, 196);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (4, 'Poslovnica Ljubljana', 'Dunajska cesta, Ljubljana', 4, 202);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (5, 'Poslovnica Salzburg', 'Franz-Josef Strasse, Salzburg', 5, 15);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (6, 'Poslovnica Minhen', 'Marsplatz, Minhen', 6, 83);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (7, 'Poslovnica Paris', 'Rue Jacob, Paris', 7, 76);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (8, 'Poslovnica Rome', 'Via Statilia, Rome', 8, 109);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (9, 'Poslovnica Warshaw', 'Miodowa, Warshaw', 9, 176);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (10, 'Poslovnica Madrid', 'Calle de la Cruz, Madrid', 10, 209);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (11, 'Poslovnica Bern', 'Nording, Bern', 11, 216);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (12, 'Poslovnica Kiev', 'Atrema St, Kiev', 12, 233);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (13, 'Poslovnica Tuzla', 'Ismeta Mujezinovica, Tuzla', 13, 29);
 
 
 
