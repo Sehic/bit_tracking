@@ -404,21 +404,28 @@ public class UserController extends Controller {
         if (userType.equals("Admin")) {
 
             user.typeOfUser = UserType.ADMIN;
+            user.isCourier = false;
 
         } else if (userType.equals("Office Worker")) {
 
             user.typeOfUser = UserType.OFFICE_WORKER;
             user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
+            user.isCourier = false;
 
         } else if (userType.equals("Delivery Worker")) {
 
             user.typeOfUser = UserType.DELIVERY_WORKER;
             user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
             user.drivingOffice = drivingPostOffice;
+            user.isCourier = false;
 
         } else if(userType.equals("Registered User")) {
             user.typeOfUser = UserType.REGISTERED_USER;
             user.postOffice = null;
+        } else if(userType.equals("Delivery Courier")){
+            user.typeOfUser = UserType.DELIVERY_WORKER;
+            user.isCourier = true;
+            user.drivingOffice = null;
         }
         user.update();
 

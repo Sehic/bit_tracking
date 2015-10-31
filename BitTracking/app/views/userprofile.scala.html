@@ -116,25 +116,37 @@
                                             <select class="form-control" name="userType">
                                                 @if(user.typeOfUser == UserType.ADMIN) {
                                                     <option value="Admin">Admin</option>
+                                                    <option value="Delivery Courier">Delivery Courier</option>
                                                     <option value="Delivery Worker">Delivery Worker</option>
                                                     <option value="Office Worker">Office Worker</option>
                                                     <option value="Registered User">Registered User</option>
                                                 }
                                                 @if(user.typeOfUser == UserType.DELIVERY_WORKER) {
-                                                    <option value="Delivery Worker">Delivery Worker</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Office Worker">Office Worker</option>
-                                                    <option value="Registered User">Registered User</option>
+                                                    @if(user.isCourier == false) {
+                                                        <option value="Delivery Worker">Delivery Worker</option>
+                                                        <option value="Delivery Courier">Delivery Courier</option>
+                                                        <option value="Admin">Admin</option>
+                                                        <option value="Office Worker">Office Worker</option>
+                                                        <option value="Registered User">Registered User</option>
+                                                    }else{
+                                                        <option value="Delivery Courier">Delivery Courier</option>
+                                                        <option value="Delivery Worker">Delivery Worker</option>
+                                                        <option value="Admin">Admin</option>
+                                                        <option value="Office Worker">Office Worker</option>
+                                                        <option value="Registered User">Registered User</option>
+                                                    }
                                                 }
                                                 @if(user.typeOfUser == UserType.OFFICE_WORKER) {
                                                     <option value="Office Worker">Office Worker</option>
                                                     <option value="Admin">Admin</option>
+                                                    <option value="Delivery Courier">Delivery Courier</option>
                                                     <option value="Delivery Worker">Delivery Worker</option>
                                                     <option value="Registered User">Registered User</option>
                                                 }
                                                 @if(user.typeOfUser == UserType.REGISTERED_USER) {
                                                     <option value="Registered User">Registered User</option>
                                                     <option value="Admin">Admin</option>
+                                                    <option value="Delivery Courier">Delivery Courier</option>
                                                     <option value="Delivery Worker">Delivery Worker</option>
                                                     <option value="Office Worker">Office Worker</option>
 

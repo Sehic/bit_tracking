@@ -117,7 +117,7 @@ INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unme
 INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unmember, calling_code, cct_id) VALUES (106, 'IE', 'Ireland', 'Ireland', 'IRL', '372', 'yes', '353', '.ie');
 INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unmember, calling_code, cct_id) VALUES (107, 'IM', 'Isle of Man', 'Isle of Man', 'IMN', '833', 'no', '44', '.im');
 INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unmember, calling_code, cct_id) VALUES (108, 'IL', 'Israel', 'State of Israel', 'ISR', '376', 'yes', '972', '.il');
-INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unmember, calling_code, cct_id) VALUES (109, 'IT', 'Italy', 'Italian Republic', 'ITA', '380', 'yes', '39', '.jm');
+INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unmember, calling_code, cct_id) VALUES (109, 'IT', 'Italy', 'Italian Republic', 'ITA', '380', 'yes', '39', '.it');
 INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unmember, calling_code, cct_id) VALUES (110, 'JM', 'Jamaica', 'Jamaica', 'JAM', '388', 'yes', '1+876', '.jm');
 INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unmember, calling_code, cct_id) VALUES (111, 'JP', 'Japan', 'Japan', 'JPN', '392', 'yes', '81', '.jp');
 INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unmember, calling_code, cct_id) VALUES (112, 'JE', 'Jersey', 'The Bailiwick of Jersey', 'JEY', '832', 'no', '44', '.je');
@@ -261,54 +261,147 @@ INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unme
 INSERT INTO ups.country (id, iso2, country_name, short_name, iso3, numcode, unmember, calling_code, cct_id) VALUES (250, 'ZW', 'Zimbabwe', 'Republic of Zimbabwe', 'ZWE', '716', 'yes', '263', '.zw');
 
 -- Adding post office location
-INSERT INTO ups.location(id, x, y) VALUES (1, 18.35399749999999, 43.8495915);
-INSERT INTO ups.location(id, x, y) VALUES (2,18.697584099999972, 44.2302617);
+INSERT INTO ups.location(id, x, y) VALUES (1, 18.369989000000032, 43.8504701);
+INSERT INTO ups.location(id, x, y) VALUES (2, 15.948950500000024, 45.8030699);
 INSERT INTO ups.location(id, x, y) VALUES (3, 18.70192069999996, 44.53286629999999);
-INSERT INTO ups.location(id, x, y) VALUES (4, 18.811436100000037, 44.8740526);
-INSERT INTO ups.location(id, x, y) VALUES (5, 14.515460699999949, 46.086484);
-INSERT INTO ups.location(id, x, y) VALUES (6, 11.120037000000025, 46.0695767);
-INSERT INTO ups.location(id, x, y) VALUES (7, 13.051009300000032, 47.7997758);
-INSERT INTO ups.location(id, x, y) VALUES (8, 11.553509399999939, 48.1310878);
-INSERT INTO ups.location(id, x, y) VALUES (9, 9.17429560000005, 48.7764029);
+INSERT INTO ups.location(id, x, y) VALUES (4, 14.515460699999949, 46.086484);
+INSERT INTO ups.location(id, x, y) VALUES (5, 13.046604800000068, 47.8071516);
+INSERT INTO ups.location(id, x, y) VALUES (6, 11.547859300000027, 48.1460453);
+INSERT INTO ups.location(id, x, y) VALUES (7, 2.334396800000036, 48.85534879999999);
+INSERT INTO ups.location(id, x, y) VALUES (8, 12.51076420000004, 41.8901055);
+INSERT INTO ups.location(id, x, y) VALUES (9, 21.009757400000012, 52.2472127);
+INSERT INTO ups.location(id, x, y) VALUES (10, -3.7016727000000174, 40.4156499);
+INSERT INTO ups.location(id, x, y) VALUES (11, 7.447146599999996, 46.9572735);
+INSERT INTO ups.location(id, x, y) VALUES (12, 30.495723099999964, 50.456283);
+INSERT INTO ups.location(id, x, y) VALUES (13, 20.386730400000033, 44.8417656);
 
 
 -- Adding post offices
 INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (1, 'Poslovnica Sarajevo', 'Dzemala Bijedica 20, Sarajevo', 1, 29);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (2, 'Poslovnica Kladanj', 'Kladanjskih brigada, Kladanj', 2, 29);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (3, 'Poslovnica Tuzla', 'Ismeta Mujazinovica, Tuzla', 3, 29);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (4, 'Poslovnica Brcko', 'Klosterska, Brcko', 4, 29);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (5, 'Poslovnica Ljubljana', 'Dunajska cesta, Ljubljana', 5, 202);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (6, 'Poslovnica Trento', 'Via Roma, Trento', 6, 109);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (7, 'Poslovnica Salzburg', 'Giselakai, Salzburg', 7, 15);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (8, 'Poslovnica Minhen', 'Bavariaring, Minhen', 8, 83);
-INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (9, 'Poslovnica Studgard', 'Clawer Str, Studgard', 9, 83);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (2, 'Poslovnica Zagreb', 'Krapinska ulica, Zagreb', 2, 55);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (3, 'Poslovnica Tuzla', 'Ismeta Mujezinovica, Tuzla', 3, 29);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (4, 'Poslovnica Ljubljana', 'Dunajska cesta, Ljubljana', 4, 202);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (5, 'Poslovnica Salzburg', 'Franz-Josef Strasse, Salzburg', 5, 15);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (6, 'Poslovnica Minhen', 'Marsplatz, Minhen', 6, 83);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (7, 'Poslovnica Paris', 'Rue Jacob, Paris', 7, 76);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (8, 'Poslovnica Rome', 'Via Statilia, Rome', 8, 109);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (9, 'Poslovnica Warshaw', 'Miodowa, Warshaw', 9, 176);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (10, 'Poslovnica Madrid', 'Calle de la Cruz, Madrid', 10, 209);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (11, 'Poslovnica Bern', 'Nording, Bern', 11, 216);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (12, 'Poslovnica Kiev', 'Atrema St, Kiev', 12, 233);
+INSERT INTO ups.post_office(id, name, address, place_id, country_id) VALUES (13, 'Poslovnica Beograd', 'Prvomajska, Beograd', 13, 196);
+
+-- Adding post office relations
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(3,1);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(1,3);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(3,2);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(2,3);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(4,2);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(2,4);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(3,13);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(13,3);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(5,4);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(4,5);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(8,4);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(4,8);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(6,5);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(5,6);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(9,5);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(5,9);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(9,6);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(6,9);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(11,6);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(6,11);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(10,7);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(7,10);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(11,7);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(7,11);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(11,8);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(8,11);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(12,9);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(9,12);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(13,12);
+INSERT INTO ups.linked_offices(post_officeA_id, post_officeB_id) VALUES(12,13);
 
 
-
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (1, 'Poslovnica Sarajevo', 'Poslovnica Tuzla', 125.554);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (2, 'Poslovnica Tuzla', 'Poslovnica Sarajevo', 125.554);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (3, 'Poslovnica Beograd', 'Poslovnica Tuzla', 195.21);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (4, 'Poslovnica Tuzla', 'Poslovnica Beograd', 195.21);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (5, 'Poslovnica Tuzla', 'Poslovnica Zagreb', 342.124);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (6, 'Poslovnica Zagreb', 'Poslovnica Tuzla', 342.124);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (7, 'Poslovnica Ljubljana', 'Poslovnica Zagreb', 139.577);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (8, 'Poslovnica Zagreb', 'Poslovnica Ljubljana', 139.577);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (9, 'Poslovnica Ljubljana', 'Poslovnica Salzburg', 282.511);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (10, 'Poslovnica Salzburg', 'Poslovnica Ljubljana', 282.511);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (11, 'Poslovnica Warshaw', 'Poslovnica Salzburg', 948.291);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (12, 'Poslovnica Salzburg', 'Poslovnica Warshaw', 948.291);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (13, 'Poslovnica Madrid', 'Poslovnica Paris', 1269.524);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (14, 'Poslovnica Paris', 'Poslovnica Madrid', 1269.524);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (15, 'Poslovnica Bern', 'Poslovnica Paris', 568.218);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (16, 'Poslovnica Paris', 'Poslovnica Bern', 568.218);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (17, 'Poslovnica Salzburg', 'Poslovnica Minhen', 151.194);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (18, 'Poslovnica Minhen', 'Poslovnica Salzburg', 151.194);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (19, 'Poslovnica Warshaw', 'Poslovnica Minhen', 1126.528);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (20, 'Poslovnica Minhen', 'Poslovnica Warshaw', 1126.528);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (21, 'Poslovnica Bern', 'Poslovnica Minhen', 428.379);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (22, 'Poslovnica Minhen', 'Poslovnica Bern', 428.379);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (23, 'Poslovnica Ljubljana', 'Poslovnica Rome', 761.421);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (24, 'Poslovnica Rome', 'Poslovnica Ljubljana', 761.421);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (25, 'Poslovnica Bern', 'Poslovnica Rome', 929.876);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (26, 'Poslovnica Rome', 'Poslovnica Bern', 929.876);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (27, 'Poslovnica Warshaw', 'Poslovnica Kiev', 770.872);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (28, 'Poslovnica Kiev', 'Poslovnica Warshaw', 770.872);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (29, 'Poslovnica Beograd', 'Poslovnica Kiev', 1465.733);
+INSERT INTO ups.link(id, target, start_office, distance) VALUES (30, 'Poslovnica Kiev', 'Poslovnica Beograd', 1465.733);
 
 -- Adding post office workers
 --
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (7, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@sarajevo.com', '2', 1, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (8, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@kladanj.com', '2', 2, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (9, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@tuzla.com', '2', 3, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (10, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@brcko.com', '2', 4, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (11, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@ljubljana.com', '2', 5, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (12, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@trento.com', '2', 6, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (13, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@salzburg.com', '2', 7, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (14, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@minhen.com', '2', 8, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (15, 'Office', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'office@studgard.com', '2', 9, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (7, 'Sarajevo', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@sarajevo.com', '2', 1, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (8, 'Zagreb', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@zagreb.com', '2', 2, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (9, 'Tuzla', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@tuzla.com', '2', 3, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (10, 'Ljubljana', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@ljubljana.com', '2', 4, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (11, 'Salzburg', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@salzburg.com', '2', 5, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (12, 'Minhen', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@minhen.com', '2', 6, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (13, 'Paris', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@pariz.com', '2', 7, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (14, 'Rome', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@rim.com', '2', 8, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (15, 'Warsaw', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@varsava.com', '2', 9, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (17, 'Madrid', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@madrid.com', '2', 10, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (18, 'Bern', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@bern.com', '2', 11, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (19, 'Kiev', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@kiev.com', '2', 12, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (20, 'Beograd', 'Office', 'dff8206d22a9219f77c5094de90a5f83', 'office@beograd.com', '2', 13, NULL, 1);
 
 -- Adding post office delivery
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (17, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@sarajevo.com', '4', 1, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (18, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@kladanj.com', '4', 2, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (19, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@tuzla.com', '4', 3, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (20, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@brcko.com', '4', 4, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (21, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@ljubljana.com', '4', 5, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (22, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@trento.com', '4', 6, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (23, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@salzburg.com', '4', 7, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (24, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@minhen.com', '4', 8, NULL, 1);
-INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated) VALUES (25, 'Delivery', 'Worker', 'dff8206d22a9219f77c5094de90a5f83', 'delivery@studgard.com', '4', 9, NULL, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (21, 'Sarajevo', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-tuzla@sarajevo.com', '4', 1, NULL, 1, 'Poslovnica Tuzla');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (22, 'Zagreb', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-ljubljana@zagreb.com', '4', 2, NULL, 1, 'Poslovnica Ljubljana');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (23, 'Tuzla', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-zagreb@tuzla.com', '4', 3, NULL, 1, 'Poslovnica Zagreb');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (24, 'Ljubljana', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-salzburg@ljubljana.com', '4', 4, NULL, 1, 'Poslovnica Salzburg');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (25, 'Salzburg', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-varsava@salzburg.com', '4', 5, NULL, 1, 'Poslovnica Warshaw');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (26, 'Minhen', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-salzburg@minhen.com', '4', 6, NULL, 1, 'Poslovnica Salzburg');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (27, 'Paris', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-bern@pariz.com', '4', 7, NULL, 1, 'Poslovnica Bern');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (28, 'Rome', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-bern@rim.com', '4', 8, NULL, 1, 'Poslovnica Rome');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (29, 'Warsaw', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-kiev@varsava.com', '4', 9, NULL, 1, 'Poslovnica Kiev');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (30, 'Madrid', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-pariz@madrid.com', '4', 10, NULL, 1, 'Poslovnica Paris');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (31, 'Bern', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-minhen@bern.com', '4', 11, NULL, 1, 'Poslovnica Minhen');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (32, 'Kiev', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-beograd@kiev.com', '4', 12, NULL, 1, 'Poslovnica Beograd');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (33, 'Beograd', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-tuzla@beograd.com', '4', 13, NULL, 1, 'Poslovnica Tuzla');
 
+-- Adding delivery couriers
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (34, 'Sarajevo', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@sarajevo.com', '4', 1, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (35, 'Zagreb', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@zagreb.com', '4', 2, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (36, 'Tuzla', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@tuzla.com', '4', 3, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (37, 'Ljubljana', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@ljubljana.com', '4', 4, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (38, 'Salzburg', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@salzburg.com', '4', 5, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (39, 'Minhen', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@minhen.com', '4', 6, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (40, 'Paris', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@pariz.com', '4', 7, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (41, 'Rome', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@rim.com', '4', 8, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (42, 'Warsaw', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@varsava.com', '4', 9, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (43, 'Madrid', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@madrid.com', '4', 10, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (44, 'Bern', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@bern.com', '4', 11, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (45, 'Kiev', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@kiev.com', '4', 12, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (46, 'Beograd', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@beograd.com', '4', 13, NULL, 1, 1);
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (47, 'Rome', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-ljubljana@rim.com', '4', 8, NULL, 1, 'Poslovnica Ljubljana');
+INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (49, 'Warsaw', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-minhen@varsava.com', '4', 9, NULL, 1, 'Poslovnica Minhen');
 -- Adding FAQ
 
 INSERT INTO ups.faq (id, question, answer) VALUES (1, 'How do I get a BIT Tracking Account?', 'Applying for a BIT Tracking account is easy.Open an account online (register).');
