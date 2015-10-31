@@ -76,7 +76,7 @@
                                 <input name="callingCodeId" value="" type="text" class="form-control" id="inputCallingCode" readonly style="font-size:11px; font-style: italic ">
                             </div>
                             <div class="col-sm-9">
-                                <input name="phoneNumber" value="@text("phoneNumber").value" onkeyup="checkNumber()" placeholder="Your mobile number (ex. 61 263 829)" type="text" class="form-control" id="inputPhoneNumber" required="required" style="font-size:11px; font-style: italic ">
+                                <input name="phoneNumber" value="@text("phoneNumber").value" onkeyup="checkNumber()" placeholder="Your mobile number (ex. 61 263 829)" type="text" class="form-control" id="inputPhoneNumber" style="font-size:11px; font-style: italic ">
                                 <span id="phoneError" class="alert-danger" data-error-for="" ></span>
                                 <span id="phoneInfo" data-error-for="" style="font-size: 10px">This field is not required. If you want to receive an SMS notifications about delivery
                                     status of your packages, please submit valid mobile number. If you do, you will get validation code to specified number.</span>
@@ -137,7 +137,7 @@
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
 
-                                <input id="buttonsubmit" type="submit" class="btn btn-information btn-info" value="Register">
+                                <input id="buttonsubmit" type="submit" class="btn btn-primary active" value="Register">
 
                             </div>
                         </div>

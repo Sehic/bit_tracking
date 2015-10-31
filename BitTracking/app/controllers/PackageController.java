@@ -171,7 +171,7 @@ public class PackageController extends Controller {
 
             if (!User.checkName(pack.recipientName)) {
                 flash("recipientNameError", "Your name should contains only letters.");
-                return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+                return redirect(routes.Application.userPanel());
             }
 
             pack.recipientAddress = form.get("recipientAddress");
@@ -180,6 +180,8 @@ public class PackageController extends Controller {
             Double distance = Double.parseDouble(form.get("distanceBetween"));
             pack.seen = true;
             String type = form.get("packageType");
+            String recipientCountry = form.get("recipientCountry");
+            pack.recipientCountry = recipientCountry;
             pack.packageType = null;
             switch (type) {
                 case "1":
@@ -202,7 +204,7 @@ public class PackageController extends Controller {
             ship.postOfficeId = PostOffice.findPostOfficeByAddress(form.get("initialPostOffice"));
             if (ship.postOfficeId == null) {
                 flash("noOffice", "Please select one office!");
-                return badRequest(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+                return redirect(routes.Application.userPanel());
             }
             pack.price = PriceHelper.calculatePrice(pack.weight, distance);
             pack.save();
@@ -213,7 +215,8 @@ public class PackageController extends Controller {
 
             return badRequest(index.render());
         }
-        return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList()));
+        List<Country> countries = Country.findCountry.findList();
+        return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList(), countries));
     }
 
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
@@ -248,9 +251,9 @@ public class PackageController extends Controller {
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.destination = destination;
             pack.packagePinCode = Package.getPinCode();
-            if (pack.users.size() > 0 && pack.users.get(0).phoneNumber != null && pack.users.get(0).numberValidated) {
-                SmsHelper.sendSms("Package Pin Code:" + pack.packagePinCode, pack.users.get(0).phoneNumber);
-            }
+//            if (pack.users.size() > 0 && pack.users.get(0).phoneNumber != null && pack.users.get(0).numberValidated) {
+//                SmsHelper.sendSms("Package Pin Code:" + pack.packagePinCode, pack.users.get(0).phoneNumber);
+//            }
             if (pack.users.size() > 0) {
                 MailHelper.approvedRequestNotification(pack.users.get(0).lastName, pack.trackingNum, pack.users.get(0).email, pack.packagePinCode);
             }

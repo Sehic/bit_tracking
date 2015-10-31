@@ -230,7 +230,8 @@ public class Application extends Controller {
                 packages.get(i).update();
             }
         }
-        return ok(userpanel.render(packagesForRender, PostOffice.findOffice.findList()));
+        List<Country> countries = Country.findCountry.findList();
+        return ok(userpanel.render(packagesForRender, PostOffice.findOffice.findList(), countries));
     }
 
 }

@@ -1,15 +1,15 @@
 @import helpers.StatusHelper
 @import helpers.SessionHelper
 @(packages: List[models.Package])(userPackagesForDelivery: List[models.Package])(userPackages: List[models.Package])
-@adminmain("Delivery Worker Packages") {
+@adminmain("Delivery Courier Panel") {
 
     <ol class="breadcrumb">
-        <li><a href="@routes.Application.adminPanel()">Delivery Worker Panel</a></li>
+        <li><a href="@routes.Application.adminPanel()">Delivery Courier Panel</a></li>
         <li><a href="#">Manage Packages</a></li>
         <li class="active">Packages</li>
     </ol>
     <hr/>
-    <h1>Delivery Worker Panel (@SessionHelper.getCurrentUser(ctx()).postOffice.name)</h1>
+    <h1>Delivery Courier Panel (@SessionHelper.getCurrentUser(ctx()).postOffice.name)</h1>
     <hr/>
     @helper.form(routes.PackageController.takePackages(), 'id -> "forms", 'class -> "form-horizontal", 'role -> "form") {
         <div class="row">
@@ -17,7 +17,7 @@
 
                 <div class="table-responsive">
                     <a id="takePackagesId" class="btn btn-info btn-group-sm" data-toggle="modal">
-                        Show Packages Ready For Shipping (@packages.size)</a>
+                        Show Packages Ready For Shipping <span class="badge">@packages.size) </span></a>
                     <a id="hideTakePackagesId" class="btn btn-info btn-group-sm" data-toggle="modal">
                         Hide Packages Ready For Shipping</a>
                     <a id="myPackages" class="btn btn-info btn-group-sm">
@@ -26,7 +26,7 @@
                         My Packages</a>
                     <hr/>
                     <div id="packagesToTake">
-                        <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
+                        <table class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -35,7 +35,7 @@
                                     <th>Recipient Name</th>
                                     <th>Recipient Address</th>
                                     <th>Status</th>
-                                    <th>Check</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,8 +52,7 @@
                                     </tr>
                             </tbody>
                         </table>
-                        <input type="submit" value="Take Packages" class="btn btn-primary"/>
-                        <hr/>
+                        <input type="submit" value="Take Packages" class="btn btn-primary pull-right"/>
                     </div>
                 </div>
             </div>
@@ -66,7 +65,7 @@
             <div class="col-md-12">
 
                 <div class="table-responsive">
-                    <h4 class="margin-bottom-15 breadcrumb">Delivery Worker Packages</h4>
+                    <h4 class="margin-bottom-15 breadcrumb">Delivery Courier Packages</h4>
                     <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
                         <thead>
                             <tr>
@@ -76,7 +75,7 @@
                                 <th>Recipient Name</th>
                                 <th>Recipient Address</th>
                                 <th>Status</th>
-                                <th>Check</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -55,6 +55,7 @@ create table package (
   package_type              integer,
   sender_name               varchar(255),
   recipient_name            varchar(255),
+  recipient_country         varchar(255),
   approved                  tinyint(1) default 0,
   seen                      tinyint(1) default 0,
   is_taken                  tinyint(1) default 0,

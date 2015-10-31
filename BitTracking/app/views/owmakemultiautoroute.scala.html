@@ -2,8 +2,8 @@
 @adminmain("Make Route Automatically") {
 
     <ol class="breadcrumb">
-        <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
-        <li><a href="#">Manage Post Office</a></li>
+        <li><a href="@routes.Application.adminPanel()">Office Worker Panel</a></li>
+        <li><a href="#">Manage Packages Route</a></li>
         <li class="active">Make a route automatically</li>
     </ol>
 
@@ -13,12 +13,12 @@
         <div class="col-sm-9 col-sm-offset-3">
             @helper.form(action = routes.RouteController.showMultiDijkstraRouting(), 'class -> "form-horizontal pull-left", 'role -> "form") {
                 <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
-                <button type="submit" class="btn btn-default">Create Route Using Algorithm</button>
+                <button type="submit" class="btn btn-primary active">Create Route Using Algorithm</button>
             }
 
             @helper.form(action = routes.RouteController.listMultiRoute(), 'class -> "form-horizontal pull-left", 'role -> "form") {
                 <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
-                <button type="submit" class="btn btn-default">Create Route Manually</button>
+                <button type="submit" class="btn btn-primary">Create Route Manually</button>
             }
         </div>
     </div>
@@ -86,10 +86,10 @@
         </div>
         <div class="row">
             <div class="col-sm-9 col-sm-offset-3">
+                <input id="clickMe" type="button" class="btn btn-primary" value="Refresh Map"/>
                 <button id="addPackageButton" type="submit" class="btn btn-success">
                     Save Route
                 </button>
-                <input id="clickMe" type="button" class="btn btn-primary" value="Refresh Map"/>
 
                 <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
     }

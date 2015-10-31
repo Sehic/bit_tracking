@@ -1,5 +1,5 @@
 @import helpers.StatusHelper
-@(packages: List[models.Package])(offices: List[PostOffice])
+@(packages: List[models.Package])(offices: List[PostOffice])(countries: List[Country])
 
 @main("My Tracking Panel") {
 
@@ -9,8 +9,8 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12" style="margin-top : 35px">
-                    <a href="#myUserPackages" class="btn btn-default myLinks">My Packages</a>
-                    <a href="#createPackage" class="btn btn-default myLinks">Create New Package</a>
+                    <a href="#myUserPackages" class="btn btn-info myLinks">My Packages</a>
+                    <a href="#createPackage" class="btn btn-primary active myLinks">Create New Package</a>
                 </div>
             </div>
 
@@ -26,6 +26,7 @@
                             <tr>
                                 <th>Tracking number</th>
                                 <th>Recipient Name</th>
+                                <th>Recipient Country</th>
                                 <th>Recipient Address</th>
                                 <th>Weight (kg)</th>
                                 <th>Price (KM)</th>
@@ -55,6 +56,7 @@
                                 }
                             }
                             <td id="recName">@pack.recipientName</td>
+                            <td>@pack.recipientCountry</td>
                             <td id="recAddress">@pack.recipientAddress</td>
                             <td id="weight">@pack.weight</td>
                             <td id="price">@pack.price</td>
@@ -101,38 +103,58 @@
                 </div>
             </div>
 
-            <div id="createPackage" class="usertables">
+            <div id="createPackage" class="usertables pull-left">
                 <form action="@routes.PackageController.userSavePackage()" method="post">
                     <div class="row">
-                        <div class="col-md-12" style="margin-top : 35px">
-                            <h2>Create New Package</h2>
+                        <div class="col-md-7" style="margin-top : 35px">
+                            <h2>Create New Package</h2><br/><br/>
                         </div>
                         <div class="col-md-7">
                             <div class="form-group col-md-12">
                                 <label for="recipientName" class="col-sm-3" style="font-size: 12px">
-                                    Recipient's Name:<abbr class="req" title="required"> *</abbr>
+                                    Recipient Name:<abbr class="req" title="required"> *</abbr>
                                 </label>
                                 <div class="col-sm-9">
                                     <input name="recipientName" type="text" class="form-control" id="recipientName" required="required" value="">
                                 </div>
                                 <span id="recipientNameError" class="alert-danger" data-error-for="" ></span>
                             </div>
-
+                            <div class="form-group col-md-12">
+                                <label for="recipientCountry" class="col-sm-3" style="font-size: 12px">
+                                    Recipient Country:<abbr class="req" title="required"> *</abbr>
+                                </label>
+                                <div class="col-sm-5">
+                                    <select id="recipientCountry" class="form-control" name="recipientCountry" required>
+                                        <option class="default" value="">--Select Country--</option>
+                                        @for(country <- countries) {
+                                            <option value="@country.countryName">@country.countryName</option>
+                                        }
+                                    </select>
+                                </div>
+                                <span class="alert-danger" data-error-for="" >@flash.get("noOffice")</span>
+                            </div>
                             <div class="form-group col-md-12">
                                 <label for="recipientAddress" class="col-sm-3" style="font-size: 12px">
-                                    Recipient's Address:<abbr class="req" title="required"> *</abbr>
+                                    Recipient Address:<abbr class="req" title="required"> *</abbr>
                                 </label>
                                 <div class="col-sm-9">
                                     <input placeholder="Street Name & Number, City" name="recipientAddress" type="text" class="form-control" id="recipientAddress" required="required" value="">
                                 </div>
                             </div>
+
                             <div class="form-group col-md-12">
-                                <label for="weight" class="col-sm-3" style="font-size: 12px">
-                                    Package Weight:<abbr class="req" title="required"> *</abbr>
+                                <label for="packageType" class="col-sm-3" style="font-size: 12px">
+                                    Send Via:<abbr class="req" title="required"> *</abbr>
                                 </label>
-                                <div class="col-sm-9">
-                                    <input placeholder="Weight in kg" name="weight" value="" type="number" class="form-control" id="weight" required="required" step="0.01" min="0.01" max="20000">
+                                <div class="col-sm-5">
+                                    <select id="initialAddress" class="sortAlphabetically form-control" name="initialPostOffice" required>
+                                        <option class="default" value="">--Select one--</option>
+                                        @for(office <- offices) {
+                                            <option value="@office.address">@office.name</option>
+                                        }
+                                    </select>
                                 </div>
+                                <span class="alert-danger" data-error-for="" >@flash.get("noOffice")</span>
                             </div>
 
                             <div class="form-group col-md-12">
@@ -151,22 +173,17 @@
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label for="packageType" class="col-sm-3" style="font-size: 12px">
-                                    Send Via:<abbr class="req" title="required"> *</abbr>
+                                <label for="weight" class="col-sm-3" style="font-size: 12px">
+                                    Package Weight:<abbr class="req" title="required"> *</abbr>
                                 </label>
-                                <div class="col-sm-5">
-                                    <select id="initialAddress" class="sortAlphabetically form-control" name="initialPostOffice" required>
-                                        <option class="default" value="">--Select one--</option>
-                                        @for(office <- offices) {
-                                            <option value="@office.address">@office.name</option>
-                                        }
-                                    </select>
+                                <div class="col-sm-9">
+                                    <input placeholder="Weight in kg" name="weight" value="" type="number" class="form-control" id="weight" required="required" step="0.01" min="0.01" max="20000">
                                 </div>
-                                <span class="alert-danger" data-error-for="" >@flash.get("noOffice")</span>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-3 pull-right">
-                                    <input id="createRequestButton" type="submit" class="btn btn-primary" value="Create Request">
+
+                            <div class="form-group col-md-12">
+                                <div class="col-sm-9 pull-right">
+                                    <input id="createRequestButton" type="submit" class="btn btn-primary active" value="Create Request">
                                 </div>
                             </div>
                         </div>

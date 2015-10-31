@@ -7,7 +7,7 @@
     <a href="@routes.PackageController.addPackage()"><button class="btn btn-primary active"data-toggle="modal">
         Add new package</button></a>
     <a id="approvalId" class="btn btn-info btn-group-sm" data-toggle="modal">
-        Packages Waiting For Approval (@allPacks.size)</a>
+        Packages Waiting For Approval <span class="badge">@allPacks.size</span></a>
     <a id="hideApproval" button class="btn btn-info active"  data-toggle="modal">
         Hide Packages Waiting For Approval</a>
     <hr/>
@@ -18,13 +18,14 @@
             <thead>
                 <tr>
                     <th>Recipient Name</th>
+                    <th>Recipient Country</th>
                     <th>Recipient Address</th>
                     <th>Weight (kg)</th>
                     <th>Price (KM)</th>
                     <th>Approve/Reject</th>
                     <th>Initial Post Office</th>
                     <th>Destination Post Office</th>
-                    <th>-</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +35,7 @@
                         <form action="@routes.PackageController.approveReject(pack.id)" method="post">
                             <tr>
                                 <td>@pack.recipientName</td>
+                                <td>@pack.recipientCountry</td>
                                 <td>@pack.recipientAddress</td>
                                 <td>@pack.weight</td>
                                 <td><input style="background-color: transparent; border: 0px" id="priceId" name="price" value="@pack.price" readonly>
@@ -44,7 +46,7 @@
                                     <option value="reject">Reject</option>
                                 </select></td>
                                 <td><input name="initialPostOffice" value="@workerOffice.name" type="text" style="background-color: transparent; border: 0px" readonly/></td>
-                                <td><select name="destinationPostOffice" id="destinationPostOffice">
+                                <td><select name="destinationPostOffice" id="destinationPostOffice" class="sortAlphabetically">
                                     <option value="default">Choose</option>
                                     @for(office <- offices) {
                                         @if(office != workerOffice) {
@@ -152,7 +154,7 @@
                                 <td>@pack.trackingNum</td>
                                 <td>@pack.senderName</td>
                                 <td>@pack.recipientName</td>
-                                <td><button class="btn btn-warning btn-mini active" onclick="form.action='@routes.PackageController.packageInfo(pack.id)';form.method='GET'">Verify...</button></td>
+                                <td><button class="btn btn-warning btn-mini active" onclick="form.action='@routes.PackageController.packageInfo(pack.id)';form.method='GET'">Verify</button></td>
                                 <td></td>
                                 <td>@pack.destination</td>
                                 <td></td>

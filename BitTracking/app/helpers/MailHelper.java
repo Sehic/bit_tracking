@@ -71,7 +71,7 @@ public class MailHelper {
         String address = "http://localhost:9000/validate/" + token;
         String message = "Mr/Mrs. " + userLastName + ",<br><br>" +
                 "Thank you for joining BitTracking community.<br>" +
-                "To complete your registration, please follow the link bellow: <br>" +
+                "To complete your registration, please follow the link below: <br>" +
                 "<u><a href=\"" + address + "\">" + address + "</a></u><br><br>" +
                 "<i>BitTracking Team</i>";
         MailHelper.sendConfirmation(subject, message, userEmail);
