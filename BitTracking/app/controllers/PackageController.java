@@ -317,7 +317,6 @@ public class PackageController extends Controller {
     public Result checkPackageCode(Long id){
         DynamicForm form = Form.form().bindFromRequest();
         String code = form.get("packagePinCode");
-        System.out.println(code);
         Package pack = Package.findPackageById(id);
         Long pinCode =0L;
         try{
