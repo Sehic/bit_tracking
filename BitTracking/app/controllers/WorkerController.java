@@ -190,6 +190,15 @@ public class WorkerController extends Controller {
         List<Package> courierPackagesForDelivery = getCourierPackagesForHomeDelivery(courierPackages);
         return ok(deliverycourierpanel.render(packagesForShipment, courierPackagesForDelivery, courierPackages));
     }
+    @Security.Authenticated(Authenticators.DeliveryWorkerFilter.class)
+    public Result driveHome(){
+        User u1 = SessionHelper.getCurrentUser(ctx());
+        PostOffice userOffice = PostOffice.findPostOfficeByName(u1.drivingOffice);
+        u1.drivingOffice = u1.postOffice.name;
+        u1.postOffice = userOffice;
+        u1.update();
+        return redirect(routes.WorkerController.deliveryWorkerPanel());
+    }
 
     public static List<Package> getCourierPackagesForHomeDelivery(List<Package> courierPackages){
         List<Package> packages = new ArrayList<>();

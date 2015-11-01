@@ -71,7 +71,7 @@ public class ApiPackageController extends Controller {
     }
 
     public Result getPackageList(){
-        Logger.info("uso");
+
         List<Package> packs = Package.finder.findList();
 
         return ok(JSONHelper.jsonPackagesList(packs));

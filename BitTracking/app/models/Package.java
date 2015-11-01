@@ -122,7 +122,7 @@ public class Package extends Model {
     @Override
     public String toString() {
         if (shipmentPackages.get(shipmentPackages.size() - 1).status == StatusHelper.DELIVERED) {
-            return trackingNum + "," + weight + "," + price + "," + shipmentPackages.get(0).postOfficeId.name + "," + destination + "," + shipmentPackages.get(0).dateCreated + "," + StatusHelper.DELIVERED.toString();
+            return trackingNum + "," + weight + "," + price + "," + shipmentPackages.get(0).postOfficeId.name + "," + destination + "," + shipmentPackages.get(shipmentPackages.size()-1).dateCreated + "," + StatusHelper.DELIVERED.toString();
         } else {
             if(shipmentPackages.get(0).dateCreated != null){
                 return trackingNum + "," + weight + "," + price + "," + shipmentPackages.get(0).postOfficeId.name + "," + destination + "," + shipmentPackages.get(0).dateCreated + "," + StatusHelper.OUT_FOR_DELIVERY.toString();

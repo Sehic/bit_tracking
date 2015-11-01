@@ -139,7 +139,7 @@
                                                 <td></td>
                                             }
                                             @if(shipmentFromThisPackage.status == helpers.StatusHelper.DELIVERED) {
-                                                <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input class="btn-link" type="button" value="Delete"></a></td>
+                                                <td align="center"><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><span class="glyphicon glyphicon-trash"></span></a></td>
                                             } else {
                                                 <td></td>
                                             }
