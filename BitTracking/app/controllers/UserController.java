@@ -1,10 +1,11 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
-import helpers.*;
+import helpers.Authenticators;
+import helpers.HashHelper;
+import helpers.MailHelper;
+import helpers.SessionHelper;
 import models.*;
-import models.Package;
-import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -12,14 +13,8 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
 import views.html.*;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -213,35 +208,35 @@ public class UserController extends Controller {
 
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart picture = body.getFile("picture");
+        ImagePath path = ImagePath.findByUser(user);
 
-        if (picture != null) {
-            String fileName = picture.getFilename();
-            File file = picture.getFile();
-            try {
-                FileUtils.moveFile(file, new File("./public/images/" + fileName));
-                ImagePath path = ImagePath.findByUser(user);
-                if (path == null) {
-                    path = new ImagePath();
-                    path.image_url = "/assets/images/" + fileName;
-                    path.profilePhoto = user;
-                    path.save();
-                    user.imagePath = path;
-                    user.update();
-                } else {
-                    String deletePic = "./public/images/" + path.image_url.split("/", 4)[3];
-                    Logger.info(deletePic);
-                    path.image_url = "/assets/images/" + fileName;
-                    path.update();
-                    FileUtils.deleteQuietly(new File(deletePic));
-                }
+        if (path == null) {
 
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (picture != null) {
+                File file = picture.getFile();
+
+                user.imagePath = ImagePath.create(file, user);
+
+                return redirect("/mybt/editprofile/" + user.id);
+            }else{
+                flash("pictureError", "Please select one picture!");
+                return redirect("/mybt/editprofile/" + user.id);
             }
-            return redirect("/mybt/editprofile/" + user.id);
-        } else {
-            return redirect(routes.Application.index());
+        }else {
+            if (picture != null) {
+                Ebean.delete(path);
+
+                File file = picture.getFile();
+
+                user.imagePath = ImagePath.create(file, user);
+
+                return redirect("/mybt/editprofile/" + user.id);
+            }else {
+                flash("pictureError", "Please select one picture!");
+                return redirect("/mybt/editprofile/" + user.id);
+            }
         }
+
     }
 
     /**
