@@ -18,6 +18,7 @@ import views.html.*;
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -183,6 +184,14 @@ public class PostOfficeController extends Controller {
                 }
             }
         }
+
+        postOffices.sort(new Comparator<PostOffice>() {
+            @Override
+            public int compare(PostOffice o1, PostOffice o2) {
+                return o1.name.compareTo(o2.name);
+            }
+        });
+
         return ok(adminlinkoffices.render(postOffices, mainOfficeRelationList, office, locations));
     }
 
