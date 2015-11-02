@@ -194,41 +194,21 @@ directionsService.route(request, function (response, status) {
 
             routeString+=final+"|";
             $("#routeOffices").val(routeString);
-            calculateDistance(originAddress, destinationAddress);
+            var totalDistance = 0;
+        var totalDuration = 0;
+        var legs = response.routes[0].legs;
+        for(var i=0; i<legs.length; i++) {
+            totalDistance = totalDistance + legs[i].distance.value;
+            totalDuration += legs[i].duration.value;
+        }
+        $("#distanceBetweenOffices").val((totalDistance/1000).toFixed(2)+" km");
+        var hours = totalDuration/60/60;
+        $("#tripDurationBetweenOffices").val(hours.toFixed(2)+" h");
     }else {
       bootbox.alert('There is no available route for these Post Offices!');
     }
 })
 
-
-}
-
-function calculateDistance(originAddress, destinationAddress){
-var service = new google.maps.DistanceMatrixService;
-  service.getDistanceMatrix({
-    origins: [originAddress],
-    destinations: [destinationAddress],
-    travelMode: google.maps.TravelMode.DRIVING,
-    unitSystem: google.maps.UnitSystem.METRIC,
-    avoidHighways: false,
-    avoidTolls: false
-  }, function(response, status) {
-    if (status !== google.maps.DistanceMatrixStatus.OK) {
-      alert('Error was: ' + status);
-    } else {
-      var originList = response.originAddresses;
-      var destinationList = response.destinationAddresses;
-
-      for (var i = 0; i < originList.length; i++) {
-        var results = response.rows[i].elements;
-
-        for (var j = 0; j < results.length; j++) {
-            $("#distanceBetweenOffices").val(results[j].distance.text);
-            $("#tripDurationBetweenOffices").val(results[j].duration.text);
-        }
-      }
-    }
-  });
 }
 
 $("#clickMe").click( function(){
