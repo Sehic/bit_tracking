@@ -256,9 +256,13 @@ public class PackageController extends Controller {
             pack.trackingNum = (UUID.randomUUID().toString());
             pack.destination = destination;
             pack.packagePinCode = Package.getPinCode();
-//            if (pack.users.size() > 0 && pack.users.get(0).phoneNumber != null && pack.users.get(0).numberValidated) {
-//                SmsHelper.sendSms("Package Pin Code:" + pack.packagePinCode, pack.users.get(0).phoneNumber);
-//            }
+            /**
+             * Due to limitations caused by trial version of Twilio, we can send only 5 SMS messages per day.
+             * That's why we use MailHelper in this testing period.
+             */
+            /*if (pack.users.size() > 0 && pack.users.get(0).phoneNumber != null && pack.users.get(0).numberValidated) {
+                SmsHelper.sendSms("Package Pin Code:" + pack.packagePinCode, pack.users.get(0).phoneNumber);
+            }*/
             if (pack.users.size() > 0) {
                 MailHelper.approvedRequestNotification(pack.users.get(0).lastName, pack.trackingNum, pack.users.get(0).email, pack.packagePinCode);
             }
