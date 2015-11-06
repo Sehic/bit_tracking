@@ -127,6 +127,12 @@ public class DijkstraHelper {
         return getShortestPathTo(b);
     }
 
+    /**
+     * This method is connected with google maps api that returns us distance between two offices
+     * @param address1 - address from first inserted office
+     * @param address2 - address from second inserted office
+     * @return
+     */
     public static double getDistance(String address1, String address2) {
         InputStream is = null;
         double distance = 0;
@@ -163,6 +169,12 @@ public class DijkstraHelper {
         return distance;
     }
 
+    /**
+     * This method is used for getting shortest path as list of String
+     * @param initialAddress - initial post office address
+     * @param targetAddress - destination post office address
+     * @return
+     */
     public List<String> getStringPath(String initialAddress, String targetAddress) {
 
         getAllVertexesWithEdges();

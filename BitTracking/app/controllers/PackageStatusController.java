@@ -112,6 +112,7 @@ public class PackageStatusController extends Controller {
         Package newPack = new Package();
         Calendar c = null;
         Date date = null;
+        //Getting packages from checkboxes
         for (int i = 0; i < packages.size(); i++) {
             String pack = form.field("" + packages.get(i).id).value();
             if (pack != null) {
@@ -129,6 +130,12 @@ public class PackageStatusController extends Controller {
             u1.update();
             return redirect(routes.WorkerController.deliveryWorkerPanel());
     }
+
+    /**
+     * This method is used for checking package when it comes to office worker office
+     * @param id - package id
+     * @return
+     */
     @Security.Authenticated(Authenticators.OfficeWorkerFilter.class)
     public Result updateStatusOfficeWorker(Long id){
         User u1 = SessionHelper.getCurrentUser(ctx());
@@ -141,16 +148,22 @@ public class PackageStatusController extends Controller {
         return redirect(routes.WorkerController.officeWorkerPanel());
     }
 
+    /**
+     * This method is used for updating status as delivery courier
+     * @return
+     */
     public Result updateStatusDeliveryCourier(){
         DynamicForm form = Form.form().bindFromRequest();
         List<Package> packages = Package.findApprovedPackages();
         Package newPack = new Package();
+        //Getting values from checkboxes
         for (int i = 0; i < packages.size(); i++) {
             String pack = form.field("" + packages.get(i).id).value();
             if (pack != null) {
                 newPack = Package.findPackageById(Long.parseLong(pack));
                 newPack.statusForCourier = StatusHelper.DELIVERED;
                 User user = null;
+                //Finding user for sending mail confirmation
                 for (int j = 0; j < newPack.users.size(); j++) {
                     if (newPack.users.get(j).typeOfUser == UserType.REGISTERED_USER) {
                         user = newPack.users.get(j);

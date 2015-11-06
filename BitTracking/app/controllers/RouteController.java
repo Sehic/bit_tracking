@@ -22,7 +22,11 @@ import java.util.List;
  * Created by mladen.teofilovic on 15/10/15.
  */
 public class RouteController extends Controller {
-
+    /**
+     * This method opens up view for making route manually
+     * @param id - package that needs route
+     * @return
+     */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result listRoutes(Long id) {
 
@@ -34,6 +38,10 @@ public class RouteController extends Controller {
         return ok(owmakeroute.render(office.postOfficesA, officePackage, locations, allOffices));
     }
 
+    /**
+     * Method that is used for updating select box with new values
+     * @return - list of offices that are linked with selected office
+     */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result createRoute() {
 
@@ -55,19 +63,27 @@ public class RouteController extends Controller {
         return ok(officesString);
     }
 
+    /**
+     * Method that is used for saving package route
+     * @param id - package id
+     * @return
+     */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result saveRoute(Long id) {
 
         DynamicForm form = Form.form().bindFromRequest();
         String packages = form.get("packagesForRoute");
         List<Package> packagesForRoute = new ArrayList<>();
+        //Getting values from form and checking if we need to route one or more packages
         if (packages != null) {
             packagesForRoute = packagesForRoute(packages);
         } else {
             Package onePackage = Package.findPackageById(id);
             packagesForRoute.add(onePackage);
         }
+        //Getting route field
         String route = form.get("route");
+        //Creating route for list of packages
         for (int i = 0; i < packagesForRoute.size(); i++) {
             Package packageWithRoute = packagesForRoute.get(i);
             Shipment initialOfficeShip = new Shipment();
@@ -92,16 +108,21 @@ public class RouteController extends Controller {
                 ship.packageId = packageWithRoute;
                 ship.status = StatusHelper.ON_ROUTE;
 
-                Ebean.save(ship);
+                ship.save();
             }
         }
         User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1.typeOfUser == UserType.ADMIN)
+        if (u1.typeOfUser == UserType.ADMIN) {
             return redirect(routes.PackageController.adminPackage());
-        else
+        }
             return redirect(routes.WorkerController.officeWorkerPanel());
     }
 
+    /**
+     * Method that is used for showing up auto route view
+     * @param id - package id
+     * @return
+     */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result showAutoRouting(Long id) {
 
@@ -111,12 +132,18 @@ public class RouteController extends Controller {
         return ok(owmakeautoroute.render(offices, locations, officePackage));
     }
 
+    /**
+     * This method is used for saving auto route for one or more packages that goes to same destination
+     * @param id - package id
+     * @return
+     */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result saveAutoRoute(Long id) {
 
         DynamicForm form = Form.form().bindFromRequest();
         String packages = form.get("packagesForRoute");
         List<Package> packagesForRoute = new ArrayList<>();
+        //Getting values from form and checking if we need to route one or more packages
         if (packages != null) {
             packagesForRoute = packagesForRoute(packages);
         } else {
@@ -173,6 +200,11 @@ public class RouteController extends Controller {
         return routeOffices;
     }
 
+    /**
+     * This method returns packages that should be routed
+     * @param packages - list of packages
+     * @return
+     */
     public static List<Package> packagesForRoute(String packages) {
         List<Package> routePackages = new ArrayList<>();
         if (packages == null) {
@@ -187,6 +219,12 @@ public class RouteController extends Controller {
         return routePackages;
     }
 
+    /**
+     * This method is used when more than one package is selected using checkboxes, and when button is clicked, new view shows up.
+     * That view is used for routing all selected packages.
+     * Packages must have same destination post office.
+     * @return
+     */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result listMultiRoute() {
         User u = SessionHelper.getCurrentUser(ctx());
@@ -215,7 +253,7 @@ public class RouteController extends Controller {
                 }
             }
             for (int i = 0; i < packagesToTake.size() - 1; i++) {
-
+                //Checking if every selected package goes to same destination post office
                 if (!newPack.destination.equals(packagesToTake.get(i).destination)) {
                     flash("differentDestinationOffices", "You must select Packages which have same Destination Post Office!");
                     ApplicationLog newLog = new ApplicationLog(u.email+": Error choosing Multi Route. Packages must have same Destination Post Office.");
@@ -224,6 +262,7 @@ public class RouteController extends Controller {
                 }
             }
             officePackage = Package.findPackageById(newPack.id);
+            //Validation on button click without selecting any packages
             if (officePackage == null) {
                 ApplicationLog newLog = new ApplicationLog(u.email+": Error choosing Multi Route. Select at least one Package.");
                 newLog.save();
@@ -238,6 +277,11 @@ public class RouteController extends Controller {
         return ok(owmakemultiroute.render(office.postOfficesA, officePackage, locations, allOffices, packagesId));
     }
 
+    /**
+     * This method is used for creating route for more than one package.
+     * This view is called clicking on button, and auto routing is available then.
+     * @return
+     */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result showMultiAutoRouting() {
 
@@ -250,6 +294,11 @@ public class RouteController extends Controller {
         return ok(owmakemultiautoroute.render(offices, locations, officePackage, packagesId));
     }
 
+    /**
+     * This method is used for showing up dijkstra routing for one package
+     * @param id - package id
+     * @return
+     */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result showDijkstraRouting(Long id) {
 
@@ -262,6 +311,10 @@ public class RouteController extends Controller {
         return ok(owmakedijkstraroute.render(finalOffices, locations, officePackage));
     }
 
+    /**
+     * This method is used for showing up view that is used for routing more than one package
+     * @return
+     */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result showMultiDijkstraRouting() {
 
@@ -277,7 +330,12 @@ public class RouteController extends Controller {
         return ok(owmakemultidijkstraroute.render(finalOffices, locations, officePackage, packagesId));
     }
 
-
+    /**
+     * This method is used for getting list of post offices that are part of route
+     * @param initialOffice - initial post office
+     * @param destinationOffice - destination post office
+     * @return
+     */
     public static List<PostOffice> officesInRoute(String initialOffice, String destinationOffice){
         List<PostOffice> offices = PostOffice.findOffice.findList();
         DijkstraHelper dijkstra = new DijkstraHelper();
@@ -294,6 +352,10 @@ public class RouteController extends Controller {
         return finalOffices;
     }
 
+    /**
+     * This method will give us Dijkstra shortest path
+     * @return - list of post offices as string
+     */
     public Result getDijkstraPath(){
         DynamicForm form = Form.form().bindFromRequest();
 

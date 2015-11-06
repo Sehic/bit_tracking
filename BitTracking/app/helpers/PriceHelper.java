@@ -4,7 +4,12 @@ package helpers;
  * Created by Mladen13 on 24.10.2015.
  */
 public class PriceHelper {
-
+    /**
+     * Method that calculates price for package shipping, it can be modified, and it is part of business logic of company
+     * @param weight
+     * @param distance
+     * @return
+     */
     public static double calculatePrice(double weight, double distance) {
         double index = 0.20;
         if (distance > 10 && distance <= 50) {

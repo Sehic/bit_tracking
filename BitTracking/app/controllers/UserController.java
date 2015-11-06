@@ -53,30 +53,30 @@ public class UserController extends Controller {
         if (u == null) {
             return badRequest(login.render("Wrong email or password!", newUser.bindFromRequest()));
         }
-
-        if (u.validated == false) {
+        //Checking mail validation
+        if (!u.validated) {
             return badRequest(login.render("Please check your email and validate this account!", newUser.bindFromRequest()));
         }
-
+        //Putting user mail to session
         session("email", email);
 
-        if(u.token != null) {
+        if (u.token != null) {
             u.token = null;
             u.update();
         }
-
-        if (u.phoneNumber != null && !u.numberValidated){
+        //Checking phone number validation
+        if (u.phoneNumber != null && !u.numberValidated) {
             return ok(validatephone.render());
         }
 
-        return redirect(routes.Application.index());
+        return ok(index.render());
     }
 
     /**
      * This method get user input from registration form and if every input is valid
      * saves it to database.
      *
-     * @return redirect user to subpage login if everything is ok, otherwise ?????
+     * @return redirect user to subpage login if everything is ok, otherwise user should correct inputs
      */
     public Result registrationCheck() {
 
@@ -90,7 +90,7 @@ public class UserController extends Controller {
         List<Country> countryList = Country.findCountry.findList();
         try {
             userFromForm = boundForm.get();
-        }catch(Exception e){
+        } catch (Exception e) {
             return badRequest(register.render(boundForm, countryList));
         }
         //Getting password confirmation field on this way because it is not attribute
@@ -111,7 +111,7 @@ public class UserController extends Controller {
         String validationCode = rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9);
 
         u = new User(userFromForm.firstName, userFromForm.lastName, userFromForm.password, userFromForm.email);
-
+        //Backend validation of every input.
         if (!u.checkName(u.firstName)) {
             flash("errorName", "Your name should have only letters.");
             return badRequest(register.render(boundForm, countryList));
@@ -143,11 +143,12 @@ public class UserController extends Controller {
         }
 
         String newPassword = HashHelper.getEncriptedPasswordMD5(u.password);
-
+        //Capitalize first letter before inserting to database
         u.firstName = u.firstName.substring(0, 1).toUpperCase() + u.firstName.substring(1);
         u.lastName = u.lastName.substring(0, 1).toUpperCase() + u.lastName.substring(1);
 
         u = new User(u.firstName, u.lastName, newPassword, u.email);
+        //Generating token for further validation
         u.token = UUID.randomUUID().toString();
 
         u.country = country;
@@ -174,7 +175,9 @@ public class UserController extends Controller {
             u.token = null;
             u.update();
         }
+        //Sending validation mail to user
         MailHelper.sendVerificationMail(u.token, u.lastName, u.email);
+        //Logging new user to admin panel
         ApplicationLog newLog = new ApplicationLog("New user registered using: " + u.email + " mail.");
         newLog.save();
         return redirect(routes.Application.login());
@@ -245,9 +248,9 @@ public class UserController extends Controller {
     }
 
     /**
-     * Method that updates user firstname, lastname and password
+     * Method that updates user first name, last name, country, phone number if needed
      *
-     * @param id - user on that id
+     * @param id - user with that id
      * @return
      */
     public Result updateUser(Long id) {
@@ -256,7 +259,7 @@ public class UserController extends Controller {
         if (u1 == null || user == null || u1.id != user.id) {
             return redirect(routes.Application.index());
         }
-
+        //Getting values from form
         DynamicForm form = Form.form().bindFromRequest();
         String firstName = form.get("firstName");
         String lastName = form.get("lastName");
@@ -265,7 +268,7 @@ public class UserController extends Controller {
 
         ImagePath path = ImagePath.findByUser(user);
         List<Country> countryList = Country.findCountry.findList();
-
+        //Backend field validation
         if (!User.checkName(firstName)) {
             flash("errorName", "Your name should have only letters.");
             return badRequest(editprofile.render(user, path, countryList));
@@ -275,7 +278,7 @@ public class UserController extends Controller {
             flash("errorLastName", "Your last name should have only letters.");
             return badRequest(editprofile.render(user, path, countryList));
         }
-
+        //Editing user number and country
         if (countryCode != null && phoneNumber != null) {
             Country country = null;
             if (!"".equals(countryCode)) {
@@ -419,10 +422,13 @@ public class UserController extends Controller {
             user.drivingOffice = drivingPostOffice;
             user.isCourier = false;
 
-        } else if(userType.equals("Registered User")) {
+        } else if (userType.equals("Registered User")) {
+
             user.typeOfUser = UserType.REGISTERED_USER;
             user.postOffice = null;
-        } else if(userType.equals("Delivery Courier")){
+
+        } else if (userType.equals("Delivery Courier")) {
+
             user.typeOfUser = UserType.DELIVERY_WORKER;
             user.isCourier = true;
             user.drivingOffice = null;
@@ -478,10 +484,10 @@ public class UserController extends Controller {
         User user = SessionHelper.getCurrentUser(ctx());
         DynamicForm form = Form.form().bindFromRequest();
         String number = form.data().get("newNumber");
-        if(number.charAt(0) == '+') {
+        if (number.charAt(0) == '+') {
             number = number.substring(1, number.length());
         }
-        if(!User.checkPhoneNumber(number)) {
+        if (!User.checkPhoneNumber(number)) {
             return badRequest();
         }
         String fixNumber = "+" + number;
@@ -499,6 +505,10 @@ public class UserController extends Controller {
         return ok();
     }
 
+    /**
+     * Method that sends mail to user when he can't remember his own password and wants to change it
+     * @return - change password view
+     */
     public Result sendPassword() {
         DynamicForm form = Form.form().bindFromRequest();
         String email = form.data().get("email");
@@ -524,6 +534,11 @@ public class UserController extends Controller {
         return ok(changepassword.render(user));
     }
 
+    /**
+     * Method that renders changepassword view that is used for changing user password
+     * @param token - default generated token
+     * @return
+     */
     public Result changePassword(String token) {
         User activeUser = SessionHelper.getCurrentUser(ctx());
         if (activeUser != null) {
@@ -532,12 +547,16 @@ public class UserController extends Controller {
             return badRequest(index.render());
         }
         User user = User.findByToken(token);
-        if(user == null) {
+        if (user == null) {
             return badRequest(index.render());
         }
         return ok(changepassword.render(user));
     }
 
+    /**
+     * Method that is used for changing user password using ajax
+     * @return badRequest if something goes wrong, else ok
+     */
     public Result makePasswordChange() {
         DynamicForm form = Form.form().bindFromRequest();
         String userId = form.data().get("userId");
@@ -546,8 +565,9 @@ public class UserController extends Controller {
         String reNewPassword = form.data().get("reNewPass");
 
         User activeUser = SessionHelper.getCurrentUser(ctx());
+        //Backend field validation
         if (activeUser != null) {
-            if (oldPassword == "") {
+            if ("".equals(oldPassword)) {
                 return badRequest("wrongoldpassword");
             }
             String hashedOldPassword = HashHelper.getEncriptedPasswordMD5(oldPassword);
@@ -557,7 +577,7 @@ public class UserController extends Controller {
             if (!newPassword.equals(reNewPassword)) {
                 return badRequest("passwordsdontmatch");
             }
-            if(!User.checkPassword(newPassword)) {
+            if (!User.checkPassword(newPassword)) {
                 return badRequest("errorpassword");
             }
             activeUser.password = HashHelper.getEncriptedPasswordMD5(newPassword);
@@ -570,7 +590,7 @@ public class UserController extends Controller {
             if (!User.checkPassword(newPassword)) {
                 return badRequest("errorpassword");
             }
-            if(!newPassword.equals(reNewPassword)) {
+            if (!newPassword.equals(reNewPassword)) {
                 return badRequest("passwordsdontmatch");
             }
             user.password = HashHelper.getEncriptedPasswordMD5(newPassword);

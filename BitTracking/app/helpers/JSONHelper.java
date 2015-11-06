@@ -14,6 +14,11 @@ import java.util.List;
  */
 public class JSONHelper {
 
+    /**
+     * Creating user as json
+     * @param u
+     * @return
+     */
     public static ObjectNode jsonUser(User u) {
 
         ObjectNode user = Json.newObject();
@@ -26,6 +31,11 @@ public class JSONHelper {
 
     }
 
+    /**
+     * Getting post office as json
+     * @param office
+     * @return
+     */
     public static ObjectNode jsonPostOffice(PostOffice office) {
         ObjectNode jsonPostOffice = Json.newObject();
         jsonPostOffice.put("id", office.id);
@@ -34,6 +44,11 @@ public class JSONHelper {
         return jsonPostOffice;
     }
 
+    /**
+     * Getting package as json
+     * @param pack
+     * @return
+     */
     public static ObjectNode jsonPackage(models.Package pack) {
         ObjectNode jsonPack = Json.newObject();
         jsonPack.put("id", pack.id);
@@ -73,6 +88,11 @@ public class JSONHelper {
         return jsonPack;
     }
 
+    /**
+     * Getting post offices list as json
+     * @param offices
+     * @return
+     */
     public static ArrayNode jsonPostOfficeList(List<PostOffice> offices) {
         ArrayNode jsonListPostOffices = new ArrayNode(JsonNodeFactory.instance);
         for (PostOffice office : offices) {
@@ -82,6 +102,11 @@ public class JSONHelper {
         return jsonListPostOffices;
     }
 
+    /**
+     * Getting packages list as json
+     * @param packages
+     * @return
+     */
     public static ArrayNode jsonPackagesList(List<Package> packages) {
         ArrayNode jsonListPackages = new ArrayNode(JsonNodeFactory.instance);
         for (Package pack : packages) {

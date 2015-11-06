@@ -67,6 +67,7 @@ public class PackageController extends Controller {
         String routeForShipment = boundForm.field("routeOffices").value();
         PostOffice office = PostOffice.findPostOfficeByAddress(officeAddress);
         List<Location> locations = Location.findLocation.findList();
+        //Form input validation, because initial and destination post offices are required
         if (office == null) {
             ApplicationLog newLog = new ApplicationLog("Error saving package " + u1.email + ". Initial Post Office not chosen.");
             newLog.save();
@@ -104,6 +105,7 @@ public class PackageController extends Controller {
             newLog.save();
             return badRequest(packageadd.render(PostOffice.findOffice.findList(), locations, boundForm, u1));
         }
+        //Create only one shipment if route option is disabled else, whole route is created.
         if (routeForShipment == null) {
             Shipment ship = new Shipment();
             ship.packageId = pack;
@@ -126,9 +128,9 @@ public class PackageController extends Controller {
         }
 
         User user = SessionHelper.getCurrentUser(ctx());
-        if (user.typeOfUser == UserType.ADMIN)
+        if (user.typeOfUser == UserType.ADMIN) {
             return redirect(routes.PackageController.adminPackage());
-        else
+        }
             return redirect(routes.WorkerController.officeWorkerPanel());
     }
 
@@ -142,11 +144,11 @@ public class PackageController extends Controller {
     public Result deletePackage(Long id) {
 
         Package p = Package.findPackageById(id);
-
+        //Deleting shipments from this package
         for (int i = 0; i < p.shipmentPackages.size(); i++) {
             p.shipmentPackages.get(i).delete();
         }
-
+        //Deleting package relation with users
         for (int i = 0; i < p.users.size(); i++) {
             User u = p.users.get(i);
             Logger.info(u.email);
@@ -164,9 +166,13 @@ public class PackageController extends Controller {
 
     }
 
+    /**
+     * This method is used for creating package request by Registered User
+     * @return
+     */
     @Security.Authenticated(Authenticators.RegisteredUserFilter.class)
     public Result userSavePackage() {
-
+        //Getting form data
         User user = SessionHelper.getCurrentUser(ctx());
         DynamicForm form = Form.form().bindFromRequest();
         List<Package> packages = Package.finder.where().eq("seen", false).eq("users", user).findList();
@@ -204,6 +210,7 @@ public class PackageController extends Controller {
             }
 
             user.packages.add(pack);
+            //Creating first shipment
             Shipment ship = new Shipment();
             ship.packageId = pack;
             ship.postOfficeId = PostOffice.findPostOfficeByAddress(form.get("initialPostOffice"));
@@ -211,10 +218,12 @@ public class PackageController extends Controller {
                 flash("noOffice", "Please select one office!");
                 return redirect(routes.Application.userPanel());
             }
+            //Calculating price for package request
             pack.price = PriceHelper.calculatePrice(pack.weight, distance);
             pack.save();
             user.update();
             ship.save();
+            //Sending mail to user that request has been received
             MailHelper.requestReceivedNotification(user.lastName, user.email);
         } catch (PersistenceException | IllegalStateException | NumberFormatException e) {
 
@@ -224,13 +233,20 @@ public class PackageController extends Controller {
         return ok(userpanel.render(Package.findPackagesByUser(user), PostOffice.findOffice.findList(), countries));
     }
 
+    /**
+     * This method is used for approving or rejecting package request that comes from registered user
+     * If package request is valid, office worker will approve it
+     * @param id
+     * @return
+     */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result approveReject(Long id) {
+        //Getting form values
         DynamicForm form = Form.form().bindFromRequest();
         Package pack = Package.findPackageById(id);
-        String value = form.get("approveReject");
-
         PostOffice initial = PostOffice.findPostOfficeByName(form.get("initialPostOffice"));
+
+        String value = form.get("approveReject");
         String destination = form.get("destinationPostOffice");
         String price = form.get("price");
         String subject = "BitTracking Notification!";
@@ -238,10 +254,11 @@ public class PackageController extends Controller {
 
         Shipment ship = Shipment.shipmentFinder.where().eq("packageId", pack).findUnique();
         Calendar c = Calendar.getInstance();
-        ;
+
         Date date = c.getTime();
-        if (value.equals("approve") && destination != "default") {
-            if (destination.equals("default")) {
+        //Approving package request
+        if ("approve".equals(value) && !"default".equals(destination)) {
+            if ("default".equals(destination)) {
                 return redirect(routes.WorkerController.officeWorkerPanel());
             }
             if ("".equals(price)) {
@@ -266,7 +283,8 @@ public class PackageController extends Controller {
             if (pack.users.size() > 0) {
                 MailHelper.approvedRequestNotification(pack.users.get(0).lastName, pack.trackingNum, pack.users.get(0).email, pack.packagePinCode);
             }
-        } else if (value.equals("reject")) {
+        //Rejecting package request
+        } else if ("reject".equals(value)) {
             pack.approved = false;
             pack.trackingNum = "rejected";
             pack.seen = false;
@@ -284,11 +302,13 @@ public class PackageController extends Controller {
         ship.postOfficeId = initial;
         ship.update();
 
-        List<Location> locations = Location.findLocation.findList();
-        List<PostOffice> offices = PostOffice.findOffice.findList();
         return redirect(routes.WorkerController.officeWorkerPanel());
     }
 
+    /**
+     * This method is used for taking packages for transport as delivery worker
+     * @return
+     */
     @Security.Authenticated(Authenticators.AdminDeliveryWorkerFilter.class)
     public Result takePackages() {
         User user = SessionHelper.getCurrentUser(ctx());
@@ -313,11 +333,21 @@ public class PackageController extends Controller {
         return redirect(routes.WorkerController.deliveryWorkerPanel());
     }
 
+    /**
+     * This method is used to open package info view which is used to verify package pin code.
+     * @param id - package id
+     * @return
+     */
     public Result packageInfo(Long id) {
         Package pack = Package.findPackageById(id);
         return ok(packageinfo.render(pack));
     }
 
+    /**
+     * This method is used for checking existance of package pin code
+     * @param id - package id
+     * @return
+     */
     public Result checkPackageCode(Long id){
         DynamicForm form = Form.form().bindFromRequest();
         String code = form.get("packagePinCode");
@@ -329,6 +359,7 @@ public class PackageController extends Controller {
         }catch(NumberFormatException e) {
             return badRequest(packageinfo.render(pack));
         }
+        //If inserted pin code is equal to package pin code, package is verified
         if(!pinCode.equals(pack.packagePinCode)){
             ApplicationLog newLog = new ApplicationLog("Error checking Package Code: " + pinCode + ". Invalid PinCode.");
             newLog.save();

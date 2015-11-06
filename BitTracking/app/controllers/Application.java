@@ -217,6 +217,10 @@ public class Application extends Controller {
         return ok(deliveryworkerslist.render(User.find.where().eq("typeOfUser", UserType.DELIVERY_WORKER).findList()));
     }
 
+    /**
+     * This method is used for showing up user panel
+     * @return
+     */
     public Result userPanel() {
         if (!request().accepts("text/html")) {
             return ApiPackageController.getPackageAdd();
@@ -227,6 +231,7 @@ public class Application extends Controller {
         }
         List<Package> packagesForRender = Package.findPackagesByUser(user);
         List<Package> packages = Package.findPackagesByUser(user);
+        //Checking up notifications
         for (int i = 0; i < packages.size(); i++) {
             if (packages.get(i).seen != null) {
                 packages.get(i).seen = null;
@@ -237,11 +242,19 @@ public class Application extends Controller {
         return ok(userpanel.render(packagesForRender, PostOffice.findOffice.findList(), countries));
     }
 
+    /**
+     * Method that opens up list of admin logs
+     * @return
+     */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result adminLogs() {
         return ok(adminlogs.render(ApplicationLog.logFinder.findList()));
     }
 
+    /**
+     * Method that opens up google map which has list of our locations
+     * @return
+     */
     public Result userLocations(){
         List<PostOffice> offices = PostOffice.findOffice.findList();
         return ok(userlocations.render(offices));

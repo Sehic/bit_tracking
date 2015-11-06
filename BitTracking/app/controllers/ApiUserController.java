@@ -16,6 +16,10 @@ import java.util.UUID;
  */
 public class ApiUserController extends Controller {
 
+    /**
+     * Method that is part of content negotiation and it is used for registering new user
+     * @return - ok if everything goes fine, badRequest if user already exists in database
+     */
     public static Result registration(){
 
         JsonNode json = request().body().asJson();
@@ -42,6 +46,10 @@ public class ApiUserController extends Controller {
         return ok();
     }
 
+    /**
+     * Method that is used for signing in registered user
+     * @return
+     */
     public static Result login(){
 
         JsonNode json = request().body().asJson();
@@ -56,6 +64,10 @@ public class ApiUserController extends Controller {
         return ok(JSONHelper.jsonUser(u));
     }
 
+    /**
+     * Method that is used for getting packages from user with email that we get as json
+     * @return - list of user packages
+     */
     public Result getUserPackagesList(){
 
         JsonNode json = request().body().asJson();

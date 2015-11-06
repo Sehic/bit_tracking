@@ -17,9 +17,12 @@ import java.util.List;
  * Created by Mladen13 on 25.10.2015.
  */
 public class ApiPackageController extends Controller {
-
+    /**
+     * This method is used for creating package request by registered android user
+     * @return
+     */
     public Result packageAdd(){
-
+        //Getting form values as json
         JsonNode json = request().body().asJson();
         String userId = json.findPath("userId").textValue();
         String recipientName = json.findPath("recipientName").textValue();
@@ -52,6 +55,7 @@ public class ApiPackageController extends Controller {
                 pack.packageType = PackageType.TUBE;
                 break;
         }
+        //Creating first shipment
         Shipment ship = new Shipment();
         ship.packageId = pack;
         ship.postOfficeId = PostOffice.findPostOfficeByName(postOfficeName);
@@ -65,11 +69,18 @@ public class ApiPackageController extends Controller {
         return ok();
     }
 
-
+    /**
+     * Method that is used to send list of post offices as json
+     * @return
+     */
     public static Result getPackageAdd(){
         return ok(JSONHelper.jsonPostOfficeList(PostOffice.findOffice.findList()));
     }
 
+    /**
+     * Getting package list as json
+     * @return
+     */
     public Result getPackageList(){
 
         List<Package> packs = Package.finder.findList();
@@ -77,6 +88,11 @@ public class ApiPackageController extends Controller {
         return ok(JSONHelper.jsonPackagesList(packs));
     }
 
+    /**
+     * This method is used for getting shortest distance between our current location and closest post office
+     * @param loc
+     * @return closest post office
+     */
     public Result jsonLocation(String loc) {
         String[] locs = loc.split("&");
         Location newLocation = new Location(Double.parseDouble(locs[0]), Double.parseDouble(locs[1]));
