@@ -32,6 +32,7 @@ public class FaqController extends Controller {
      *
      * @return faq list page on adminpanel
      */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result adminFaqView() {
         List<Faq> faqList = Faq.faqFinder.findList();
         return ok(faqview.render(faqList));

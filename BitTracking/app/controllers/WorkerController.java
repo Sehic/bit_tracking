@@ -163,63 +163,6 @@ public class WorkerController extends Controller {
     }
 
     /**
-     * Method that returns list of packages that delivery worker can take for transport
-     * Delivery worker can take packages that goes to destination where his driving office is
-     *
-     * @param packages - list of packages
-     * @param u1       - delivery worker
-     * @return - list of packages that will be taken
-     */
-    public static List<Package> getReadyToBeTakenPackages(List<Package> packages, User u1) {
-        List<Package> packagesToBeTaken = new ArrayList<>();
-        //Putting packages that are not taken by another delivery worker to list
-        for (int i = 0; i < packages.size(); i++) {
-            if (packages.get(i).isTaken == false) {
-                packagesToBeTaken.add(packages.get(i));
-            }
-        }
-        List<Package> finalPackages = new ArrayList<>();
-        //Filtering packages for delivery worker, so he can se only packages with his driving office
-        for (int i = 0; i < packagesToBeTaken.size(); i++) {
-            List<Shipment> shipmentPackages = packagesToBeTaken.get(i).shipmentPackages;
-            for (int j = 0; j < shipmentPackages.size(); j++) {
-                //Checking if list comes to end
-                if (j != shipmentPackages.size() - 1) {
-                    //If office from shipment is equal delivery worker driving office, package will be added to list
-                    if (shipmentPackages.get(j + 1).postOfficeId.name.equals(u1.drivingOffice)) {
-                        finalPackages.add(shipmentPackages.get(j + 1).packageId);
-                        break;
-                    }
-                } else {
-                    if (shipmentPackages.get(shipmentPackages.size() - 1).postOfficeId.name.equals(u1.drivingOffice)) {
-                        finalPackages.add(shipmentPackages.get(shipmentPackages.size() - 1).packageId);
-                    }
-                }
-            }
-        }
-        return finalPackages;
-    }
-
-    /**
-     * Method that returns packages that delivery worker transported
-     *
-     * @param packagesForUser
-     * @param userPackages
-     * @return
-     */
-    public static List<Package> getUserPackages(List<Package> packagesForUser, List<Package> userPackages) {
-        List<Package> finalUserPackages = new ArrayList<>();
-        for (int i = 0; i < packagesForUser.size(); i++) {
-            for (int j = 0; j < userPackages.size(); j++) {
-                if (packagesForUser.get(i).id == userPackages.get(j).id) {
-                    finalUserPackages.add(userPackages.get(j));
-                }
-            }
-        }
-        return finalUserPackages;
-    }
-
-    /**
      * Method that opens up delivery courier panel
      *
      * @return
@@ -283,6 +226,64 @@ public class WorkerController extends Controller {
             }
         }
         return packages;
+    }
+
+
+    /**
+     * Method that returns list of packages that delivery worker can take for transport
+     * Delivery worker can take packages that goes to destination where his driving office is
+     *
+     * @param packages - list of packages
+     * @param u1       - delivery worker
+     * @return - list of packages that will be taken
+     */
+    public static List<Package> getReadyToBeTakenPackages(List<Package> packages, User u1) {
+        List<Package> packagesToBeTaken = new ArrayList<>();
+        //Putting packages that are not taken by another delivery worker to list
+        for (int i = 0; i < packages.size(); i++) {
+            if (packages.get(i).isTaken == false) {
+                packagesToBeTaken.add(packages.get(i));
+            }
+        }
+        List<Package> finalPackages = new ArrayList<>();
+        //Filtering packages for delivery worker, so he can se only packages with his driving office
+        for (int i = 0; i < packagesToBeTaken.size(); i++) {
+            List<Shipment> shipmentPackages = packagesToBeTaken.get(i).shipmentPackages;
+            for (int j = 0; j < shipmentPackages.size(); j++) {
+                //Checking if list comes to end
+                if (j != shipmentPackages.size() - 1) {
+                    //If office from shipment is equal delivery worker driving office, package will be added to list
+                    if (shipmentPackages.get(j + 1).postOfficeId.name.equals(u1.drivingOffice)) {
+                        finalPackages.add(shipmentPackages.get(j + 1).packageId);
+                        break;
+                    }
+                } else {
+                    if (shipmentPackages.get(shipmentPackages.size() - 1).postOfficeId.name.equals(u1.drivingOffice)) {
+                        finalPackages.add(shipmentPackages.get(shipmentPackages.size() - 1).packageId);
+                    }
+                }
+            }
+        }
+        return finalPackages;
+    }
+
+    /**
+     * Method that returns packages that delivery worker transported
+     *
+     * @param packagesForUser
+     * @param userPackages
+     * @return
+     */
+    public static List<Package> getUserPackages(List<Package> packagesForUser, List<Package> userPackages) {
+        List<Package> finalUserPackages = new ArrayList<>();
+        for (int i = 0; i < packagesForUser.size(); i++) {
+            for (int j = 0; j < userPackages.size(); j++) {
+                if (packagesForUser.get(i).id == userPackages.get(j).id) {
+                    finalUserPackages.add(userPackages.get(j));
+                }
+            }
+        }
+        return finalUserPackages;
     }
 
 }

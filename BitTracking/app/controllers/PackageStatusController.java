@@ -152,6 +152,7 @@ public class PackageStatusController extends Controller {
      * This method is used for updating status as delivery courier
      * @return
      */
+    @Security.Authenticated(Authenticators.DeliveryWorkerFilter.class)
     public Result updateStatusDeliveryCourier(){
         DynamicForm form = Form.form().bindFromRequest();
         List<Package> packages = Package.findApprovedPackages();
@@ -187,7 +188,12 @@ public class PackageStatusController extends Controller {
         return redirect(routes.WorkerController.deliveryCourierPanel());
     }
 
-
+    /**
+     * Method that is used for getting list of packages that office worker needs to approve or reject
+     * @param userOffice - office workers post office
+     * @param packagesWaiting - all packages waiting for approval
+     * @return
+     */
     public static List<Package> packagesForOfficeWorkerWaitingForApproval(PostOffice userOffice, List<Package> packagesWaiting) {
         List<Package> packagesForOfficeWorker = new ArrayList<>();
 

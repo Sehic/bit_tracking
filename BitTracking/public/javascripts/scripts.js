@@ -39,7 +39,7 @@ $(document).ready(function() {
         }
     });
 });
-
+//Forgot password functionality using ajax
 $(document).ready(function() {
     var button = $('#sendPassword');
     var span = $('#sendingError');
@@ -62,7 +62,7 @@ $(document).ready(function() {
         })
     })
 })
-
+//Phone number validation using ajax
 $(document).ready(function() {
     var submit = $('#validateSubmit');
 
@@ -82,7 +82,7 @@ $(document).ready(function() {
         })
     });
 });
-
+//Sending phone number code using ajax
 $(document).ready(function() {
     var tryAgain = $('#tryAgainDiv').hide();
     $('#tryAgainId').click(function() {
@@ -248,7 +248,7 @@ $(document).ready(function() {
     });
 });
 
-
+//Sorting select boxes
 $(document).ready(function(){
     sortDropDownListByText();
 });
@@ -389,7 +389,7 @@ $(document).ready(function () {
         })
     })
 });
-//Method that is globaly used when we delete something
+//Method that is globally used when we delete something
 $(document).ready(function () {
     $('body').on('click', 'a[data-role="delete"]', function (e) {
         e.preventDefault();
@@ -412,13 +412,12 @@ $(document).ready(function () {
                             }
                         }
                     });
-             //   bootbox.alert("You can't delete this office!");
                 });
             }
         });
     });
 });
-
+//Validating email using ajax
 $(document).ready(function () {
     $("#inputEmail3").blur(function () {
         var email = $("#inputEmail3").val();
@@ -441,7 +440,7 @@ $(document).ready(function () {
         })
     });
 });
-
+//Checking post office name and address uniqueness
 $(document).ready(function () {
     $('#address, #nameAddOffice').keyup(function () {
         var name = $("#nameAddOffice").val();
@@ -491,7 +490,6 @@ function deleteCookies() {
 }
 
 //Registration validation
-
 function checkNumber() {
     var firstName = document.getElementById("inputPhoneNumber").value;
     var filter = /^[0-9]+$/;

@@ -181,45 +181,6 @@ public class RouteController extends Controller {
     }
 
     /**
-     * Method that is used for splitting offices string and returning them for creating shipment.
-     *
-     * @param route - string route offices
-     * @return - list of post offices
-     */
-    public static List<PostOffice> officesFromAutoRoute(String route) {
-        List<PostOffice> routeOffices = new ArrayList<>();
-        if (route == null) {
-            return routeOffices;
-        }
-        String[] offices = route.split("\\|");
-
-        for (int i = 0; i < offices.length; i++) {
-            PostOffice officeFromRoute = PostOffice.findPostOfficeByName(offices[i]);
-            routeOffices.add(officeFromRoute);
-        }
-        return routeOffices;
-    }
-
-    /**
-     * This method returns packages that should be routed
-     * @param packages - list of packages
-     * @return
-     */
-    public static List<Package> packagesForRoute(String packages) {
-        List<Package> routePackages = new ArrayList<>();
-        if (packages == null) {
-            return routePackages;
-        }
-        String[] packagesForRoute = packages.split("\\|");
-
-        for (int i = 0; i < packagesForRoute.length; i++) {
-            Package packageForRoute = Package.findPackageById(Long.parseLong(packagesForRoute[i]));
-            routePackages.add(packageForRoute);
-        }
-        return routePackages;
-    }
-
-    /**
      * This method is used when more than one package is selected using checkboxes, and when button is clicked, new view shows up.
      * That view is used for routing all selected packages.
      * Packages must have same destination post office.
@@ -331,6 +292,60 @@ public class RouteController extends Controller {
     }
 
     /**
+     * This method will give us Dijkstra shortest path
+     * @return - list of post offices as string
+     */
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
+    public Result getDijkstraPath(){
+        DynamicForm form = Form.form().bindFromRequest();
+
+        String initialOffice = form.data().get("initial");
+        String destinationOffice = form.data().get("destination");
+        DijkstraHelper dijkstra = new DijkstraHelper();
+        List<String> offices = dijkstra.getStringPath(initialOffice, destinationOffice);
+        return ok(offices.toString());
+    }
+
+    /**
+     * Method that is used for splitting offices string and returning them for creating shipment.
+     *
+     * @param route - string route offices
+     * @return - list of post offices
+     */
+    public static List<PostOffice> officesFromAutoRoute(String route) {
+        List<PostOffice> routeOffices = new ArrayList<>();
+        if (route == null) {
+            return routeOffices;
+        }
+        String[] offices = route.split("\\|");
+
+        for (int i = 0; i < offices.length; i++) {
+            PostOffice officeFromRoute = PostOffice.findPostOfficeByName(offices[i]);
+            routeOffices.add(officeFromRoute);
+        }
+        return routeOffices;
+    }
+
+    /**
+     * This method returns packages that should be routed
+     * @param packages - list of packages
+     * @return
+     */
+    public static List<Package> packagesForRoute(String packages) {
+        List<Package> routePackages = new ArrayList<>();
+        if (packages == null) {
+            return routePackages;
+        }
+        String[] packagesForRoute = packages.split("\\|");
+
+        for (int i = 0; i < packagesForRoute.length; i++) {
+            Package packageForRoute = Package.findPackageById(Long.parseLong(packagesForRoute[i]));
+            routePackages.add(packageForRoute);
+        }
+        return routePackages;
+    }
+
+    /**
      * This method is used for getting list of post offices that are part of route
      * @param initialOffice - initial post office
      * @param destinationOffice - destination post office
@@ -350,20 +365,6 @@ public class RouteController extends Controller {
             }
         }
         return finalOffices;
-    }
-
-    /**
-     * This method will give us Dijkstra shortest path
-     * @return - list of post offices as string
-     */
-    public Result getDijkstraPath(){
-        DynamicForm form = Form.form().bindFromRequest();
-
-        String initialOffice = form.data().get("initial");
-        String destinationOffice = form.data().get("destination");
-        DijkstraHelper dijkstra = new DijkstraHelper();
-        List<String> offices = dijkstra.getStringPath(initialOffice, destinationOffice);
-        return ok(offices.toString());
     }
 
 }
