@@ -2,11 +2,13 @@ package models;
 
 import helpers.PackageType;
 import helpers.StatusHelper;
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,11 +34,8 @@ public class Package extends Model {
     @Constraints.Required
     public String destination;
 
-    @Enumerated(EnumType.STRING)
-    public StatusHelper status;
-
     @ManyToMany
-    public List<User> deliveryWorkers = new ArrayList<>();
+    public List<User> users = new ArrayList<>();
 
     @Column(precision = 10, scale = 2)
     public Double weight;
@@ -53,6 +52,30 @@ public class Package extends Model {
 
     @Column(length = 255)
     public String recipientName;
+    @Column
+    public String recipientCountry;
+    @Column
+    public Boolean approved = null;
+    @Column
+    public Boolean seen = null;
+    @Column
+    public Boolean isTaken = null;
+
+    @Formats.DateTime(pattern="dd/MM/yyyy")
+    public Date packageRejectedTimestamp;
+    @Column
+    @Enumerated(EnumType.STRING)
+    public StatusHelper statusForCourier;
+
+    @Column
+    public Long packagePinCode;
+
+    @Column
+    public Boolean isVerified = false;
+
+    public Package(){
+
+    }
 
     public static Finder<Long, Package> finder = new Finder<Long, Package>(Package.class);
 
@@ -72,12 +95,39 @@ public class Package extends Model {
         return finder.where().eq("packageType", type).findList();
     }
 
+    public static List<Package> findPackagesByUser(User user) {
+        return finder.where().eq("users", user).findList();
+    }
+
+    public static List<Package> findPackagesWaitingForApproval(){
+        return finder.where().eq("approved", null).findList();
+    }
+
+    public static List<Package> findApprovedPackages(){
+        return finder.where().eq("approved", true).findList();
+    }
+
+    private static final long LIMIT = 1000000L;
+    private static long last = 0;
+
+    public static long getPinCode() {
+        // 6 digits.
+        long id = (System.currentTimeMillis() / 10) % LIMIT;
+        if ( id <= last ) {
+            id = (last + 1) % LIMIT;
+        }
+        return last = id;
+    }
+
     @Override
     public String toString() {
         if (shipmentPackages.get(shipmentPackages.size() - 1).status == StatusHelper.DELIVERED) {
-            return trackingNum + "," + weight + "," + price + "," + shipmentPackages.get(0).postOfficeId.name + "," + destination + "," + shipmentPackages.get(0).dateCreated + "," + StatusHelper.DELIVERED.toString();
+            return trackingNum + "," + weight + "," + price + "," + shipmentPackages.get(0).postOfficeId.name + "," + destination + "," + shipmentPackages.get(shipmentPackages.size()-1).dateCreated + "," + StatusHelper.DELIVERED.toString();
         } else {
-            return trackingNum + "," + weight + "," + price + "," + shipmentPackages.get(0).postOfficeId.name + "," + destination + "," + shipmentPackages.get(0).dateCreated + "," + StatusHelper.OUT_FOR_DELIVERY.toString();
+            if(shipmentPackages.get(0).dateCreated != null){
+                return trackingNum + "," + weight + "," + price + "," + shipmentPackages.get(0).postOfficeId.name + "," + destination + "," + shipmentPackages.get(0).dateCreated + "," + StatusHelper.OUT_FOR_DELIVERY.toString();
+            }
+            return trackingNum + "," + weight + "," + price + "," + shipmentPackages.get(0).postOfficeId.name + "," + destination + "," + shipmentPackages.get(0).packageId.packageRejectedTimestamp+ "," + StatusHelper.OUT_FOR_DELIVERY.toString();
         }
     }
 

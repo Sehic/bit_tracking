@@ -1,4 +1,5 @@
 @import helpers.SessionHelper
+
 @()(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
 
 <div class="navbar navbar-inverse" role="navigation">
@@ -54,7 +55,6 @@
     </ul>
 </div>
 
-
 <div class="template-page-wrapper">
     <div class="navbar-collapse collapse templatemo-sidebar">
         <ul class="templatemo-sidebar-menu">
@@ -85,13 +85,37 @@
                 1</span>
                 Maps</a>
             </li>
+            @if(currentUser.typeOfUser == UserType.OFFICE_WORKER) {
+                <li><a href="@routes.WorkerController.officeWorkerPanel()"><i class="fa fa-users"></i> <span class="badge pull-right">
+                    NEW</span>
+                    Office Worker Panel</a>
+                </li>
+            }
+
+
+
+            @if(currentUser.typeOfUser == UserType.DELIVERY_WORKER){
+                <li><a href="@routes.WorkerController.deliveryWorkerPanel()"><i class="fa fa-users"></i> <span class="badge pull-right">
+                    NEW</span>
+                    Delivery Worker Panel</a>
+                </li>
+            }
+            @if(currentUser.typeOfUser== UserType.ADMIN) {
             <li><a href="@routes.Application.adminTables()"><i class="fa fa-users"></i> <span class="badge pull-right">
                 NEW</span>
                 Manage</a>
             </li>
+            <li><a href="@routes.FaqController.adminFaqView()"><span class="glyphicon glyphicon-question-sign"></span>
+                FAQ</a>
+            </li>
+
+            <li><a href="@routes.Application.adminLogs()"><i class="fa fa-cog"></i>
+                Logs</a>
+
             <li><a href="@routes.UserController.adminPreferences(currentUser.id)"><i class="fa fa-cog"></i>
                 Preferences</a>
             </li>
+            }
             <li><a href="javascript:;" data-toggle="modal" data-target="#confirmModal"><i class="fa fa-sign-out"></i>
                 Sign Out</a>
             </li>

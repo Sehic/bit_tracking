@@ -30,57 +30,64 @@
         <div class="table-responsive">
 
         </div>
-
-        <h4 class="margin-bottom-15">List of packages</h4>
-        <table id="example" class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Tracking Number</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Route</th>
-                    <th>Initial Post Office</th>
-                    <th>Recipient Address</th>
-                    <th>Package type</th>
-                    <th>Weight</th>
-                    <th>Price</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-            @for(pack <- packs) {
-                <tr class="succes">
-                    <td>@pack.id</td>
-                    <td>@pack.trackingNum</td>
-                    <td>@pack.senderName</td>
-                    <td>@pack.recipientName</td>
-
-                    @if(pack.shipmentPackages.size() < 2) {
-                        <td><a href="@routes.PostOfficeController.listRoutes(pack.id)">Add Route</a></td>
-                    } else {
+        <div class="table-responsive">
+            <h4 class="margin-bottom-15">List of packages</h4>
+            <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tracking Number</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Route</th>
+                        <th>Initial Post Office</th>
+                        <th>Recipient Address</th>
+                        <th>Package type</th>
+                        <th>Weight</th>
+                        <th>Price</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @for(pack <- packs) {
+                    <tr class="succes">
+                        <td>@pack.id</td>
                         <td>
-
-                        @for(shipments: Shipment <- pack.shipmentPackages) {
-                            @shipments.postOfficeId.name|
+                        @if(pack.trackingNum == null) {
+                            <i>Waiting for Approval</i>
+                        } else {
+                            @pack.trackingNum
                         }
                         </td>
-                    }
-                    @if(pack.shipmentPackages.size() != 0) {
-                        <td>@pack.shipmentPackages.get(0).postOfficeId.name</td>
-                    } else {
-                        <td></td>
-                    }
-                    <td>@pack.recipientAddress</td>
+                        <td>@pack.senderName</td>
+                        <td>@pack.recipientName</td>
 
-                    <td>@pack.packageType</td>
-                    <td>@pack.weight kg</td>
-                    <td>@pack.price KM</td>
-                    <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input type="button" value="Delete"></a></td>
-                </tr>
-            }
+                        @if(pack.shipmentPackages.size() < 2 & pack.approved == true) {
+                            <td><a href="@routes.RouteController.showDijkstraRouting(pack.id)">Add Route</a></td>
+                        } else {
+                            <td>
 
-            </tbody>
-        </table>
+                            @for(shipments: Shipment <- pack.shipmentPackages) {
+                                @shipments.postOfficeId.name|
+                            }
+                            </td>
+                        }
+                        @if(pack.shipmentPackages.size() != 0) {
+                            <td>@pack.shipmentPackages.get(0).postOfficeId.name</td>
+                        } else {
+                            <td></td>
+                        }
+                        <td>@pack.recipientAddress</td>
+
+                        <td>@pack.packageType</td>
+                        <td>@pack.weight kg</td>
+                        <td>@pack.price KM</td>
+                        <td><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><input type="button" value="Delete"></a></td>
+                    </tr>
+                }
+
+                </tbody>
+            </table>
+        </div>
 
     }

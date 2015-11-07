@@ -71,6 +71,38 @@
                     </div>
                     <br/>
                     <br/>
+                    @if(user.country != null) {
+                        <div class="form-group">
+
+                            <label for="userCountry" class="col-sm-2 control-label" style="text-align : right">
+                                Country:
+                            </label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></span>
+                                    <input type="text" name="userCountry" disabled class="form-control" id="userCountry" value="@user.country.countryName" required="required">
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <br/>
+                        <div class="form-group">
+
+                            <label for="phoneNumber" class="col-sm-2 control-label" style="text-align : right">
+                                Phone Number:
+                            </label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-info-sign"></span></span>
+                                    <input type="text" name="phoneNumber" disabled class="form-control" id="lastName" value="@user.phoneNumber" required="required">
+                                </div>
+                                @if(user.phoneNumber != null && user.numberValidated == false) {
+                                    <span style="font-size: 9px; color: red; ">This phone number is not validated!
+                                        <a href="@routes.UserController.validatePhone()" style="text-decoration: none">VALIDATE NOW!</a></span>
+                                }
+                            </div>
+                        </div>
+                    }
 
                     @helper.form(action = routes.UserController.updateUserType(user.id), 'class -> "form-horizontal", 'role -> "form") {
 
@@ -84,25 +116,37 @@
                                             <select class="form-control" name="userType">
                                                 @if(user.typeOfUser == UserType.ADMIN) {
                                                     <option value="Admin">Admin</option>
+                                                    <option value="Delivery Courier">Delivery Courier</option>
                                                     <option value="Delivery Worker">Delivery Worker</option>
                                                     <option value="Office Worker">Office Worker</option>
                                                     <option value="Registered User">Registered User</option>
                                                 }
                                                 @if(user.typeOfUser == UserType.DELIVERY_WORKER) {
-                                                    <option value="Delivery Worker">Delivery Worker</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Office Worker">Office Worker</option>
-                                                    <option value="Registered User">Registered User</option>
+                                                    @if(user.isCourier == false) {
+                                                        <option value="Delivery Worker">Delivery Worker</option>
+                                                        <option value="Delivery Courier">Delivery Courier</option>
+                                                        <option value="Admin">Admin</option>
+                                                        <option value="Office Worker">Office Worker</option>
+                                                        <option value="Registered User">Registered User</option>
+                                                    }else{
+                                                        <option value="Delivery Courier">Delivery Courier</option>
+                                                        <option value="Delivery Worker">Delivery Worker</option>
+                                                        <option value="Admin">Admin</option>
+                                                        <option value="Office Worker">Office Worker</option>
+                                                        <option value="Registered User">Registered User</option>
+                                                    }
                                                 }
                                                 @if(user.typeOfUser == UserType.OFFICE_WORKER) {
                                                     <option value="Office Worker">Office Worker</option>
                                                     <option value="Admin">Admin</option>
+                                                    <option value="Delivery Courier">Delivery Courier</option>
                                                     <option value="Delivery Worker">Delivery Worker</option>
                                                     <option value="Registered User">Registered User</option>
                                                 }
                                                 @if(user.typeOfUser == UserType.REGISTERED_USER) {
                                                     <option value="Registered User">Registered User</option>
                                                     <option value="Admin">Admin</option>
+                                                    <option value="Delivery Courier">Delivery Courier</option>
                                                     <option value="Delivery Worker">Delivery Worker</option>
                                                     <option value="Office Worker">Office Worker</option>
 
@@ -137,19 +181,47 @@
                                                         <option value="@office.name">@office.name</option>
                                                     }
                                                 }
-
-
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <br>
+                                @if(user.typeOfUser == UserType.DELIVERY_WORKER) {
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-sm-2" style="text-align : right"><strong>
+                                                Driving Office:</strong></div>
+                                            <div class="col-sm-10">
+
+                                                <select class="form-control sortAlphabetically" name="drivingPostOffice">
+
+                                                    @if(user.drivingOffice != null) {
+                                                        <option value="@user.drivingOffice"><strong>@user.drivingOffice</strong></option>
+                                                    }
+                                                    <option value=""></option>
+                                                    @for(office <- offices) {
+                                                        @if(user.postOffice != null) {
+                                                            @if(user.postOffice.id != office.id) {
+                                                                <option value="@office.name">@office.name</option>
+                                                            }
+                                                        } else {
+                                                            <option value="@office.name">@office.name</option>
+                                                        }
+                                                    }
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                <br>
+
                                 <div class="container-fluid">
                                     <div class="form-group">
                                         <div class="col-sm-offset-2 col-sm-10">
                                             <input type="submit" class="btn btn-primary btn-sm" value="Save Changes">
                                             <span></span>
-                                            <input type="reset" class="btn btn-default btn-sm" value="Cancel">
+                                            <a href="@routes.Application.adminTables()"><input type="button" class="btn btn-default btn-sm" value="Cancel"></a>
                                         </div>
                                     </div>
                                 </div>

@@ -1,3 +1,254 @@
+$("#button-back").click(function(){
+    parent.history.back();
+    return false;
+});
+//function will disable submit button if input field is whitespace
+$(document).ready(function () {
+    CheckInputs();
+    $("#question").each(function () {
+        $(this).keyup(function () {
+            $("#addfaq").prop("disabled", CheckInputs());
+        });
+    });
+});
+function CheckInputs() {
+    var valid = false;
+    $("#question").each(function () {
+        if (valid) {
+            return valid;
+        }
+        var input = $.trim($(this).val());
+        valid = !input;
+    });
+    return valid;
+}
+
+//function removes whitespaces from input field
+function removeSpaces(string) {
+    return string.split(' ').join('');
+}
+
+$(document).ready(function() {
+    $(".drivingOfficeDiv").show();
+    $("#userTypeId").change(function() {
+        var userTypeValue = $("#userTypeId option:selected").val();
+        if(userTypeValue === "2"){
+            $(".drivingOfficeDiv").show();
+        }else{
+            $(".drivingOfficeDiv").hide();
+        }
+    });
+});
+//Forgot password functionality using ajax
+$(document).ready(function() {
+    var button = $('#sendPassword');
+    var span = $('#sendingError');
+    var loader = $('#loaderId');
+    loader.hide();
+    button.click(function() {
+        var email = $('#forgotPasswordEmail').val();
+        $.ajax({
+            beforeSend: function() {
+                loader.show();
+                //span.html("Checking...");
+            },
+            url: '/forgotpassword',
+            data: 'email=' + email,
+            type: 'post'
+        }).success(function(response) {
+            span.html("Instructions sent to: \"" + email + "\" !").removeClass("alert-danger").addClass(alert-success);
+        }).error(function(response) {
+            span.html("Email \"" + email + "\" does not exist in our database!").removeClass("alert-success").addClass("alert-danger");
+        })
+    })
+})
+//Phone number validation using ajax
+$(document).ready(function() {
+    var submit = $('#validateSubmit');
+
+    submit.click(function() {
+        var enteredCode = $('#validatePhoneNumber').val();
+        var span = $('#validationError');
+        $.ajax({
+            url: '/validate',
+            data: "enteredCode=" + enteredCode,
+            type: 'post'
+        }).success(function(response) {
+            var valDiv = $('#completeValidation');
+            span.html("Successfully validated phone number " + response).attr("style", "font-size: 14px; color: green");
+            $('#hideAfterValidation').hide();
+        }).error(function() {
+            span.html("Error! No such validation code found!").attr("style", "font-size: 14px; color: red; style: italic");
+        })
+    });
+});
+//Sending phone number code using ajax
+$(document).ready(function() {
+    var tryAgain = $('#tryAgainDiv').hide();
+    $('#tryAgainId').click(function() {
+        tryAgain.show();
+    })
+
+    var newCodeButton = $('#newCodeSubmit');
+    var newSpan = $('#newSpan');
+    newCodeButton.click(function() {
+        var newNumber = $('#validatePhoneNumberAgain').val();
+        var res = encodeURIComponent(newNumber);
+        $.ajax({
+            beforeSend: function() {
+                newSpan.html("Please wait...");
+            },
+            url: '/validate/newCode',
+            data: 'newNumber=' + res,
+            type: 'post'
+        }).success(function(response) {
+            newSpan.html("New validation code sent to " + newNumber);
+        }).error(function() {
+            newSpan.html("Please enter correct phone number")
+        })
+    })
+});
+
+
+$(document).ready(function() {
+    var phoneField = $('#phoneNumberFields').hide();
+    var number = $('#inputCallingCode');
+    var country = $('#countryId');
+
+    country.change(function() {
+        phoneField.slideDown();
+        var value = $('#countryId option:selected').val();
+        number.attr("value", "+" + value);
+    })
+});
+
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
+$(document).ready(function() {
+    setInterval(function() {
+        var number = '';
+        $.ajax({
+            method: 'get',
+            url: '/indexajax'
+        }).success(function(response) {
+            var mybt = $('#mybt');
+            number = response;
+            mybt.html('My BT <span class=\"label label-warning\">' + number + '</span><strong class="caret"></strong>');
+        })
+    }, 500);
+})
+
+$(document).ready(function() {
+    var showPackagesButton = $('#takePackagesId');
+    var hidePackagesButton = $('#hideTakePackagesId');
+    var tablePackages = $('#packagesToTake');
+    var myPackages = $('#myPackages');
+    var myPackagesDiv= $('#myPackagesDiv');
+    var myPackages1 = $('#myPackages1');
+
+    tablePackages.hide();
+    hidePackagesButton.hide();
+    myPackagesDiv.hide();
+    myPackages1.hide();
+
+    showPackagesButton.click(function() {
+        tablePackages.slideDown();
+        hidePackagesButton.show();
+        showPackagesButton.hide();
+    });
+
+    hidePackagesButton.click(function() {
+        tablePackages.slideUp();
+        hidePackagesButton.hide();
+        showPackagesButton.show();
+    });
+    myPackages.click(function() {
+       myPackagesDiv.slideDown();
+        myPackages.hide();
+        myPackages1.show();
+    });
+
+    myPackages1.click(function() {
+        myPackagesDiv.slideUp();
+        myPackages.show();
+        myPackages1.hide();
+    });
+});
+
+
+$(document).ready(function(){
+   $("#enableRouteButton").prop('disabled', true);
+    $("#disableRouteButton").click( function(){
+       $("#clickMe").prop('disabled', true);
+       $('#addPackageButton').prop('disabled', false);
+       $('#routeOffices').prop('disabled', true);
+        $("#enableRouteButton").prop('disabled', false);
+        $("#disableRouteButton").prop('disabled', true);
+   })
+    $("#enableRouteButton").click( function(){
+        $("#clickMe").prop('disabled', false);
+        $('#addPackageButton').prop('disabled', true);
+        $('#routeOffices').prop('disabled', false);
+        $("#disableRouteButton").prop('disabled', false);
+        $("#enableRouteButton").prop('disabled', true);
+    })
+
+});
+
+$(document).ready(function() {
+    $('#mapUserLocation').hide();
+    $('#recipientName').focusout(function() {
+        $('#mapUserLocation').fadeIn();
+    });
+});
+
+$(document).ready(function() {
+    $('#rejectedPackages, #approvedPackages').click(function() {
+        $(this).slideUp();
+    })
+});
+
+$(document).ready(function() {
+    $('#myPackageList').hide();
+    $('#myPackages').click(function() {
+        $('#waitingForApproval').show();
+        $('#hideApproval').show();
+        $('#approvalId').hide();
+    });
+});
+
+$(document).ready(function() {
+    $('#waitingForApproval').hide();
+    $('#hideApproval').hide();
+    $('#approvalId').click(function() {
+        $('#waitingForApproval').show();
+        $('#hideApproval').show();
+        $('#approvalId').hide();
+    });
+});
+
+$(document).ready(function() {
+    $('#hideApproval').click(function() {
+        $('#waitingForApproval').hide();
+        $('#hideApproval').hide();
+        $('#approvalId').show();
+    });
+});
+
+$(document).ready(function() {
+    $('#createPackage').hide();
+
+    $('.myLinks').click(function() {
+        var tablesToShow = $(this).attr('href');
+        $(tablesToShow).show();
+        $(tablesToShow).siblings('.usertables').hide();
+        return false;
+    });
+});
+
+//Sorting select boxes
 $(document).ready(function(){
     sortDropDownListByText();
 });
@@ -28,7 +279,7 @@ $(document).ready(function () {
 
 //Calling table sort and search
 $(document).ready(function () {
-    $('#example').DataTable();
+    $('.searchSortClass').DataTable();
 });
 //Method that append values to input field, and saving it to database
 $(document).ready(function () {
@@ -38,9 +289,11 @@ $(document).ready(function () {
     var destinationOffice = $('#getDestinationOffice').val();
     var initialOffice = $('#getInitialOffice').val();
     var counter = 0;
+    $('#finalizeButton').prop('disabled', true);
 
     // for any form on this page do the following
     $('#addToRoute').click(function () {
+
         //getting value from select box
         valueOfSelect = $('.selectOffice :selected').text();
         //saving values into string
@@ -76,6 +329,7 @@ $(document).ready(function () {
             if (counter > 0) {
                 $('.selectOffice').remove();
                 $('#addToRoute').prop('disabled', true);
+                $('#finalizeButton').prop('disabled', false);
                 return;
             }
             //Searching for final destination
@@ -91,6 +345,7 @@ $(document).ready(function () {
             if (splitFirstOffice[0] == destinationOffice) {
                 $('.selectOffice').remove();
                 $('#addToRoute').prop('disabled', true);
+                $('#finalizeButton').prop('disabled', false);
                 return;
             }
 
@@ -134,7 +389,7 @@ $(document).ready(function () {
         })
     })
 });
-//Method that is globaly used when we delete something
+//Method that is globally used when we delete something
 $(document).ready(function () {
     $('body').on('click', 'a[data-role="delete"]', function (e) {
         e.preventDefault();
@@ -157,30 +412,35 @@ $(document).ready(function () {
                             }
                         }
                     });
-             //   bootbox.alert("You can't delete this office!");
                 });
             }
         });
     });
 });
-
+//Validating email using ajax
 $(document).ready(function () {
     $("#inputEmail3").blur(function () {
         var email = $("#inputEmail3").val();
+        var filter = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
         $.ajax({
             url: "register/check",
             type: "post",
             data: "email=" + email
         }).success(function (response) {
-            $('#buttonsubmit').prop('disabled', false);
-            $("#mailError").remove();
+            if (!filter.test(email)) {
+                $('#buttonsubmit').prop('disabled', true);
+                $("#mailError").text("Invalid E-mail.");
+            } else {
+                $('#buttonsubmit').prop('disabled', false);
+                $("#mailError").text("");
+            }
         }).error(function (response) {
             $("#mailError").text("Email already exists");
             $('#buttonsubmit').prop('disabled', true);
         })
     });
 });
-
+//Checking post office name and address uniqueness
 $(document).ready(function () {
     $('#address, #nameAddOffice').keyup(function () {
         var name = $("#nameAddOffice").val();
@@ -230,13 +490,14 @@ function deleteCookies() {
 }
 
 //Registration validation
-function checkEmail() {
-    var email = document.getElementById("inputEmail3").value;
-    var filter = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-    if (!filter.test(email)) {
-        document.getElementById("mailError").innerHTML = "Invalid E-mail.";
+function checkNumber() {
+    var firstName = document.getElementById("inputPhoneNumber").value;
+    var filter = /^[0-9]+$/;
+    var phoneSpan = $('#phoneInfo');
+    if (!filter.test(firstName) && firstName.length > 0) {
+        phoneSpan.html("Only numbers allowed. No spaces between!").addClass("alert-danger").attr("style", "font-size: 14px");
     } else {
-        document.getElementById("mailError").innerHTML = "";
+        phoneSpan.html("This field is not required. If you want to receive an SMS notifications about delivery status of your packages, please submit valid mobile number. If you do, you will get validation code to specified number.").removeClass("alert-danger").attr("style", "font-size: 10px");
     }
 }
 

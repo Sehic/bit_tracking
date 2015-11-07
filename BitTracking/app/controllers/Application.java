@@ -1,6 +1,7 @@
 package controllers;
 
 import helpers.Authenticators;
+import helpers.MailHelper;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
@@ -21,6 +22,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import play.libs.F.Function;
+import play.libs.F.Promise;
+import play.libs.Json;
+import play.libs.ws.WS;
+import play.libs.ws.WSResponse;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 
 public class Application extends Controller {
     /**
@@ -37,13 +47,43 @@ public class Application extends Controller {
     }
 
     /**
+     * This method send notification to Registered user, if that user
+     * has some newly approved or rejected packages.
+     *
+     * @return
+     */
+    public Result indexAjax() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        Integer approved = 0;
+        Integer rejected = 0;
+        if (user != null && user.typeOfUser == UserType.REGISTERED_USER) {
+            List<Package> packages = Package.finder.where().eq("seen", false).eq("users", user).findList();
+            for (int i = 0; i < packages.size(); i++) {
+                if (packages.get(i).approved) {
+                    approved++;
+                } else if (!packages.get(i).approved) {
+                    rejected++;
+                }
+            }
+        }
+        Integer result = approved + rejected;
+        String notification = Integer.toString(result);
+
+        if (result != 0) {
+            return ok(notification);
+        }
+
+        return ok();
+    }
+
+    /**
      * Method that opens up login page
      *
      * @return
      */
     public Result login() {
         User u = SessionHelper.getCurrentUser(ctx());
-        if(u!=null){
+        if (u != null) {
             return redirect(routes.Application.index());
         }
         Form<User> newUser = new Form<User>(User.class);
@@ -67,11 +107,12 @@ public class Application extends Controller {
      */
     public Result register() {
         User u = SessionHelper.getCurrentUser(ctx());
-        if(u!=null){
+        if (u != null) {
             return redirect(routes.Application.index());
         }
         Form<User> newUser = new Form<User>(User.class);
-        return ok(register.render(newUser));
+        List<Country> countryList = Country.findCountry.findList();
+        return ok(register.render(newUser, countryList));
     }
 
     /**
@@ -91,11 +132,11 @@ public class Application extends Controller {
      *
      * @return
      */
-    @Security.Authenticated(Authenticators.AdminFilter.class)
+    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result adminMaps() {
 
         if (Location.findLocation.findList().size() > 0)
-            return ok(adminmaps.render(Location.findLocation.findList()));
+            return ok(adminmaps.render(Location.findLocation.findList(), PostOffice.findOffice.findList()));
         return redirect(routes.Application.adminPanel());
 
     }
@@ -141,8 +182,8 @@ public class Application extends Controller {
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result addPostOffice() {
-
-        return ok(adminpostofficeadd.render());
+        List<Country> countries = Country.findCountry.findList();
+        return ok(adminpostofficeadd.render(countries));
     }
 
     /**
@@ -169,26 +210,53 @@ public class Application extends Controller {
         Package p = Package.findPackageByTrackingNumber(trackingNumber);
         return ok(p.toString());
     }
+
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result deliveryWorkersList() {
 
         return ok(deliveryworkerslist.render(User.find.where().eq("typeOfUser", UserType.DELIVERY_WORKER).findList()));
     }
 
-    public Result deliveryWorkerPanel() {
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1 == null || (u1.typeOfUser != UserType.ADMIN && u1.typeOfUser != UserType.DELIVERY_WORKER)) {
+    /**
+     * This method is used for showing up user panel
+     * @return
+     */
+    public Result userPanel() {
+        if (!request().accepts("text/html")) {
+            return ApiPackageController.getPackageAdd();
+        }
+        User user = SessionHelper.getCurrentUser(ctx());
+        if (user == null) {
             return redirect(routes.Application.index());
         }
-
-        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("status", StatusHelper.READY_FOR_SHIPPING).eq("postOfficeId", u1.postOffice).findList();
-        List<Package> packages = new ArrayList<>();
-        for (int i = 0; i < shipments.size(); i++) {
-
-            packages.add(shipments.get(i).packageId);
+        List<Package> packagesForRender = Package.findPackagesByUser(user);
+        List<Package> packages = Package.findPackagesByUser(user);
+        //Checking up notifications
+        for (int i = 0; i < packages.size(); i++) {
+            if (packages.get(i).seen != null) {
+                packages.get(i).seen = null;
+                packages.get(i).update();
+            }
         }
-
-        return ok(deliveryworkerpanel.render(packages));
+        List<Country> countries = Country.findCountry.findList();
+        return ok(userpanel.render(packagesForRender, PostOffice.findOffice.findList(), countries));
     }
 
+    /**
+     * Method that opens up list of admin logs
+     * @return
+     */
+    @Security.Authenticated(Authenticators.AdminFilter.class)
+    public Result adminLogs() {
+        return ok(adminlogs.render(ApplicationLog.logFinder.findList()));
+    }
+
+    /**
+     * Method that opens up google map which has list of our locations
+     * @return
+     */
+    public Result userLocations(){
+        List<PostOffice> offices = PostOffice.findOffice.findList();
+        return ok(userlocations.render(offices));
+    }
 }

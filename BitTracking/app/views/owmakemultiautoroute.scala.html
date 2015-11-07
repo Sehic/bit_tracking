@@ -1,0 +1,384 @@
+@(offices: List[PostOffice])(places: List[Location])(officePackage: models.Package)(packagesId: String)
+@adminmain("Make Route Automatically") {
+
+    <ol class="breadcrumb">
+        <li><a href="@routes.Application.adminPanel()">Office Worker Panel</a></li>
+        <li><a href="#">Manage Packages Route</a></li>
+        <li class="active">Make a route automatically</li>
+    </ol>
+
+    <h2>Make a route automatically</h2>
+    <hr/>
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3">
+            @helper.form(action = routes.RouteController.showMultiDijkstraRouting(), 'class -> "form-horizontal pull-left", 'role -> "form") {
+                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                <button type="submit" class="btn btn-primary active">Create Route Using Algorithm</button>
+            }
+
+            @helper.form(action = routes.RouteController.listMultiRoute(), 'class -> "form-horizontal pull-left", 'role -> "form") {
+                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                <button type="submit" class="btn btn-primary">Create Route Manually</button>
+            }
+        </div>
+    </div>
+    @helper.form(routes.RouteController.saveAutoRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
+
+        <div class="row">
+            <hr/>
+            <div class="form-group">
+                <label for="initialOffice" class="col-sm-3 control-label">
+                    Initial Post Office:
+                </label>
+                <div class="col-sm-9">
+                    <input id="initialOffice" name="initialPostOffice" value="@officePackage.shipmentPackages.get(0).postOfficeId.name" type="text" class="form-control" style="font-size : 13px ; font-style : italic " readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <hr/>
+            <div class="form-group">
+                <label for="routeOffices" class="col-sm-3 control-label">
+                    Route:
+                </label>
+                <div class="col-md-9">
+                    <input id="routeOffices" name="route" class="form-control" readonly required>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <hr/>
+            <div class="form-group">
+                <label for="finalOffice" class="col-sm-3 control-label">
+                    Destination Post Office:
+                </label>
+                <div class="col-sm-9">
+                    <input id="finalOffice" name="destinationOffice" value="@officePackage.shipmentPackages.get(0).packageId.destination" type="text" class="form-control" style="font-size : 13px ; font-style : italic " readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <hr/>
+            <div class="form-group">
+                <label for="distanceBetweenOffices" class="col-sm-3 control-label">
+                    Distance:
+                </label>
+                <div class="col-sm-9">
+                    <input id="distanceBetweenOffices" placeholder="Distance between Post Offices" name="distanceBetweenOffices" value="" type="text" class="form-control" disabled>
+                </div>
+            </div>
+            <hr/>
+            <div class="form-group">
+                <label for="tripDurationBetweenOffices" class="col-sm-3 control-label">
+                    Duration:
+                </label>
+                <div class="col-sm-9">
+                    <input id="tripDurationBetweenOffices" placeholder="Travel duration between Post Offices" name="tripDurationBetweenOffices" value="" type="text" class="form-control" disabled>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <hr/>
+        </div>
+        <div class="row">
+            <div class="col-sm-9 col-sm-offset-3">
+                <input id="clickMe" type="button" class="btn btn-primary" value="Refresh Map"/>
+                <button id="addPackageButton" type="submit" class="btn btn-success">
+                    Save Route
+                </button>
+
+                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+    }
+
+            </div>
+        </div>
+    <br/>
+
+    <div class="templatemo-maps">
+        <div class="row">
+            <div class="col-md-12 margin-bottom-30">
+                <div id="map" style="position : relative; height: 700px; width: auto"></div>
+
+
+                <script type="text/javascript">
+
+     var map;
+     var i, marker;
+     var polys = new Array();
+     var jot=0;
+     var myPolygons=new Array();
+     var officeNames=[];
+     var officeAddresses=[];
+
+function initialize(){
+        map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 7,
+        center: new google.maps.LatLng(43.8331, 18.3039),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+     });
+
+     @for(place <- places) {
+
+         var placey1 = @place.y+0.1724;
+         var placey2 = @place.y+0.131;
+         var placey3 = @place.y-0.129;
+         var placey4 = @place.y-0.082;
+
+         var placex1 = @place.x-0.200;
+         var placex2 = @place.x+0.159;
+         var placex3 = @place.x+0.186;
+         var placex4 = @place.x-0.183;
+
+         marker = new google.maps.Marker({
+            position: new google.maps.LatLng(@place.y, @place.x),
+            map: map
+         });
+
+        myPolygons.push(
+            {
+            "name": "zone"+jot,
+                "coordinates": [
+
+                    placey1.toString()+","+placex1.toString(),
+                    placey2.toString()+","+placex2.toString(),
+                    placey3.toString()+","+placex3.toString(),
+                    placey4.toString()+","+placex4.toString()
+
+                ]
+            }
+         )
+         jot++;
+     }
+
+    sendPolygonForDrawing();
+}
+
+function showMap(){
+
+        var initial = document.getElementById("initialOffice").value;
+        var final = document.getElementById("finalOffice").value;
+        var initialAddress="";
+        google.maps.event.addDomListener(window, 'resize', function() {
+        map.setCenter(marker.getPosition());
+        });
+
+        @for(office <- offices) {
+            var officeName="@office.name";
+            var officeAddress="@office.address";
+            if(officeName===initial){
+            initialAddress=officeAddress;
+            }
+            if(final === officeName){
+            var finalAddress = "@office.address";
+            }
+        }
+        var directionsService = new google.maps.DirectionsService();
+
+        var renderOptions = { draggable: true };
+        var directionDisplay = new google.maps.DirectionsRenderer(renderOptions);
+
+
+        //set the directions display service to the map
+        directionDisplay.setMap(map);
+
+        //set the starting address and destination address
+        var originAddress = initialAddress;
+        var destinationAddress = finalAddress;
+
+        //build directions request
+        var request = {
+            origin: originAddress,
+            destination: destinationAddress,
+            provideRouteAlternatives: true,
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+
+        //get the route from the directions service
+        var middleOfficeAddress=[];
+        var middleOffices=[];
+        var middleOfficesNames=[];
+         var idsAndNames = [];
+directionsService.route(request, function (response, status) {
+    if(status == google.maps.DirectionsStatus.OK) {
+
+        new google.maps.DirectionsRenderer({
+            map: map,
+            directions: response,
+            routeIndex: 0
+        });
+
+        var routCoordinates = fncRouteZoneIntersection(response);//this function populates the routCoordinates with the JSON data of the route.
+        var exist = new Array();
+
+        for (var i = 0; i < polys.length; i++) {
+            for (var j = 0; j < routCoordinates.length; j++){
+
+                if (google.maps.geometry.poly.containsLocation(routCoordinates[j], polys[i]) == true){
+
+                    @for(office <- offices) {
+                        var coorX=@office.place.y;
+                        var coorY=@office.place.x;
+                        var isWithinPolygon = polys[i].containsLatLng(coorX, coorY);
+                        if(isWithinPolygon){
+                             var officeAddress = "@office.address";
+                             var officeName = "@office.name";
+                             middleOfficeAddress.push(officeAddress);
+                             middleOfficesNames.push(officeName);
+                        }
+                                        }
+                    exist.push(polys[i].polyTitle);
+                    break;
+                }
+                        /*this breaks the loop checking when a point is found inside a polygon and go check the next one, because knowing that one point of the route is inside a polygon is enough*/
+            }
+        }
+
+        //set the directions display service to the map
+        directionDisplay.setMap(map);
+
+        var waypoints = [];
+        //set the starting address and destination address
+        var originAddress = initialAddress;
+        var destinationAddress = finalAddress;
+        for (var i = 0; i < middleOfficeAddress.length; i++) {
+            var address = middleOfficeAddress[i];
+            if(address !== "" && address!==destinationAddress && address!==originAddress) {
+                waypoints.push(address);
+                middleOffices.push(middleOfficesNames[i]);
+            }
+        }
+
+        var semifinalWaypoints = [];
+
+         @for(office <- offices) {
+                    @for(linkedOffice <- office.postOfficesA) {
+            var linkedPostOffice = "@linkedOffice.address";
+                for(var i=0;i<waypoints.length;i++){
+                    if(linkedPostOffice === waypoints[i]){
+                        semifinalWaypoints.push(waypoints[i]);
+                    }
+                }
+            }
+         }
+
+         var finalWaypoints = findDuplicates(semifinalWaypoints);
+
+         var waypointsFromRoute = [];
+         var optimizedArray = [];
+         for(var i=0;i<finalWaypoints.length;i++){
+
+            idsAndNames.push({
+                id: i,
+                address: finalWaypoints[i]
+            });
+
+            waypointsFromRoute.push({
+                    location: finalWaypoints[i],
+                    stopover: true
+            });
+         }
+
+        //build directions request
+        var request = {
+            origin: originAddress,
+            destination: destinationAddress,
+            provideRouteAlternatives: true,
+            waypoints: waypointsFromRoute, //an array of waypoints
+            optimizeWaypoints: true, //set to true if you want google to determine the shortest route or false to use the order specified.
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+
+        directionsService.route(request, function(response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+              for (var i = 0, len = response.routes.length; i < len; i++) {
+                new google.maps.DirectionsRenderer({
+                    map: map,
+                    directions: response,
+                    routeIndex: i
+                });
+               }
+               var orders = response.routes[0].waypoint_order;
+
+               for(var i=0;i<orders.length;i++){
+                    for(var j=0;j<idsAndNames.length;j++){
+                        if(orders[i]===idsAndNames[j].id){
+                            optimizedArray.push(idsAndNames[j].address)
+                        }
+                    }
+               }
+            }
+                var routeString = initial+"|";
+                for(var i=0;i<optimizedArray.length;i++){
+                    for(var j=0;j<middleOfficeAddress.length;j++){
+                        if(middleOfficeAddress[j] === optimizedArray[i]){
+                            routeString+=middleOfficesNames[j]+"|";
+                        }
+                    }
+                }
+                routeString+=final+"|";
+                $("#routeOffices").val(routeString);
+        });
+    }
+});
+
+        calculateDistance(originAddress, destinationAddress);
+
+}
+
+function sendPolygonForDrawing() {
+
+    for(var i = 0; i < myPolygons.length; i++){
+        poly = new Array();
+        var coord = myPolygons[i].coordinates;
+        var lng = coord.length;
+        for (var j = 0; j < lng; j++){
+            var longit_Latid = coord[j].split(',');
+            poly.push(new google.maps.LatLng(parseFloat(longit_Latid[0]), parseFloat(longit_Latid[1])));
+        }
+
+        drawPolygon(poly, myPolygons[i].name);
+        poly.pop();
+    }
+};
+
+function drawPolygon(poly, polyLabel) {
+
+    var options = {
+        paths: poly,
+        strokeColor: '#AA2143',
+        strokeOpacity: 0,
+        strokeWeight: 2,
+        fillColor: "#FDFDFD",
+        fillOpacity: 0,
+        polyTitle: polyLabel
+    };
+
+    newPoly = new google.maps.Polygon(options);
+    newPoly.setMap(map);
+    polys.push(newPoly);
+
+};
+
+$("#clickMe").click( function(){
+    polys =[];
+    myPolygons=[];
+    initialize();
+    showMap();
+
+});
+$(document).ready(function() {
+    polys =[];
+    myPolygons=[];
+    initialize();
+    showMap();
+});
+  </script>
+            </div>
+        </div>
+    </div>
+
+}

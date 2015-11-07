@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Ebean;
 import helpers.Authenticators;
+import helpers.DijkstraHelper;
 import helpers.SessionHelper;
 import helpers.StatusHelper;
 import models.*;
@@ -17,6 +18,7 @@ import views.html.*;
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -58,21 +60,22 @@ public class PostOfficeController extends Controller {
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result addNewOffice() {
+        //Getting form data
+        DynamicForm form = Form.form().bindFromRequest();
 
-        Form<PostOffice> boundForm = officeForm.bindFromRequest();
-
-        String name = boundForm.get().name;
-        String address = boundForm.get().address;
+        String name = form.get("name");
+        String address = form.get("address");
+        String countryCode = form.get("country");
 
         PostOffice officeByName = PostOffice.findPostOfficeByName(name);
         PostOffice officeByAddress = PostOffice.findPostOfficeByAddress(address);
-
+        //Making sure that office name and address are unique
         if(officeByName != null || officeByAddress != null){
             return redirect(routes.Application.addPostOffice());
         }
-
-        String lon = boundForm.field("longitude").value();
-        String lat = boundForm.field("latitude").value();
+        //Getting coordinates from map
+        String lon = form.get("longitude");
+        String lat = form.get("latitude");
 
         Double x = null;
         Double y = null;
@@ -81,14 +84,19 @@ public class PostOfficeController extends Controller {
             x = Double.parseDouble(lon);
             y = Double.parseDouble(lat);
         } catch (NumberFormatException e) {
+            ApplicationLog newLog = new ApplicationLog("Error saving Post Office to address " + address + ". Address does not exists.");
+            newLog.save();
             flash("wrongAddress", "Entered place does not exists!");
             return redirect(routes.Application.addPostOffice());
         }
+        //Saving post office location
         Location place = new Location(x, y);
         Ebean.save(place);
-        PostOffice p = new PostOffice(name, address, place);
-
+        Country officeCountry = Country.findCountryByCode(countryCode);
+        PostOffice p = new PostOffice(name, address, place, officeCountry);
         Ebean.save(p);
+        ApplicationLog newLog = new ApplicationLog("New Post Office added: " + p.name + ". Address: "+ p.address);
+        newLog.save();
         return redirect(routes.Application.adminPostOffice());
     }
 
@@ -167,6 +175,7 @@ public class PostOfficeController extends Controller {
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
         PostOffice office = PostOffice.findOffice.byId(id);
         List<PostOffice> mainOfficeRelationList = office.postOfficesA;
+        List<Location> locations = Location.findLocation.findList();
 
         for (int i = 0; i < mainOfficeRelationList.size(); i++) {
             for (int j = 0; j < postOffices.size(); j++) {
@@ -175,7 +184,15 @@ public class PostOfficeController extends Controller {
                 }
             }
         }
-        return ok(adminlinkoffices.render(postOffices, mainOfficeRelationList, office));
+        //Sorting offices by name
+        postOffices.sort(new Comparator<PostOffice>() {
+            @Override
+            public int compare(PostOffice o1, PostOffice o2) {
+                return o1.name.compareTo(o2.name);
+            }
+        });
+
+        return ok(adminlinkoffices.render(postOffices, mainOfficeRelationList, office, locations));
     }
 
     /**
@@ -198,7 +215,7 @@ public class PostOfficeController extends Controller {
         //Removing null elements from list
         checkBoxValues.removeAll(Collections.singleton(null));
         postOffices.clear();
-        //Making postoffices with names from checkBoxValues list
+        //Making post offices with names from checkBoxValues list
         for (int i = 0; i < checkBoxValues.size(); i++) {
             PostOffice postOffice = PostOffice.findOffice.where().eq("name", checkBoxValues.get(i)).findUnique();
             postOffices.add(postOffice);
@@ -208,6 +225,9 @@ public class PostOfficeController extends Controller {
 
         PostOffice mainPostOffice = PostOffice.findOffice.where().eq("name", officeName).findUnique();
         List<PostOffice> relationOffices = mainPostOffice.postOfficesA;
+        //Saving links to Link model that is used for dijkstra algorithm
+        String startOffice = mainPostOffice.name;
+        Location loc1 = Location.findLocationById(mainPostOffice.id);
 
         if (relationOffices.size() != 0) {
             for (int i = 0; i < relationOffices.size(); i++) {
@@ -216,88 +236,41 @@ public class PostOfficeController extends Controller {
             }
             mainPostOffice.postOfficesA.clear();
             Ebean.update(mainPostOffice);
+
+            List<Link> startOfficeLinks = Link.findByStartOffice(startOffice);
+            for (int i = 0; i < startOfficeLinks.size(); i++) {
+                startOfficeLinks.get(i).delete();
+            }
+            List<Link> targetOfficeLinks = Link.findByTargetOffice(startOffice);
+            for (int i = 0; i < targetOfficeLinks.size(); i++) {
+                targetOfficeLinks.get(i).delete();
+            }
         }
         //    Saving offices and their relationship to database
         for (int i = 0; i < postOffices.size(); i++) {
             PostOffice linkedPostOffice = postOffices.get(i);
+
+            String targetOffice = linkedPostOffice.name;
+            Location loc2 = Location.findLocationById(linkedPostOffice.id);
+            double distance = (double) DijkstraHelper.getDistance(loc1.toString(), loc2.toString());
+
+            Link l1 = new Link(startOffice, targetOffice, distance);
+            Link l2 = new Link(targetOffice, startOffice, distance);
+            l1.save();
+            l2.save();
+
             mainPostOffice.postOfficesA.add(linkedPostOffice);
             linkedPostOffice.postOfficesA.add(mainPostOffice);
             Ebean.save(mainPostOffice);
             Ebean.save(linkedPostOffice);
         }
-        return redirect("/adminpanel/postoffice");
+        return redirect(routes.Application.adminPostOffice());
     }
 
-
-    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
-    public Result listRoutes(Long id) {
-
-        Package officePackage = Package.findPackageById(id);
-        PostOffice office = officePackage.shipmentPackages.get(0).postOfficeId;
-
-        return ok(owmakeroute.render(office.postOfficesA, officePackage));
-    }
-
-    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
-    public Result createRoute() {
-
-        DynamicForm form = Form.form().bindFromRequest();
-
-        String nextOffice = form.data().get("name");
-
-        PostOffice mainOffice = PostOffice.findOffice.where().eq("name", nextOffice).findUnique();
-
-        List<PostOffice> linkedOffices = mainOffice.postOfficesA;
-
-        String officesString = "";
-        for (int i = 0; i < linkedOffices.size(); i++) {
-            officesString += linkedOffices.get(i).name;
-            if (i != linkedOffices.size() - 1) {
-                officesString += ",";
-            }
-        }
-        return ok(officesString);
-    }
-
-    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
-    public Result saveRoute(Long id) {
-
-        DynamicForm form = Form.form().bindFromRequest();
-
-        String route = form.get("route");
-
-        Package packageWithRoute = Package.findPackageById(id);
-        Shipment initialOfficeShip = new Shipment();
-        try {
-            initialOfficeShip = Shipment.shipmentFinder.where().eq("packageId", packageWithRoute).findUnique();
-        }catch(PersistenceException e){
-            return redirect(routes.PostOfficeController.listRoutes(id));
-        }
-        initialOfficeShip.status = StatusHelper.READY_FOR_SHIPPING;
-        initialOfficeShip.update();
-
-        String[] arr = route.split(",");
-
-        for (int j = 0; j < arr.length; j++) {
-            PostOffice p = PostOffice.findPostOfficeByName(arr[j]);
-
-            if (p == null) {
-                return redirect(routes.PackageController.adminPackage());
-            }
-            Shipment ship = new Shipment();
-            ship.postOfficeId = p;
-            ship.packageId = packageWithRoute;
-            ship.status = StatusHelper.ON_ROUTE;
-
-            Ebean.save(ship);
-        }
-        User u1 = SessionHelper.getCurrentUser(ctx());
-        if (u1.typeOfUser == UserType.ADMIN)
-            return redirect(routes.PackageController.adminPackage());
-        else
-            return redirect(routes.UserController.officeWorkerPanel());
-    }
-
+    /**
+     * Method that checks if office name and address are unique using ajax
+     * @return - ok if there are no office name or address with inserted word
+     */
     public Result checkOfficeName() {
         DynamicForm form = Form.form().bindFromRequest();
         String officeName = form.data().get("name");

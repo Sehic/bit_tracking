@@ -2,3 +2,15 @@
 #inputName, #inputLastName {
     text-transform: capitalize;
 }
+
+.req {
+    color:red;
+}
+
+#logo{
+    height: 35px;
+    width: 100px;
+}
+.navbar-brand{
+    padding: 7px 5px;
+}

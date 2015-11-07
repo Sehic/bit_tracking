@@ -8,7 +8,7 @@
                 <div class="col-md-12">
                     <h3>
                         Add Worker
-                    </h3>
+                    </h3><br/>
                 </div>
             </div> <!--End register title  row-->
 
@@ -17,7 +17,7 @@
                 <div class="col-md-12">
                     <p>
                         Please use the form below to create a Worker account. Required fields are indicated with *.
-                    </p>
+                    </p><br/>
                 </div>
             </div><!--End paragraf row-->
 
@@ -25,13 +25,13 @@
             <div class="row">
                 <div class="col-md-12">
 
-                @helper.form(action = routes.UserController.addWorker(), 'class -> "form-horizontal", 'role -> "form") {
+                @helper.form(action = routes.WorkerController.addWorker(), 'class -> "form-horizontal", 'role -> "form") {
 
 
                     <div class="form-group">
 
                         <label for="inputName" class="col-sm-3 control-box">
-                            First Name*:
+                            First Name:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
                         <div class="col-sm-9">
                             <input name="firstName" value="@text("firstName").value" placeholder="First Name should contain only letters" onblur="checkFirstName()" type="text" class="form-control" id="inputName" required="required">
@@ -43,7 +43,7 @@
                     <div class="form-group">
 
                         <label for="inputLastName" class="col-sm-3 control-box">
-                            Last Name*:
+                            Last Name:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
                         <div class="col-sm-9">
                             <input name="lastName" value="@text("lastName").value" placeholder="Last Name should contain only letters" onblur="checkLastName()" type="text" class="form-control" id="inputLastName" required="required">
@@ -56,7 +56,7 @@
                     <div class="form-group">
 
                         <label for="inputEmail3" class="col-sm-3 control-box">
-                            Email*:
+                            Email:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
                         <div class="col-sm-9">
                             <input name="email" value="@text("email").value" placeholder="Insert Email" onblur="checkEmail()" type="email" class="form-control" id="inputEmail3" required="required">
@@ -68,10 +68,10 @@
                     <div class="form-group">
 
                         <label for="inputPassword3" class="col-sm-3 control-box">
-                            Password*:
+                            Password:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
                         <div class="col-sm-9">
-                            <input name="password" onblur="checkPassword()" placeholder="Password should contain any sequence of alpha & one number. Minimum alowed length is 6. " type="password" class="form-control" id="inputPassword3" required="required">
+                            <input name="password" onblur="checkPassword()" placeholder="Password should contain any sequence of alpha & one number. Minimum allowed length is 6. " type="password" class="form-control" id="inputPassword3" required="required">
                             <span id="err4" class="alert-danger" data-error-for="" >@flash.get("errorPassword")</span>
 
                         </div>
@@ -79,7 +79,7 @@
                     <div class="form-group">
 
                         <label for="inputPassword4" class="col-sm-3 control-box">
-                            Confirm Password*:
+                            Confirm Password:<abbr class="req" title="required" style="color: red"> *</abbr>
                         </label>
                         <div class="col-sm-9">
                             <input name="repassword" onblur="checkPasswords()" placeholder="Confirm Password" type="password" class="form-control" id="inputPassword4" required="required">
@@ -91,8 +91,12 @@
 
                     <div class="form-group">
 
-                        <div class="col-sm-offset-3 col-sm-3">
-                            <select class="form-control sortAlphabetically" name="postOffice">
+
+                        <label for="postOffice" class="col-sm-3 control-box">
+                            Post Office:<abbr class="req" title="required" style="color: red"> *</abbr>
+                        </label>
+                        <div class="col-sm-3">
+                            <select id="postOffice" class="form-control sortAlphabetically" name="postOffice" required>
                                 <option value="">--Choose Post Office--</option>
                                 @for(office <- offices) {
 
@@ -103,8 +107,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-3">
-                            <select class="form-control" name="userType">
+                        <label for="userTypeId" class="col-sm-3 control-box">
+                            Worker Role:<abbr class="req" title="required" style="color: red"> *</abbr>
+                        </label>
+                        <div class="col-sm-3">
+                            <select id="userTypeId" class="form-control" name="userType">
 
                                 <option value="2">Delivery Worker</option>
                                 <option value="1">Office Worker</option>
@@ -112,6 +119,34 @@
 
                             </select>
                         </div>
+                    </div>
+
+                    <div class="form-group drivingOfficeDiv">
+
+                        <label for="drivingOffice" class="col-sm-3 control-box">
+                            Driving Office:<abbr class="req" title="required" style="color: red"> *</abbr>
+                        </label>
+                        <div class="col-sm-3">
+                            <select id="drivingOffice" class="form-control sortAlphabetically" name="drivingOffice">
+
+                                <option value="">--Choose Post Office--</option>
+                                @for(office <- offices) {
+
+                                    <option value="@office.name">@office.name</option>
+                                }
+
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group drivingOfficeDiv">
+                        <label for="checkCourierBox" class="col-sm-3 control-box">
+                            Delivery Worker Role:
+                        </label>
+                        <div class="col-sm-3">
+                        <input id="checkCourierBox" type="checkbox" name="isCourier" value="Yes">Courier
+                            </div>
                     </div>
 
                     <div class="form-group">

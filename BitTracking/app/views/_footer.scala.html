@@ -17,49 +17,79 @@
     </div>
 </div>
 
-<!-- ==============FOOTER=================-->
 
-<div class="row">
-    <hr>
-    <div class="col-md-12">
-        <div class="row">
+<html>
 
-            <div class="col-md-3">
-                <div class="container" style="font-size : x-small">
-                    <address>
-                        <h5 style="font-size : 14px"><strong>BIT Tracking</strong></h5> <br>
-                        Address: Sarajevo, Street: <br>
-                        Bosnia and Herzegovina, 71000<br> <abbr title="Phone">P:</abbr> (387) 000-000
-                    </address>
+    <head>
+
+        <meta name="keywords" content="footer, address, phone, icons" />
+
+        <title>Footer With Address And Phones</title>
+
+        <link href="http://fonts.googleapis.com/css?family=Cookie" rel="stylesheet" type="text/css">
+
+    </head>
+
+    <body>
+        <hr>
+        <footer class="footer-distributed">
+
+            <div class="footer-left">
+                <p class="footer-company-about">
+                    <span>Helpful Links</span>
+                </p>
+                <div>
+                    <img src='@routes.Assets.versioned("images/home.png")' id="home"/><a href="@routes.Application.index()">Home</a>
+                    <br/><br>
+                    <img src='@routes.Assets.versioned("images/faq-icon.png")' id="faq"/><a href="@routes.FaqController.userFaqView()"> FAQs</a>
+                    <br/><br>
+                    <img src='@routes.Assets.versioned("images/contactus-icon.png")' id="contactus"/><a href="@routes.MailController.contact()">  Contact Us</a>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="container">
-                    <h5 style="font-size : 14px">
-                        <strong> Custommer Support</strong>
-                    </h5>
-                    <button type="button" class="btn btn-link">
-                        Contact BIT Tracking
-                    </button>
+            <div class="footer-center">
+                <p class="footer-company-about">
+                    <span><b>Contact BIT Tracking</b></span>
+                </p>
+                <div>
+                    <img src='@routes.Assets.versioned("images/map.png")' id="map"/>
+                    <p><span>Hrasnicka cesta 15</span> Ilidza, Sarajevo</p>
                 </div>
+                <br>
+                <div>
+                    <img src='@routes.Assets.versioned("images/phone_icon.gif")' id="phone"/>
+                    <span style="color:#737373">+38761/555-555</span>
+                </div>
+                <br>
+                <div>
+                    <img src='@routes.Assets.versioned("images/mail.jpg")' id="mail"/>
+                    <a href="mailto:support:company.com">bittracking2015@@gmail.com</a>
+                </div>
+
             </div>
 
-            <div class="col-md-3">
-                <h5>
-                    <strong>New Customers</strong>
-                </h5>
+            <div class="footer-right">
+
+                <p class="footer-company-about">
+                    <span>Follow us</span>
+                </p>
+
+                <div>
+
+                    <a href="https://www.facebook.com/Bit-Tracking-462032430635765/" target="_blank"><img src='@routes.Assets.versioned("images/facebook.png")' id="facebook" class="glyphicon-resize-small"/></a>
+                    <a href="https://twitter.com/BitTracking" target="_blank"><img src='@routes.Assets.versioned("images/twitter.png")' id="twitter"/></a>
+                    <a href="#"><img src='@routes.Assets.versioned("images/linkedin.png")' id="linkedin"/></a>
+                    <a href="https://github.com/Sehic/bit_tracking"><img src='@routes.Assets.versioned("images/octocat.png")' id="octocat"/></a>
+
+                </div>
+
             </div>
 
-            <div class="col-md-3">
-                <h5 style="font-size : 14px">
-                    <strong>Follow BIT Tracking</strong>
-                </h5>
-                <link href="">
-            </div>
-        </div>
-    </div>
-</div> <!-- Ends footer-->
+        </footer>
+
+    </body>
+
+</html>
 
 <hr>
 

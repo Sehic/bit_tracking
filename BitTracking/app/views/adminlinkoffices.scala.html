@@ -1,6 +1,6 @@
 @import helpers._
 
-@(postOffices: List[PostOffice], mainOfficeRelationList: List[PostOffice], office: PostOffice)
+@(postOffices: List[PostOffice], mainOfficeRelationList: List[PostOffice], office: PostOffice, places: List[Location])
     @adminmain("Link Offices") {
 
         <ol class="breadcrumb">
@@ -20,6 +20,7 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
+                        <th>Country</th>
                         <th>Adress</th>
                         <th>Linked To</th>
                         <th>Link To</th>
@@ -31,11 +32,12 @@
                     <tr>
                         <td>@office.id</td>
                         <td><input name="mainOfficeName" value="@office.name" type="text" style="background-color : transparent ; border : 0px" readonly/></td>
+                        <td>@office.country.countryName</td>
                         <td>@office.address</td>
                         <td>
                         @for(linkedToThisOffice <- office.postOfficesA) {
                             @linkedToThisOffice.name <br>
-                        }
+                            }
                         </td>
                         <td>
                             @for(mainRelationOffice <- mainOfficeRelationList) {
@@ -66,6 +68,69 @@
                 <li><a href="#">&raquo;</a></li>
             </ul>
 
+        </div>
+
+        <div class="templatemo-maps">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 margin-bottom-30">
+                    <div id="map" style="position: relative; height: 700px; width: auto"></div>
+                    <script type="text/javascript">
+function initialize(){
+     var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 5,
+        center: new google.maps.LatLng(43.8331, 18.3039),
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    // Construct a new InfoWindow.
+    var i, marker;
+
+    @for(place <- places) {
+
+     marker = new google.maps.Marker({
+        position: new google.maps.LatLng(@place.y, @place.x),
+        map: map
+        });
+     }
+    @for(linkToOffice <- office.postOfficesA){
+        var directionsService = new google.maps.DirectionsService();
+
+        var renderOptions = { draggable: true };
+        var directionDisplay = new google.maps.DirectionsRenderer(renderOptions);
+
+        directionDisplay.setMap(map);
+
+        var originAddress = "@office.address";
+        var destinationAddress = "@linkToOffice.address";
+
+        //build directions request
+        var request = {
+            origin: originAddress,
+            destination: destinationAddress,
+            provideRouteAlternatives: true,
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+
+        directionsService.route(request, function (response, status) {
+            if(status == google.maps.DirectionsStatus.OK) {
+
+                new google.maps.DirectionsRenderer({
+                    map: map,
+                    directions: response,
+                    routeIndex: 0
+                });
+            }
+        });
+    }
+
+}
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+    google.maps.event.addDomListener(window, 'resize', function() {
+    map.setCenter(marker.getPosition());
+    });
+  </script>
+                </div>
+            </div>
         </div>
 
     }

@@ -28,6 +28,15 @@ public class User extends Model {
     @Column(length = 50)
     public String lastName;
 
+    @ManyToOne
+    public Country country;
+    @Column(length = 50)
+    public String phoneNumber = null;
+    @Column
+    public Boolean numberValidated = false;
+    @Column
+    public String validationCode;
+
     @Constraints.Required
     @Column(length = 50)
     @Constraints.MinLength(6)
@@ -48,8 +57,20 @@ public class User extends Model {
     @OneToMany(mappedBy = "profilePhoto", cascade = CascadeType.ALL)
     public ImagePath imagePath;
 
-    @ManyToMany(mappedBy = "deliveryWorkers")
+    @ManyToMany(mappedBy = "users")
     public List<Package> packages = new ArrayList<>();
+
+    @Column(unique = true)
+    public String token;
+
+    @Column
+    public Boolean validated = false;
+
+    @Column
+    public String drivingOffice;
+
+    @Column
+    public Boolean isCourier = false;
 
 
     public User() {
@@ -114,6 +135,10 @@ public class User extends Model {
         return (User) (list.get(0));
     }
 
+    public static User findUserByEmail(String email){
+        return find.where().eq("email", email).findUnique();
+    }
+
 
     /**
      * This method checks if the entered email exists in the database
@@ -135,8 +160,11 @@ public class User extends Model {
      * @return
      */
     public static boolean checkName(String name) {
+        if (name.length() < 1) {
+            return false;
+        }
         for (int i = 0; i < name.length(); i++) {
-            if ((name.charAt(i) < 65) || (name.charAt(i) > 90 &&
+            if (name.charAt(i) < 31 || (name.charAt(i) > 32 && name.charAt(i) < 65) || (name.charAt(i) > 90 &&
                     name.charAt(i) < 97) || (name.charAt(i) > 122 && name.charAt(i) < 262) ||
                     (name.charAt(i) > 263 && name.charAt(i) < 268) ||
                     (name.charAt(i) > 269 && name.charAt(i) < 272) ||
@@ -148,6 +176,33 @@ public class User extends Model {
         }
         return true;
     }
+
+    /**
+     * This method checks if entered character are only numbers, or spaces,
+     * and if number of entered digits is valid (should be min 8).
+     * @param phoneNumber
+     * @return
+     */
+    public static boolean checkPhoneNumber(String phoneNumber) {
+        if (phoneNumber.length() < 8) {
+            return false;
+        }
+        int count = 0;
+        for (int i = 0; i < phoneNumber.length(); i++) {
+            if (phoneNumber.charAt(i) < 31 || (phoneNumber.charAt(i) > 32 && phoneNumber.charAt(i) < 48) ||
+                    phoneNumber.charAt(i) > 57) {
+                return false;
+            }
+            if (phoneNumber.charAt(i) > 47 && phoneNumber.charAt(i) < 58) {
+                count++;
+            }
+        }
+        if (count < 8) {
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * Checks if password has more then 6 letters
@@ -184,6 +239,14 @@ public class User extends Model {
 
     public static List<User> findOfficeWorkers() {
         return find.where().eq("typeOfUser", UserType.OFFICE_WORKER).findList();
+    }
+
+    public static User findByToken(String token) {
+        return find.where().eq("token", token).findUnique();
+    }
+
+    public static User findByValidationCode(String validationCode) {
+        return find.where().eq("validationCode", validationCode).findUnique();
     }
 
 

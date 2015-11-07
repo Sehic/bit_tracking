@@ -1,0 +1,326 @@
+@import helpers.PackageType
+@import helper._
+@(postOffices: List[PostOffice], users: List[User], packs: java.util.List[models.Package])
+@main("BIT Tracking Statistics") {
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+
+                    <!--=================Starts tab==================-->
+                <div class="tabbable" id="tabs">
+                    <ul class="nav nav-tabs">
+                        <li >
+                            <a href="#panel-package" data-toggle="tab">Packages</a>
+                        </li>
+
+                        <li class="active">
+                            <a href="#panel-user" data-toggle="tab">Users</a>
+                        </li>
+
+                        <li>
+                            <a href="#panel-postoffice" data-toggle="tab">Post Offices</a>
+                        </li>
+                    </ul>
+                        <!--Ends tab-->
+
+                        <!--Starts tab content-->
+                    <div class="tab-content">
+
+
+                            <!--======================PACKAGE STATISTICS======================-->
+
+                        <div class="tab-pane" id="panel-package">
+
+                            @if(!packs.isEmpty) {
+                                <h4><strong>@Messages("Current Package Statistics")</strong></h4> <br>
+                                <p>The following table shows number of BIT Tracking packages by package type and by package status. BIT Tracking has four types of packages: <em>box, envelope, flyer, tube.</em>
+                                    Table contains current statistic by package status: <em>"On Route","Out For Delivery","Ready For Shipping", "Delivered", "Received"</em></p>
+                                <p>Table and chart are displaying current statistic. </p><br>
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th><strong>Table - BIT Tracking Package Statistic</strong></th>
+                                            <th>Data</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="background-color : #DFDFDF"><strong>
+                                                Statistic by Package Type</strong></td>
+                                            <td style="background-color : #DFDFDF"><strong></strong></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Current number of boxes</td>
+                                            <td>@Statistic.createPackageBoxStatistic().size()</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Current number of envelopes</td>
+                                            <td>@Statistic.createPackageEnvelopeStatistic().size()</td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>Current number of flyers</td>
+                                            <td>@Statistic.createPackageFlyerStatistic().size()</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Current number of tubes</td>
+                                            <td>@Statistic.createPackageTubeStatistic().size()</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="background-color : #DFDFDF"><strong>
+                                                Statistic by Package Status</strong></td>
+                                            <td style="background-color : #DFDFDF"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Number of packages with status "Delivered" - <em>Package is deliverded to thr final customer address.</em></td>
+                                            <td>@Statistic.createPackageDeliveredStatistics().size()</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Number of packaces with status "On Route" - <em>Package is on route to the destination office</em></td>
+                                            <td>@Statistic.createPackageOnRouteStatistics().size()</td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>Number of packages with status "Out For Delivery" - <em>Package is sent on route to the destination.</em></td>
+                                            <td>@Statistic.createPackageOutForDeliveryStatistics().size()</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Number of packages with status "Ready For Shipping" - <em>Status for package in initial office.</em></td>
+                                            <td>@Statistic.createPackageReadyForShippStatistics().size()</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Number of packages with status "Received" - <em>Status when package is received in office(s) on route to the destination. </em></td>
+                                            <td >@Statistic.createPackageReceivedStatistics().size()</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="background-color:#DFDFDF; color : #b92c28 ;"><strong>Total number of packages</strong></td>
+                                            <td style="background-color:#DFDFDF; color : #b92c28 ;"><strong>@Statistic.createPackageStatistic().size()</strong></td>
+                                        </tr>
+                                        } else {
+                                <div class="alert-info"><h4> @Messages("There are no packages in database. ")</h4></div>
+                            }
+                        </tbody>
+                        </table><br><br>
+
+                            <div><strong>Chart Bit Tracking Statistic By Package Type</strong> displays data from table BIT Tracking Package Statistic/Statistic by Package Type</div><br><br>
+                            <script type="text/javascript">
+                            google.load('visualization', '1', {packages: ['corechart', 'bar']});
+                            google.setOnLoadCallback(drawBasic1);
+                            function drawBasic1() {
+                            var data = google.visualization.arrayToDataTable([
+                            ['BIT Tracking Package Statistic ', 'Data'],
+                            ['Box', @Statistic.createPackageBoxStatistic().size()],
+                            ['Envelope', @Statistic.createPackageEnvelopeStatistic().size()],
+                            ['Flyer', @Statistic.createPackageFlyerStatistic().size()],
+                            ['Tube', @Statistic.createPackageTubeStatistic().size()],
+                            ]);
+                            var options = {
+                            width: 900,
+                            height: 250,
+                            title: 'BIT Tracking Statistic By Package Type',
+                            chartArea: {width: '60%'},
+                            hAxis: {
+                            title: 'Total Number Of Packages',
+                            minValue: 0
+                            },
+                            vAxis: {
+                            title: 'Type Of Package'
+                            }
+                            };
+                            var chart = new google.visualization.BarChart(document.getElementById('chart_packagetype'));
+                            chart.draw(data, options);
+                            }
+                        </script><br>
+                            <div id="chart_packagetype"></div>
+                            <br> <br> <br>
+                                <!--==========================JS Google API Chart for Statistic By Package status=========================-->
+
+                            <div><strong>Chart Bit Tracking Statistic By Package Status</strong> displays data from table BIT Tracking Package Statistic/Statistic by Package Status</div><br/><br/>
+                            <script type="text/javascript">
+                            google.load('visualization', '1', {packages: ['corechart', 'bar']});
+google.setOnLoadCallback(drawBasic2);
+function drawBasic2() {
+      var data = google.visualization.arrayToDataTable([
+        ['BIT Tracking Package Statistic ', 'Data',{ role: 'style' }],
+        ['On Route', @Statistic.createPackageOnRouteStatistics().size(),'color: gray'],
+        ['Out For Delivery', @Statistic.createPackageOutForDeliveryStatistics().size(),'color: #76A7FA'],
+        ['Ready For Ship', @Statistic.createPackageReadyForShippStatistics().size(),'opacity: 0.2'],
+        ['Received', @Statistic.createPackageReceivedStatistics().size(),'stroke-color: #703593; stroke-width: 4; fill-color: #C5A5CF'],
+        ['Delivered', @Statistic.createPackageDeliveredStatistics().size(),'stroke-color: #871B47; stroke-opacity: 0.6; stroke-width: 8; fill-color: #BC5679; fill-opacity: 0.2']
+      ]);
+      var options = {
+       width: 900,
+       height: 250,
+        title: 'BIT Tracking Statistic By Package Status',
+        chartArea: {width: '50%'},
+        hAxis: {
+          title: 'Total Number Of Packages',
+          minValue: 0
+        },
+        vAxis: {
+          title: 'Package Status'
+        }
+      };
+      var chart = new google.visualization.BarChart(document.getElementById('chart_packagestatus'));
+       chart.draw(data, options);
+    }
+                        </script>
+                            <div id="chart_packagestatus"></div>
+                        </div> <!--end of package statistic-->
+
+                        <!--======================USER STATISTICS======================-->
+
+                        <div class="tab-pane active" id="panel-user">
+                            <div style="padding-top:3%">
+                                <b><h4>Statistic by BIT Tracking Users Type</h4></b><br>
+                                <p>The following table displays number of BIT Tracking users by user type. BIT Tracking site has four types of users: admin, delivery worker, office worker and registered user.
+                                    <em>Number of BIT Tracking employees</em> - represents total current number of admins, delivery and office workers.<br>
+                                    <em>Total number of users</em> - represents total number of all types of users registered or employed with BIT Tracking.</p>
+                                <p>Table and chart are displaying current statistic. </p>
+                            </div><br><br>
+
+
+                            <div class="row">
+                                <div class="col-sm-5 table-responsive" style="padding-top:4.5%">
+                                    <h5><strong>Table - BIT Tracking User Statistic</strong></h5><br>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="background-color : #DFDFDF"><strong>@Messages("USER")</strong></th>
+                                                <th style="background-color : #DFDFDF"><strong>@Messages("BT STATISTIC")</strong></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Admins</strong></td>
+                                                <td>@Statistic.createAdminStatistic().size()</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Delivery Workers</strong></td>
+                                                <td>@Statistic.createDeliveryWorkerStatistic().size()</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Office Workers</strong></td>
+                                                <td>@Statistic.createOfficeWorkerStatistic().size()</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td><strong>Registered Users</strong></td>
+                                                <td>@Statistic.createRegistersUsersStatistic().size()</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td><strong>Number of BIT Tracking employees</strong></td>
+                                                <td>@Statistic.createEmployeesStatistic().size()</td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td style="background-color : #DFDFDF ; color : #b92c28 ; margin-left : 1.7 %"><strong>
+                                                    Total number of users</strong></td>
+                                                <td style="background-color : #DFDFDF ; color : #b92c28 ; margin-left : 1.7 %"><strong>@Statistic.createUserStatistic().size()</strong></td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <script type="text/javascript">
+      // Load the Visualization API and the piechart package.
+      google.load("visualization", "1.0", {packages:["corechart"]});
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+        // Create the data table.
+        var data = new google.visualization.arrayToDataTable([
+          ['User', 'BT Statistic'],
+          ['Admins',@Statistic.createAdminStatistic().size()],
+          ['Delivery workers', @Statistic.createDeliveryWorkerStatistic().size()],
+          ['Office workers', @Statistic.createOfficeWorkerStatistic().size()],
+          ['Registered user', @Statistic.createRegistersUsersStatistic().size()]
+        ]);
+        // Set chart options
+        var options = {title:'BIT Tracking Users',
+                                forceIFrame: true,
+                                width: 700,
+                                height: 500,
+                                pieSliceText: 'percentage',
+                                pieSliceTextStyle: {
+                                    color: "black",
+                                    fontSize: 16}
+                                    };
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('userchart'));
+        chart.draw(data, options);
+      }
+    </script>
+                                <div class="col-sm-offset-1 col-sm-6 pull-right" style="padding-top : 1 %">
+                                    <div id="userchart"></div>
+                                </div>
+
+                            </div>
+                        </div> <!--end of user statistic-->
+
+
+                        <!--======================POST OFFICE STATISTICS======================-->
+                        <div class="tab-pane" id="panel-postoffice">
+                            <h4>@Messages("Current Post Office Statistics")</h4> <br><br>
+                            @if(!postOffices.isEmpty) {
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="background-color : #DFDFDF"><strong>@Messages("Post Office Name")</strong></th>
+                                            <th style="background-color : #DFDFDF"><strong>@Messages("Number of Linked Offices")</strong></th>
+                                            <th style="background-color : #DFDFDF"><strong>@Messages("Total number of Packages")</strong></th>
+                                            <th style="background-color : #DFDFDF"><strong>@Messages("Total number of Active Routes")</strong></th>
+                                            <th style="background-color : #DFDFDF"><strong>@Messages("Total number of Office Workers")</strong></th>
+                                            <th style="background-color : #DFDFDF"><strong>@Messages("Total number of Delivery Workers")</strong></th>
+
+                                        </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                        @for(postOffice <- postOffices) {
+                                            <tr>
+                                                <td>@postOffice.name</td>
+                                                <td>@postOffice.postOfficesA.size()</td>
+                                                <td>@Statistic.packageByPostOffice(postOffice)</td>
+                                                <td>@Statistic.getNumOfRoutes(postOffice)</td>
+                                                <td>@Statistic.officeWorkerByPostOffice(postOffice)</td>
+                                                <td>@Statistic.deliveryWorkerByPostOffice(postOffice)</td>
+                                            </tr>
+                                        }
+                                    } else {
+                                <div class="alert-info"><h4> @Messages("There are no post offices in database. ")</h4></div>
+                            }
+                        </tbody>
+                        </table>
+                        </div> <!--end of package statistic--><!--end of post office statistic-->
+                    </div><!--Ends tab content-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}

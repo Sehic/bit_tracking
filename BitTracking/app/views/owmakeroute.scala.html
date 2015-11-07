@@ -1,14 +1,25 @@
-@(postOffices: List[PostOffice], officePackage: models.Package)
+@(postOffices: List[PostOffice], officePackage: models.Package, places: List[Location], allOffices: List[PostOffice])
     @adminmain("Make a route") {
 
         <ol class="breadcrumb">
             <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
             <li><a href="#">Manage Post Office</a></li>
-            <li class="active">Make a route</li>
+            <li class="active">Make a route manually</li>
         </ol>
 
-        <h2>Make package route</h2>
-
+        <h2>Make a route manually</h2>
+    <hr/>
+    <div class="row">
+        <div class="form-group">
+            <label for="route" class="col-sm-3 control-label">
+                Create Route using:
+            </label>
+            <div class="col-sm-9">
+                <a href="@routes.RouteController.showDijkstraRouting(officePackage.id)"><button type="button" class="btn btn-primary active">Algorithm Route</button></a>
+                <a href="@routes.RouteController.showAutoRouting(officePackage.id)"><button type="button" class="btn btn-primary active">Shortest Path</button></a>
+            </div>
+        </div>
+    </div>
 
         <div class="row">
             <hr/>
@@ -30,10 +41,10 @@
         </div>
 
         <div class="row">
-        @helper.form(routes.PostOfficeController.saveRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
+        @helper.form(routes.RouteController.saveRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
 
             <div class="col-md-2">
-                <select name="postOffices" class="selectOffice form-control sortAlphabetically">
+                <select name="postOffices" class="selectOffice form-group form-control sortAlphabetically">
                 @for(office <- postOffices) {
                     <option value="@office.name">@office.name</option>
                 }
@@ -41,22 +52,20 @@
                 </select>
             </div>
 
-            <div class="col-md-0">
-                <button id="addToRoute" type="button" style="margin-right: 1%" class="btn btn-default pull-left">
+            <div class="col-md-1">
+                <button id="addToRoute" type="button" style="margin-right : 1%" class="btn btn-primary active pull-left">
                     Add
                 </button>
             </div>
-
-            <div class="col-md-0">
-                <button id="clearFromRoute" type="button" class="btn btn-default pull-left">
-                    Clear
-                </button>
-            </div>
-
             <div id="routeForm" class="col-md-9 pull-right">
-                <input id="finalRoute" name="route" class="form-control" readonly>
+                <input id="finalRoute" name="route" class="form-control" placeholder="Route field" readonly required>
             </div>
         </div>
+    <div class="col-md-12 col-sm-offset-3">
+        <a href="#" id="clearFromRoute" style="color: red">
+            Click to clear route field
+        </a>
+    </div>
 
         <div class="row">
             <hr/>
@@ -66,7 +75,7 @@
                     Destination Post Office
                 </label>
                 <div class="col-sm-9">
-                    <input id="getDestinationOffice" name="destinationOffice" value="@officePackage.shipmentPackages.get(0).packageId.destination" type="text" class="form-control" style="font-size:13px; font-style: italic " readonly>
+                    <input id="getDestinationOffice" name="destinationOffice" value="@officePackage.shipmentPackages.get(0).packageId.destination" type="text" class="form-control" style="font-size : 13 px ; font-style : italic " readonly>
                 </div>
             </div>
 
@@ -78,13 +87,110 @@
         <div class="row">
 
 
-
             <div class="col-sm-9 col-sm-offset-3">
-                <button type="submit" class="btn btn-primary">
-                    Finalize
+                <button id="seeRouteButton" type="button" class="btn btn-info active">
+                    See Route
+                </button>
+                <button id="finalizeButton" type="submit" class="btn btn-success active">
+                    Save Route
                 </button>
             </div>
 
         </div>
+        <br/>
     }
+
+        <input id="longitude" name="longitude" type="hidden">
+        <input id="latitude" name="latitude" type="hidden">
+
+        <div class="templatemo-maps">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 margin-bottom-30">
+                    <div id="map" style="position : relative ; height : 700px ; width : auto"></div>
+
+                    <script type="text/javascript">
+function initialize(){
+     var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 5,
+        center: new google.maps.LatLng(43.8331, 18.3039),
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    // Construct a new InfoWindow.
+    var i, marker;
+
+    @for(place <- places) {
+
+     marker = new google.maps.Marker({
+        position: new google.maps.LatLng(@place.y, @place.x),
+        map: map
+        });
+     }
+     $("#seeRouteButton").click(function(){
+
+        var directionsService = new google.maps.DirectionsService();
+        var renderOptions = { draggable: true };
+        var directionDisplay = new google.maps.DirectionsRenderer(renderOptions);
+
+        directionDisplay.setMap(map);
+        var getRoute = $("#finalRoute").val();
+        var initialOffice = $("#getInitialOffice").val();
+        var destinationOffice= $("#getDestinationOffice").val();
+        var routeOffices = getRoute.split(",");
+        var waypoints = [];
+        var originAddress = "";
+        var destinationAddress = "";
+        for(var i=0;i<routeOffices.length-1;i++){
+
+            @for(office <- allOffices) {
+                  var officeName = "@office.name";
+                  var officeAddress= "@office.address";
+                  if(officeName === initialOffice){
+
+                  originAddress=officeAddress;
+                  }
+                  if(officeName === destinationOffice){
+                  destinationAddress=officeAddress;
+
+                  }
+                  if(officeName === routeOffices[i] && officeName!==destinationOffice){
+
+                    waypoints.push({
+                        location: officeAddress,
+                        stopover: true
+                    });
+                  }
+            }
+        }
+        //build directions request
+        var request = {
+            origin: originAddress,
+            destination: destinationAddress,
+            provideRouteAlternatives: true,
+            waypoints: waypoints,
+            optimizeWaypoints: true,
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+
+        directionsService.route(request, function (response, status) {
+            if(status == google.maps.DirectionsStatus.OK) {
+
+                new google.maps.DirectionsRenderer({
+                    map: map,
+                    directions: response,
+                    routeIndex: 0
+                });
+            }
+        });
+    });
+}
+    google.maps.event.addDomListener(window, 'load', initialize);
+    google.maps.event.addDomListener(window, 'resize', function() {
+
+    });
+  </script>
+                </div>
+            </div>
+        </div>
     }
+
+

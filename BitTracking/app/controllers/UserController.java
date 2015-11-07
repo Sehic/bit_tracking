@@ -1,9 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
-import helpers.Authenticators;
-import helpers.CurrentUser;
-import helpers.SessionHelper;
+import helpers.*;
 import models.*;
 import models.Package;
 import play.Logger;
@@ -23,6 +21,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by mladen.teofilovic on 04/09/15.
@@ -39,36 +39,59 @@ public class UserController extends Controller {
      * @return - positive message if true, else negative message
      */
     public Result loginCheck() {
+
+        if (!request().accepts("text/html")) {
+            return ApiUserController.login();
+        }
         //Getting values from form in (login.scala.html)
         String password = newUser.bindFromRequest().field("password").value();
         String email = newUser.bindFromRequest().field("email").value();
-        String newPassword = getEncriptedPasswordMD5(password);
+        String newPassword = HashHelper.getEncriptedPasswordMD5(password);
 
         User u = User.findEmailAndPassword(email, newPassword);
 
-        if (u != null) {
-            session("email", email);
-            return redirect(routes.Application.index());
+        if (u == null) {
+            return badRequest(login.render("Wrong email or password!", newUser.bindFromRequest()));
         }
-        return badRequest(login.render("Wrong email or password!", newUser.bindFromRequest()));
+        //Checking mail validation
+        if (!u.validated) {
+            return badRequest(login.render("Please check your email and validate this account!", newUser.bindFromRequest()));
+        }
+        //Putting user mail to session
+        session("email", email);
 
+        if (u.token != null) {
+            u.token = null;
+            u.update();
+        }
+        //Checking phone number validation
+        if (u.phoneNumber != null && !u.numberValidated) {
+            return ok(validatephone.render());
+        }
+
+        return ok(index.render());
     }
 
     /**
      * This method get user input from registration form and if every input is valid
      * saves it to database.
      *
-     * @return redirect user to subpage login if everything is ok, otherwise ?????
+     * @return redirect user to subpage login if everything is ok, otherwise user should correct inputs
      */
     public Result registrationCheck() {
+
+        if (!request().accepts("text/html")) {
+            return ApiUserController.registration();
+        }
 
         Form<User> boundForm = newUser.bindFromRequest();
         //Creating user using form values (register.scala.html)
         User userFromForm = new User();
+        List<Country> countryList = Country.findCountry.findList();
         try {
             userFromForm = boundForm.get();
-        }catch(Exception e){
-            return badRequest(register.render(boundForm));
+        } catch (Exception e) {
+            return badRequest(register.render(boundForm, countryList));
         }
         //Getting password confirmation field on this way because it is not attribute
         String repassword = boundForm.bindFromRequest().field("repassword").value();
@@ -76,66 +99,88 @@ public class UserController extends Controller {
         User u = User.checkEmail(userFromForm.email);
         //If user is not found, that means we can proceed creating new user
         if (u != null) {
+            ApplicationLog newLog = new ApplicationLog("Registration failed. " + u.email + " already exists.");
+            newLog.save();
             flash("errorEmail", "E-mail address already exists!");
-            return badRequest(register.render(boundForm));
+            return badRequest(register.render(boundForm, countryList));
         }
 
-        u = new User(userFromForm.firstName, userFromForm.lastName, userFromForm.password, userFromForm.email);
+        Country country = Country.findCountryByCallingCode(boundForm.bindFromRequest().field("userCountry").value());
+        String phoneNumber = boundForm.bindFromRequest().field("phoneNumber").value();
+        Random rand = new Random();
+        String validationCode = rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9);
 
+        u = new User(userFromForm.firstName, userFromForm.lastName, userFromForm.password, userFromForm.email);
+        //Backend validation of every input.
         if (!u.checkName(u.firstName)) {
             flash("errorName", "Your name should have only letters.");
-            return badRequest(register.render(boundForm));
+            return badRequest(register.render(boundForm, countryList));
         }
 
         if (!u.checkName(u.lastName)) {
             flash("errorLastName", "Your last name should have only letters.");
-            return badRequest(register.render(boundForm));
+            return badRequest(register.render(boundForm, countryList));
+        }
+
+        if (country == null) {
+            flash("errorCountry", "Please select your country!");
+            return badRequest(register.render(boundForm, countryList));
+        }
+
+        if (!"".equals(phoneNumber) && !User.checkPhoneNumber(phoneNumber)) {
+            flash("errorPhoneNumber", "Your phone number should have only numbers, and minimum length is 8 digits.");
+            return badRequest(register.render(boundForm, countryList));
         }
 
         if (!u.checkPassword(u.password)) {
             flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters and one number");
-            return badRequest(register.render(boundForm));
+            return badRequest(register.render(boundForm, countryList));
         }
 
         if (!u.password.equals(repassword)) {
             flash("errorTwoPasswords", "You entered different passwords");
-            return badRequest(register.render(boundForm));
+            return badRequest(register.render(boundForm, countryList));
         }
 
-        String newPassword = getEncriptedPasswordMD5(u.password);
-
+        String newPassword = HashHelper.getEncriptedPasswordMD5(u.password);
+        //Capitalize first letter before inserting to database
         u.firstName = u.firstName.substring(0, 1).toUpperCase() + u.firstName.substring(1);
         u.lastName = u.lastName.substring(0, 1).toUpperCase() + u.lastName.substring(1);
 
         u = new User(u.firstName, u.lastName, newPassword, u.email);
+        //Generating token for further validation
+        u.token = UUID.randomUUID().toString();
+
+        u.country = country;
+        if (!"".equals(phoneNumber)) {
+            if (phoneNumber.charAt(0) == '0') {
+                phoneNumber = phoneNumber.substring(1, phoneNumber.length());
+            }
+            u.phoneNumber = "+" + u.country.callingCode + phoneNumber;
+            u.validationCode = validationCode;
+            String smsBody = "Validation code: " + u.validationCode;
+            //SmsHelper.sendSms(smsBody, u.phoneNumber);
+            /**
+             * Due to limitations caused by trial version of Twilio, we can send only 5 SMS messages per day.
+             * That's why we use MailHelper in this testing period.
+             */
+            MailHelper.sendPhoneValidationCode(u.validationCode, u.email);
+        }
 
         u.save();
 
         if (u.id == 1) {
             u.typeOfUser = UserType.ADMIN;
+            u.validated = true;
+            u.token = null;
             u.update();
         }
-
+        //Sending validation mail to user
+        MailHelper.sendVerificationMail(u.token, u.lastName, u.email);
+        //Logging new user to admin panel
+        ApplicationLog newLog = new ApplicationLog("New user registered using: " + u.email + " mail.");
+        newLog.save();
         return redirect(routes.Application.login());
-    }
-
-    /**
-     * This method is used for password encryption.
-     *
-     * @param password - that would be inserted into database
-     * @return - encrypted password
-     */
-    public static String getEncriptedPasswordMD5(String password) {
-        try {
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            md5.update(password.getBytes(), 0, password.length());
-            String result = new BigInteger(1, md5.digest()).toString(16);
-            md5.reset();
-            return result;
-        } catch (NoSuchAlgorithmException e) {
-            // TODO add to logger
-        }
-        return "INVALID PASSWORD";
     }
 
     /**
@@ -154,7 +199,7 @@ public class UserController extends Controller {
         if (u1 == null || user == null || u1.id != user.id) {
             return redirect(routes.Application.index());
         }
-        return ok(editprofile.render(user, path));
+        return ok(editprofile.render(user, path, Country.findCountry.findList()));
     }
 
     /**
@@ -203,44 +248,80 @@ public class UserController extends Controller {
     }
 
     /**
-     * Method that updates user firstname, lastname and password
+     * Method that updates user first name, last name, country, phone number if needed
      *
-     * @param id - user on that id
+     * @param id - user with that id
      * @return
      */
     public Result updateUser(Long id) {
-
         User u1 = SessionHelper.getCurrentUser(ctx());
         User user = User.findById(id);
-
         if (u1 == null || user == null || u1.id != user.id) {
             return redirect(routes.Application.index());
         }
+        //Getting values from form
+        DynamicForm form = Form.form().bindFromRequest();
+        String firstName = form.get("firstName");
+        String lastName = form.get("lastName");
+        String countryCode = form.get("userCountry");
+        String phoneNumber = form.get("phoneNumber");
 
-        Form<User> filledForm = newUser.bindFromRequest();
-
-        user.firstName = filledForm.field("firstName").value();
-        user.lastName = filledForm.field("lastName").value();
-        user.password = filledForm.field("password").value();
-
-        String repassword = filledForm.field("repassword").value();
         ImagePath path = ImagePath.findByUser(user);
-        if (!User.checkName(user.firstName)) {
+        List<Country> countryList = Country.findCountry.findList();
+        //Backend field validation
+        if (!User.checkName(firstName)) {
             flash("errorName", "Your name should have only letters.");
-            return badRequest(editprofile.render(user, path));
+            return badRequest(editprofile.render(user, path, countryList));
         }
 
-        if (!User.checkName(user.lastName)) {
+        if (!User.checkName(lastName)) {
             flash("errorLastName", "Your last name should have only letters.");
-            return badRequest(editprofile.render(user, path));
+            return badRequest(editprofile.render(user, path, countryList));
+        }
+        //Editing user number and country
+        if (countryCode != null && phoneNumber != null) {
+            Country country = null;
+            if (!"".equals(countryCode)) {
+                country = Country.findCountryByCallingCode(countryCode);
+            }
+
+            if (!"".equals(phoneNumber) && !User.checkPhoneNumber(phoneNumber)) {
+                flash("errorPhoneNumber", "Your phone number should have only numbers, and minimum length is 8 digits.");
+                return badRequest(editprofile.render(user, path, countryList));
+            }
+
+            String editedPhoneNumber = "";
+
+            if (!"".equals(phoneNumber)) {
+                if (phoneNumber.charAt(0) == '0') {
+                    phoneNumber = phoneNumber.substring(1, phoneNumber.length());
+                }
+                editedPhoneNumber = "+" + countryCode + phoneNumber;
+            }
+
+            if ((user.phoneNumber == null || !phoneNumber.equals(user.phoneNumber)) && User.checkPhoneNumber(phoneNumber)) {
+                Random rand = new Random();
+                String validationCode = rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9);
+                user.phoneNumber = editedPhoneNumber;
+                user.numberValidated = false;
+                user.validationCode = validationCode;
+                String smsBody = "Validation code: " + user.validationCode;
+                //SmsHelper.sendSms(smsBody, u.phoneNumber);
+                /**
+                 * Due to limitations caused by trial version of Twilio, we can send only 5 SMS messages per day.
+                 * That's why we use MailHelper in this testing period.
+                 */
+                MailHelper.sendPhoneValidationCode(user.validationCode, user.email);
+            }
+
+            if (country != null) {
+                user.country = country;
+            }
         }
 
-        if (!user.password.equals(repassword)) {
-
-            return badRequest(editprofile.render(user, path));
-        }
-            user.password = getEncriptedPasswordMD5(user.password);
-            user.update();
+        user.firstName = firstName;
+        user.lastName = lastName;
+        user.update();
 
         return redirect(routes.UserController.userProfile(user.id));
     }
@@ -321,104 +402,40 @@ public class UserController extends Controller {
         //Getting values from combo boxes
         String userType = boundForm.bindFromRequest().field("userType").value();
         String postOffice = boundForm.bindFromRequest().field("postOffice").value();
+        String drivingPostOffice = boundForm.field("drivingPostOffice").value();
 
         if (userType.equals("Admin")) {
 
             user.typeOfUser = UserType.ADMIN;
+            user.isCourier = false;
 
         } else if (userType.equals("Office Worker")) {
 
             user.typeOfUser = UserType.OFFICE_WORKER;
             user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
+            user.isCourier = false;
 
         } else if (userType.equals("Delivery Worker")) {
 
             user.typeOfUser = UserType.DELIVERY_WORKER;
             user.postOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
+            user.drivingOffice = drivingPostOffice;
+            user.isCourier = false;
 
-        } else if(userType.equals("Registered User")) {
+        } else if (userType.equals("Registered User")) {
+
             user.typeOfUser = UserType.REGISTERED_USER;
             user.postOffice = null;
+
+        } else if (userType.equals("Delivery Courier")) {
+
+            user.typeOfUser = UserType.DELIVERY_WORKER;
+            user.isCourier = true;
+            user.drivingOffice = null;
         }
         user.update();
 
         return redirect(routes.Application.adminPanel());
-    }
-
-    @Security.Authenticated(Authenticators.AdminFilter.class)
-    public Result addWorker() {
-
-        Form<User> boundForm = newUser.bindFromRequest();
-        String firstName = boundForm.field("firstName").value();
-        String lastName = boundForm.field("lastName").value();
-        String password = boundForm.field("password").value();
-        String repassword = boundForm.field("repassword").value();
-        String email = boundForm.field("email").value();
-        //Getting post office name
-        String postOffice = boundForm.bindFromRequest().field("postOffice").value();
-        String userType = boundForm.bindFromRequest().field("userType").value();
-        //Proceeding value and creating post office with it
-        PostOffice wantedPostOffice = PostOffice.findOffice.where().eq("name", postOffice).findUnique();
-
-        User u = User.checkEmail(email);
-        List<PostOffice> postOffices = PostOffice.findOffice.findList();
-        if (u != null) {
-            flash("errorEmail", "E-mail address already exists!");
-            return ok(adminworkeradd.render(postOffices, boundForm));
-        }
-        u = new User(firstName, lastName, password, email, wantedPostOffice);
-
-
-        if (!u.checkName(u.firstName)) {
-            flash("errorName", "Your name should have only letters.");
-            return badRequest(adminworkeradd.render(postOffices, boundForm));
-        }
-
-        if (!u.checkName(u.lastName)) {
-            flash("errorLastName", "Your last name should have only letters.");
-            return badRequest(adminworkeradd.render(postOffices, boundForm));
-        }
-
-        if (!u.checkPassword(u.password)) {
-            flash("errorPassword", "Couldn't accept password. Your password should contain at least 6 characters and one number");
-            return badRequest(adminworkeradd.render(postOffices, boundForm));
-        }
-
-        if (!u.password.equals(repassword)) {
-            flash("errorTwoPasswords", "You entered different passwords");
-            return badRequest(adminworkeradd.render(postOffices, boundForm));
-        }
-
-        String newPassword = getEncriptedPasswordMD5(password);
-
-        firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
-        lastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
-
-        u = new User(firstName, lastName, newPassword, email, wantedPostOffice);
-        if (userType.equals("1")) {
-            u.typeOfUser = UserType.OFFICE_WORKER;
-        } else {
-            u.typeOfUser = UserType.DELIVERY_WORKER;
-        }
-        u.save();
-
-        return redirect(routes.Application.adminTables());
-
-    }
-
-    @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
-    public Result officeWorkerPanel() {
-
-        User u1 = SessionHelper.getCurrentUser(ctx());
-
-        PostOffice userOffice = u1.postOffice;
-        List<Shipment> shipments = Shipment.shipmentFinder.where().eq("postOfficeId", userOffice).findList();
-        List<Package> packages = new ArrayList<>();
-        for (int i = 0; i < shipments.size(); i++) {
-            packages.add(shipments.get(i).packageId);
-        }
-
-        return ok(officeworkerpanel.render(packages, u1.postOffice));
     }
 
     public Result findEmail() {
@@ -429,6 +446,159 @@ public class UserController extends Controller {
             return badRequest();
         }
         return ok();
+    }
+
+    public Result emailValidation(String token) {
+        User user = User.findByToken(token);
+        if (user == null || token == null) {
+            return redirect("/");
+        }
+        user.token = null;
+        user.validated = true;
+        user.update();
+        return redirect("/login");
+    }
+
+    public Result validatePhone() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        if (user == null || user.numberValidated) {
+            return redirect("/");
+        }
+        return ok(validatephone.render());
+    }
+
+    public Result validatePhoneNumber() {
+        DynamicForm form = Form.form().bindFromRequest();
+        String code = form.data().get("enteredCode");
+        User user = User.findByValidationCode(code);
+        if (user == null) {
+            return badRequest();
+        }
+        user.numberValidated = true;
+        user.validationCode = null;
+        user.update();
+        return ok(user.phoneNumber);
+    }
+
+    public Result newCode() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        DynamicForm form = Form.form().bindFromRequest();
+        String number = form.data().get("newNumber");
+        if (number.charAt(0) == '+') {
+            number = number.substring(1, number.length());
+        }
+        if (!User.checkPhoneNumber(number)) {
+            return badRequest();
+        }
+        String fixNumber = "+" + number;
+        Random rand = new Random();
+        String validationCode = rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9) + "" + rand.nextInt(9);
+        user.phoneNumber = fixNumber;
+        user.validationCode = validationCode;
+        user.update();
+        //SmsHelper.sendSms("Validation code: ", fixNumber);
+        /**
+         * Due to limitations caused by trial version of Twilio, we can send only 5 SMS messages per day.
+         * That's why we use MailHelper in this testing period.
+         */
+        MailHelper.sendPhoneValidationCode(user.validationCode, user.email);
+        return ok();
+    }
+
+    /**
+     * Method that sends mail to user when he can't remember his own password and wants to change it
+     * @return - change password view
+     */
+    public Result sendPassword() {
+        DynamicForm form = Form.form().bindFromRequest();
+        String email = form.data().get("email");
+        User user = User.findUserByEmail(email);
+        if (user == null) {
+            return badRequest();
+        }
+        String uuid = UUID.randomUUID().toString();
+        user.token = uuid;
+        user.update();
+        String address = "http://localhost:9000/changepassword/" + uuid;
+        String subject = "Change password";
+        String message = "To change your password, please follow the link bellow <br> <a href=\"" + address + "\">" + address + "</a>";
+        MailHelper.sendConfirmation(subject, message, email);
+        return ok();
+    }
+
+    public Result userChangePassword() {
+        User user = SessionHelper.getCurrentUser(ctx());
+        if (user == null) {
+            return badRequest(index.render());
+        }
+        return ok(changepassword.render(user));
+    }
+
+    /**
+     * Method that renders changepassword view that is used for changing user password
+     * @param token - default generated token
+     * @return
+     */
+    public Result changePassword(String token) {
+        User activeUser = SessionHelper.getCurrentUser(ctx());
+        if (activeUser != null) {
+            activeUser.token = null;
+            activeUser.update();
+            return badRequest(index.render());
+        }
+        User user = User.findByToken(token);
+        if (user == null) {
+            return badRequest(index.render());
+        }
+        return ok(changepassword.render(user));
+    }
+
+    /**
+     * Method that is used for changing user password using ajax
+     * @return badRequest if something goes wrong, else ok
+     */
+    public Result makePasswordChange() {
+        DynamicForm form = Form.form().bindFromRequest();
+        String userId = form.data().get("userId");
+        String oldPassword = form.data().get("oldPass");
+        String newPassword = form.data().get("newPass");
+        String reNewPassword = form.data().get("reNewPass");
+
+        User activeUser = SessionHelper.getCurrentUser(ctx());
+        //Backend field validation
+        if (activeUser != null) {
+            if ("".equals(oldPassword)) {
+                return badRequest("wrongoldpassword");
+            }
+            String hashedOldPassword = HashHelper.getEncriptedPasswordMD5(oldPassword);
+            if (!activeUser.password.equals(hashedOldPassword)) {
+                return badRequest("wrongoldpassword2");
+            }
+            if (!newPassword.equals(reNewPassword)) {
+                return badRequest("passwordsdontmatch");
+            }
+            if (!User.checkPassword(newPassword)) {
+                return badRequest("errorpassword");
+            }
+            activeUser.password = HashHelper.getEncriptedPasswordMD5(newPassword);
+            activeUser.update();
+            return ok();
+        }
+
+        User user = User.findById(Long.parseLong(userId));
+        if (user != null && user.token != null) {
+            if (!User.checkPassword(newPassword)) {
+                return badRequest("errorpassword");
+            }
+            if (!newPassword.equals(reNewPassword)) {
+                return badRequest("passwordsdontmatch");
+            }
+            user.password = HashHelper.getEncriptedPasswordMD5(newPassword);
+            user.token = null;
+            user.update();
+            return ok();
+        }
+        return badRequest();
     }
 
 

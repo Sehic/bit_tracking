@@ -1,0 +1,51 @@
+@(offices: List[PostOffice])
+@main("BT Post Office Locations"){
+
+    <ol class="breadcrumb">
+        <h2>BITTracking Offices Network</h2>
+    </ol>
+    <hr/>
+    <div class="templatemo-maps">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 margin-bottom-30">
+                <div id="map" style="position: relative; height: 700px; width: auto"></div>
+                <script type="text/javascript">
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 5,
+    center: new google.maps.LatLng(43.8331, 18.3039),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    var geocoder = new google.maps.Geocoder();
+    var marker = geocoder.marker;
+
+<!-- Create info window for each Post Office address (getting address from postofficeadd.scala.html) -->
+    var infowindow = new google.maps.InfoWindow();
+
+            @for(office <- offices) {
+
+                 marker = new google.maps.Marker({
+                 position: new google.maps.LatLng(@office.place.y, @office.place.x),
+                 map: map,
+                 clickable:true
+                 });
+
+                google.maps.event.addListener(marker,'click',(function(marker){
+                return function(){
+                <!--set office name to markers infowindow-->
+                    var content = "@office.name";
+                    infowindow.setContent(content);
+                    infowindow.open(map,marker);
+                    }
+                })(marker));
+            }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+    google.maps.event.addDomListener(window, 'resize', function() {
+    map.setCenter(marker.getPosition());
+    });
+  </script>
+            </div>
+        </div>
+    </div>
+}
