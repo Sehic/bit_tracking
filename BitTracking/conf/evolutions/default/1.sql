@@ -3,6 +3,12 @@
 
 # --- !Ups
 
+create table api_token (
+  id                        bigint auto_increment not null,
+  token                     varchar(255) not null,
+  constraint pk_api_token primary key (id))
+;
+
 create table application_log (
   id                        bigint auto_increment not null,
   date                      datetime(6),
@@ -156,6 +162,8 @@ alter table linked_offices add constraint fk_linked_offices_post_office_02 forei
 # --- !Downs
 
 SET FOREIGN_KEY_CHECKS=0;
+
+drop table api_token;
 
 drop table application_log;
 

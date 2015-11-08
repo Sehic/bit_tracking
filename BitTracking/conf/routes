@@ -107,10 +107,11 @@ POST          /adminpanel/editFaq/:id                            @controllers.Fa
 GET           /statistic                                         @controllers.StatisticController.showPostOfficeStatistic()
 
 #Api Controllers
-POST          /user/createrequest/nestob                         @controllers.ApiPackageController.packageAdd()
-GET           /user/getpackagelist                               @controllers.ApiPackageController.getPackageList()
+POST          /user/createrequest/newrequest/:token              @controllers.ApiPackageController.packageAdd(token: String)
+GET           /user/getpackagelist/:token                        @controllers.ApiPackageController.getPackageList(token: String)
 GET           /json/:location                                    @controllers.ApiPackageController.jsonLocation(location: String)
-POST          /user/getuserpackages/nesto                        @controllers.ApiUserController.getUserPackagesList()
+POST          /user/getuserpackages/packages/:token              @controllers.ApiUserController.getUserPackagesList(token: String)
+
 
 
 

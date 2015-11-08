@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by Mladen13 on 25.10.2015.
  */
-public class ApiUserController extends Controller {
+public class ApiUserController extends ApiSecurityController {
 
     /**
      * Method that is part of content negotiation and it is used for registering new user
@@ -68,7 +68,11 @@ public class ApiUserController extends Controller {
      * Method that is used for getting packages from user with email that we get as json
      * @return - list of user packages
      */
-    public Result getUserPackagesList(){
+    public Result getUserPackagesList(String token){
+
+        if(!isAuthorized(token)){
+            return badRequest();
+        }
 
         JsonNode json = request().body().asJson();
         String email = json.findPath("email").textValue();

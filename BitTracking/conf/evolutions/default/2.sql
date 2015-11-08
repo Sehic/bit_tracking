@@ -402,8 +402,11 @@ INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, 
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, is_courier) VALUES (46, 'Beograd', 'DeliveryCourier', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-courier@beograd.com', '4', 13, NULL, 1, 1);
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (47, 'Rome', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-ljubljana@rim.com', '4', 8, NULL, 1, 'Poslovnica Ljubljana');
 INSERT INTO ups.user (id, first_name, last_name, password, email, type_of_user, post_office_id, token, validated, driving_office) VALUES (49, 'Warsaw', 'Delivery', 'dff8206d22a9219f77c5094de90a5f83', 'delivery-minhen@varsava.com', '4', 9, NULL, 1, 'Poslovnica Minhen');
--- Adding FAQ
 
+-- Adding API tokens
+INSERT INTO ups.api_token(id, token) VALUES (1, 'a1b2c3d4e5');
+
+-- Adding FAQ
 INSERT INTO ups.faq (id, question, answer) VALUES (1, 'How do I get a BIT Tracking Account?', 'Applying for a BIT Tracking account is easy.Open an account online (register).');
 INSERT INTO ups.faq (id, question, answer) VALUES (2, 'Do I need a BIT Tracking account to ship?', 'I order to ship online using BIT Tracking account login is required. Register online,and than log in');
 INSERT INTO ups.faq (id, question, answer) VALUES (3, 'How do I check the status of a package without the BIT Tracking number?', 'If you do not have access to a tracking number, you can not track your shipment. ');
