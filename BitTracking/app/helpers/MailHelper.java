@@ -68,7 +68,7 @@ public class MailHelper {
 
     public static void sendVerificationMail(String token, String userLastName, String userEmail) {
         String subject = "Email Validation - BitTracking";
-        String address = "http://localhost:9000/validate/" + token;
+        String address = "http://bittrackingx.cloudapp.net/validate/" + token;
         String message = "Mr/Mrs. " + userLastName + ",<br><br>" +
                 "Thank you for joining BitTracking community.<br>" +
                 "To complete your registration, please follow the link below: <br>" +

@@ -519,7 +519,7 @@ public class UserController extends Controller {
         String uuid = UUID.randomUUID().toString();
         user.token = uuid;
         user.update();
-        String address = "http://localhost:9000/changepassword/" + uuid;
+        String address = "http://bittrackingx.cloudapp.net/changepassword/" + uuid;
         String subject = "Change password";
         String message = "To change your password, please follow the link bellow <br> <a href=\"" + address + "\">" + address + "</a>";
         MailHelper.sendConfirmation(subject, message, email);
