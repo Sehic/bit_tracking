@@ -22,10 +22,18 @@
                                             <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
                                         }
                                         <h6>Upload photo...</h6>
-
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <b style="color : red">
+                                                @flash.get("pictureError")
+                                                </b>
+                                            </div>
+                                        </div>
+                                        <br>
                                         <form action="@routes.UserController.uploadPicture()" method="post" enctype="multipart/form-data">
                                             <input type="file" name="picture" accept="image/*" class="form-control">
-                                            <input type="submit">
+                                            <br>
+                                            <input type="submit" class="btn btn-primary">
                                         </form>
                                     </div>
                                 </div> <!--Ends Image upload-->

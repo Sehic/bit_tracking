@@ -40,6 +40,8 @@ create table image_path (
   id                        bigint auto_increment not null,
   image_url                 varchar(255),
   profile_photo_id          bigint,
+  public_id                 varchar(255),
+  secret_image_url          varchar(255),
   constraint pk_image_path primary key (id))
 ;
 
