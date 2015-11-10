@@ -259,4 +259,8 @@ public class Application extends Controller {
         List<PostOffice> offices = PostOffice.findOffice.findList();
         return ok(userlocations.render(offices));
     }
+
+    public Result aboutUs(){
+        return ok(aboutus.render());
+    }
 }
