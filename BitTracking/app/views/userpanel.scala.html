@@ -2,9 +2,6 @@
 @(packages: List[models.Package])(offices: List[PostOffice])(countries: List[Country])
 
 @main("My Tracking Panel") {
-
-
-
     <menu id="formmenu">
         <div class="container-fluid">
             <div class="row">
@@ -20,6 +17,7 @@
                         <h2>My Packages</h2>
                     </div>
                 </div>
+                    <!--=====User panel "My Packages" table====-->
                 <div class="table-responsive">
                     <table id="example" class="table table-striped table-hover table-bordered">
                         <thead>
@@ -102,8 +100,9 @@
                     </table>
                 </div>
             </div>
-
+                <!--=====My Packages table ends====-->
             <div id="createPackage" class="usertables pull-left">
+                    <!--=====form starts====-->
                 <form action="@routes.PackageController.userSavePackage()" method="post">
                     <div class="row">
                         <div class="col-md-7" style="margin-top : 35px">
@@ -219,7 +218,6 @@ function initialize(){
       map.panTo(marker.getPosition());
     }, 3000);
   });
-
  }
 
  $("#recipientName").blur(function (){
@@ -294,6 +292,7 @@ directionsService.route(request, function (response, status) {
                             </div>
                         </div>
                 </form>
+                    <!--=====form ends====-->
             </div>
         </div>
     </menu>

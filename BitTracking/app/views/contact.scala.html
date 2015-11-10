@@ -4,7 +4,7 @@
 @main("Contact Us") {
 
     <h1><strong>Contact Us</strong></h1> <br> <br>
-
+    <!--==== CONTACT US form starts ===-->
     @helper.form(routes.MailController.sendMail(), 'class -> "form-horizontal", 'id -> "contactForm") {
         <div class="row">
             <div class="col-md-12">
@@ -81,6 +81,8 @@
         </div>
 
     }
+    <!--==== CONTACT US form ends ===-->
 
+    <!--==== RECAPTCHA Script ===-->
     <script src='https://www.google.com/recaptcha/api.js'></script>
 }

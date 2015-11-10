@@ -2,6 +2,7 @@
 
 @()(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
 
+<!--Navbar admin panel starts-->
 <div class="navbar navbar-inverse" role="navigation">
     <div class="navbar-header">
         @if(currentUser.typeOfUser == UserType.ADMIN) {
@@ -54,7 +55,8 @@
         </li>
     </ul>
 </div>
-
+<!-- Navbar admin panel ends -->
+<!-- Sidebar admin panel starts -->
 <div class="template-page-wrapper">
     <div class="navbar-collapse collapse templatemo-sidebar">
         <ul class="templatemo-sidebar-menu">
@@ -121,4 +123,4 @@
             </li>
         </ul>
     </div> <!--/.navbar-collapse -->
-</div>
+</div><!-- Sidebar admin panel ends -->

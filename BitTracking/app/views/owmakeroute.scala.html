@@ -24,7 +24,6 @@
         <div class="row">
             <hr/>
             <div class="form-group">
-
                 <label for="initialPostOffice" class="col-sm-3 control-label">
                     Initial Post Office
                 </label>
@@ -32,17 +31,15 @@
                     <input id="getInitialOffice" name="initialPostOffice" value="@officePackage.shipmentPackages.get(0).postOfficeId.name" type="text" class="form-control" style="font-size : 13 px ; font-style : italic " readonly>
                 </div>
             </div>
-
         </div>
 
         <div class="row">
             <hr/>
-
         </div>
 
         <div class="row">
+                <!--=====form starts====-->
         @helper.form(routes.RouteController.saveRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
-
             <div class="col-md-2">
                 <select name="postOffices" class="selectOffice form-group form-control sortAlphabetically">
                 @for(office <- postOffices) {
@@ -98,11 +95,11 @@
 
         </div>
         <br/>
-    }
+    }<!--=====form ends====-->
 
         <input id="longitude" name="longitude" type="hidden">
         <input id="latitude" name="latitude" type="hidden">
-
+        <!--GOOGLE API MAP-->
         <div class="templatemo-maps">
             <div class="row">
                 <div class="col-md-12 col-sm-12 margin-bottom-30">

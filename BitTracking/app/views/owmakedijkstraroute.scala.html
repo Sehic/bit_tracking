@@ -9,6 +9,7 @@
 
     <h2>Make a route using Algorithm</h2>
     <hr/>
+    <!--=====Office Worker Panel "Create route" form starts====-->
     @helper.form(routes.RouteController.saveAutoRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
         <div class="row">
             <div class="form-group">
@@ -97,18 +98,15 @@
         </div>
         <br/>
     }
-
+    <!--=====Office Worker Panel "Create route" form ends====-->
 
     <div class="templatemo-maps">
         <div class="row">
             <div class="col-md-12 margin-bottom-30">
                 <div id="map" style="position : relative; height: 700px; width: auto"></div>
-
-
                 <script type="text/javascript">
      var map;
      var i, marker;
-
 function initialize(){
         map = new google.maps.Map(document.getElementById('map'), {
         zoom: 7,
@@ -125,7 +123,6 @@ function initialize(){
 }
 
 function showMap(){
-
         var initial = document.getElementById("initialOffice").value;
         var final = document.getElementById("finalOffice").value;
         var initialAddress="";
@@ -137,7 +134,6 @@ function showMap(){
         });
 
         @for(office <- offices) {
-
             var officeName="@office.name";
             var officeAddress="@office.address";
             if(officeName===initial){
@@ -155,14 +151,10 @@ function showMap(){
             }
         }
         var directionsService = new google.maps.DirectionsService();
-
         var renderOptions = { draggable: true };
         var directionDisplay = new google.maps.DirectionsRenderer(renderOptions);
-
-
         //set the directions display service to the map
         directionDisplay.setMap(map);
-
         //set the starting address and destination address
         var originAddress = initialAddress;
         var destinationAddress = finalAddress;
@@ -186,12 +178,10 @@ directionsService.route(request, function (response, status) {
                 routeIndex: i
             });
         }
-
        var routeString = initial+"|";
             for(var i=0;i<officesFromWaypoints.length;i++){
                 routeString+=officesFromWaypoints[i]+"|";
             }
-
             routeString+=final+"|";
             $("#routeOffices").val(routeString);
             var totalDistance = 0;
@@ -208,9 +198,7 @@ directionsService.route(request, function (response, status) {
       bootbox.alert('There is no available route for these Post Offices!');
     }
 })
-
 }
-
 $("#clickMe").click( function(){
     initialize();
     showMap();

@@ -1,73 +1,74 @@
 @(postOffices: List[PostOffice], officePackage: models.Package, places: List[Location], allOffices: List[PostOffice], packagesId: String)
-@adminmain("Make a route") {
+    @adminmain("Make a route") {
 
-    <ol class="breadcrumb">
-        <li><a href="@routes.Application.adminPanel()">Office Worker Panel</a></li>
-        <li><a href="#">Manage Packages Route</a></li>
-        <li class="active">Make Route Manually</li>
-    </ol>
+        <ol class="breadcrumb">
+            <li><a href="@routes.Application.adminPanel()">Office Worker Panel</a></li>
+            <li><a href="#">Manage Packages Route</a></li>
+            <li class="active">Make Route Manually</li>
+        </ol>
 
-    <h2>Make a route manually</h2>
-    <hr/>
-    <div class="row">
-        <div class="col-sm-9 col-sm-offset-3">
-            @helper.form(action = routes.RouteController.showMultiDijkstraRouting(), 'class -> "form-horizontal pull-left", 'role -> "form") {
-                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
-                <button type="submit" class="btn btn-primary active">Create Route Using Algorithm</button>
-            }
-
-            @helper.form(action = routes.RouteController.showMultiAutoRouting(), 'class -> "form-horizontal pull-left", 'role -> "form") {
-                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
-                <button type="submit" class="btn btn-primary">Create Route Using Shortest Path</button>
-            }
-        </div>
-    </div>
-
-    <div class="row">
+        <h2>Make a route manually</h2>
         <hr/>
-        <div class="form-group">
+        <div class="row">
+            <div class="col-sm-9 col-sm-offset-3">
+                @helper.form(action = routes.RouteController.showMultiDijkstraRouting(), 'class -> "form-horizontal pull-left", 'role -> "form") {
+                    <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                    <button type="submit" class="btn btn-primary active">Create Route Using Algorithm</button>
+                }
 
-            <label for="initialPostOffice" class="col-sm-3 control-label">
-                Initial Post Office
-            </label>
-            <div class="col-sm-9">
-                <input id="getInitialOffice" name="initialPostOffice" value="@officePackage.shipmentPackages.get(0).postOfficeId.name" type="text" class="form-control" style="font-size : 13 px ; font-style : italic " readonly>
+                @helper.form(action = routes.RouteController.showMultiAutoRouting(), 'class -> "form-horizontal pull-left", 'role -> "form") {
+                    <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                    <button type="submit" class="btn btn-primary">Create Route Using Shortest Path</button>
+                }
             </div>
         </div>
 
-    </div>
+        <div class="row">
+            <hr/>
+            <div class="form-group">
 
-    <div class="row">
-        <hr/>
+                <label for="initialPostOffice" class="col-sm-3 control-label">
+                    Initial Post Office
+                </label>
+                <div class="col-sm-9">
+                    <input id="getInitialOffice" name="initialPostOffice" value="@officePackage.shipmentPackages.get(0).postOfficeId.name" type="text" class="form-control" style="font-size : 13 px ; font-style : italic " readonly>
+                </div>
+            </div>
 
-    </div>
-
-    <div class="row">
-    @helper.form(routes.RouteController.saveRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
-
-        <div class="col-md-2">
-            <select name="postOffices" class="selectOffice form-group form-control sortAlphabetically">
-            @for(office <- postOffices) {
-                <option value="@office.name">@office.name</option>
-            }
-
-            </select>
         </div>
 
-        <div class="col-md-1">
-            <button id="addToRoute" type="button" style="margin-right : 1%" class="btn btn-primary active pull-left">
-                Add
-            </button>
+        <div class="row">
+            <hr/>
+
         </div>
-        <div id="routeForm" class="col-md-9 pull-right">
-            <input id="finalRoute" name="route" class="form-control" placeholder="Route field" readonly required>
+
+        <div class="row">
+                <!--=====form starts====-->
+            @helper.form(routes.RouteController.saveRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
+
+                <div class="col-md-2">
+                    <select name="postOffices" class="selectOffice form-group form-control sortAlphabetically">
+                    @for(office <- postOffices) {
+                        <option value="@office.name">@office.name</option>
+                    }
+
+                    </select>
+                </div>
+
+                <div class="col-md-1">
+                    <button id="addToRoute" type="button" style="margin-right : 1 %" class="btn btn-primary active pull-left">
+                        Add
+                    </button>
+                </div>
+                <div id="routeForm" class="col-md-9 pull-right">
+                    <input id="finalRoute" name="route" class="form-control" placeholder="Route field" readonly required>
+                </div>
+            </div>
+        <div class="col-md-12 col-sm-offset-3">
+            <a href="#" id="clearFromRoute" style="color : red">
+                Click to clear route field
+            </a>
         </div>
-    </div>
-    <div class="col-md-12 col-sm-offset-3">
-        <a href="#" id="clearFromRoute" style="color: red">
-            Click to clear route field
-        </a>
-    </div>
 
         <div class="row">
             <hr/>
@@ -97,22 +98,22 @@
                     Save Route
                 </button>
 
-        <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
-    }
-
+                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                }
+                    <!--=====form ends====-->
+            </div>
         </div>
-    </div>
-    <br/>
+        <br/>
 
-    <input id="longitude" name="longitude" type="hidden">
-    <input id="latitude" name="latitude" type="hidden">
+        <input id="longitude" name="longitude" type="hidden">
+        <input id="latitude" name="latitude" type="hidden">
+        <!--=====GOOGLE API MAP====-->
+        <div class="templatemo-maps">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 margin-bottom-30">
+                    <div id="map" style="position : relative ; height : 700 px ; width : auto"></div>
 
-    <div class="templatemo-maps">
-        <div class="row">
-            <div class="col-md-12 col-sm-12 margin-bottom-30">
-                <div id="map" style="position: relative; height: 700px; width: auto"></div>
-
-                <script type="text/javascript">
+                    <script type="text/javascript">
 function initialize(){
      var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 5,
@@ -125,7 +126,8 @@ function initialize(){
     @for(place <- places) {
 
      marker = new google.maps.Marker({
-        position: new google.maps.LatLng(@place.y, @place.x),
+        position: new google.maps.LatLng(@place.y
+                        , @place.x),
         map: map
         });
      }
@@ -145,21 +147,23 @@ function initialize(){
         var destinationAddress = "";
         for(var i=0;i<routeOffices.length;i++){
             @for(office <- allOffices) {
-                  var officeName = "@office.name";
-                  var officeAddress= "@office.address";
-                  if(officeName === initialOffice){
-                  originAddress=officeAddress;
-                  }
-                  if(officeName === destinationOffice){
-                  destinationAddress=officeAddress;
-                  }
-                  if(officeName === routeOffices[i] && officeName!==destinationOffice){
-                    waypoints.push({
-                        location: officeAddress,
-                        stopover: true
-                    });
-                  }
-            }
+                  var officeName = "@office.name
+                        ";
+                                          var officeAddress= "@office.address
+                        ";
+                                          if(officeName === initialOffice){
+                                          originAddress=officeAddress;
+                                          }
+                                          if(officeName === destinationOffice){
+                                          destinationAddress=officeAddress;
+                                          }
+                                          if(officeName === routeOffices[i] && officeName!==destinationOffice){
+                                            waypoints.push({
+                                                location: officeAddress,
+                                                stopover: true
+                                            });
+                                          }
+                                    }
         }
         //build directions request
         var request = {
@@ -188,9 +192,9 @@ function initialize(){
 
     });
   </script>
+                </div>
             </div>
         </div>
-    </div>
-}
+    }
 
 

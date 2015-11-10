@@ -11,7 +11,7 @@
     <a id="hideApproval" button class="btn btn-info active"  data-toggle="modal">
         Hide Packages Waiting For Approval</a>
     <hr/>
-
+    <!--=====Office Worker Panel packages waiting for approval table starts====-->
     <div id="waitingForApproval" class="table-responsive">
         <h4 class="margin-bottom-15">Packages Waiting For Approval at @workerOffice.name</h4>
         <table class="table table-striped table-hover table-bordered">
@@ -64,6 +64,7 @@
             </tbody>
         </table>
     </div>
+    <!--=====Office Worker Panel packages waiting for approval table ends====-->
     <form action="@routes.RouteController.listMultiRoute()" method="GET">
         <div class="row">
             <div class="col-md-12">
@@ -81,6 +82,7 @@
             }
             </div>
         </div>
+            <!--=====Office Worker Panel list of packages table starts====-->
         <div class="table-responsive">
             <h4 class="margin-bottom-15">List of packages</h4>
             <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
@@ -171,6 +173,7 @@
                 </tbody>
             </table>
         </div>
+            <!--=====Office Worker Panel list of packages table ends====-->
         <hr/>
         <input type="submit" value="Create a route for selected Packages" class="btn btn-primary active"/>
         <hr/>

@@ -11,6 +11,7 @@
     <hr/>
     <h1><a href="@routes.WorkerController.driveHome()"><span class="glyphicon glyphicon-home"></span></a> Delivery Worker Panel (@SessionHelper.getCurrentUser(ctx()).postOffice.name)</h1>
     <hr/>
+    <!--=====Delivery Worker Panel form starts====-->
     @helper.form(routes.PackageController.takePackages(), 'id -> "forms", 'class -> "form-horizontal", 'role -> "form") {
         <div class="row">
             <div class="col-md-12">
@@ -41,7 +42,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-
                                 @for(pack <- packages) {
                                     <tr>
                                         <td>@pack.id</td>
@@ -66,9 +66,7 @@
                                             <td></td>
                                             <td></td>
                                         }
-
                                         <td>@pack.destination</td>
-
                                         <td><input type="checkbox" name="@pack.id" value="@pack.id">Take</td>
                                         }
                                     </tr>
@@ -78,14 +76,11 @@
                     </div>
                 </div>
             </div>
-
-
-            }
+            }<!--=====Delivery Worker Panel form ends====-->
         </div>
     @helper.form(routes.PackageStatusController.updateStatusDeliveryWorker(), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
     <div class="row">
         <div class="col-md-12">
-
             <div class="table-responsive">
                 <h4 class="margin-bottom-15 breadcrumb">Delivery Worker Packages</h4>
                 <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
@@ -121,7 +116,6 @@
                                             <td>@pack.shipmentPackages.get(pack.shipmentPackages.size() - 1).postOfficeId.name</td>
                                         }
                                     }
-
                                 }
                             } else {
                                 <td></td>
@@ -133,7 +127,6 @@
                             <td><input type="checkbox" name="@pack.id" value="@pack.id">Done</td>
                         </tr>
                     }
-
                     </tbody>
                 </table>
             </div>
@@ -145,7 +138,6 @@
 
     <div id="myPackagesDiv" class="row">
         <div class="col-md-12">
-
             <div class="table-responsive">
                 <h4 class="margin-bottom-15 breadcrumb">My Delivered Packages</h4>
                 <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
@@ -160,7 +152,6 @@
                             <th>Status</th>
                             <th>Initial Post Office</th>
                             <th>Final Destination</th>
-
                         </tr>
                     </thead>
                     <tbody>
@@ -190,11 +181,9 @@
                             <td>@pack.destination</td>
                         </tr>
                     }
-
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 

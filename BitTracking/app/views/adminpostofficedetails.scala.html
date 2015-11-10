@@ -8,9 +8,8 @@
             <li class="active">Details</li>
         </ol>
 
+        <!--==== Admin panel post office details form and google map starts ===-->
         @helper.form(action = routes.PostOfficeController.updateOffice(postOffice.id), 'class -> "form-horizontal", 'role -> "form") {
-
-
             <h1>Details</h1>
             <div class="form-group">
 
@@ -41,7 +40,7 @@
                 </div>
             </div>
 
-
+            <!--==== GOOGLE API MAP Starts ===-->
 
             <div class="templatemo-maps">
                 <div class="row">
@@ -90,12 +89,6 @@
                     </div>
                 </div>
             </div>
-
         }
-
-
-
-
-
-
+        <!--==== Admin panel post office details form and google map ends ===-->
     }

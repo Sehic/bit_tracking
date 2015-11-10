@@ -21,6 +21,7 @@
             }
         </div>
     </div>
+    <!--=====form starts====-->
     @helper.form(routes.RouteController.saveAutoRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
         <div class="row">
             <hr/>
@@ -91,12 +92,12 @@
 
                 <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
                 }
-
+        <!--=====form ends====-->
 </div>
 
 </div>
     <br/>
-
+    <!--=====GOOGLE API MAP====-->
     <div class="templatemo-maps">
         <div class="row">
             <div class="col-md-12 margin-bottom-30">

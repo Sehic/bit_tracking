@@ -8,7 +8,6 @@
     </ol>
     <h1>Manage</h1>
 
-
     <div class="row margin-bottom-30">
         <div class="col-md-12">
             <ul class="nav nav-pills">
@@ -24,11 +23,10 @@
             Add Office Worker</button></a>
     <hr/>
 
-
-
     <div class="row">
         <div class="col-md-12">
 
+                <!--=====Office workers list table starts====-->
             <div class="table-responsive">
                 <h4 class="margin-bottom-15">Office Workers List</h4>
                 <table class="searchSortClass table table-striped table-hover table-bordered" cellspacing="0" width="100%">
@@ -59,10 +57,10 @@
                             <td><a data-role="delete" data-delete-parent="tr" href="@routes.UserController.deleteUser(user.id)" role="button"><input type="button" value="Delete"></a></td>
                         </tr>
                     }
-
                     </tbody>
                 </table>
             </div>
+                <!--=====Office workers list table ends====-->
         </div>
     </div>
 
