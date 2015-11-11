@@ -21,6 +21,7 @@ GET           /adminpanel/deliveryworkers                        @controllers.Ap
 GET           /user                                              @controllers.Application.userPanel()
 GET           /adminpanel/adminlogs                              @controllers.Application.adminLogs()
 GET           /user/postofficelocationlist                       @controllers.Application.userLocations()
+GET           /aboutus                                           @controllers.Application.aboutUs()
 
 # User Controller
 GET           /validate/:token                                   @controllers.UserController.emailValidation(token: String)
