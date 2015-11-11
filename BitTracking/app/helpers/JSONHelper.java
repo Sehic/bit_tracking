@@ -41,6 +41,8 @@ public class JSONHelper {
         jsonPostOffice.put("id", office.id);
         jsonPostOffice.put("name", office.name);
         jsonPostOffice.put("address", office.address);
+        jsonPostOffice.put("x", office.place.x);
+        jsonPostOffice.put("y", office.place.y);
         return jsonPostOffice;
     }
 
