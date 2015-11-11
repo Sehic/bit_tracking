@@ -21,7 +21,6 @@ GET           /adminpanel/deliveryworkers                        @controllers.Ap
 GET           /user                                              @controllers.Application.userPanel()
 GET           /adminpanel/adminlogs                              @controllers.Application.adminLogs()
 GET           /user/postofficelocationlist                       @controllers.Application.userLocations()
-GET           /aboutus                                           @controllers.Application.aboutUs()
 
 # User Controller
 GET           /validate/:token                                   @controllers.UserController.emailValidation(token: String)
@@ -108,10 +107,10 @@ POST          /adminpanel/editFaq/:id                            @controllers.Fa
 GET           /statistic                                         @controllers.StatisticController.showPostOfficeStatistic()
 
 #Api Controllers
-POST          /user/createrequest/newrequest/:token              @controllers.ApiPackageController.packageAdd(token: String)
-GET           /user/getpackagelist/:token                        @controllers.ApiPackageController.getPackageList(token: String)
+POST          /user/createrequest/nestob                         @controllers.ApiPackageController.packageAdd()
+GET           /user/getpackagelist                               @controllers.ApiPackageController.getPackageList()
 GET           /json/:location                                    @controllers.ApiPackageController.jsonLocation(location: String)
-POST          /user/getuserpackages/packages/:token              @controllers.ApiUserController.getUserPackagesList(token: String)
+POST          /user/getuserpackages/nesto                        @controllers.ApiUserController.getUserPackagesList()
 
 
 
