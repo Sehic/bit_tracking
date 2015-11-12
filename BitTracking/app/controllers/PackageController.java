@@ -1,7 +1,9 @@
 package controllers;
 
-import com.avaje.ebean.Ebean;
 import helpers.*;
+import helpers.enumhelpers.PackageType;
+import helpers.enumhelpers.StatusHelper;
+import helpers.enumhelpers.UserType;
 import models.Package;
 import models.*;
 import play.Logger;
@@ -28,7 +30,7 @@ public class PackageController extends Controller {
     /**
      * Method that shows up list of all packages in post office
      *
-     * @return
+     * @return - ok and admin package list opens up
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result adminPackage() {
@@ -39,7 +41,7 @@ public class PackageController extends Controller {
     /**
      * Method that opens up add package form (packageadd.scala.html)
      *
-     * @return
+     * @return - ok, and package add view opens up
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result addPackage() {
@@ -59,7 +61,7 @@ public class PackageController extends Controller {
     /**
      * Method that saves package to database using (packageadd.scala.html) form
      *
-     * @return
+     * @return - badRequest if something goes wrong, else redirect to office worker panel
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result savePackage() {
@@ -141,7 +143,7 @@ public class PackageController extends Controller {
      * Method that deletes package from database
      *
      * @param id - tracking number
-     * @return
+     * @return - admin package list view opens up
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result deletePackage(Long id) {
@@ -171,7 +173,7 @@ public class PackageController extends Controller {
 
     /**
      * This method is used for creating package request by Registered User
-     * @return
+     * @return - redirect to user panel if something goes wrong, else ok and user panel opens up
      */
     @Security.Authenticated(Authenticators.RegisteredUserFilter.class)
     public Result userSavePackage() {
@@ -239,8 +241,8 @@ public class PackageController extends Controller {
     /**
      * This method is used for approving or rejecting package request that comes from registered user
      * If package request is valid, office worker will approve it
-     * @param id
-     * @return
+     * @param id - package id
+     * @return - redirect to office worker panel
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result approveReject(Long id) {
@@ -310,7 +312,7 @@ public class PackageController extends Controller {
 
     /**
      * This method is used for taking packages for transport as delivery worker
-     * @return
+     * @return - redirect to office worker panel
      */
     @Security.Authenticated(Authenticators.AdminDeliveryWorkerFilter.class)
     public Result takePackages() {
@@ -339,7 +341,7 @@ public class PackageController extends Controller {
     /**
      * This method is used to open package info view which is used to verify package pin code.
      * @param id - package id
-     * @return
+     * @return - ok and package info opens up
      */
     public Result packageInfo(Long id) {
         Package pack = Package.findPackageById(id);
@@ -349,7 +351,7 @@ public class PackageController extends Controller {
     /**
      * This method is used for checking existance of package pin code
      * @param id - package id
-     * @return
+     * @return - redirect to office worker panel
      */
     public Result checkPackageCode(Long id){
         DynamicForm form = Form.form().bindFromRequest();

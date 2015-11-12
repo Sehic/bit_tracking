@@ -1,35 +1,18 @@
 package controllers;
 
 import helpers.Authenticators;
-import helpers.MailHelper;
 import helpers.SessionHelper;
-import helpers.StatusHelper;
+import helpers.enumhelpers.UserType;
 import models.*;
 import models.Package;
-import play.*;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.*;
 
 import views.html.*;
 
-import com.avaje.ebean.Ebean;
-import play.Logger;
-
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
-import play.libs.F.Function;
-import play.libs.F.Promise;
-import play.libs.Json;
-import play.libs.ws.WS;
-import play.libs.ws.WSResponse;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import views.html.admin.*;
 import views.html.registereduser.*;
 

@@ -1,6 +1,7 @@
-@import helpers.PackageType
 @import helpers.SessionHelper
+@import helpers.enumhelpers.PackageType
 
+@import helpers.enumhelpers.UserType
 @(offices: List[PostOffice])(places: List[Location])(text: Form[models.Package])(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
 @adminmain("Add Package") {
     <div class="container-fluid">

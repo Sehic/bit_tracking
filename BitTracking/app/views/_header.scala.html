@@ -1,5 +1,6 @@
 @import helpers.SessionHelper
 
+@import helpers.enumhelpers.UserType
 @()(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
 
 <div class="row"> <!--This row contains grid col 2 8-->

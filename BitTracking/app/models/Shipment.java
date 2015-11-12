@@ -1,12 +1,11 @@
 package models;
 
-import helpers.StatusHelper;
+import helpers.enumhelpers.StatusHelper;
 import play.data.format.Formats;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Mladen13 on 16.9.2015.

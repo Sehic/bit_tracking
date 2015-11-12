@@ -3,10 +3,8 @@ package models;
 
 import javax.persistence.*;
 
-import com.avaje.ebean.Ebean;
-import play.data.format.Formats;
+import helpers.enumhelpers.UserType;
 import play.data.validation.Constraints;
-import play.db.*;
 import play.db.ebean.Model;
 
 import java.lang.Override;

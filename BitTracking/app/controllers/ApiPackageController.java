@@ -3,12 +3,10 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import helpers.DijkstraHelper;
 import helpers.JSONHelper;
-import helpers.PackageType;
+import helpers.enumhelpers.PackageType;
 import helpers.PriceHelper;
 import models.*;
 import models.Package;
-import play.Logger;
-import play.mvc.Controller;
 import play.mvc.Result;
 
 import java.util.List;
@@ -19,7 +17,7 @@ import java.util.List;
 public class ApiPackageController extends ApiSecurityController {
     /**
      * This method is used for creating package request by registered android user
-     * @return
+     * @return - badRequest if something goes wrong, otherwise ok
      */
     public Result packageAdd(String token){
 
@@ -76,7 +74,7 @@ public class ApiPackageController extends ApiSecurityController {
 
     /**
      * Method that is used to send list of post offices as json
-     * @return
+     * @return - ok and post office list as json
      */
     public static Result getPackageAdd(){
         return ok(JSONHelper.jsonPostOfficeList(PostOffice.findOffice.findList()));
@@ -84,7 +82,7 @@ public class ApiPackageController extends ApiSecurityController {
 
     /**
      * Getting package list as json
-     * @return
+     * @return - packages as json
      */
     public Result getPackageList(String token){
 

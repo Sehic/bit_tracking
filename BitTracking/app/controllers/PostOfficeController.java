@@ -3,11 +3,8 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import helpers.Authenticators;
 import helpers.DijkstraHelper;
-import helpers.SessionHelper;
-import helpers.StatusHelper;
+import helpers.enumhelpers.UserType;
 import models.*;
-import models.Package;
-import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
@@ -15,7 +12,6 @@ import play.mvc.Result;
 import play.mvc.Security;
 import views.html.admin.*;
 
-import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,7 +29,7 @@ public class PostOfficeController extends Controller {
      * Method that deletes office from database
      *
      * @param id - represents office id
-     * @return
+     * @return - redirect to admin post office list
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result deleteOffice(Long id) {
@@ -56,7 +52,7 @@ public class PostOfficeController extends Controller {
     /**
      * Method that adds new office to database using (adminpostoffice.scala.html)
      *
-     * @return
+     * @return - redirect to admin post office list
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result addNewOffice() {
@@ -104,7 +100,7 @@ public class PostOfficeController extends Controller {
      * Method that enables post office editing
      *
      * @param id - post office id
-     * @return
+     * @return - ok and editing post office view opens up
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result postOfficeDetails(Long id) {
@@ -115,8 +111,8 @@ public class PostOfficeController extends Controller {
     /**
      * Method that updates post office information (postofficedetails.scala.html)
      *
-     * @param Id
-     * @return
+     * @param Id - office id
+     * @return - redirect to admin panel if something goes wrong, else redirect to add post office view
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result updateOffice(Long Id) {
@@ -167,7 +163,7 @@ public class PostOfficeController extends Controller {
     /**
      * Method that opens up window for making links to offices
      *
-     * @return
+     * @return - ok and admin link offices view opens up
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result linkPostOffices(Long id) {
@@ -198,7 +194,7 @@ public class PostOfficeController extends Controller {
     /**
      * Method that saves link of offices to database
      *
-     * @return
+     * @return - redirect to admin post office list
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result savePostOffices() {

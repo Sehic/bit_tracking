@@ -1,7 +1,7 @@
 package models;
 
-import helpers.PackageType;
-import helpers.StatusHelper;
+import helpers.enumhelpers.PackageType;
+import helpers.enumhelpers.StatusHelper;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;

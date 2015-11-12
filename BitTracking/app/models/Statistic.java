@@ -1,13 +1,11 @@
 package models;
 
 import com.avaje.ebean.Model;
-import helpers.PackageType;
-import helpers.StatusHelper;
+import helpers.enumhelpers.PackageType;
+import helpers.enumhelpers.StatusHelper;
+import helpers.enumhelpers.UserType;
 
-import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**

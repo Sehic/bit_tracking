@@ -3,7 +3,8 @@ package controllers;
 import helpers.Authenticators;
 import helpers.HashHelper;
 import helpers.SessionHelper;
-import helpers.StatusHelper;
+import helpers.enumhelpers.StatusHelper;
+import helpers.enumhelpers.UserType;
 import models.*;
 import models.Package;
 import play.data.Form;
@@ -27,7 +28,7 @@ public class WorkerController extends Controller {
     /**
      * Method that is used for adding delivery or office worker (with admin that is signed in to page)
      *
-     * @return
+     * @return badRequest if something goes wrong, ok and admintables.html renders
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result addWorker() {
@@ -109,7 +110,7 @@ public class WorkerController extends Controller {
     /**
      * Method that opens up office worker panel
      *
-     * @return
+     * @return ok, officeworkerpanel.html renders
      */
     @Security.Authenticated(Authenticators.OfficeWorkerFilter.class)
     public Result officeWorkerPanel() {
@@ -139,7 +140,7 @@ public class WorkerController extends Controller {
      * It filters up packages and shows up only packages that are ready for shipment.
      * It also only shows packages that are going to destination where delivery worker driving office is.
      *
-     * @return
+     * @return ok, deliveryworkerpanel.html renders
      */
     @Security.Authenticated(Authenticators.DeliveryWorkerFilter.class)
     public Result deliveryWorkerPanel() {
@@ -167,7 +168,7 @@ public class WorkerController extends Controller {
     /**
      * Method that opens up delivery courier panel
      *
-     * @return
+     * @return ok, and deliverycourierpanel.html render
      */
     @Security.Authenticated(Authenticators.DeliveryWorkerFilter.class)
     public Result deliveryCourierPanel() {
@@ -183,7 +184,7 @@ public class WorkerController extends Controller {
      * Action method that is used for sending delivery worker home. It simulates situation when delivery worker comes to another office
      * and when he couldn't find any packages that are ready for shipping so he can go home.
      *
-     * @return
+     * @return redirecting to delivery worker panel
      */
     @Security.Authenticated(Authenticators.DeliveryWorkerFilter.class)
     public Result driveHome() {
@@ -199,7 +200,7 @@ public class WorkerController extends Controller {
      * Method that returns packages that are in process of transport
      *
      * @param courierPackages
-     * @return
+     * @return - list of packages that are ready for home delivery
      */
     public static List<Package> getCourierPackagesForHomeDelivery(List<Package> courierPackages) {
         List<Package> packages = new ArrayList<>();
@@ -274,7 +275,7 @@ public class WorkerController extends Controller {
      *
      * @param packagesForUser
      * @param userPackages
-     * @return
+     * @return - list of user packages
      */
     public static List<Package> getUserPackages(List<Package> packagesForUser, List<Package> userPackages) {
         List<Package> finalUserPackages = new ArrayList<>();

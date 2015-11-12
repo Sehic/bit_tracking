@@ -71,7 +71,7 @@ public class MailController extends Controller {
     /**
      * Inner class that is used for sending mail from user to bittracking
      */
-    public static class Contact {
+    private static class Contact {
 
         public String name;
         public String email;

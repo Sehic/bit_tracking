@@ -1,3 +1,5 @@
+@import helpers.enumhelpers.StatusHelper
+@import helpers.enumhelpers
 @(packs: java.util.List[models.Package], workerOffice: PostOffice)(allPacks: List[models.Package])(offices: List[PostOffice])
 @adminmain("Office Worker Panel") {
 
@@ -130,7 +132,7 @@
                                             } else {
                                                 <td></td>
                                             }
-                                            @if(shipmentFromThisPackage.status == helpers.StatusHelper.RECEIVED) {
+                                            @if(shipmentFromThisPackage.status == StatusHelper.RECEIVED) {
 
                                                 <td><button type="submit" class="btn-default" onclick="form.action='@routes.PackageStatusController.updateStatusOfficeWorker(pack.id)';form.method='POST'">
                                                     Done</button></td>
@@ -138,7 +140,7 @@
                                             } else {
                                                 <td></td>
                                             }
-                                            @if(shipmentFromThisPackage.status == helpers.StatusHelper.DELIVERED) {
+                                            @if(shipmentFromThisPackage.status == enumhelpers.StatusHelper.DELIVERED) {
                                                 <td align="center"><a data-role="delete" data-delete-parent="tr" href="@routes.PackageController.deletePackage(pack.id)" role="button"><span class="glyphicon glyphicon-trash"></span></a></td>
                                             } else {
                                                 <td></td>

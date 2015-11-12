@@ -1,5 +1,6 @@
 @import helpers.SessionHelper
 
+@import helpers.enumhelpers.UserType
 @(user: User, offices: List[PostOffice], path: ImagePath)(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
 @import helper._
 @main("Edit your profile") {

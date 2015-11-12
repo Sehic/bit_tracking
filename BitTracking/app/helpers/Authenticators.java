@@ -1,7 +1,7 @@
 package helpers;
 
 import models.User;
-import models.UserType;
+import helpers.enumhelpers.UserType;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;

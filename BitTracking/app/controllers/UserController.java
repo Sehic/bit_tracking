@@ -1,9 +1,8 @@
 package controllers;
 
-import com.avaje.ebean.Ebean;
 import helpers.*;
+import helpers.enumhelpers.UserType;
 import models.*;
-import models.Package;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -18,10 +17,6 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -207,7 +202,7 @@ public class UserController extends Controller {
     /**
      * This method is used for uploading picture when clicking on button
      *
-     * @return
+     * @return redirect on user profile if everything goes fine, else redirect to index page
      */
     public Result uploadPicture() {
 
@@ -244,16 +239,16 @@ public class UserController extends Controller {
                 e.printStackTrace();
             }
             return redirect("/mybt/editprofile/" + user.id);
-        } else {
-            return redirect(routes.Application.index());
         }
+        return redirect(routes.Application.index());
+
     }
 
     /**
      * Method that updates user first name, last name, country, phone number if needed
      *
      * @param id - user with that id
-     * @return
+     * @return - badRequest if something goes wrong, redirect to user profile otherwise
      */
     public Result updateUser(Long id) {
         User u1 = SessionHelper.getCurrentUser(ctx());
@@ -332,7 +327,7 @@ public class UserController extends Controller {
      * Method that deletes user from database
      *
      * @param id - user id
-     * @return
+     * @return - redirect to index page if user is not valid, redirect to admintables.html otherwise
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result deleteUser(Long id) {
@@ -348,8 +343,8 @@ public class UserController extends Controller {
     /**
      * Method that opens up admin profile (adminpreferences.scala.html)
      *
-     * @param id
-     * @return
+     * @param id - admin id
+     * @return - ok, and render adminpreferences.html
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result adminPreferences(Long id) {
@@ -368,7 +363,7 @@ public class UserController extends Controller {
      * Method that opens up user profile (userprofile.scala.html)
      *
      * @param id - edited user id
-     * @return
+     * @return - redirect to index page if user is not valid, ok and renders userprofile otherwise
      */
     public Result userProfile(Long id) {
 
@@ -392,7 +387,7 @@ public class UserController extends Controller {
      * Method that is used for updating type of user (userprofile.scala.html)
      *
      * @param id - edited user id
-     * @return
+     * @return - redirect to adminpanel.html
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result updateUserType(Long id) {
@@ -440,6 +435,10 @@ public class UserController extends Controller {
         return redirect(routes.Application.adminPanel());
     }
 
+    /**
+     * Ajax method that is used for checking inserted email
+     * @return - bad request if user is found, ok otherwise
+     */
     public Result findEmail() {
         DynamicForm form = Form.form().bindFromRequest();
         String email = form.data().get("email");
@@ -450,6 +449,11 @@ public class UserController extends Controller {
         return ok();
     }
 
+    /**
+     * Ajax method for email validation
+     * @param token
+     * @return - index page if token is null, redirect to login page otherwise
+     */
     public Result emailValidation(String token) {
         User user = User.findByToken(token);
         if (user == null || token == null) {
@@ -461,6 +465,10 @@ public class UserController extends Controller {
         return redirect("/login");
     }
 
+    /**
+     * Method that is used for phone number validation
+     * @return - redirect to index page if user is null, ok and validatephone.html render
+     */
     public Result validatePhone() {
         User user = SessionHelper.getCurrentUser(ctx());
         if (user == null || user.numberValidated) {
@@ -469,6 +477,10 @@ public class UserController extends Controller {
         return ok(validatephone.render());
     }
 
+    /**
+     * Method that is used for phone number validation
+     * @return - badRequest if there is no user, else ok
+     */
     public Result validatePhoneNumber() {
         DynamicForm form = Form.form().bindFromRequest();
         String code = form.data().get("enteredCode");
@@ -482,6 +494,10 @@ public class UserController extends Controller {
         return ok(user.phoneNumber);
     }
 
+    /**
+     * Method that is used for sending new phone validation code
+     * @return - badRequest if something goes wrong, else ok
+     */
     public Result newCode() {
         User user = SessionHelper.getCurrentUser(ctx());
         DynamicForm form = Form.form().bindFromRequest();
@@ -509,6 +525,7 @@ public class UserController extends Controller {
 
     /**
      * Method that sends mail to user when he can't remember his own password and wants to change it
+     *
      * @return - change password view
      */
     public Result sendPassword() {
@@ -538,6 +555,7 @@ public class UserController extends Controller {
 
     /**
      * Method that renders changepassword view that is used for changing user password
+     *
      * @param token - default generated token
      * @return
      */
@@ -557,6 +575,7 @@ public class UserController extends Controller {
 
     /**
      * Method that is used for changing user password using ajax
+     *
      * @return badRequest if something goes wrong, else ok
      */
     public Result makePasswordChange() {

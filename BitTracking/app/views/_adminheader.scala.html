@@ -1,5 +1,6 @@
 @import helpers.SessionHelper
 
+@import helpers.enumhelpers.UserType
 @()(implicit currentUser: User = SessionHelper.getCurrentUser(ctx()))
 
 <div class="navbar navbar-inverse" role="navigation">

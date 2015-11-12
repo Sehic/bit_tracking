@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import helpers.JSONHelper;
 import helpers.MailHelper;
 import models.User;
-import models.UserType;
-import play.mvc.Controller;
+import helpers.enumhelpers.UserType;
 import play.mvc.Result;
-import views.html.register;
 
 import java.util.UUID;
 
@@ -48,7 +46,7 @@ public class ApiUserController extends ApiSecurityController {
 
     /**
      * Method that is used for signing in registered user
-     * @return
+     * @return - ok and return user as json to android, badRequest otherwise
      */
     public static Result login(){
 

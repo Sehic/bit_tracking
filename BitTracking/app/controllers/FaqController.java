@@ -1,24 +1,18 @@
 package controllers;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.Model;
 import helpers.Authenticators;
-import helpers.SessionHelper;
 import models.Faq;
-import models.User;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import play.i18n.Messages;
-
 import play.mvc.Security;
-import views.html.admin.*;
+import views.html.admin.faqedit;
+import views.html.admin.faqnew;
+import views.html.admin.faqview;
+import views.html.faqindex;
 
 import java.util.List;
-
-import play.Logger;
-import views.html.faqindex;
 
 /**
  * Created by Emina on 17.10.2015.
@@ -42,7 +36,7 @@ public class FaqController extends Controller {
     /**
      * Adding a new faq to the list (To database)
      *
-     * @return
+     * @return - ok and faqnew.html opens up
      */
 
     @Security.Authenticated(Authenticators.AdminFilter.class)
@@ -74,8 +68,8 @@ public class FaqController extends Controller {
     /**
      * This method will get user to faqedit page
      *
-     * @param id
-     * @return
+     * @param id - faq id
+     * @return ok and editing faq view opens up
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result editFaq(Long id) {
