@@ -10,8 +10,8 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
-import views.html.deliveryworkerpanel;
-import views.html.officeworkerpanel;
+import views.html.deliveryworker.deliveryworkerpanel;
+import views.html.officeworker.officeworkerpanel;
 
 import java.util.ArrayList;
 import java.util.Calendar;

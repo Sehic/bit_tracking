@@ -13,11 +13,12 @@ import play.mvc.Result;
 import play.i18n.Messages;
 
 import play.mvc.Security;
-import views.html.*;
+import views.html.admin.*;
 
 import java.util.List;
 
 import play.Logger;
+import views.html.faqindex;
 
 /**
  * Created by Emina on 17.10.2015.

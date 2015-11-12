@@ -8,7 +8,7 @@ import models.Package;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.adminindex;
+import views.html.admin.adminindex;
 import views.html.statistic;
 
 import java.util.ArrayList;

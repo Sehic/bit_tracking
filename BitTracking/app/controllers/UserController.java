@@ -12,6 +12,8 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Security;
 import views.html.*;
+import views.html.registereduser.*;
+import views.html.admin.adminpreferences;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

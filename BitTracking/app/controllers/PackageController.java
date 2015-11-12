@@ -11,6 +11,9 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import views.html.*;
+import views.html.admin.*;
+import views.html.officeworker.*;
+import views.html.registereduser.userpanel;
 
 import javax.persistence.PersistenceException;
 import java.util.*;

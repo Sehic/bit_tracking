@@ -13,7 +13,7 @@ import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
-import views.html.*;
+import views.html.admin.*;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;

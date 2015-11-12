@@ -1,0 +1,224 @@
+@(offices: List[PostOffice])(places: List[Location])(officePackage: models.Package)(packagesId: String)
+@adminmain("Make Route Using Algorithm") {
+
+    <ol class="breadcrumb">
+        <li><a href="@routes.Application.adminPanel()">Admin Panel</a></li>
+        <li><a href="#">Manage Post Office</a></li>
+        <li class="active">Make a route using Algorithm</li>
+    </ol>
+
+    <h2>Make a route using Algorithm</h2>
+    <hr/>
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3">
+            @helper.form(action = routes.RouteController.listMultiRoute(), 'class -> "form-horizontal pull-left", 'role -> "form") {
+                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                <button type="submit" class="btn btn-primary active">Create Route Manually</button>
+            }
+            @helper.form(action = routes.RouteController.showMultiAutoRouting(), 'class -> "form-horizontal pull-left", 'role -> "form") {
+                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                <button type="submit" class="btn btn-primary">Create Route Using Shortest Path</button>
+            }
+        </div>
+    </div>
+    @helper.form(routes.RouteController.saveAutoRoute(officePackage.id), 'id -> "forma", 'class -> "form-horizontal", 'role -> "form") {
+        <div class="row">
+            <hr/>
+            <div class="form-group">
+                <label for="initialOffice" class="col-sm-3 control-label">
+                    Initial Post Office:
+                </label>
+                <div class="col-sm-9">
+                    <input id="initialOffice" name="initialPostOffice" value="@officePackage.shipmentPackages.get(0).postOfficeId.name" type="text" class="form-control" style="font-size : 13px ; font-style : italic " readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <hr/>
+            <div class="form-group">
+                <label for="routeOffices" class="col-sm-3 control-label">
+                    Route:
+                </label>
+                <div class="col-md-9">
+                    <input id="routeOffices" name="route" class="form-control" readonly required>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <hr/>
+            <div class="form-group">
+                <label for="finalOffice" class="col-sm-3 control-label">
+                    Destination Post Office:
+                </label>
+                <div class="col-sm-9">
+                    <input id="finalOffice" name="destinationOffice" value="@officePackage.shipmentPackages.get(0).packageId.destination" type="text" class="form-control" style="font-size : 13px ; font-style : italic " readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <hr/>
+            <div class="form-group">
+                <label for="distanceBetweenOffices" class="col-sm-3 control-label">
+                    Distance:
+                </label>
+                <div class="col-sm-9">
+                    <input id="distanceBetweenOffices" placeholder="Distance between Post Offices" name="distanceBetweenOffices" value="" type="text" class="form-control" disabled>
+                </div>
+            </div>
+            <hr/>
+            <div class="form-group">
+                <label for="tripDurationBetweenOffices" class="col-sm-3 control-label">
+                    Duration:
+                </label>
+                <div class="col-sm-9">
+                    <input id="tripDurationBetweenOffices" placeholder="Travel duration between Post Offices" name="tripDurationBetweenOffices" value="" type="text" class="form-control" disabled>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <hr/>
+        </div>
+        <div class="row">
+            <div class="col-sm-9 col-sm-offset-3">
+                <input id="clickMe" type="button" class="btn btn-primary" value="Refresh Map"/>
+                <button id="addPackageButton" type="submit" class="btn btn-success">
+                    Save Route
+                </button>
+
+                <input name="packagesForRoute" type="text" value="@packagesId" hidden/>
+                }
+
+</div>
+
+</div>
+    <br/>
+
+    <div class="templatemo-maps">
+        <div class="row">
+            <div class="col-md-12 margin-bottom-30">
+                <div id="map" style="position : relative; height: 700px; width: auto"></div>
+
+
+                <script type="text/javascript">
+
+     var map;
+     var i, marker;
+
+function initialize(){
+        map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 7,
+        center: new google.maps.LatLng(43.8331, 18.3039),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+     });
+
+     @for(place <- places) {
+         marker = new google.maps.Marker({
+            position: new google.maps.LatLng(@place.y, @place.x),
+            map: map
+         });
+     }
+}
+
+function showMap(){
+
+        var initial = document.getElementById("initialOffice").value;
+        var final = document.getElementById("finalOffice").value;
+        var initialAddress="";
+        var waypointsFromRoute = [];
+        var officesFromWaypoints = [];
+        google.maps.event.addDomListener(window, 'resize', function() {
+            map.setCenter(marker.getPosition());
+        });
+
+        @for(office <- offices) {
+
+            var officeName="@office.name";
+            var officeAddress="@office.address";
+            if(officeName===initial){
+            initialAddress=officeAddress;
+            }
+            if(final === officeName){
+            var finalAddress = "@office.address";
+            }
+            if(officeName!==initial && final!==officeName){
+                waypointsFromRoute.push({
+                    location: officeAddress,
+                    stopover: true
+            });
+            officesFromWaypoints.push(officeName);
+            }
+        }
+        var directionsService = new google.maps.DirectionsService();
+
+        var renderOptions = { draggable: true };
+        var directionDisplay = new google.maps.DirectionsRenderer(renderOptions);
+
+
+        //set the directions display service to the map
+        directionDisplay.setMap(map);
+
+        //set the starting address and destination address
+        var originAddress = initialAddress;
+        var destinationAddress = finalAddress;
+        //build directions request
+        var request = {
+            origin: originAddress,
+            destination: destinationAddress,
+            provideRouteAlternatives: true,
+            waypoints: waypointsFromRoute, //an array of waypoints
+            optimizeWaypoints: true, //set to true if you want google to determine the shortest route or false to use the order specified.
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+
+directionsService.route(request, function (response, status) {
+    if(status == google.maps.DirectionsStatus.OK) {
+
+        for (var i = 0, len = response.routes.length; i < len; i++) {
+            new google.maps.DirectionsRenderer({
+                map: map,
+                directions: response,
+                routeIndex: i
+            });
+        }
+
+       var routeString = initial+"|";
+            for(var i=0;i<officesFromWaypoints.length;i++){
+                routeString+=officesFromWaypoints[i]+"|";
+            }
+
+            routeString+=final+"|";
+            $("#routeOffices").val(routeString);
+            var totalDistance = 0;
+        var totalDuration = 0;
+        var legs = response.routes[0].legs;
+        for(var i=0; i<legs.length; i++) {
+            totalDistance = totalDistance + legs[i].distance.value;
+            totalDuration += legs[i].duration.value;
+        }
+        $("#distanceBetweenOffices").val((totalDistance/1000).toFixed(2)+" km");
+        var hours = totalDuration/60/60;
+        $("#tripDurationBetweenOffices").val(hours.toFixed(2)+" h");
+    }
+})
+}
+
+$("#clickMe").click( function(){
+    initialize();
+    showMap();
+});
+
+$(document).ready(function() {
+    initialize();
+    showMap();
+})
+
+  </script>
+            </div>
+        </div>
+    </div>
+
+}

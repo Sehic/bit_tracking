@@ -1,0 +1,150 @@
+@(user: User, path: ImagePath, countryList: List[Country])
+    @import helper._
+    @main("Edit your profile") {
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="row">
+                        <div class="col-md-3" style="margin-top: 6%">
+                            <div>
+                                <h3 style="text-align: center">User Profile </h3>
+                            </div>
+
+                                <!--======IMAGE UPLOAD========-->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="text-center">
+                                        @if(path != null) {
+                                            <img src="@path.image_url" class="avatar img-circle" alt="avatar" height="100" width="100">
+                                        } else {
+                                            <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">
+                                        }
+                                        <h6>Upload photo...</h6>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <b style="color : red">
+                                                @flash.get("pictureError")
+                                                </b>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <form action="@routes.UserController.uploadPicture()" method="post" enctype="multipart/form-data">
+                                            <input type="file" name="picture" accept="image/*" class="form-control">
+                                            <br>
+                                            <input type="submit" class="btn btn-primary">
+                                        </form>
+                                    </div>
+                                </div> <!--Ends Image upload-->
+                            </div>
+                        </div>
+
+                            <!--===========EDIT PROFILE==============-->
+
+                        <div class="col-md-9" style="margin-top: 6%">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3 style="text-align: center">Edit Profile</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5 style="text-align: center">Personal information</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                @helper.form(action = routes.UserController.updateUser(user.id), 'class -> "form-horizontal", 'role -> "form") {
+                                    <div class="form-group">
+
+                                        <label for="inputName" class="col-sm-2 control-label">
+                                            First Name:
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" onkeyup="checkFirstName()" name="firstName" class="form-control" id="inputName" value="@user.firstName" required="required">
+                                            <span id="nameError" class="alert-danger" data-error-for="" ></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+
+                                        <label for="inputLastName" class="col-sm-2 control-label">
+                                            Last Name:
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input type="text" onkeyup="checkLastName()" name="lastName" class="form-control" id="inputLastName" value="@user.lastName" required="required">
+                                            <span id="lastNameError" class="alert-danger" data-error-for="" ></span>
+                                        </div>
+                                    </div>
+
+                                    @if(user.country != null) {
+                                        <div class="form-group">
+
+                                            <label for="inputCountry" class="col-sm-2 control-label">
+                                                Country
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <select id="countryId" class="form-control" name="userCountry" required>
+                                                    <option class="default" value="@user.country.callingCode">@user.country.countryName</option>
+                                                    @for(country <- countryList) {
+                                                        @if(user.country != country) {
+                                                            <option value="@country.callingCode">@country.countryName</option>
+                                                        }
+                                                    }
+                                                </select>
+                                                <span id="countryError" class="alert-danger" data-error-for="" ></span>
+                                            </div>
+                                        </div>
+
+                                        <div id="editPhoneNumberFields" class="form-group">
+
+                                            <label for="inputPhoneNumber" class="col-sm-2 control-label">
+                                                Phone Number
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <input name="callingCodeId" value="+@user.country.callingCode" type="text" class="form-control" id="inputCallingCode" readonly style="font-size:11px; font-style: italic; text-align: center ">
+                                            </div>
+                                            <div class="col-sm-8">
+                                                @if(user.phoneNumber != null) {
+                                                        <!-- THIS WILL WORK CORRECTLY ONLY FOR CALLING CODES WITH LENGTH = 3 -->
+                                                    <input name="phoneNumber" value="@user.phoneNumber.substring(4,user.phoneNumber.length)" onkeyup="checkNumber()" placeholder="Your mobile number (ex. 61 263 829)" type="text" class="form-control" id="inputPhoneNumber" style="font-size:11px; font-style: italic ">
+                                                } else {
+                                                    <input name="phoneNumber" value="" onkeyup="checkNumber()" placeholder="Your mobile number (ex. 61 263 829)" type="text" class="form-control" id="inputPhoneNumber" style="font-size:11px; font-style: italic ">
+                                                }
+                                                <span id="phoneError" class="alert-danger" data-error-for="" ></span>
+                                                <span id="phoneInfo" data-error-for="" style="font-size: 10px">This field is not required. If you want to receive an SMS notifications about delivery
+                                                    status of your packages, please submit valid mobile number. If you do, you will get validation code to specified number.</span>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <b style="color : red">
+
+                                                @flash.get("errorName")
+                                                @flash.get("errorLastName")
+                                                @flash.get("errorPhoneNumber")
+
+                                            </b>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <input type="submit" class="btn btn-primary btn-sm" value="Save Changes">
+                                            <span></span>
+                                            <input type="reset" class="btn btn-default btn-sm" value="Cancel">
+                                        </div>
+                                    </div>
+                                }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
