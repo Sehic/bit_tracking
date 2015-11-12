@@ -33,7 +33,7 @@ public class PostOfficeController extends Controller {
      * Method that deletes office from database
      *
      * @param id - represents office id
-     * @return
+     * @return - redirect to admin post office list
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result deleteOffice(Long id) {
@@ -56,7 +56,7 @@ public class PostOfficeController extends Controller {
     /**
      * Method that adds new office to database using (adminpostoffice.scala.html)
      *
-     * @return
+     * @return - redirect to post office list if ok, return to same page otherwise
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result addNewOffice() {
@@ -104,7 +104,7 @@ public class PostOfficeController extends Controller {
      * Method that enables post office editing
      *
      * @param id - post office id
-     * @return
+     * @return - ok and page for editing post office opens up
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result postOfficeDetails(Long id) {
@@ -115,8 +115,8 @@ public class PostOfficeController extends Controller {
     /**
      * Method that updates post office information (postofficedetails.scala.html)
      *
-     * @param Id
-     * @return
+     * @param Id - post office id
+     * @return - redirect to admin post office list
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result updateOffice(Long Id) {
@@ -167,7 +167,7 @@ public class PostOfficeController extends Controller {
     /**
      * Method that opens up window for making links to offices
      *
-     * @return
+     * @return - ok, and adminlinkoffices.html render
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result linkPostOffices(Long id) {
@@ -198,7 +198,7 @@ public class PostOfficeController extends Controller {
     /**
      * Method that saves link of offices to database
      *
-     * @return
+     * @return - redirect to list of post offices
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result savePostOffices() {

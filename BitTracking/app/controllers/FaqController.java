@@ -41,7 +41,7 @@ public class FaqController extends Controller {
     /**
      * Adding a new faq to the list (To database)
      *
-     * @return
+     * @return - add new faq view render
      */
 
     @Security.Authenticated(Authenticators.AdminFilter.class)
@@ -73,8 +73,8 @@ public class FaqController extends Controller {
     /**
      * This method will get user to faqedit page
      *
-     * @param id
-     * @return
+     * @param id - faq id
+     * @return - form for faq editing
      */
     @Security.Authenticated(Authenticators.AdminFilter.class)
     public Result editFaq(Long id) {

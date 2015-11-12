@@ -25,7 +25,7 @@ public class RouteController extends Controller {
     /**
      * This method opens up view for making route manually
      * @param id - package that needs route
-     * @return
+     * @return - renders up owmakeroute.html
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result listRoutes(Long id) {
@@ -66,7 +66,7 @@ public class RouteController extends Controller {
     /**
      * Method that is used for saving package route
      * @param id - package id
-     * @return
+     * @return - redirect to admin package list
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result saveRoute(Long id) {
@@ -121,7 +121,7 @@ public class RouteController extends Controller {
     /**
      * Method that is used for showing up auto route view
      * @param id - package id
-     * @return
+     * @return - renders up view for auto routing
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result showAutoRouting(Long id) {
@@ -135,7 +135,7 @@ public class RouteController extends Controller {
     /**
      * This method is used for saving auto route for one or more packages that goes to same destination
      * @param id - package id
-     * @return
+     * @return - redirect to office worker panel, redirect to index if user is not valid
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result saveAutoRoute(Long id) {
@@ -184,7 +184,7 @@ public class RouteController extends Controller {
      * This method is used when more than one package is selected using checkboxes, and when button is clicked, new view shows up.
      * That view is used for routing all selected packages.
      * Packages must have same destination post office.
-     * @return
+     * @return - renders office worker make multi route
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result listMultiRoute() {
@@ -241,7 +241,7 @@ public class RouteController extends Controller {
     /**
      * This method is used for creating route for more than one package.
      * This view is called clicking on button, and auto routing is available then.
-     * @return
+     * @return - ok, and renders owmakemultiautoroute.html
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result showMultiAutoRouting() {
@@ -258,7 +258,7 @@ public class RouteController extends Controller {
     /**
      * This method is used for showing up dijkstra routing for one package
      * @param id - package id
-     * @return
+     * @return - opens up view for dijkstra routing
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result showDijkstraRouting(Long id) {
@@ -274,7 +274,7 @@ public class RouteController extends Controller {
 
     /**
      * This method is used for showing up view that is used for routing more than one package
-     * @return
+     * @return - ok and opens up office worker make dijkstra route
      */
     @Security.Authenticated(Authenticators.AdminOfficeWorkerFilter.class)
     public Result showMultiDijkstraRouting() {
@@ -329,7 +329,7 @@ public class RouteController extends Controller {
     /**
      * This method returns packages that should be routed
      * @param packages - list of packages
-     * @return
+     * @return - list of packages for routing
      */
     public static List<Package> packagesForRoute(String packages) {
         List<Package> routePackages = new ArrayList<>();
@@ -349,7 +349,7 @@ public class RouteController extends Controller {
      * This method is used for getting list of post offices that are part of route
      * @param initialOffice - initial post office
      * @param destinationOffice - destination post office
-     * @return
+     * @return - list of post offices in route
      */
     public static List<PostOffice> officesInRoute(String initialOffice, String destinationOffice){
         List<PostOffice> offices = PostOffice.findOffice.findList();

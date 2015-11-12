@@ -58,10 +58,10 @@ public class MailController extends Controller {
                             MailHelper.sendContactMessage(name, email, message);
 
                             return redirect("/contact");
-                        } else {
-                            flash("errorMail", "Please verify that you are not a robot!");
-                            return ok(contact.render(contactForm));
                         }
+                        flash("errorMail", "Please verify that you are not a robot!");
+                        return ok(contact.render(contactForm));
+
                     }
                 });
 
@@ -71,7 +71,7 @@ public class MailController extends Controller {
     /**
      * Inner class that is used for sending mail from user to bittracking
      */
-    public static class Contact {
+    private static class Contact {
 
         public String name;
         public String email;
@@ -81,12 +81,14 @@ public class MailController extends Controller {
          * Default constructor that sets everything to NN;
          */
         public Contact() {
-            this.name= "NN";
+            this.name = "NN";
             this.email = "NN";
             this.message = "NN";
         }
+
         /**
          * Constructor with parameters;
+         *
          * @param name
          * @param email
          * @param message

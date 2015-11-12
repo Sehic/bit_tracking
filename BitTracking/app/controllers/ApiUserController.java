@@ -48,7 +48,7 @@ public class ApiUserController extends ApiSecurityController {
 
     /**
      * Method that is used for signing in registered user
-     * @return
+     * @return - user as json, badRequest otherwise
      */
     public static Result login(){
 

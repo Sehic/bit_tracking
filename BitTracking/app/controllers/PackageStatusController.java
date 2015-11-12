@@ -134,7 +134,7 @@ public class PackageStatusController extends Controller {
     /**
      * This method is used for checking package when it comes to office worker office
      * @param id - package id
-     * @return
+     * @return - redirect to office worker panel
      */
     @Security.Authenticated(Authenticators.OfficeWorkerFilter.class)
     public Result updateStatusOfficeWorker(Long id){
@@ -150,7 +150,7 @@ public class PackageStatusController extends Controller {
 
     /**
      * This method is used for updating status as delivery courier
-     * @return
+     * @return - redirect to delivery courier panel
      */
     @Security.Authenticated(Authenticators.DeliveryWorkerFilter.class)
     public Result updateStatusDeliveryCourier(){
@@ -192,7 +192,7 @@ public class PackageStatusController extends Controller {
      * Method that is used for getting list of packages that office worker needs to approve or reject
      * @param userOffice - office workers post office
      * @param packagesWaiting - all packages waiting for approval
-     * @return
+     * @return - list of packages for office worker
      */
     public static List<Package> packagesForOfficeWorkerWaitingForApproval(PostOffice userOffice, List<Package> packagesWaiting) {
         List<Package> packagesForOfficeWorker = new ArrayList<>();

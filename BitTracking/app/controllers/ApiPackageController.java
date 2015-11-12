@@ -19,7 +19,7 @@ import java.util.List;
 public class ApiPackageController extends ApiSecurityController {
     /**
      * This method is used for creating package request by registered android user
-     * @return
+     * @return - ok if package is added successfully, badRequest otherwise
      */
     public Result packageAdd(String token){
 
@@ -76,7 +76,7 @@ public class ApiPackageController extends ApiSecurityController {
 
     /**
      * Method that is used to send list of post offices as json
-     * @return
+     * @return - post office list as json
      */
     public static Result getPackageAdd(){
         return ok(JSONHelper.jsonPostOfficeList(PostOffice.findOffice.findList()));
@@ -84,7 +84,7 @@ public class ApiPackageController extends ApiSecurityController {
 
     /**
      * Getting package list as json
-     * @return
+     * @return - package list as json
      */
     public Result getPackageList(String token){
 
@@ -99,7 +99,7 @@ public class ApiPackageController extends ApiSecurityController {
 
     /**
      * This method is used for getting shortest distance between our current location and closest post office
-     * @param loc
+     * @param loc - location
      * @return closest post office
      */
     public Result jsonLocation(String loc) {
