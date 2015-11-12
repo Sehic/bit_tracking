@@ -45,7 +45,7 @@ public class DijkstraHelper {
         }
     }
 
-    public class Edge {
+    private class Edge {
         public final Vertex target;
         public final double weight;
 
@@ -55,7 +55,7 @@ public class DijkstraHelper {
         }
     }
 
-    public static void computePaths(Vertex source) {
+    private static void computePaths(Vertex source) {
         source.minDistance = 0.;
         PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
         vertexQueue.add(source);
@@ -79,7 +79,7 @@ public class DijkstraHelper {
         }
     }
 
-    public static List<Vertex> getShortestPathTo(Vertex target) {
+    private static List<Vertex> getShortestPathTo(Vertex target) {
         List<Vertex> path = new ArrayList<Vertex>();
         for (Vertex vertex = target; vertex != null; vertex = vertex.previous)
             path.add(vertex);
@@ -88,7 +88,7 @@ public class DijkstraHelper {
         return path;
     }
 
-    public List<Vertex> getAllVertexes() {
+    private List<Vertex> getAllVertexes() {
         List<Vertex> allVertexes = new ArrayList<>();
         List<PostOffice> postOffices = PostOffice.findOffice.findList();
         for (int i = 0; i < postOffices.size(); i++) {
@@ -99,7 +99,7 @@ public class DijkstraHelper {
         return allVertexes;
     }
 
-    public Vertex findVertexByName(String name) {
+    private Vertex findVertexByName(String name) {
         for (Vertex v : vertexes) {
             if (v.name.equals(name)) {
                 return v;
@@ -108,7 +108,7 @@ public class DijkstraHelper {
         return null;
     }
 
-    public void getAllVertexesWithEdges(){
+    private void getAllVertexesWithEdges(){
         for (int i = 0; i < vertexes.size(); i++) {
             Vertex v = vertexes.get(i);
             List<Link> startOfficeLinks = Link.findByStartOffice(v.name);
@@ -121,7 +121,7 @@ public class DijkstraHelper {
         }
     }
 
-    public static List<Vertex> getPath(Vertex a, Vertex b) {
+    private static List<Vertex> getPath(Vertex a, Vertex b) {
 
         computePaths(a);
         return getShortestPathTo(b);

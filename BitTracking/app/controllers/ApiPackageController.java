@@ -16,12 +16,17 @@ import java.util.List;
 /**
  * Created by Mladen13 on 25.10.2015.
  */
-public class ApiPackageController extends Controller {
+public class ApiPackageController extends ApiSecurityController {
     /**
      * This method is used for creating package request by registered android user
      * @return
      */
-    public Result packageAdd(){
+    public Result packageAdd(String token){
+
+        if(!isAuthorized(token)){
+            return badRequest();
+        }
+
         //Getting form values as json
         JsonNode json = request().body().asJson();
         String userId = json.findPath("userId").textValue();
@@ -81,7 +86,11 @@ public class ApiPackageController extends Controller {
      * Getting package list as json
      * @return
      */
-    public Result getPackageList(){
+    public Result getPackageList(String token){
+
+        if(!isAuthorized(token)){
+            return badRequest();
+        }
 
         List<Package> packs = Package.finder.findList();
 
